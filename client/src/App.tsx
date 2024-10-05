@@ -1,10 +1,13 @@
+import { Route, Routes } from "react-router-dom";
+import TestsPage from "./pages/test/TestsPage";
+import TestDetailsPage from "./pages/test/TestDetailsPage";
+
 function App() {
   return (
-    <>
-      <div className="text-3xl font-bold w-full text-center">
-        This is BetterTOEIC
-      </div>
-    </>
+    <Routes>
+      <Route path="/" element={<TestsPage />} />
+      <Route path="/test/:id" element={<TestDetailsPage />} />
+    </Routes>
   );
 }
 
