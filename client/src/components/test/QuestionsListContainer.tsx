@@ -12,7 +12,7 @@ const QuestionsListContainer = () => {
   let runningTotal = 0;
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg">
+    <div className="bg-white rounded-2xl shadow-lg min-w-[220px]">
       {numberOfQuestionsPerPart.map((numberOfQuestions, partIndex) => {
         runningTotal += numberOfQuestions;
         return (

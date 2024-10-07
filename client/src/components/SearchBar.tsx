@@ -6,7 +6,7 @@ export default function SearchBar() {
       <input
         type="text"
         placeholder="Search..."
-        className="border-none outline-none w-full"
+        className="border-none outline-none w-full h-6"
       />
       <button>
         <SearchIcon />
