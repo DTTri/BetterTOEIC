@@ -4,20 +4,17 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
-      fontFamily: {
-        body: ['Nunito Sans', 'sans-serif'],
-      },
       colors: {
         primary: {
-          DEFAULT: "hsl(var(--primary))",
+          DEFAULT: "#00205C", // Your previous primary color
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
+          DEFAULT: "#FFC72C", // Your previous secondary color
           foreground: "hsl(var(--secondary-foreground))",
         },
         tertiary: "#F6F6F6",
-        background: "hsl(var(--background))",
+        background: "#F5F6FA", // Your previous background color
         red: "#FF0000",
         green: "#BCFFE3",
         foreground: "hsl(var(--foreground))",
