@@ -14,10 +14,6 @@ import VN from '../assets/VN_Flag.png';
 export default function Header() {
   const [language, setLanguauge] = useState('vi');
 
-  const handleLanguageClick = () => {
-    setLanguauge((prevState) =>  prevState === 'vi' ? 'en' : 'vi')
-  }
-
   return (
     <>
       <header className="absolute top-0 bg-background w-full px-9 py-5 ">
@@ -46,8 +42,8 @@ export default function Header() {
             <SelectContent className='bg-background'>
               <SelectGroup>
                 <SelectLabel>Language</SelectLabel>
-                <SelectItemWithImage onClick={() => { setLanguauge('vi'); }} value='vi' imageSrc={VN}>Tiếng Việt</SelectItemWithImage>
-                <SelectItemWithImage onClick={() => { setLanguauge('en'); }} value='en' imageSrc={VN}>English</SelectItemWithImage>
+                <SelectItemWithImage onClick={() => { () => setLanguauge('vi') }} value='vi' imageSrc={VN}>Tiếng Việt</SelectItemWithImage>
+                <SelectItemWithImage onClick={() => { () => setLanguauge('en') }} value='en' imageSrc={VN}>English</SelectItemWithImage>
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -62,8 +58,8 @@ export default function Header() {
             <SelectContent className='bg-background'>
               <SelectGroup>
                 <SelectLabel>Language</SelectLabel>
-                <SelectItemWithImage onClick={() => { setLanguauge('vi'); }} value='vi' imageSrc={VN}>Tiếng Việt</SelectItemWithImage>
-                <SelectItemWithImage onClick={() => { setLanguauge('en'); }} value='en' imageSrc={VN}>English</SelectItemWithImage>
+                <SelectItemWithImage value='vi' imageSrc={VN}>Tiếng Việt</SelectItemWithImage>
+                <SelectItemWithImage value='en' imageSrc={VN}>English</SelectItemWithImage>
               </SelectGroup>
             </SelectContent>
           </Select>
