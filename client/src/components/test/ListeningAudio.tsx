@@ -1,5 +1,8 @@
-// This is just a stub code (mock code)
-
 export default function ListeningAudio() {
-  return <div></div>;
+  return (
+    <audio
+      src="https://cdn.pixabay.com/audio/2022/08/23/audio_d16737dc28.mp3"
+      controls
+    />
+  );
 }

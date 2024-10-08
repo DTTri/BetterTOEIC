@@ -8,7 +8,14 @@
   box-sizing: border-box;
   font-family: "Nunito Sans", sans-serif;
 }
-
+audio {
+  width: 600px;
+  height: 60px;
+}
+audio::-webkit-media-controls-panel {
+  background-color: white;
+  border: 10px solid black;
+}
 @layer base {
   :root {
     --background: 0 0% 100%;
