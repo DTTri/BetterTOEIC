@@ -2,49 +2,31 @@
 
 import { useState } from "react";
 
-export default function Question({strImg, questionNum} : {strImg: string, questionNum: number}) {
+export default function Question({strImg, questionText, questionNum, options} : {strImg: string, questionText:string, questionNum: number, options: string[]}) {
   const [ans, setAns] = useState('');
-  return <div className="w-[900px]">
-    <h4 className="text-2xl font-bold mb-2">Question {questionNum}:</h4>
+  return <div className="w-[900px] mb-4">
+    <h4 className="text-[20px] font-bold mb-2">Question {questionNum}: {questionText}</h4>
     <div className="content flex flex-row w-full gap-[48px] items-center">
       {strImg !== '' && 
-      <div className="img w-[50%]">
-        <img className="w-full max-h-[300px] block object-cover object-center " src={strImg} alt="" />
+      <div className="img w-[45%]">
+        <img className="w-full max-h-[250px] block object-cover object-center " src={strImg} alt="" />
       </div>}
-      <form className="questions w-[40%] flex flex-col gap-3">
-        <div className="flex items-center space-x-2">
-          <input className="w-[20px] h-[20px] rounded-[15px] border-solid border-[1px] border-[##767676] mr-3" type="radio" name={questionNum + ''} id="A" />
-          <label
-            className="text-[20px] font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          >
-            (A)
+      <div className="flex flex-col gap-2 items-center">
+      {options.map((optionValue, index) => (
+        <div key={index} className="flex  items-center space-x-2">
+          <input
+            type="radio"
+            name={`question-${questionNum}`}
+            id={`optionValue-${questionNum}-${index}`}
+            onChange={() => setAns(optionValue)}
+            className="w-[18px] h-[18px] border-solid border-[1px] border-gray-400"
+          />
+          <label htmlFor={`optionValue-${questionNum}-${index}`} className="text-[16px] font-normal">
+          ({String.fromCharCode(65 + index)}): {optionValue}
           </label>
         </div>
-        <div className="flex items-center space-x-2">
-          <input name={questionNum + ''} className="w-[20px] h-[20px] rounded-[15px] border-solid border-[1px] border-[##767676] mr-3" type="radio" id="B" />
-          <label
-            className="text-[20px] font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          >
-            (B)
-          </label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <input name={questionNum + ''} className="w-[20px] h-[20px] rounded-[15px] border-solid border-[1px] border-[##767676] mr-3" type="radio" id="C" />
-          <label
-            className="text-[20px] font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          >
-            (C)
-          </label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <input name={questionNum + ''} className="w-[20px] h-[20px] rounded-[15px] border-solid border-[1px] border-[##767676] mr-3" type="radio" id="D" />
-          <label
-            className="text-[20px] font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          >
-            (D)
-          </label>
-        </div>
-      </form>
+      ))}
+      </div>
     </div>
   </div>;
 }

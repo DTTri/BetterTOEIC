@@ -13,6 +13,7 @@ import VN from '../assets/VN_Flag.png';
 
 export default function Header() {
   const [language, setLanguauge] = useState('vi');
+  const [isChooseLanguauge, showChooseLanguauge] = useState(false);
 
   return (
     <>
@@ -32,21 +33,29 @@ export default function Header() {
           <div className="icon_noti">
             <img src={Noti} alt="" />
           </div>
-          <Select>
-            <SelectTrigger value={language} className="w-[180px]">
-              <span className="flex flex-row">
-                <img src={language === 'vi' ? VN : VN} alt="" className="h-5 w-8 inline-block" />
-                <span className="ml-3 truncate">{language === 'vi' ? 'Tiếng Việt' : 'English'}</span>
+          <form className='relative w-[180px] language_select hover' onSubmit={(event) => { event.preventDefault(); showChooseLanguauge((prevState) => !prevState); }}>
+            <button className="relative w-full cursor-default rounded-md bg-white py-[7px] pl-3 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6 mb-1">
+              <span className="flex items-center">
+                <img src={language === 'vi' ? VN : VN} alt="" className="h-5 w-8 flex-shrink-0" />
+                <span className="ml-3 block truncate">{language === 'vi' ? 'Tiếng Việt' : 'English'}</span>
               </span>
-            </SelectTrigger>
-            <SelectContent className='bg-background'>
-              <SelectGroup>
-                <SelectLabel>Language</SelectLabel>
-                <SelectItemWithImage onClick={() => { () => setLanguauge('vi') }} value='vi' imageSrc={VN}>Tiếng Việt</SelectItemWithImage>
-                <SelectItemWithImage onClick={() => { () => setLanguauge('en') }} value='en' imageSrc={VN}>English</SelectItemWithImage>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+              <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
+                <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+                  <path fillRule="evenodd" d="M10.53 3.47a.75.75 0 0 0-1.06 0L6.22 6.72a.75.75 0 0 0 1.06 1.06L10 5.06l2.72 2.72a.75.75 0 1 0 1.06-1.06l-3.25-3.25Zm-4.31 9.81 3.25 3.25a.75.75 0 0 0 1.06 0l3.25-3.25a.75.75 0 1 0-1.06-1.06L10 14.94l-2.72-2.72a.75.75 0 0 0-1.06 1.06Z" clipRule="evenodd" />
+                </svg>
+              </span>
+            </button>
+            <div className={`absolute top-[40px] w-full cursor-default bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6 ${isChooseLanguauge ? '' : 'hidden'} `} aria-haspopup="listbox">
+              <span className='w-full flex flex-row items-center gap-3 py-[7px] border-b-2' onClick={() => { setLanguauge('vi'); showChooseLanguauge(false); }}>
+                <img src={VN} className='h-5 w-8' alt="" />
+                <span>Tiếng Việt</span>
+              </span>
+              <span className='flex flex-row items-center gap-3 py-[7px]' onClick={() => { setLanguauge('en'); showChooseLanguauge(false); }}>
+                <img src={VN} className='h-5 w-8 inline-block' alt="" />
+                <span>English</span>
+              </span>
+            </div>
+          </form>
           <Select>
           <SelectTrigger value={language} className="flex flex-row w-auto gap-4 justify-between shadow-none bg-background h-auto py-0 px-0 border-none">
                 <img src={language === 'vi' ? VN : VN} alt="" className="max-h-10 max-w-10 aspect-square w-full h-full inline-block rounded-full object-cover object-fill" />
