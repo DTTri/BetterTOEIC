@@ -5,11 +5,11 @@ import Question from './Question';
 export default function Part7QuestionGroup({ paragraphs, questions, strImg }:
    { paragraphs: string[], questions: { questionNum: number, questionText: string, options: string[] }[], strImg?: string }) {
   return (
-    <div className="max-w-[950px] flex flex-row gap-[48px]">
+    <div className="max-w-[950px] flex flex-row gap-[32px]">
       {/* Left section: Paragraph or Image */}
-      <div className="left-section w-[50%]">
+      <div className="left-section w-[55%]">
         {paragraphs.map((para, idx) => (
-          <p key={idx} className="border-slate-500 shadow wtext-[16px] font-normal text-wrap  mb-3">
+          <p key={idx} className="border-slate-500 bg-[#BABABA] p-[12px] shadow text- font-normal text-wrap mb-3 max-h-[450px] overflow-auto">
             {para}
           </p>
         ))}
