@@ -9,7 +9,7 @@ import Question from "./test/Question";
 import QuestionsListContainer from "./test/QuestionsListContainer";
 import TestResultsTable from "./test/TestResultsTable";
 import Part6QuestionGroup from "./test/Part6QuestionGroup";
-import Part7QuestionGroup from "./test/Part7QuestionGroup";
+import Part7QuestionGroup from "./test/QuestionsGroup";
 import PartItemsContainer from "./test/PartItemsContainer";
 
 export {

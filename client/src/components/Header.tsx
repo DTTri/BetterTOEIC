@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Logo from '../assets/Logo_BetterTOEIC.png';
 import Noti from '../assets/Noti_icon.svg';
+import { Button } from '@mui/material';
 import {
   Select,
   SelectContent,
@@ -17,21 +18,21 @@ export default function Header() {
 
   return (
     <>
-      <header className="absolute top-0 bg-background w-full px-9 py-5 ">
+      <header className="bg-[#ffffff] w-full px-9 py-5 ">
         <div className="w-full flex flex-row justify-between  items-center">
           <a href="#">
           <img className='flex justify-center max-w-full object-cover object-center' src={Logo} alt="BetterTOEIC" />
         </a>
         <div className="right flex flex-row gap-[32px] items-center justify-center">
           <ul className='flex flex-row gap-[18px]'>
-            <li><a href="">Lộ trình hóa</a></li>
-            <li><a href="">Từ vựng</a></li>
-            <li><a href="">Đề thi</a></li>
-            <li><a href="">Luyện tập</a></li>
-            <li><a href="">Diễn đàn</a></li>
+            <li><Button style={{fontWeight: "700", fontSize: "16px", color:'#000000', fontFamily:'Nunito Sans'}} variant='text' sx={{textTransform:'none'}}>Lộ trình hóa</Button></li>
+            <li><Button style={{fontWeight: "700", fontSize: "16px", color:'#000000', fontFamily:'Nunito Sans'}} variant='text' sx={{textTransform:'none'}}>Từ vựng</Button></li>
+            <li><Button style={{fontWeight: "700", fontSize: "16px", color:'#000000', fontFamily:'Nunito Sans'}} variant='text' sx={{textTransform:'none'}}>Đề thi</Button></li>
+            <li><Button style={{fontWeight: "700", fontSize: "16px", color:'#000000', fontFamily:'Nunito Sans'}} variant='text' sx={{textTransform:'none'}}>Luyện tập</Button></li>
+            <li><Button style={{fontWeight: "700", fontSize: "16px", color:'#000000', fontFamily:'Nunito Sans'}} variant='text' sx={{textTransform:'none'}}>Diễn đàn</Button></li>
           </ul>
           <div className="icon_noti">
-            <img src={Noti} alt="" />
+            <button className='flex items-center justify-center'><img src={Noti} alt="" /></button>
           </div>
           
           <Select onValueChange={(e: any) => {
