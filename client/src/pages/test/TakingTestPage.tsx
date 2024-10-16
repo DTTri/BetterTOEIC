@@ -8,11 +8,19 @@ import QuestionsGroup from "../../components/test/QuestionsGroup";
 import QuestionComponent from "../../components/test/QuestionComponent";
 import { Button } from "@mui/material";
 import dataTest from "../../data/test";
-import Test from "../../entities/Test";
+import Question from "@/entities/Question";
 
 export default function TakingTestPage() {
-  const [part, setPart] = useState(1);
-  const [dataForTest, setDataForTest] = useState<Test>(dataTest);
+  const [currentPart, setCurrentPart] = useState(1);
+  const dataForTest = dataTest;
+  const questionsPart1To5 = dataForTest.questions.filter(
+    (question) => question.part < 6
+  );
+  const questionsPart6AndAbove = dataForTest.questions.filter(
+    (question) => question.part >= 6
+  );
+  //console.log(questionsPart6AndAbove);
+  let questionGroup: Question[] = [];
   return (
     <div className="bg-background">
       <Header></Header>
@@ -40,11 +48,11 @@ export default function TakingTestPage() {
           <div className="Question-lists w-full bg-[#ffffff] rounded-[20px] py-8 px-10">
             <div className="parts flex flex-row gap-4 mb-5">
               <Button
-                onClick={() => setPart(1)}
+                onClick={() => setCurrentPart(1)}
                 variant="contained"
                 style={{
-                  backgroundColor: part === 1 ? "#0063F3" : "#EEE",
-                  color: part === 1 ? "#FFFFFF" : "#000000",
+                  backgroundColor: currentPart === 1 ? "#0063F3" : "#EEE",
+                  color: currentPart === 1 ? "#FFFFFF" : "#000000",
                   padding: "5px 10px 5px",
                   fontSize: "16px",
                   fontWeight: "600",
@@ -55,11 +63,11 @@ export default function TakingTestPage() {
                 Part 1
               </Button>
               <Button
-                onClick={() => setPart(2)}
+                onClick={() => setCurrentPart(2)}
                 variant="contained"
                 style={{
-                  backgroundColor: part === 2 ? "#0063F3" : "#EEE",
-                  color: part === 2 ? "#FFFFFF" : "#000000",
+                  backgroundColor: currentPart === 2 ? "#0063F3" : "#EEE",
+                  color: currentPart === 2 ? "#FFFFFF" : "#000000",
                   padding: "5px 10px 5px",
                   fontSize: "16px",
                   fontWeight: "600",
@@ -70,11 +78,11 @@ export default function TakingTestPage() {
                 Part 2
               </Button>
               <Button
-                onClick={() => setPart(3)}
+                onClick={() => setCurrentPart(3)}
                 variant="contained"
                 style={{
-                  backgroundColor: part === 3 ? "#0063F3" : "#EEE",
-                  color: part === 3 ? "#FFFFFF" : "#000000",
+                  backgroundColor: currentPart === 3 ? "#0063F3" : "#EEE",
+                  color: currentPart === 3 ? "#FFFFFF" : "#000000",
                   padding: "5px 10px 5px",
                   fontSize: "16px",
                   fontWeight: "600",
@@ -85,11 +93,11 @@ export default function TakingTestPage() {
                 Part 3
               </Button>
               <Button
-                onClick={() => setPart(4)}
+                onClick={() => setCurrentPart(4)}
                 variant="contained"
                 style={{
-                  backgroundColor: part === 4 ? "#0063F3" : "#EEE",
-                  color: part === 4 ? "#FFFFFF" : "#000000",
+                  backgroundColor: currentPart === 4 ? "#0063F3" : "#EEE",
+                  color: currentPart === 4 ? "#FFFFFF" : "#000000",
                   padding: "5px 10px 5px",
                   fontSize: "16px",
                   fontWeight: "600",
@@ -100,11 +108,11 @@ export default function TakingTestPage() {
                 Part 4
               </Button>
               <Button
-                onClick={() => setPart(5)}
+                onClick={() => setCurrentPart(5)}
                 variant="contained"
                 style={{
-                  backgroundColor: part === 5 ? "#0063F3" : "#EEE",
-                  color: part === 5 ? "#FFFFFF" : "#000000",
+                  backgroundColor: currentPart === 5 ? "#0063F3" : "#EEE",
+                  color: currentPart === 5 ? "#FFFFFF" : "#000000",
                   padding: "5px 10px 5px",
                   fontSize: "16px",
                   fontWeight: "600",
@@ -115,11 +123,11 @@ export default function TakingTestPage() {
                 Part 5
               </Button>
               <Button
-                onClick={() => setPart(6)}
+                onClick={() => setCurrentPart(6)}
                 variant="contained"
                 style={{
-                  backgroundColor: part === 6 ? "#0063F3" : "#EEE",
-                  color: part === 6 ? "#FFFFFF" : "#000000",
+                  backgroundColor: currentPart === 6 ? "#0063F3" : "#EEE",
+                  color: currentPart === 6 ? "#FFFFFF" : "#000000",
                   padding: "5px 10px 5px",
                   fontSize: "16px",
                   fontWeight: "600",
@@ -130,11 +138,11 @@ export default function TakingTestPage() {
                 Part 6
               </Button>
               <Button
-                onClick={() => setPart(7)}
+                onClick={() => setCurrentPart(7)}
                 variant="contained"
                 style={{
-                  backgroundColor: part === 7 ? "#0063F3" : "#EEE",
-                  color: part === 7 ? "#FFFFFF" : "#000000",
+                  backgroundColor: currentPart === 7 ? "#0063F3" : "#EEE",
+                  color: currentPart === 7 ? "#FFFFFF" : "#000000",
                   padding: "5px 10px 5px",
                   fontSize: "16px",
                   fontWeight: "600",
@@ -145,39 +153,59 @@ export default function TakingTestPage() {
                 Part 7
               </Button>
             </div>
-            {part === 1 && (
-              <div className="questions">
-                {dataForTest.questions.map((question, index) => {
-                  if (question.part === 1)
-                    return (
-                      <QuestionComponent
-                        question={question}
-                      ></QuestionComponent>
-                    );
-                })}
-              </div>
-            )}
-            {part === 2 && (
-              <div className="questions">
-                {dataForTest.questions.map((question, index) => {
-                  if (question.part === 2)
-                    return (
-                      <QuestionComponent
-                        question={question}
-                      ></QuestionComponent>
-                    );
-                })}
-              </div>
-            )}
-            {part === 3 && (
-              <div className="questions">
-                
-              </div>
-            )}
+            {/* // i just want to map questions until part 5 */}
+            {questionsPart1To5.map((question, index) => {
+              //console.log(question.part, question._id);
+              return (
+                question.part === currentPart && (
+                  <QuestionComponent key={index} question={question} />
+                )
+              );
+            })}
+            {questionsPart6AndAbove.map((question, index) => {
+              console.log(question.part, currentPart, question._id);
+              if (
+                index > 0 &&
+                questionsPart6AndAbove[index - 1].part !== currentPart
+              ) {
+                questionGroup = [];
+              }
+              let questionGroupForPassing = [...questionGroup];
+              if (
+                (questionGroup.length < 1 ||
+                  question.question_group_id ===
+                    dataForTest.questions[questionsPart1To5.length + index - 1]
+                      .question_group_id) &&
+                index < questionsPart6AndAbove.length - 1 &&
+                questionsPart6AndAbove[index + 1].part === currentPart
+              ) {
+                questionGroup.push(question);
+              } else {
+                questionGroupForPassing = [...questionGroup];
+                console.log(questionGroupForPassing);
+
+                questionGroup = [];
+                if (
+                  index < questionsPart6AndAbove.length - 1 &&
+                  questionsPart6AndAbove[index + 1].part === currentPart
+                ) {
+                  questionGroup.push(question);
+                }
+                //console.log(questionGroupForPassing);
+                return (
+                  question.part === currentPart && (
+                    <QuestionsGroup
+                      key={index}
+                      questions={questionGroupForPassing}
+                    />
+                  )
+                );
+              }
+            })}
             <div className="w-full flex ">
               <Button
                 style={{
-                  backgroundColor: part !== 7 ? "#0063F3" : "#00C552",
+                  backgroundColor: currentPart !== 7 ? "#0063F3" : "#00C552",
                   padding: "5px 15px 5px",
                   fontSize: "18px",
                   fontWeight: "500",
@@ -189,7 +217,7 @@ export default function TakingTestPage() {
                 color="success"
                 sx={{ textTransform: "none" }}
               >
-                {part !== 7 ? "Next part" : "Submit"}
+                {currentPart !== 7 ? "Next part" : "Submit"}
               </Button>
             </div>
           </div>
