@@ -36,7 +36,7 @@ const testData: Test = {
       correct_choice: 1,
       explanation: "The man is holding a phone to his ear.",
       part: 1,
-      question_group_id: "",
+      question_group_id: "0",
     },
     // ... 5 câu tương tự cho Part 1
 
@@ -49,7 +49,7 @@ const testData: Test = {
       correct_choice: 1,
       explanation: "The correct answer is about location, not timing.",
       part: 2,
-      question_group_id: "",
+      question_group_id: "0",
     },
     // ... 24 câu tương tự cho Part 2
 
@@ -111,7 +111,7 @@ const testData: Test = {
       correct_choice: 2,
       explanation: "The speaker mentions business meetings and conferences.",
       part: 4,
-      question_group_id: "",
+      question_group_id: "0",
     },
     {
       _id: "653f1b7d4b8f1e2f10123460",
@@ -125,7 +125,7 @@ const testData: Test = {
       correct_choice: 2,
       explanation: "The speaker mentions business meetings and conferences.",
       part: 4,
-      question_group_id: "",
+      question_group_id: "0",
     },
     {
       _id: "653f1b7d4b8f1e2f10123460",
@@ -139,7 +139,7 @@ const testData: Test = {
       correct_choice: 2,
       explanation: "The speaker mentions business meetings and conferences.",
       part: 4,
-      question_group_id: "",
+      question_group_id: "0",
     },
     // ... 29 câu tương tự cho Part 4
 
@@ -152,7 +152,7 @@ const testData: Test = {
       correct_choice: 1,
       explanation: "'On' is the correct preposition for days of the week.",
       part: 5,
-      question_group_id: "",
+      question_group_id: "0",
     },
     // ... 29 câu tương tự cho Part 5
 
@@ -193,7 +193,7 @@ const testData: Test = {
       question_group_id: "1",
     },
     {
-      _id: "653f1c0d4b8f1e2f10123463",
+      _id: "653f1c0d4b8f1e2f10153s463",
       text: "What is the purpose of the passage?",
       choices: [
         "A. To explain a new policy.",

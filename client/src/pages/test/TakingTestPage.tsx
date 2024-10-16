@@ -13,7 +13,14 @@ import Question from "@/entities/Question";
 export default function TakingTestPage() {
   const [currentPart, setCurrentPart] = useState(1);
   const dataForTest = dataTest;
-  const [questionGroup, setQuestionGroup] = useState<Question[]>([]);
+  const questionsPart1To5 = dataForTest.questions.filter(
+    (question) => question.part < 6
+  );
+  const questionsPart6AndAbove = dataForTest.questions.filter(
+    (question) => question.part >= 6
+  );
+  //console.log(questionsPart6AndAbove);
+  let questionGroup: Question[] = [];
   return (
     <div className="bg-background">
       <Header></Header>
@@ -146,37 +153,53 @@ export default function TakingTestPage() {
                 Part 7
               </Button>
             </div>
+            {/* // i just want to map questions until part 5 */}
+            {questionsPart1To5.map((question, index) => {
+              //console.log(question.part, question._id);
+              return (
+                question.part === currentPart && (
+                  <QuestionComponent key={index} question={question} />
+                )
+              );
+            })}
+            {questionsPart6AndAbove.map((question, index) => {
+              console.log(question.part, currentPart, question._id);
+              if (
+                index > 0 &&
+                questionsPart6AndAbove[index - 1].part !== currentPart
+              ) {
+                questionGroup = [];
+              }
+              let questionGroupForPassing = [...questionGroup];
+              if (
+                (questionGroup.length < 1 ||
+                  question.question_group_id ===
+                    dataForTest.questions[questionsPart1To5.length + index - 1]
+                      .question_group_id) &&
+                index < questionsPart6AndAbove.length - 1 &&
+                questionsPart6AndAbove[index + 1].part === currentPart
+              ) {
+                questionGroup.push(question);
+              } else {
+                questionGroupForPassing = [...questionGroup];
+                console.log(questionGroupForPassing);
 
-            {dataForTest.questions.map((question, index) => {
-              if (currentPart < 6)
+                questionGroup = [];
+                if (
+                  index < questionsPart6AndAbove.length - 1 &&
+                  questionsPart6AndAbove[index + 1].part === currentPart
+                ) {
+                  questionGroup.push(question);
+                }
+                //console.log(questionGroupForPassing);
                 return (
                   question.part === currentPart && (
-                    <QuestionComponent key={index} question={question} />
+                    <QuestionsGroup
+                      key={index}
+                      questions={questionGroupForPassing}
+                    />
                   )
                 );
-              else {
-                console.log(question.part, question._id);
-                let questionGroupForPassing = [...questionGroup];
-                if (
-                  questionGroup.length < 1 ||
-                  question.question_group_id ===
-                    dataForTest.questions[index - 1].question_group_id
-                ) {
-                  setQuestionGroup([...questionGroup, question]);
-                } else {
-                  questionGroupForPassing = [...questionGroup];
-                  console.log(questionGroupForPassing);
-
-                  setQuestionGroup([question]);
-                  return (
-                    question.part === currentPart && (
-                      <QuestionsGroup
-                        key={index}
-                        questions={questionGroupForPassing}
-                      />
-                    )
-                  );
-                }
               }
             })}
             <div className="w-full flex ">
