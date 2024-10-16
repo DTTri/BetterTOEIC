@@ -23,6 +23,7 @@ const testData: Test = {
     // Part 1: 6 câu hỏi với hình ảnh và 3 đáp án
     {
       _id: "653f1af74b8f1e2f10123457",
+      question_number: 1,
       text: "What is the man doing?",
       image: ["https://images.unsplash.com/photo-1728595840390-d01e1a63f27d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwyN3x8fGVufDB8fHx8fA%3D%3D"],
       choices: [
@@ -40,11 +41,8 @@ const testData: Test = {
     {
       _id: "653f1b274b8f1e2f10123458",
       text: "Where did you leave the report?",
-      choices: [
-        "A. On the desk.",
-        "B. It's due tomorrow.",
-        "C. I will report it."
-      ],
+      question_number: 7,
+      choices: ['', '', ''],
       correct_choice: 1,
       explanation: "The correct answer is about location, not timing.",
       part: 2
@@ -55,6 +53,7 @@ const testData: Test = {
     {
       _id: "653f1b564b8f1e2f10123459",
       text: "What does the woman imply?",
+      question_number: 31,
       choices: [
         "A. She forgot to bring something.",
         "B. She is late for a meeting.",
@@ -62,11 +61,13 @@ const testData: Test = {
       ],
       correct_choice: 3,
       explanation: "The woman's tone suggests she needs more time.",
-      part: 3
+      part: 3,
+      question_group_id: "1"
     },
     {
         _id: "653f1b564b8f1e2f10123459",
         text: "What does the woman say?",
+        question_number: 32,
         choices: [
           "A. She forgot to bring something.",
           "B. She is late for a meeting.",
@@ -74,11 +75,13 @@ const testData: Test = {
         ],
         correct_choice: 3,
         explanation: "The woman's tone suggests she needs more time.",
-        part: 3
+        part: 3,
+        question_group_id: "1"
       },
       {
         _id: "653f1b564b8f1e2f10123459",
         text: "What does the woman asdmas;md?",
+        question_number: 33,
         choices: [
           "A. She forgot to bring something.",
           "B. She is late for a meeting.",
@@ -86,7 +89,8 @@ const testData: Test = {
         ],
         correct_choice: 3,
         explanation: "The woman's tone suggests she needs more time.",
-        part: 3
+        part: 3,
+        question_group_id: "1"
       },
     // ... 38 câu tương tự cho Part 3
 
@@ -94,6 +98,7 @@ const testData: Test = {
     {
       _id: "653f1b7d4b8f1e2f10123460",
       text: "Who is the intended audience?",
+      question_number: 41,
       choices: [
         "A. College students.",
         "B. Business professionals.",
@@ -106,6 +111,7 @@ const testData: Test = {
     {
         _id: "653f1b7d4b8f1e2f10123460",
         text: "Who is the intended audience?",
+        question_number: 42,
         choices: [
           "A. College students.",
           "B. Business professionals.",
@@ -118,6 +124,7 @@ const testData: Test = {
       {
         _id: "653f1b7d4b8f1e2f10123460",
         text: "Who is the intended audience?",
+        question_number: 44,
         choices: [
           "A. College students.",
           "B. Business professionals.",
@@ -132,6 +139,7 @@ const testData: Test = {
     // Part 5: 30 câu hỏi chỉ có câu hỏi và đáp án
     {
       _id: "653f1bb34b8f1e2f10123461",
+      question_number: 54,
       text: "The report will be submitted _______ Friday.",
       choices: [
         "A. on",
@@ -152,6 +160,7 @@ const testData: Test = {
                 Features: The truck is fitted with seat heaters for both the driver and front passenger. It also features dual and side airbags, satellite navigation, and a USB jack for any second- generation or higher smartphone. Finally, the warranty expires in just under two years.
                 The owner will arrange a test drive in the New Jersey area for serious buyers. Please call (201) 555-7586 and leave a message for Geraldine. All calls will be returned within 24 hours.`],
       _id: "653f1bd84b8f1e2f10123462",
+      question_number: 51,
       text: "Which word best completes the sentence in the passage?",
       choices: [
         "A. Although",
@@ -172,6 +181,7 @@ const testData: Test = {
         "C. To advertise a product.",
         "D. To give instructions."
       ],
+      question_number: 52,
       correct_choice: 4,
       explanation: "The passage gives detailed instructions on how to use a product.",
       part: 6
@@ -185,6 +195,7 @@ const testData: Test = {
           "C. To advertise a product.",
           "D. To give instructions."
         ],
+        question_number: 52,
         correct_choice: 4,
         explanation: "The passage gives detailed instructions on how to use a product.",
         part: 6
@@ -206,6 +217,7 @@ const testData: Test = {
         "C. To request information.",
         "D. To apologize for a mistake."
       ],
+      question_number: 61,
       correct_choice: 2,
       explanation: "The email contains details about a hotel reservation confirmation.",
       part: 7
@@ -219,6 +231,7 @@ const testData: Test = {
           "C. To request information.",
           "D. To apologize for a mistake."
         ],
+        question_number: 62,
         correct_choice: 2,
         explanation: "The email contains details about a hotel reservation confirmation.",
         part: 7
@@ -232,6 +245,7 @@ const testData: Test = {
           "C. To request information.",
           "D. To apologize for a mistake."
         ],
+        question_number: 63,
         correct_choice: 2,
         explanation: "The email contains details about a hotel reservation confirmation.",
         part: 7

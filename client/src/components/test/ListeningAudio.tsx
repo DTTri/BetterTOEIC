@@ -1,7 +1,7 @@
-export default function ListeningAudio(srcAudio: string) {
+export default function ListeningAudio() {
   return (
     <audio
-      src={srcAudio}
+      src={''}
       controls
     />
   );

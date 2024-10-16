@@ -34,7 +34,7 @@
   "dependencies": {
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
-    "express": "^4.21.0",
+    "express": "^.21.0",
     "mongodb": "^6.9.0"
   }
 }

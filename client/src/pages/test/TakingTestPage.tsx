@@ -5,7 +5,7 @@ import Timer from "../../components/test/Timer";
 import ListeningAudio from "../../components/test/ListeningAudio";
 import QuestionsListContainer from "../../components/test/QuestionsListContainer";
 import QuestionsGroup from "../../components/test/QuestionsGroup";
-import Question from "../../components/test/Question";
+import QuestionComponent from "../../components/test/QuestionComponent";
 import { Button } from "@mui/material";
 import dataTest from "../../data/test";
 import Test from "../../entities/Test";
@@ -19,7 +19,7 @@ export default function TakingTestPage() {
       <div className="content py-3 px-12 m-auto">
         <div className="info-test flex flex-row items-center justify-between mb-5">
           <Timer></Timer>
-          <ListeningAudio src></ListeningAudio>
+          <ListeningAudio></ListeningAudio>
           <Button
             style={{
               backgroundColor: "#00C552",
@@ -145,42 +145,35 @@ export default function TakingTestPage() {
                 Part 7
               </Button>
             </div>
-              {part === 1 && (
-                <div className="questions">
-                  {dataForTest.questions.map((question, index) => {
-                    if(question.part === 1)
-                      return (
-                        (
-                          <Question
-                            strImg={question.image?.[0] || ''}
-                            options={question.choices}
-                            questionNum={index + 1}
-                            questionText={question.text}
-                          ></Question>
-                        ))
-                  })}
-                  
-                  <QuestionsGroup
-                    paragraphs={[
-                      `This truck is 3 years old and in excellent condition for its age. With less than 15z000 miles on the odometer, it has had quite an easy life transporting animals for an animal sanctuary, and it has been used by only one very careful owner.This vehicle averages around 18 miles per gallon on the highway and 13 miles per gallon in the city, which makes its fuel efficiency quite competitive. Price reduced for quick sale to $19,000 (or nearest offer).
-                                Features: The truck is fitted with seat heaters for both the driver and front passenger. It also features dual and side airbags, satellite navigation, and a USB jack for any second- generation or higher smartphone. Finally, the warranty expires in just under two years.
-                                The owner will arrange a test drive in the New Jersey area for serious buyers. Please call (201) 555-7586 and leave a message for Geraldine. All calls will be returned within 24 hours.`,
-                    ]}
-                    questions={[
-                      {
-                        questionNum: 1,
-                        questionText: "What is your name",
-                        options: ["A", "B", "C", "D"],
-                      },
-                      {
-                        questionNum: 2,
-                        questionText: "What is your age",
-                        options: ["A", "B", "C", "D"],
-                      },
-                    ]}
-                  ></QuestionsGroup>
-                </div>
-              )}
+            {part === 1 && (
+              <div className="questions">
+                {dataForTest.questions.map((question, index) => {
+                  if (question.part === 1)
+                    return (
+                      <QuestionComponent
+                        question={question}
+                      ></QuestionComponent>
+                    );
+                })}
+              </div>
+            )}
+            {part === 2 && (
+              <div className="questions">
+                {dataForTest.questions.map((question, index) => {
+                  if (question.part === 2)
+                    return (
+                      <QuestionComponent
+                        question={question}
+                      ></QuestionComponent>
+                    );
+                })}
+              </div>
+            )}
+            {part === 3 && (
+              <div className="questions">
+                
+              </div>
+            )}
             <div className="w-full flex ">
               <Button
                 style={{

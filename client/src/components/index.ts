@@ -5,7 +5,7 @@ import SearchBar from "./SearchBar";
 import TestCard from "./test/TestCard";
 import ListeningAudio from "./test/ListeningAudio";
 import Timer from "./test/Timer";
-import Question from "./test/Question";
+import Question from "./test/QuestionComponent";
 import QuestionsListContainer from "./test/QuestionsListContainer";
 import TestResultsTable from "./test/TestResultsTable";
 import Part6QuestionGroup from "./test/Part6QuestionGroup";

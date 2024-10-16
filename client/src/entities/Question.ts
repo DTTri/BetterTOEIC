@@ -7,6 +7,8 @@ type Question = {
   correct_choice: number;
   explanation: string;
   part: number;
+  question_number: number;
+  question_group_id?: string;
 };
 
 export default Question;
