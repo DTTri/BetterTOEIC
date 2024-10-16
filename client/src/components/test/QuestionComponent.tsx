@@ -13,9 +13,9 @@ export default function QuestionComponent({question} : {question : Question} )  
       <div className="img w-[40%]">
         <img className="max-w-full w-full max-h-[250px] block object-cover object-center " src={question.image[0]} alt="" />
       </div>}
-      <div className="flex flex-col gap-2 items-center">
+      <div className="flex flex-col gap-2">
       {question.choices.map((optionValue, index) => (
-        <div key={index} className="flex items-center space-x-2">
+        <div key={index} className="flex justify-start items-center gap-2">
           <input
             type="radio"
             name={`question-${question.question_number}`}
@@ -28,7 +28,7 @@ export default function QuestionComponent({question} : {question : Question} )  
             value={String.fromCharCode(65 + index)}
           />
           <label htmlFor={`optionValue-${question.question_number}-${index}`} className="text-[18px] font-medium">
-          ({String.fromCharCode(65 + index)}): {optionValue}
+            ({String.fromCharCode(65 + index)}) {optionValue && ':'} {optionValue}
           </label>
         </div>
       ))}
