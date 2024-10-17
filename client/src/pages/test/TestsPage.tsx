@@ -1,4 +1,3 @@
-// This is just a stub code (mock code)
 
 import { PageHeader, SearchBar } from "@/components";
 import BuildRoadmapProgressBar from "@/components/roadmap/BuildRoadmapProgressBar";
