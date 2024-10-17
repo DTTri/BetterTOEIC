@@ -1,10 +1,21 @@
 // This is just a stub code (mock code)'
+import { Test } from "@/entities";
 import clock from "../../assets/charm_clock-alarm.svg";
 import Hierarchy from "../../assets/Hierarchy.png";
 
-export default function TestCard({ titleTestCard }: { titleTestCard: string }) {
+export default function TestCard({
+  test,
+  onClick,
+}: {
+  test: Test;
+  onClick: () => void;
+}) {
+  const titleTestCard = test.title;
   return (
-    <div className="overflow-hidden max-w-[400px] flex flex-row rounded-[20px] bg-[#fff] border-[#00205C] border-[2px] border-solid">
+    <div
+      onClick={onClick}
+      className="overflow-hidden max-w-[400px] flex flex-row rounded-[20px] bg-[#fff] border-[#00205C] border-[2px] border-solid"
+    >
       <div className="img w-[40%] h-[170px] rounded-s-[20px]">
         <img
           className="w-full h-full object-cover object-center"
