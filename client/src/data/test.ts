@@ -31,7 +31,7 @@ const testData: Test = {
       choices: [
         "He is talking on the phone.",
         "He is reading a book.",
-        "He is writing something."
+        "He is writing something.",
       ],
       correct_choice: 1,
       explanation: "The man is holding a phone to his ear.",
@@ -168,7 +168,7 @@ const testData: Test = {
       ],
       _id: "653f1bd84b8f1e2f10123462",
       question_number: 51,
-      text: "Which word best completes the sentence in the passage?",
+      text: "Which word best completes the sentence in the passages?",
       choices: ["A. Although", "B. Since", "C. Despite", "D. While"],
       correct_choice: 2,
       explanation:

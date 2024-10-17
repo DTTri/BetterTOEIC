@@ -6,7 +6,7 @@ import Youtube from '../assets/YouTube.svg'
 export default function Footer() {
   return (
     <>
-      <footer className='absolute bottom-0 bg-[#ffffff] w-full pt-[40px] px-[130px] pb-4'>
+      <footer className=' bg-[#ffffff] w-full pt-[40px] px-[130px] pb-4'>
         <div className='footer-top flex flex-row justify-between border-b pb-[90px]'>
           <div>
             <a href="#">
