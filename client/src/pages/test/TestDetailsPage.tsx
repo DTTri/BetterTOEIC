@@ -3,6 +3,7 @@ import AccountTreeIcon from "@mui/icons-material/AccountTree";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import { Test } from "@/entities";
 import { TestResultsTable } from "@/components";
+import { Link } from "react-router-dom";
 
 export default function TestDetailsPage({ test }: { test: Test }) {
   return (
@@ -25,7 +26,7 @@ export default function TestDetailsPage({ test }: { test: Test }) {
           <TestResultsTable />
           <div className="w-full flex justify-center">
             <button className="bg-primary text-white px-4 py-2 rounded-lg">
-              Bắt đầu thi
+              <Link to="/taking-test">Bắt đầu thi</Link>
             </button>
           </div>
         </div>

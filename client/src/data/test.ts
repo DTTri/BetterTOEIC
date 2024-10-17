@@ -1,5 +1,4 @@
 import { Test } from "@/entities";
-import exp from "constants";
 /*
 Số câu hỏi cố định cho mỗi part:
 Part 1 (6 câu hỏi)

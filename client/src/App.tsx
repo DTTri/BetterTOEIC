@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import TestsPage from "./pages/test/TestsPage";
 import TestDetailsPage from "./pages/test/TestDetailsPage";
 import RoadmapPage from "./pages/roadmap/RoadmapPage";
+import TakingTestPage from "./pages/test/TakingTestPage";
 function App() {
   // useSelector to get the test from the store by id, currently hardcode the test data
   // type Test = {
@@ -36,6 +37,7 @@ function App() {
           />
         }
       />
+      <Route path="/taking-test" element={<TakingTestPage />} />
       <Route path="/road-map" element={<RoadmapPage />} />
     </Routes>
   );
