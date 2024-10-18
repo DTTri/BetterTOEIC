@@ -3,7 +3,7 @@ import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import LockIcon from "@mui/icons-material/Lock";
 function NumberOfQuestions() {
   return (
-    <div className="bg-secondary rounded-3xl text-primary py-2 px-1 text-sm">
+    <div className="bg-tertiary rounded-3xl text-primary py-2 px-1 text-sm">
       10 questions
     </div>
   );
