@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LinearProgress, {
   linearProgressClasses,
 } from "@mui/material/LinearProgress";
@@ -23,16 +23,30 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
 }));
 export default function BuildRoadmapProgressBar() {
   const [progress, setProgress] = useState(0);
-  const interval = setInterval(() => {
-    setProgress((prevProgress) => {
-      if (prevProgress === 100) {
-        clearInterval(interval);
-        return 100;
-      }
-      const diff = Math.random() * 10;
-      return Math.min(prevProgress + diff, 100);
-    });
-  }, 200);
+  console.log("BuildRoadmapProgressBar rendered, progress: ", progress);
+
+  useEffect(() => {
+    console.log("Component mounted");
+
+    const interval = setInterval(() => {
+      console.log("interval");
+      setProgress((prevProgress) => {
+        if (prevProgress === 100) {
+          clearInterval(interval);
+          console.log("interval cleared");
+          return 100;
+        }
+        const diff = Math.random() * 10;
+        return Math.min(prevProgress + diff, 100);
+      });
+    }, 200);
+    // Cleanup the interval on component unmount
+    return () => {
+      console.log("Component unmounted");
+      clearInterval(interval);
+    };
+  }, []); // Empty dependency array ensures this runs only once
+
   return (
     <div className="w-full">
       <span className="text-xl font-semibold">
