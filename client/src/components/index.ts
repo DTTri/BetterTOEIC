@@ -11,6 +11,11 @@ import TestResultsTable from "./test/TestResultsTable";
 import QuestionsGroup from "./test/QuestionsGroup";
 import PartItemsContainer from "./test/PartItemsContainer";
 
+import BuildRoadmapProgressBar from "./roadmap/BuildRoadmapProgressBar";
+import LevelChart from "./roadmap/LevelChart";
+import LevelExplain from "./roadmap/LevelExplain";
+import Steps from "./roadmap/Steps";
+import ChaptersListContainer from "./roadmap/ChaptersListContainer";
 export {
   Footer,
   Header,
@@ -24,4 +29,9 @@ export {
   TestResultsTable,
   QuestionsGroup,
   PartItemsContainer,
+  BuildRoadmapProgressBar,
+  LevelChart,
+  LevelExplain,
+  Steps,
+  ChaptersListContainer,
 };

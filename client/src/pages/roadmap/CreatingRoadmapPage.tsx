@@ -1,21 +1,24 @@
-import Steps from "@/components/roadmap/Steps";
-import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
-
+import { Link } from "react-router-dom";
+import { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-
+import { Navigation } from "swiper/modules";
+// Import components
+import {
+  Steps,
+  BuildRoadmapProgressBar,
+  LevelChart,
+  LevelExplain,
+} from "../../components";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
 
-// Import Swiper styles
-import "swiper/css";
-import { useState } from "react";
-import LevelChart from "@/components/roadmap/LevelChart";
-import LevelExplain from "@/components/roadmap/LevelExplain";
-import BuildRoadmapProgressBar from "@/components/roadmap/BuildRoadmapProgressBar";
 export default function CreatingRoadmapPage() {
   const [currentStep, setCurrentStep] = useState(1);
-
+  // TODO-1: haven't updated the Steps component when currentStep changes
+  // TODO-2:the BuildRoadmapProgressBar component is rendered as soon as the page is loaded
+  // not when its SwiperSlide is active -> need to fix this later
+  // TODO-3: use Buttons to navigate between SwiperSlides instead of Swiper's navigation
   return (
     <div className="bg-background flex flex-col gap-4 items-center py-4 px-12 w-full h-screen">
       <Steps currentStep={currentStep} />
@@ -95,7 +98,7 @@ export default function CreatingRoadmapPage() {
             <BuildRoadmapProgressBar />
             <p className="text-xl font-semibold text-center">
               Lộ trình học tập cá nhân hóa của bạn đã được khởi tạo thành công.
-              Hãy bắt đầu tham gia lộ trình để đạt được số điểm TOEIC mong muốn!
+              Hãy bắt đầu tham gia lộ trình để đạt được số điểm TOEIC mong muốn!
             </p>
             <div className="buttons-container absolute bottom-2 w-full flex justify-between items-center mt-4">
               <button className="prev-slide bg-white text-black text-lg px-3 py-2 border border-secondary rounded-md">
@@ -103,7 +106,7 @@ export default function CreatingRoadmapPage() {
               </button>
 
               <button className="end-swiper bg-secondary text-white text-lg px-3 py-2 rounded-md">
-                Bắt đầu
+                <Link to="/roadmap">Bắt đầu</Link>
               </button>
             </div>
           </SwiperSlide>
