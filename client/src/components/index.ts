@@ -16,6 +16,8 @@ import LevelChart from "./roadmap/LevelChart";
 import LevelExplain from "./roadmap/LevelExplain";
 import Steps from "./roadmap/Steps";
 import ChaptersListContainer from "./roadmap/ChaptersListContainer";
+import ChaptersContainer from "./roadmap/personalRoadmap/ChaptersContainer";
+import CurrentPhaseContainer from "./roadmap/personalRoadmap/CurrentPhaseContainer";
 export {
   Footer,
   Header,
@@ -34,4 +36,6 @@ export {
   LevelExplain,
   Steps,
   ChaptersListContainer,
+  ChaptersContainer,
+  CurrentPhaseContainer,
 };
