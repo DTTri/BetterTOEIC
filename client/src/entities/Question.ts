@@ -9,6 +9,8 @@ type Question = {
   part: number;
   question_number: number;
   question_group_id?: string;
+  created_at: string;
+  updated_at: string;
 };
 
 export default Question;

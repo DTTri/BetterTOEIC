@@ -11,6 +11,7 @@ import {
   SelectTrigger,
 } from "@/components/ui/select"
 import VN from '../assets/VN_Flag.png';
+import { Link } from 'react-router-dom';
 
 export default function Header() {
   const [language, setLanguauge] = useState('vi');
@@ -25,11 +26,11 @@ export default function Header() {
         </a>
         <div className="right flex flex-row gap-[32px] items-center justify-center">
           <ul className='flex flex-row gap-[18px]'>
-            <li><Button className='hover:bg-slate-100' style={{fontWeight: "700", fontSize: "16px", color:'#000000', fontFamily:'Nunito Sans'}} variant='text' sx={{textTransform:'none'}}>Lộ trình hóa</Button></li>
-            <li><Button className='hover:bg-slate-100' style={{fontWeight: "700", fontSize: "16px", color:'#000000', fontFamily:'Nunito Sans'}} variant='text' sx={{textTransform:'none'}}>Từ vựng</Button></li>
-            <li><Button className='hover:bg-slate-100' style={{fontWeight: "700", fontSize: "16px", color:'#000000', fontFamily:'Nunito Sans'}} variant='text' sx={{textTransform:'none'}}>Đề thi</Button></li>
-            <li><Button className='hover:bg-slate-100' style={{fontWeight: "700", fontSize: "16px", color:'#000000', fontFamily:'Nunito Sans'}} variant='text' sx={{textTransform:'none'}}>Luyện tập</Button></li>
-            <li><Button className='hover:bg-slate-100' style={{fontWeight: "700", fontSize: "16px", color:'#000000', fontFamily:'Nunito Sans'}} variant='text' sx={{textTransform:'none'}}>Diễn đàn</Button></li>
+            <li><Link to='/road-map'><Button className='hover:bg-slate-100' style={{fontWeight: "700", fontSize: "16px", color:'#000000', fontFamily:'Nunito Sans'}} variant='text' sx={{textTransform:'none'}}>Lộ trình hóa</Button></Link></li>
+            <li><Link to='/vocab'><Button className='hover:bg-slate-100' style={{fontWeight: "700", fontSize: "16px", color:'#000000', fontFamily:'Nunito Sans'}} variant='text' sx={{textTransform:'none'}}>Từ vựng</Button></Link></li>
+            <li><Link to='/test-page'><Button className='hover:bg-slate-100' style={{fontWeight: "700", fontSize: "16px", color:'#000000', fontFamily:'Nunito Sans'}} variant='text' sx={{textTransform:'none'}}>Đề thi</Button></Link></li>
+            <li><Link to='/practice'><Button className='hover:bg-slate-100' style={{fontWeight: "700", fontSize: "16px", color:'#000000', fontFamily:'Nunito Sans'}} variant='text' sx={{textTransform:'none'}}>Luyện tập</Button></Link></li>
+            <li><Link to='/forum'><Button className='hover:bg-slate-100' style={{fontWeight: "700", fontSize: "16px", color:'#000000', fontFamily:'Nunito Sans'}} variant='text' sx={{textTransform:'none'}}>Diễn đàn</Button></Link></li>
           </ul>
           <div className="icon_noti">
             <button className='flex items-center justify-center'><img src={Noti} alt="" /></button>
