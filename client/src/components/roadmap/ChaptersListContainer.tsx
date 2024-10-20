@@ -57,13 +57,13 @@ export default function ChaptersListContainer({
 }) {
   const [currentChapter, setCurrentChapter] = useState(chapter); // this should be got from the store
   return (
-    <div className="bg-white rounded-2xl shadow-lg min-w-[220px] flex flex-col items-center gap-4 py-8">
+    <div className="bg-white rounded-2xl shadow-lg min-w-[220px] flex flex-col items-center gap-4 py-8 px-4">
       <div className="current-part flex justify-center items-center w-full px-4">
-        <div className="text-lg font-semibold bg-primary text-white px-2 py-1 rounded-md">
+        <div className="text-lg font-semibold bg-primary text-white px-2 py-1 rounded-md min-w-24 text-center">
           Phase {phase}
         </div>
         <ArrowRightIcon fontSize="large" color="inherit" />
-        <div className="text-lg font-semibold bg-white text-primary border border-primary px-2 py-1 rounded-md">
+        <div className="text-lg font-semibold bg-white text-primary border border-primary px-2 py-1 rounded-md min-w-24 text-center">
           Part {part}
         </div>
       </div>
