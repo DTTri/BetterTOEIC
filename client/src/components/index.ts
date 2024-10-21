@@ -8,7 +8,7 @@ import Timer from "./test/Timer";
 import Question from "./test/QuestionComponent";
 import QuestionsListContainer from "./test/QuestionsListContainer";
 import TestResultsTable from "./test/TestResultsTable";
-import Part7QuestionGroup from "./test/QuestionsGroup";
+import QuestionsGroup from "./test/QuestionsGroup";
 import PartItemsContainer from "./test/PartItemsContainer";
 
 export {
@@ -22,6 +22,6 @@ export {
   Question,
   QuestionsListContainer,
   TestResultsTable,
-  Part7QuestionGroup,
+  QuestionsGroup,
   PartItemsContainer,
 };
