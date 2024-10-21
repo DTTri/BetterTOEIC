@@ -1,13 +1,12 @@
 import Question from "@/entities/Question";
+  import Practice from "@/entities/Practice";
   
-  interface Practice {
-    id: string;
-    questions: Question[];
-  }
-  
+  //example data for part 2 practice test
   const practices: Practice[] = [
     {
-      id: "part1",
+      _id: "part1",
+      created_at: '',
+      updated_at: '',
       questions: [
         {
           _id: "q1",
@@ -48,7 +47,9 @@ import Question from "@/entities/Question";
       ],
     },
     {
-      id: "part2",
+      _id: "part2",
+      created_at: '',
+      updated_at: '',
       questions: [
         {
           _id: "q4",
@@ -89,7 +90,9 @@ import Question from "@/entities/Question";
       ],
     },
     {
-      id: "part3",
+      _id: "part3",
+      created_at: '',
+      updated_at: '',
       questions: [
         {
           _id: "q7",
@@ -130,7 +133,9 @@ import Question from "@/entities/Question";
       ],
     },
     {
-      id: "part4",
+      _id: "part4",
+      created_at: '',
+      updated_at: '',
       questions: [
         {
           _id: "q10",
@@ -171,7 +176,9 @@ import Question from "@/entities/Question";
       ],
     },
     {
-      id: "part5",
+      _id: "part5",
+      created_at: '',
+      updated_at: '',
       questions: [
         {
           _id: "q13",
@@ -212,7 +219,9 @@ import Question from "@/entities/Question";
       ],
     },
     {
-      id: "part6",
+      _id: "part6",
+      created_at: '',
+      updated_at: '',
       questions: [
         {
           _id: "q16",
@@ -253,7 +262,9 @@ import Question from "@/entities/Question";
       ],
     },
     {
-      id: "part7",
+      _id: "part7",
+      created_at: '',
+      updated_at: '',
       questions: [
         {
           _id: "q19",
@@ -283,4 +294,4 @@ import Question from "@/entities/Question";
     },
   ];
   
-  console.log(JSON.stringify(practices, null, 2));
+export default practices;
