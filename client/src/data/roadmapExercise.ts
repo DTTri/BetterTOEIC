@@ -304,6 +304,7 @@ const roadmapExPhase1Part3: RoadmapExercise = {
           part: 3,
           question_number: 1,
           question_group_id: "2",
+          number_of_questions_in_group: 3,
         },
         {
           _id: "q6",
@@ -338,6 +339,7 @@ const roadmapExPhase1Part3: RoadmapExercise = {
           part: 3,
           question_number: 1,
           question_group_id: "2",
+          number_of_questions_in_group: 2,
         },
         {
           _id: "q6",
@@ -362,6 +364,7 @@ const roadmapExPhase1Part3: RoadmapExercise = {
           part: 3,
           question_number: 1,
           question_group_id: "2",
+          number_of_questions_in_group: 2,
         },
         {
           _id: "q6",
@@ -386,6 +389,7 @@ const roadmapExPhase1Part3: RoadmapExercise = {
           part: 3,
           question_number: 1,
           question_group_id: "2",
+          number_of_questions_in_group: 2,
         },
         {
           _id: "q6",
@@ -410,6 +414,7 @@ const roadmapExPhase1Part3: RoadmapExercise = {
           part: 3,
           question_number: 1,
           question_group_id: "2",
+          number_of_questions_in_group: 2,
         },
         {
           _id: "q6",
@@ -446,6 +451,7 @@ const roadmapExPhase1Part4: RoadmapExercise = {
           part: 4,
           question_number: 1,
           question_group_id: "3",
+          number_of_questions_in_group: 2,
         },
         {
           _id: "q8",
@@ -471,6 +477,7 @@ const roadmapExPhase1Part4: RoadmapExercise = {
           part: 4,
           question_number: 1,
           question_group_id: "3",
+          number_of_questions_in_group: 2,
         },
         {
           _id: "q8",
@@ -496,6 +503,7 @@ const roadmapExPhase1Part4: RoadmapExercise = {
           part: 4,
           question_number: 1,
           question_group_id: "3",
+          number_of_questions_in_group: 2,
         },
         {
           _id: "q8",
@@ -521,6 +529,7 @@ const roadmapExPhase1Part4: RoadmapExercise = {
           part: 4,
           question_number: 1,
           question_group_id: "3",
+          number_of_questions_in_group: 2,
         },
         {
           _id: "q8",
@@ -546,6 +555,7 @@ const roadmapExPhase1Part4: RoadmapExercise = {
           part: 4,
           question_number: 1,
           question_group_id: "3",
+          number_of_questions_in_group: 2,
         },
         {
           _id: "q8",
@@ -727,6 +737,7 @@ const roadmapExPhase1Part6: RoadmapExercise = {
           question_number: 1,
           passage: ["This is a passage..."],
           question_group_id: "4",
+          number_of_questions_in_group: 2,
         },
         {
           _id: "q12",
@@ -753,6 +764,7 @@ const roadmapExPhase1Part6: RoadmapExercise = {
           question_number: 1,
           passage: ["This is a passage..."],
           question_group_id: "4",
+          number_of_questions_in_group: 2,
         },
         {
           _id: "q12",
@@ -779,6 +791,7 @@ const roadmapExPhase1Part6: RoadmapExercise = {
           question_number: 1,
           passage: ["This is a passage..."],
           question_group_id: "4",
+          number_of_questions_in_group: 2,
         },
         {
           _id: "q12",
@@ -805,6 +818,7 @@ const roadmapExPhase1Part6: RoadmapExercise = {
           question_number: 1,
           passage: ["This is a passage..."],
           question_group_id: "4",
+          number_of_questions_in_group: 2,
         },
         {
           _id: "q12",
@@ -842,6 +856,7 @@ const roadmapExPhase1Part7: RoadmapExercise = {
           image: ["https://via.placeholder.com/150"],
           passage: ["This is a passage..."],
           question_group_id: "5",
+          number_of_questions_in_group: 2,
         },
         {
           _id: "q14",
@@ -864,6 +879,7 @@ const roadmapExPhase1Part7: RoadmapExercise = {
           image: ["https://via.placeholder.com/150"],
           passage: ["This is a passage..."],
           question_group_id: "001",
+          number_of_questions_in_group: 3,
         },
         {
           _id: "q16",
@@ -900,6 +916,7 @@ const roadmapExPhase1Part7: RoadmapExercise = {
           image: ["https://via.placeholder.com/150"],
           passage: ["This is a passage..."],
           question_group_id: "5",
+          number_of_questions_in_group: 3,
         },
         {
           _id: "q14",
@@ -936,6 +953,7 @@ const roadmapExPhase1Part7: RoadmapExercise = {
           image: ["https://via.placeholder.com/150"],
           passage: ["This is a passage..."],
           question_group_id: "5",
+          number_of_questions_in_group: 2,
         },
         {
           _id: "q14",
@@ -962,6 +980,7 @@ const roadmapExPhase1Part7: RoadmapExercise = {
           image: ["https://via.placeholder.com/150"],
           passage: ["This is a passage..."],
           question_group_id: "5",
+          number_of_questions_in_group: 2,
         },
         {
           _id: "q14",
@@ -988,6 +1007,7 @@ const roadmapExPhase1Part7: RoadmapExercise = {
           image: ["https://via.placeholder.com/150"],
           passage: ["This is a passage..."],
           question_group_id: "5",
+          number_of_questions_in_group: 2,
         },
         {
           _id: "q14",

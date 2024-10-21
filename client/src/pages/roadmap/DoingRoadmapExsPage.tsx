@@ -23,25 +23,24 @@ export default function DoingRoadmapExsPage() {
   const [questionGroupLength, setQuestionGroupLength] = useState(1);
   const params = useParams();
 
-  // Reset state when URL parameters change
-  useEffect(() => {
-    setCurrentQuestion(1);
-    setQuestionGroupLength(1);
-    console.log("Reset state", params.chapter);
-  }, [params.phase, params.part, params.chapter]);
-
   // Parse the params to get the phase, part, chapter
-  if (!params.phase || !params.part || !params.chapter) {
-    return <div>Invalid params</div>;
-  }
   const phase = parseInt(params.phase, 10);
   const part = parseInt(params.part, 10);
   const chapter = parseInt(params.chapter, 10);
-  if (isNaN(phase) || isNaN(part) || isNaN(chapter)) {
-    return <div>Invalid params</div>;
-  }
-  console.log(phase, part, chapter, currentQuestion, questionGroupLength);
 
+  // Early return for invalid params
+  const invalidParams = isNaN(phase) || isNaN(part) || isNaN(chapter);
+
+  // Reset state when URL parameters change
+  useEffect(() => {
+    if (!invalidParams) {
+      setCurrentQuestion(1);
+      setQuestionGroupLength(1);
+      console.log("Reset state", params.chapter);
+    }
+  }, [params.phase, params.part, params.chapter, invalidParams]);
+
+  // Determine the roadmap exercises based on the part
   let roadmapExercises: RoadmapExercise;
   switch (part) {
     case 1:
@@ -65,13 +64,28 @@ export default function DoingRoadmapExsPage() {
     default:
       roadmapExercises = roadmapExPhase1Part7;
   }
+
   const questions = roadmapExercises.chapters[chapter - 1].questions;
+
+  // Initialize question group length on first render
+  useEffect(() => {
+    if (
+      !invalidParams &&
+      (part === 3 || part === 4 || part === 6 || part === 7)
+    ) {
+      setQuestionGroupLength(questions[0].number_of_questions_in_group || 1);
+    }
+  }, [part, questions, invalidParams]);
+
+  if (invalidParams) {
+    return <div>Invalid params</div>;
+  }
 
   const questionGroup: Question[] = [];
 
   function QuestionButtonsList() {
     let startIndexOfQuestionGroup = 0;
-    let buttons = [];
+    const buttons = [];
     if (part === 3 || part === 4 || part === 6 || part === 7) {
       for (let index = 0; index < questions.length; index++) {
         const question = questions[index];
