@@ -1,4 +1,5 @@
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
+import { useNavigate } from "react-router-dom";
 
 function ChapterItem({
   isUnlocked,
@@ -42,6 +43,8 @@ export default function ChaptersContainer({
   unlockedChapters: number;
   chapters: number;
 }) {
+  const nav = useNavigate();
+
   return (
     <div className="w-full bg-tertiary rounded-2xl p-4 pb-8">
       <div className="header mb-4">
@@ -59,7 +62,10 @@ export default function ChaptersContainer({
             isUnlocked={chapter < unlockedChapters}
             chapter={chapter + 1}
             numberOfQuestions={5}
-            onClick={() => {}}
+            onClick={() => {
+              if (chapter >= unlockedChapters) return;
+              nav(`/doing-roadmap/${currentPhase}/${part}/${chapter + 1}`);
+            }}
           />
         ))}
       </div>

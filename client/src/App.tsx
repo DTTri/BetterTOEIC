@@ -42,7 +42,10 @@ function App() {
       <Route path="/taking-test" element={<TakingTestPage />} />
       <Route path="/roadmap" element={<RoadmapPage />} />
       <Route path="/creating-roadmap" element={<CreatingRoadmapPage />} />
-      <Route path="/doing-roadmap" element={<DoingRoadmapExsPage />} />
+      <Route
+        path="/doing-roadmap/:phase/:part/:chapter"
+        element={<DoingRoadmapExsPage />}
+      />
     </Routes>
   );
 }

@@ -8,7 +8,7 @@ type RoadmapExercise = {
   id: string;
   phase: number;
   part: number;
-  audio: string;
+  audio?: string;
   chapters: Chapter[];
   created_at: string;
   updated_at: string;
