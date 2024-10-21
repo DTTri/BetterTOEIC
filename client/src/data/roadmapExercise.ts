@@ -877,10 +877,10 @@ const roadmapExPhase1Part7: RoadmapExercise = {
         },
         {
           _id: "q17",
-          text: "What is the main topic of the conversation? (This is chapter 1)",
+          text: "What is the man going to do?",
           choices: ["Choice A", "Choice B", "Choice C", "Choice D"],
           correct_choice: 0,
-          explanation: "The main topic is...",
+          explanation: "The is going to...",
           part: 7,
           question_number: 5,
           question_group_id: "001",

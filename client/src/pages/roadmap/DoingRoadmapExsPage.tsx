@@ -17,15 +17,20 @@ import {
 } from "@/data/RoadmapExercise";
 import { RoadmapExercise } from "@/entities";
 import { useEffect, useState } from "react";
+
 export default function DoingRoadmapExsPage() {
-  // <Route
-  //       path="/doing-roadmap/:phase/:part/:chapter"
-  //       element={<DoingRoadmapExsPage />}
-  //     />
   const [currentQuestion, setCurrentQuestion] = useState(1);
   const [questionGroupLength, setQuestionGroupLength] = useState(1);
   const params = useParams();
-  // parse the params to get the phase, part, chapter
+
+  // Reset state when URL parameters change
+  useEffect(() => {
+    setCurrentQuestion(1);
+    setQuestionGroupLength(1);
+    console.log("Reset state", params.chapter);
+  }, [params.phase, params.part, params.chapter]);
+
+  // Parse the params to get the phase, part, chapter
   if (!params.phase || !params.part || !params.chapter) {
     return <div>Invalid params</div>;
   }
@@ -35,11 +40,8 @@ export default function DoingRoadmapExsPage() {
   if (isNaN(phase) || isNaN(part) || isNaN(chapter)) {
     return <div>Invalid params</div>;
   }
-  console.log(phase, part, chapter);
+  console.log(phase, part, chapter, currentQuestion, questionGroupLength);
 
-  // const unlockedChapters = useSelector(...)
-
-  // const roadmapExercises = useSelector(...) base on phase and part
   let roadmapExercises: RoadmapExercise;
   switch (part) {
     case 1:
@@ -64,49 +66,62 @@ export default function DoingRoadmapExsPage() {
       roadmapExercises = roadmapExPhase1Part7;
   }
   const questions = roadmapExercises.chapters[chapter - 1].questions;
+
   const questionGroup: Question[] = [];
 
   function QuestionButtonsList() {
     let startIndexOfQuestionGroup = 0;
+    let buttons = [];
     if (part === 3 || part === 4 || part === 6 || part === 7) {
-      return (
-        <>
-          {questions.map((question, index) => {
-            if (
-              (index !== 0 &&
-                questions[index - 1].question_group_id !==
-                  question.question_group_id) ||
-              index === questions.length - 1
-            ) {
-              const prevStartIndex = startIndexOfQuestionGroup;
-              startIndexOfQuestionGroup = index;
-              setQuestionGroupLength(
-                startIndexOfQuestionGroup - prevStartIndex
-              );
-              return (
-                <button
-                  className={`question-item bg-gray-400 text-black rounded-lg w-8 h-8 ${
-                    currentQuestion === prevStartIndex + 1
-                      ? "bg-primary text-white"
-                      : ""
-                  }`}
-                  key={index}
-                  onClick={() => {
-                    setCurrentQuestion(index + 1);
-                    setQuestionGroupLength(
-                      startIndexOfQuestionGroup - prevStartIndex - 1
-                    );
-                    questionGroup.length = 0;
-                  }}
-                >
-                  {prevStartIndex + 1}-
-                  {prevStartIndex + 1 + questionGroupLength}
-                </button>
-              );
-            }
-          })}
-        </>
-      );
+      for (let index = 0; index < questions.length; index++) {
+        const question = questions[index];
+        if (
+          index !== 0 &&
+          questions[index - 1].question_group_id !== question.question_group_id
+        ) {
+          const prevStartIndex = startIndexOfQuestionGroup;
+          startIndexOfQuestionGroup = index;
+          const groupLength = startIndexOfQuestionGroup - prevStartIndex;
+          buttons.push(
+            <button
+              className={`question-item bg-gray-400 text-black rounded-lg w-8 h-8 ${
+                currentQuestion === prevStartIndex + 1
+                  ? "bg-primary text-white"
+                  : ""
+              }`}
+              key={index}
+              onClick={() => {
+                setCurrentQuestion(prevStartIndex + 1);
+                setQuestionGroupLength(groupLength);
+              }}
+            >
+              {prevStartIndex + 1}-{startIndexOfQuestionGroup}
+            </button>
+          );
+        }
+      }
+      // Handle the last group
+      if (startIndexOfQuestionGroup < questions.length) {
+        const prevStartIndex = startIndexOfQuestionGroup;
+        const groupLength = questions.length - prevStartIndex;
+        buttons.push(
+          <button
+            className={`question-item bg-gray-400 text-black rounded-lg w-8 h-8 ${
+              currentQuestion === prevStartIndex + 1
+                ? "bg-primary text-white"
+                : ""
+            }`}
+            key={questions.length}
+            onClick={() => {
+              setCurrentQuestion(prevStartIndex + 1);
+              setQuestionGroupLength(groupLength);
+            }}
+          >
+            {prevStartIndex + 1}-{questions.length}
+          </button>
+        );
+      }
+      return <>{buttons}</>;
     }
     return (
       <>
@@ -138,33 +153,24 @@ export default function DoingRoadmapExsPage() {
           <Timer />
           {part < 5 && <ListeningAudio />}
         </div>
-        <div className="w-full bg-white rounded-xl p-4">
+        <div className="questions-container w-full bg-white rounded-xl p-4">
           {part === 3 || part === 4 || part === 6 || part === 7
             ? questions.map((question, index) => {
-                if (part < 5) {
-                  if (
-                    index + 1 >= currentQuestion &&
-                    index + 1 <= currentQuestion + questionGroupLength
-                  ) {
-                    return <Question key={index} question={question} />;
-                  }
-                  return null;
-                } else {
-                  if (
-                    index + 1 >= currentQuestion &&
-                    index + 1 <= currentQuestion + questionGroupLength
-                  ) {
-                    questionGroup.push(question);
-                  }
-                  if (questionGroup.length === questionGroupLength) {
-                    console.log("Current question: ", currentQuestion);
-                    console.log("QuestionGroupLength: ", questionGroupLength);
-
-                    return (
-                      <QuestionsGroup key={index} questions={questionGroup} />
-                    );
-                  }
+                if (
+                  index + 1 >= currentQuestion &&
+                  index + 1 < currentQuestion + questionGroupLength
+                ) {
+                  questionGroup.push(question);
                 }
+                if (index + 1 === currentQuestion + questionGroupLength - 1) {
+                  console.log("Current question: ", currentQuestion);
+                  console.log("QuestionGroupLength: ", questionGroupLength);
+                  console.log("questionGroup.length: ", questionGroup.length);
+                  return (
+                    <QuestionsGroup key={index} questions={questionGroup} />
+                  );
+                }
+                return null;
               })
             : questions.map((question, index) => {
                 if (index + 1 === currentQuestion) {
@@ -177,23 +183,6 @@ export default function DoingRoadmapExsPage() {
           <h3 className="text-xl font-semibold text-black mb-4">Questions</h3>
           <div className="questions-list flex items-center gap-1">
             <QuestionButtonsList />
-            {/* specifically with part 3,4,6,7; those are questionGroups -> so each element in the
-            roadmapExercises.chapters[chapter - 1].questions not rendered as a button, but a questionGroup is a button
-            questionGroup is created by combining multiple questions have the same question_group_id */}
-            {/* create a QuestionButtonsList component to handle this */}
-            {/* {Array.from({
-              length: roadmapExercises.chapters[chapter - 1].questions.length,
-            }).map((_, index) => (
-              <button
-                className={`question-item bg-gray-400 text-black rounded-lg w-8 h-8 ${
-                  currentQuestion === index + 1 ? "bg-primary text-white" : ""
-                }`}
-                key={index}
-                onClick={() => setCurrentQuestion(index + 1)}
-              >
-                {index + 1}
-              </button>
-            ))} */}
           </div>
         </div>
       </div>
