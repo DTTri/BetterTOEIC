@@ -7,6 +7,9 @@ import book from "../../assets/book.svg";
 import arrow_right from "../../assets/arrow_right.svg";
 import arrow_down from "../../assets/arrow_down.svg";
 import { PracticePart } from "@/entities/PracticeHisotry";
+import { useNavigate } from "react-router-dom";
+
+const navigate = useNavigate();
 
 function PracticeTest({
   title,
@@ -19,7 +22,8 @@ function PracticeTest({
 }) {
   // progress is a number descriping the number of test.length
   return (
-    <div className="max-w-[640px] w-full flex flex-row items-center px-5 py-[8px] bg-[#F6F6F6] rounded-[30px]">
+    <div className="max-w-[640px] w-full flex flex-row items-center px-5 py-[8px] bg-[#F6F6F6] rounded-[30px]"
+         onClick={() => { navigate('') }}>
       <div className="w-[20px] h-[20px] mr-5">
         <img className="w-full h-full" src={book} alt="" />
       </div>
@@ -41,7 +45,7 @@ function PracticeTest({
     </div>
   );
 }
-export default function PracticeLists({
+export default function PracticeList({
   part,
   title,
   practices,
@@ -56,10 +60,10 @@ export default function PracticeLists({
   return (
     <div className="w-[54%] rounded-[30px] bg-[#FFF]">
       <div
-        className="w-full flex flex-row px-9 py-[16px] items-center"
+        className="w-full flex flex-row px-9 py-[16px] items-center cursor-pointer"
         onClick={() => setIsShow(!isShow)}
       >
-        <div className="w-[24px] h-[24px] mr-5">
+        <div className="w-[24px] h-[24px] mr-5 ">
           <img
             className="w-full h-full"
             src={isShow === false ? arrow_right : arrow_down}
@@ -87,7 +91,7 @@ export default function PracticeLists({
             <PracticeTest
               key={index}
               title={`Practice Test ${index + 1}`}
-              progress={2}
+              progress={PracticePart.practice_tests[index].choices.length}
               totalQuestion={practice.questions.length}
             />
           ))}

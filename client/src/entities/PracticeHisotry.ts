@@ -6,14 +6,13 @@ export type PracticeTest = {
 }
 
 export type PracticePart = {
+    part: number;
     practice_tests: PracticeTest[];
 }
 
-type PracticeHistory = {
+export type PracticeHistory = {
     _id: string;
     practice_id: string;
     user_id: string;
     part: PracticePart[];
 }
-
-export default PracticeHistory;

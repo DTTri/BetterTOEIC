@@ -21,9 +21,9 @@ export default function Header() {
     <>
       <header className="bg-[#ffffff] w-full px-9 py-5 ">
         <div className="w-full flex flex-row justify-between  items-center">
-          <a href="#">
-          <img className='flex justify-center max-w-full object-cover object-center' src={Logo} alt="BetterTOEIC" />
-        </a>
+          <Link to='/'>
+            <img className='flex justify-center max-w-full object-cover object-center' src={Logo} alt="BetterTOEIC" />
+          </Link>
         <div className="right flex flex-row gap-[32px] items-center justify-center">
           <ul className='flex flex-row gap-[18px]'>
             <li><Link to='/road-map'><Button className='hover:bg-slate-100' style={{fontWeight: "700", fontSize: "16px", color:'#000000', fontFamily:'Nunito Sans'}} variant='text' sx={{textTransform:'none'}}>Lộ trình hóa</Button></Link></li>
