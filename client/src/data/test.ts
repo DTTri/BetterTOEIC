@@ -28,9 +28,9 @@ const testData: Test = {
         "https://images.unsplash.com/photo-1728595840390-d01e1a63f27d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwyN3x8fGVufDB8fHx8fA%3D%3D",
       ],
       choices: [
-        "A. He is talking on the phone.",
-        "B. He is reading a book.",
-        "C. He is writing something.",
+        "He is talking on the phone.",
+        "He is reading a book.",
+        "He is writing something.",
       ],
       correct_choice: 1,
       explanation: "The man is holding a phone to his ear.",
@@ -167,7 +167,7 @@ const testData: Test = {
       ],
       _id: "653f1bd84b8f1e2f10123462",
       question_number: 51,
-      text: "Which word best completes the sentence in the passage?",
+      text: "Which word best completes the sentence in the passages?",
       choices: ["A. Although", "B. Since", "C. Despite", "D. While"],
       correct_choice: 2,
       explanation:
