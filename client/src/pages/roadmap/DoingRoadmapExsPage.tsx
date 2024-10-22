@@ -1,11 +1,13 @@
 import {
   ChaptersListContainer,
   ListeningAudio,
-  Question,
+  QuestionComponent,
   QuestionsGroup,
   Timer,
 } from "@/components";
 import { useParams } from "react-router-dom";
+import { Question, RoadmapExercise } from "@/entities";
+import { useEffect, useState } from "react";
 import {
   roadmapExPhase1Part1,
   roadmapExPhase1Part2,
@@ -14,19 +16,16 @@ import {
   roadmapExPhase1Part5,
   roadmapExPhase1Part6,
   roadmapExPhase1Part7,
-} from "@/data/RoadmapExercise";
-import { RoadmapExercise } from "@/entities";
-import { useEffect, useState } from "react";
-
+} from "@/data/roadmapExercise";
 export default function DoingRoadmapExsPage() {
   const [currentQuestion, setCurrentQuestion] = useState(1);
   const [questionGroupLength, setQuestionGroupLength] = useState(1);
   const params = useParams();
 
   // Parse the params to get the phase, part, chapter
-  const phase = parseInt(params.phase, 10);
-  const part = parseInt(params.part, 10);
-  const chapter = parseInt(params.chapter, 10);
+  const phase = parseInt(params.phase || "1", 10);
+  const part = parseInt(params.part || "1", 10);
+  const chapter = parseInt(params.chapter || "1", 10);
 
   // Early return for invalid params
   const invalidParams = isNaN(phase) || isNaN(part) || isNaN(chapter);
@@ -155,7 +154,7 @@ export default function DoingRoadmapExsPage() {
   }
 
   return (
-    <div className="bg-background w-full flex justify-between p-4">
+    <div className="bg-background w-full h-screen flex justify-between p-4">
       <ChaptersListContainer
         phase={phase}
         part={part}
@@ -167,7 +166,7 @@ export default function DoingRoadmapExsPage() {
           <Timer />
           {part < 5 && <ListeningAudio />}
         </div>
-        <div className="questions-container w-full bg-white rounded-xl p-4">
+        <div className="questions-container w-full bg-white rounded-xl p-4 h-[70vh] overflow-y-auto overflow-x-hidden">
           {part === 3 || part === 4 || part === 6 || part === 7
             ? questions.map((question, index) => {
                 if (
@@ -188,7 +187,7 @@ export default function DoingRoadmapExsPage() {
               })
             : questions.map((question, index) => {
                 if (index + 1 === currentQuestion) {
-                  return <Question key={index} question={question} />;
+                  return <QuestionComponent key={index} question={question} />;
                 }
                 return null;
               })}

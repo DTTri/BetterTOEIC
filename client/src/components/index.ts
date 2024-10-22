@@ -5,7 +5,7 @@ import SearchBar from "./SearchBar";
 import TestCard from "./test/TestCard";
 import ListeningAudio from "./test/ListeningAudio";
 import Timer from "./test/Timer";
-import Question from "./test/QuestionComponent";
+import QuestionComponent from "./test/QuestionComponent";
 import QuestionsListContainer from "./test/QuestionsListContainer";
 import TestResultsTable from "./test/TestResultsTable";
 import QuestionsGroup from "./test/QuestionsGroup";
@@ -26,7 +26,7 @@ export {
   TestCard,
   ListeningAudio,
   Timer,
-  Question,
+  QuestionComponent,
   QuestionsListContainer,
   TestResultsTable,
   QuestionsGroup,

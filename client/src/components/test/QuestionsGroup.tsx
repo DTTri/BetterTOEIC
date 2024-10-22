@@ -9,8 +9,8 @@ export default function QuestionsGroup({
   questions: Question[];
 }) {
   return (
-    <div className="max-w-[950px] flex flex-row gap-[32px] mb-5">
-      <div className="left-section w-[55%]">
+    <div className="w-full max-w-[950px] flex justify-around mb-5">
+      <div className="left-section w-1/3">
         {questions[0].passage &&
           questions[0].passage?.map((para, idx) => (
             <div
@@ -41,7 +41,7 @@ export default function QuestionsGroup({
       </div>
 
       {/* Right section: Questions */}
-      <div className="right-section w-[45%]">
+      <div className="right-section w-[55%]">
         {questions.map((question, idx) => (
           <QuestionComponent key={idx} question={question} />
         ))}
