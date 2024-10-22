@@ -1,5 +1,4 @@
 import { SideBar } from "@/components";
-import React from "react";
 
 export default function ForumManagementPage() {
   return (
