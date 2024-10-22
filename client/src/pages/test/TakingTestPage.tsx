@@ -24,7 +24,7 @@ export default function TakingTestPage() {
   return (
     <div className="bg-background">
       <Header></Header>
-      <div className="content py-3 px-12 m-auto">
+      <div className="max-w-[1500px] content py-3 px-12 m-auto overflow-hidden">
         <div className="info-test flex flex-row items-center justify-between mb-5">
           <Timer></Timer>
           <ListeningAudio></ListeningAudio>
@@ -43,7 +43,7 @@ export default function TakingTestPage() {
             Submit
           </Button>
         </div>
-        <div className="test-ui flex flex-row gap-5 w-full ">
+        <div className="test-ui flex flex-row gap-5 w-full items-start">
           <QuestionsListContainer></QuestionsListContainer>
           <div className="Question-lists w-full bg-[#ffffff] rounded-[20px] py-8 px-10">
             <div className="parts flex flex-row gap-4 mb-5">
