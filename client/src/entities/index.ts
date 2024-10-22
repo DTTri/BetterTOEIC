@@ -1,3 +1,4 @@
 import Test from "./Test";
-
-export type { Test };
+import RoadmapExercise from "./RoadmapExercise";
+import Question from "./Question";
+export type { Test, RoadmapExercise, Question };

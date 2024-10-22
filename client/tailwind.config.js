@@ -10,10 +10,10 @@ export default {
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
-          DEFAULT: "#D0E3FF", // Your previous secondary color
+          DEFAULT: "#0048FF", // Your previous secondary color
           foreground: "hsl(var(--secondary-foreground))",
         },
-        tertiary: "#F6F6F6",
+        tertiary: "#D0E3FF",
         background: "#F5F6FA", // Your previous background color
         red: "#FF0000",
         green: "#BCFFE3",

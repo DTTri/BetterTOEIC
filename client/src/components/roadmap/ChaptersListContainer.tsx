@@ -1,9 +1,10 @@
 import { useState } from "react";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import LockIcon from "@mui/icons-material/Lock";
+import { useNavigate } from "react-router-dom";
 function NumberOfQuestions() {
   return (
-    <div className="bg-secondary rounded-3xl text-primary py-2 px-1 text-sm">
+    <div className="bg-tertiary rounded-3xl text-primary py-2 px-1 text-sm">
       10 questions
     </div>
   );
@@ -25,7 +26,13 @@ function ChapterItem({
         unlockedChapters >= chapter
           ? "bg-primary text-white"
           : "bg-gray-400 text-black"
-      }`}
+      }
+          ${
+            currentChapter === chapter
+              ? "scale-105 shadow-md shadow-primary"
+              : ""
+          }
+      `}
       onClick={onClick}
     >
       {currentChapter === chapter && (
@@ -55,59 +62,30 @@ export default function ChaptersListContainer({
   chapter: number;
   unlockedChapters: number;
 }) {
-  const [currentChapter, setCurrentChapter] = useState(chapter); // this should be got from the store
+  const nav = useNavigate();
   return (
-    <div className="bg-white rounded-2xl shadow-lg min-w-[220px] flex flex-col items-center gap-4 py-8">
+    <div className="bg-white rounded-2xl shadow-lg min-w-[220px] flex flex-col items-center gap-4 py-8 px-4">
       <div className="current-part flex justify-center items-center w-full px-4">
-        <div className="text-lg font-semibold bg-primary text-white px-2 py-1 rounded-md">
+        <div className="text-lg font-semibold bg-primary text-white px-2 py-1 rounded-md min-w-24 text-center">
           Phase {phase}
         </div>
         <ArrowRightIcon fontSize="large" color="inherit" />
-        <div className="text-lg font-semibold bg-white text-primary border border-primary px-2 py-1 rounded-md">
+        <div className="text-lg font-semibold bg-white text-primary border border-primary px-2 py-1 rounded-md min-w-24 text-center">
           Part {part}
         </div>
       </div>
       <div className="chapters-container flex flex-col items-center gap-2 w-full px-4">
-        <ChapterItem
-          chapter={1}
-          unlockedChapters={unlockedChapters}
-          currentChapter={currentChapter}
-          onClick={
-            unlockedChapters >= 1 ? () => setCurrentChapter(1) : undefined
-          }
-        />
-        <ChapterItem
-          chapter={2}
-          unlockedChapters={unlockedChapters}
-          currentChapter={currentChapter}
-          onClick={
-            unlockedChapters >= 2 ? () => setCurrentChapter(2) : undefined
-          }
-        />
-        <ChapterItem
-          chapter={3}
-          unlockedChapters={unlockedChapters}
-          currentChapter={currentChapter}
-          onClick={
-            unlockedChapters >= 3 ? () => setCurrentChapter(3) : undefined
-          }
-        />
-        <ChapterItem
-          chapter={4}
-          unlockedChapters={unlockedChapters}
-          currentChapter={currentChapter}
-          onClick={
-            unlockedChapters >= 4 ? () => setCurrentChapter(4) : undefined
-          }
-        />
-        <ChapterItem
-          chapter={5}
-          unlockedChapters={unlockedChapters}
-          currentChapter={currentChapter}
-          onClick={
-            unlockedChapters >= 5 ? () => setCurrentChapter(5) : undefined
-          }
-        />
+        {Array.from({ length: 5 }).map((_, index) => (
+          <ChapterItem
+            key={index}
+            chapter={index + 1}
+            unlockedChapters={unlockedChapters}
+            currentChapter={chapter}
+            onClick={() => {
+              nav(`/doing-roadmap/${phase}/${part}/${index + 1}`);
+            }}
+          />
+        ))}
       </div>
     </div>
   );
