@@ -9,36 +9,38 @@ import arrow_down from "../../assets/arrow_down.svg";
 import { PracticePart } from "@/entities/PracticeHisotry";
 import { useNavigate } from "react-router-dom";
 
-const navigate = useNavigate();
 
 function PracticeTest({
   title,
+  part,
   progress,
-  totalQuestion,
+  practice,
 }: {
   title: string;
+  part: number;
   progress: number;
-  totalQuestion: number;
+  practice: Practice;
 }) {
+  const navigate = useNavigate();
   // progress is a number descriping the number of test.length
   return (
-    <div className="max-w-[640px] w-full flex flex-row items-center px-5 py-[8px] bg-[#F6F6F6] rounded-[30px]"
-         onClick={() => { navigate('') }}>
+    <div className="max-w-[640px] w-full flex flex-row items-center px-5 py-[8px] bg-[#F6F6F6] rounded-[30px] cursor-pointer"
+         onClick={() => navigate(`taking-practice/${part}/${practice._id}`)}>
       <div className="w-[20px] h-[20px] mr-5">
         <img className="w-full h-full" src={book} alt="" />
       </div>
       <div className="flex flex-col flex-1">
         <span className="font-bold text-xl">{title}</span>
         <span className="font-medium text-[16px]">
-          {totalQuestion} questions
+          {practice.questions.length} questions
         </span>
       </div>
       <div className="">
-        {progress !== totalQuestion ? (
+        {progress !== practice.questions.length ? (
           <span className="font-normal text-[16px] text-[#ffffff] px-[8px] py-[13px] aspect-square bg-[#00205C] rounded-full">
-            {((progress / totalQuestion) * 100).toFixed(0)}%
+            {((progress / practice.questions.length) * 100).toFixed(0)}%
           </span>
-        ) : (
+        ) : ( 
           <DoneIcon />
         )}
       </div>
@@ -61,7 +63,10 @@ export default function PracticeList({
     <div className="w-[54%] rounded-[30px] bg-[#FFF]">
       <div
         className="w-full flex flex-row px-9 py-[16px] items-center cursor-pointer"
-        onClick={() => setIsShow(!isShow)}
+        onClick={() => {
+          console.log(isShow);
+          setIsShow(!isShow)
+        }}
       >
         <div className="w-[24px] h-[24px] mr-5 ">
           <img
@@ -87,14 +92,19 @@ export default function PracticeList({
 
       {isShow &&
         <div className="flex flex-col items-center gap-4 border-t py-4">
-          {practices.map((practice, index) => (
-            <PracticeTest
-              key={index}
-              title={`Practice Test ${index + 1}`}
-              progress={PracticePart.practice_tests[index].choices.length}
-              totalQuestion={practice.questions.length}
-            />
-          ))}
+          {practices.map((practice, index) => {
+            console.log(practice);
+            return (
+              <PracticeTest
+                key={index}
+                part={practice.part}
+                title={`Practice Test ${index + 1}`}
+                //progress wil be replaced in the future when it has own id
+                progress={PracticePart.practice_tests[index].choices.length}
+                practice={practice}
+              />
+            );
+          })}
         </div>
       }
     </div>

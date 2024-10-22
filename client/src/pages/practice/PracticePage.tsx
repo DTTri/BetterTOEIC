@@ -1,4 +1,4 @@
-import { Header } from '@/components'
+import { Footer, Header } from '@/components'
 import { useState } from 'react'
 import PracticeList from '@/components/practice/PracticeList'
 import { practiceForPart1, practiceForPart2, practiceForPart3, practiceForPart4, practiceForPart5 } from '@/data/practice_test'
@@ -19,12 +19,13 @@ export default function PracticePage() {
             <h1 className='text-[52px] text-center text-[#202224] mt-8 font-bold'>Luyện tập cùng BetterTOEIC</h1>
             <div className="flex flex-col items-center gap-5 py-8">
                 <PracticeList part={1} title='Photos' practices={PracticeListsForPart1} PracticePart={practiceResult.part[0]}/>
-                <PracticeList part={2} title='Question - Response' practices={PracticeListsForPart1} PracticePart={practiceResult.part[1]}/>
-                <PracticeList part={3} title='Conversations' practices={PracticeListsForPart1} PracticePart={practiceResult.part[2]}/>
-                <PracticeList part={4} title='Short Talks' practices={PracticeListsForPart1} PracticePart={practiceResult.part[3]}/>
-                <PracticeList part={5} title='Incomplete Sentences' practices={PracticeListsForPart1} PracticePart={practiceResult.part[4]}/>
+                <PracticeList part={2} title='Question - Response' practices={PracticeListsForPart2} PracticePart={practiceResult.part[1]}/>
+                <PracticeList part={3} title='Conversations' practices={PracticeListsForPart3} PracticePart={practiceResult.part[2]}/>
+                <PracticeList part={4} title='Short Talks' practices={PracticeListsForPart4} PracticePart={practiceResult.part[3]}/>
+                <PracticeList part={5} title='Incomplete Sentences' practices={PracticeListsForPart5} PracticePart={practiceResult.part[4]}/>
             </div>
         </div>
+        <Footer/>
     </div>
   )
 }

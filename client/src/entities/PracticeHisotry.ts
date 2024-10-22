@@ -10,9 +10,11 @@ export type PracticePart = {
     practice_tests: PracticeTest[];
 }
 
-export type PracticeHistory = {
+export type UserPracticeData = {
     _id: string;
     practice_id: string;
     user_id: string;
     part: PracticePart[];
+    created_at: string;
+    updated_at: string;
 }

@@ -10,6 +10,9 @@ import QuestionsListContainer from "./test/QuestionsListContainer";
 import TestResultsTable from "./test/TestResultsTable";
 import QuestionsGroup from "./test/QuestionsGroup";
 import PartItemsContainer from "./test/PartItemsContainer";
+import QuestionPalette from "./practice/QuestionPalette";
+import PracticeList from "./practice/PracticeList";
+import LeftBar from "./practice/LeftBar";
 
 export {
   Footer,
@@ -24,4 +27,7 @@ export {
   TestResultsTable,
   QuestionsGroup,
   PartItemsContainer,
+  QuestionPalette,
+  LeftBar,
+  PracticeList,
 };

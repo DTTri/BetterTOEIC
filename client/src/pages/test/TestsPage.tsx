@@ -1,12 +1,15 @@
 import { PageHeader, SearchBar } from "@/components";
-import PracticeHisotry from "@/entities/PracticeHisotry";
 
+import TestCardGallery from "@/components/test/TestCardGallery";
+import PracticeList from "../../components/practice/PracticeList";
+import LeftBar from "@/components/practice/LeftBar";
 import QuestionPalette from "@/components/practice/QuestionPalette";
+import CountingTimer from "@/components/practice/CountingTimer";
 
 export default function TestsPage() {
   return (
-    <div className="bg-background flex flex-col gap-4 items-center py-8">
-      <QuestionPalette questionNumber={5} />
+    <div className="">
+      <CountingTimer/>
     </div>
   );
 }

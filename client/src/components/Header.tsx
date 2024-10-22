@@ -22,7 +22,7 @@ export default function Header() {
       <header className="bg-[#ffffff] w-full px-9 py-5 ">
         <div className="w-full flex flex-row justify-between  items-center">
           <Link to='/'>
-            <img className='flex justify-center max-w-full object-cover object-center' src={Logo} alt="BetterTOEIC" />
+            <img className='flex justify-center max-w-full object-cover object-center ml-4' src={Logo} alt="BetterTOEIC" />
           </Link>
         <div className="right flex flex-row gap-[32px] items-center justify-center">
           <ul className='flex flex-row gap-[18px]'>

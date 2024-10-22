@@ -7,9 +7,11 @@ import Question from "@/entities/Question";
       _id: "1",
       created_at: '',
       updated_at: '',
+      part: 1,
+      practice_audio: '',
       questions: [
         {
-          _id: "q1",
+          _id: "11",
           text: "Question text for part 1 - 1",
           image: [],
           choices: ["Choice 1", "Choice 2", "Choice 3", "Choice 4"],
@@ -21,7 +23,7 @@ import Question from "@/entities/Question";
           question_number: 1,
         },
         {
-          _id: "q2",
+          _id: "12",
           text: "Question text for part 1 - 2",
           image: [],
           choices: ["Choice 1", "Choice 2", "Choice 3", "Choice 4"],
@@ -33,7 +35,7 @@ import Question from "@/entities/Question";
           question_number: 1,
         },
         {
-          _id: "q3",
+          _id: "13",
           text: "Question text for part 1 - 3",
           image: [],
           choices: ["Choice 1", "Choice 2", "Choice 3", "Choice 4"],
@@ -50,6 +52,8 @@ import Question from "@/entities/Question";
       _id: "2",
       created_at: '',
       updated_at: '',
+      part: 1,
+      practice_audio: '',
       questions: [
         {
           _id: "q4",
@@ -93,6 +97,8 @@ import Question from "@/entities/Question";
       _id: "3",
       created_at: '',
       updated_at: '',
+      part: 1,
+      practice_audio: '',
       questions: [
         {
           _id: "q7",
@@ -135,9 +141,11 @@ import Question from "@/entities/Question";
 ];
   const practiceForPart2: Practice[] = [
     {
-      _id: "1",
+      _id: "2",
       created_at: '',
       updated_at: '',
+      part: 2,
+      practice_audio: '',
       questions: [
         {
           _id: "q1",
@@ -181,6 +189,8 @@ import Question from "@/entities/Question";
       _id: "2",
       created_at: '',
       updated_at: '',
+      part: 2,
+      practice_audio: '',
       questions: [
         {
           _id: "q4",
@@ -224,6 +234,8 @@ import Question from "@/entities/Question";
       _id: "3",
       created_at: '',
       updated_at: '',
+      part: 2,
+      practice_audio: '',
       questions: [
         {
           _id: "q7",
@@ -269,6 +281,8 @@ import Question from "@/entities/Question";
       _id: "1",
       created_at: '',
       updated_at: '',
+      part: 3,
+      practice_audio: '',
       questions: [
         {
           _id: "q1",
@@ -312,6 +326,8 @@ import Question from "@/entities/Question";
       _id: "2",
       created_at: '',
       updated_at: '',
+      part: 3,
+      practice_audio: '',
       questions: [
         {
           _id: "q4",
@@ -355,6 +371,8 @@ import Question from "@/entities/Question";
       _id: "3",
       created_at: '',
       updated_at: '',
+      part: 3,
+      practice_audio: '',
       questions: [
         {
           _id: "q7",
@@ -400,6 +418,8 @@ import Question from "@/entities/Question";
       _id: "1",
       created_at: '',
       updated_at: '',
+      part: 4,
+      practice_audio: '',
       questions: [
         {
           _id: "q1",
@@ -443,6 +463,8 @@ import Question from "@/entities/Question";
       _id: "2",
       created_at: '',
       updated_at: '',
+      part: 4,
+      practice_audio: '',
       questions: [
         {
           _id: "q4",
@@ -486,6 +508,8 @@ import Question from "@/entities/Question";
       _id: "3",
       created_at: '',
       updated_at: '',
+      part: 4,
+      practice_audio: '',
       questions: [
         {
           _id: "q7",
@@ -531,6 +555,7 @@ import Question from "@/entities/Question";
       _id: "1",
       created_at: '',
       updated_at: '',
+      part: 5,
       questions: [
         {
           _id: "q1",
@@ -574,6 +599,7 @@ import Question from "@/entities/Question";
       _id: "2",
       created_at: '',
       updated_at: '',
+      part: 5,
       questions: [
         {
           _id: "q4",
@@ -617,6 +643,7 @@ import Question from "@/entities/Question";
       _id: "3",
       created_at: '',
       updated_at: '',
+      part: 5,
       questions: [
         {
           _id: "q7",
