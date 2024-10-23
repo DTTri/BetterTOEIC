@@ -5,7 +5,7 @@ import SearchBar from "./SearchBar";
 import TestCard from "./test/TestCard";
 import ListeningAudio from "./test/ListeningAudio";
 import Timer from "./test/Timer";
-import Question from "./test/QuestionComponent";
+import QuestionComponent from "./test/QuestionComponent";
 import QuestionsListContainer from "./test/QuestionsListContainer";
 import TestResultsTable from "./test/TestResultsTable";
 import QuestionsGroup from "./test/QuestionsGroup";
@@ -14,6 +14,13 @@ import QuestionPalette from "./practice/QuestionPalette";
 import PracticeList from "./practice/PracticeList";
 import LeftBar from "./practice/LeftBar";
 
+import BuildRoadmapProgressBar from "./roadmap/BuildRoadmapProgressBar";
+import LevelChart from "./roadmap/LevelChart";
+import LevelExplain from "./roadmap/LevelExplain";
+import Steps from "./roadmap/Steps";
+import ChaptersListContainer from "./roadmap/ChaptersListContainer";
+import ChaptersContainer from "./roadmap/personalRoadmap/ChaptersContainer";
+import CurrentPhaseContainer from "./roadmap/personalRoadmap/CurrentPhaseContainer";
 export {
   Footer,
   Header,
@@ -22,7 +29,7 @@ export {
   TestCard,
   ListeningAudio,
   Timer,
-  Question,
+  QuestionComponent,
   QuestionsListContainer,
   TestResultsTable,
   QuestionsGroup,
@@ -30,4 +37,11 @@ export {
   QuestionPalette,
   LeftBar,
   PracticeList,
+  BuildRoadmapProgressBar,
+  LevelChart,
+  LevelExplain,
+  Steps,
+  ChaptersListContainer,
+  ChaptersContainer,
+  CurrentPhaseContainer,
 };

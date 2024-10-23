@@ -5,6 +5,9 @@ import RoadmapPage from "./pages/roadmap/RoadmapPage";
 import TakingTestPage from "./pages/test/TakingTestPage";
 import PracticePage from "./pages/practice/PracticePage";
 import TakingPracticePage from "./pages/practice/TakingPracticePage";
+import CreatingRoadmapPage from "./pages/roadmap/CreatingRoadmapPage";
+import DoingRoadmapExsPage from "./pages/roadmap/DoingRoadmapExsPage";
+import ErrorPage from "./pages/error/ErrorPage";
 function App() {
   // useSelector to get the test from the store by id, currently hardcode the test data
   // type Test = {
@@ -43,6 +46,13 @@ function App() {
       <Route path="/road-map" element={<RoadmapPage />} />
       <Route path="/practice" element={<PracticePage />} />
       <Route path="/taking-practice/:part/:id" element={<TakingPracticePage />} />
+      <Route path="/creating-roadmap" element={<CreatingRoadmapPage />} />
+      <Route
+        path="/doing-roadmap/:phase/:part/:chapter"
+        element={<DoingRoadmapExsPage />}
+      />
+      <Route path="/error" element={<ErrorPage />} />
+      <Route path="*" element={<ErrorPage />} />
     </Routes>
   );
 }
