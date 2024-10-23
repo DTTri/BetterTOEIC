@@ -3,6 +3,8 @@ import TestsPage from "./pages/test/TestsPage";
 import TestDetailsPage from "./pages/test/TestDetailsPage";
 import RoadmapPage from "./pages/roadmap/RoadmapPage";
 import TakingTestPage from "./pages/test/TakingTestPage";
+import PracticePage from "./pages/practice/PracticePage";
+import TakingPracticePage from "./pages/practice/TakingPracticePage";
 import CreatingRoadmapPage from "./pages/roadmap/CreatingRoadmapPage";
 import DoingRoadmapExsPage from "./pages/roadmap/DoingRoadmapExsPage";
 import ErrorPage from "./pages/error/ErrorPage";
@@ -41,7 +43,9 @@ function App() {
         }
       />
       <Route path="/taking-test" element={<TakingTestPage />} />
-      <Route path="/roadmap" element={<RoadmapPage />} />
+      <Route path="/road-map" element={<RoadmapPage />} />
+      <Route path="/practice" element={<PracticePage />} />
+      <Route path="/taking-practice/:part/:id" element={<TakingPracticePage />} />
       <Route path="/creating-roadmap" element={<CreatingRoadmapPage />} />
       <Route
         path="/doing-roadmap/:phase/:part/:chapter"
