@@ -13,7 +13,12 @@ export default function TakingPracticePage() {
   const [questions, setQuestions] = useState<Question[]>(
     practiceForPart1[0].questions
   );
-  const [currentQuestion, setCurrentQuestion] = useState<number>(0);
+  const [selectedQuestion, setSelectedQuestion] = useState<number>(1);
+
+  const handleQuestionSelectedChange = (selectedQuestion: number) => {
+    console.log(selectedQuestion + "from TakingPracticePage");
+    setSelectedQuestion(selectedQuestion);
+  };
   const { id, part } = useParams<{ id: string; part: string }>();
   console.log(id, part);
   console.log(questions);
@@ -25,7 +30,7 @@ export default function TakingPracticePage() {
         <div className="p-8 w-full flex flex-col gap-2">
           <div className="information w-full flex flex-row ">
             <h3 className="font-normal text-3xl text-[#000] w-[45%]">
-              Câu hỏi số{" "}
+              Câu hỏi số{selectedQuestion}
             </h3>
             <CountingTimer />
           </div>
@@ -33,10 +38,9 @@ export default function TakingPracticePage() {
             <ListeningAudio />
           </div>
           <div className="w-full bg-[#fff] rounded-[20px] px-8 py-7 mb-[20px]">
-            {questions.map((question, index) => (
-              <QuestionComponent question={question} key={index}/>))}
+            <QuestionComponent question={questions[selectedQuestion - 1]} />
           </div>
-          <QuestionPalette questionNumber={questions.length} />
+          <QuestionPalette questionNumber={questions.length} onQuestionSelectedChange={handleQuestionSelectedChange} />
         </div>
       </div>
     </div>
