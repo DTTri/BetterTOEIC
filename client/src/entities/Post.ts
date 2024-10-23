@@ -1,3 +1,5 @@
+import exp from "constants";
+
 export type Creator = {
     _id: string;
     username: string;
@@ -23,3 +25,5 @@ type Post = {
     created_at: string;
     updated_at: string;
 }
+
+export default Post;
