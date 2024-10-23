@@ -14,6 +14,9 @@ import TestsPage from "./test/TestsPage";
 import TakingTestPage from "./test/TakingTestPage";
 import TestDetailsPage from "./test/TestDetailsPage";
 
+import TakingPracticePage from "./practice/TakingPracticePage";
+import PracticePage from "./practice/PracticePage";
+
 export {
   ForumManagementPage,
   OverallManagementPage,
@@ -28,4 +31,6 @@ export {
   TestsPage,
   TakingTestPage,
   TestDetailsPage,
+  TakingPracticePage,
+  PracticePage,
 };

@@ -14,6 +14,8 @@ import {
   UserManagementPage,
   VocabManagementPage,
   ForumManagementPage,
+  PracticePage,
+  TakingPracticePage,
 } from "./pages";
 import ErrorPage from "./pages/error/ErrorPage";
 function App() {
@@ -53,7 +55,10 @@ function App() {
       <Route path="/taking-test" element={<TakingTestPage />} />
       <Route path="/road-map" element={<RoadmapPage />} />
       <Route path="/practice" element={<PracticePage />} />
-      <Route path="/taking-practice/:part/:id" element={<TakingPracticePage />} />
+      <Route
+        path="/taking-practice/:part/:id"
+        element={<TakingPracticePage />}
+      />
       <Route path="/creating-roadmap" element={<CreatingRoadmapPage />} />
       <Route
         path="/doing-roadmap/:phase/:part/:chapter"
