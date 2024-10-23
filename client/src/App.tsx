@@ -15,7 +15,7 @@ import {
   VocabManagementPage,
   ForumManagementPage,
 } from "./pages";
-
+import ErrorPage from "./pages/error/ErrorPage";
 function App() {
   // useSelector to get the test from the store by id, currently hardcode the test data
   // type Test = {
@@ -51,7 +51,9 @@ function App() {
         }
       />
       <Route path="/taking-test" element={<TakingTestPage />} />
-      <Route path="/roadmap" element={<RoadmapPage />} />
+      <Route path="/road-map" element={<RoadmapPage />} />
+      <Route path="/practice" element={<PracticePage />} />
+      <Route path="/taking-practice/:part/:id" element={<TakingPracticePage />} />
       <Route path="/creating-roadmap" element={<CreatingRoadmapPage />} />
       <Route
         path="/doing-roadmap/:phase/:part/:chapter"
@@ -65,6 +67,8 @@ function App() {
       <Route path="/admin/users" element={<UserManagementPage />} />
       <Route path="/admin/vocabs" element={<VocabManagementPage />} />
       <Route path="/admin/forums" element={<ForumManagementPage />} />
+      <Route path="/error" element={<ErrorPage />} />
+      <Route path="*" element={<ErrorPage />} />
     </Routes>
   );
 }
