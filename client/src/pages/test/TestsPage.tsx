@@ -1,4 +1,4 @@
-import { PageHeader, SearchBar } from "@/components";
+import { Footer, PageHeader, SearchBar } from "@/components";
 
 import TestCardGallery from "@/components/test/TestCardGallery";
 import PracticeList from "../../components/practice/PracticeList";
@@ -9,7 +9,7 @@ import CountingTimer from "@/components/practice/CountingTimer";
 export default function TestsPage() {
   return (
     <div className="">
-      <CountingTimer/>
+      <Footer/>
     </div>
   );
 }

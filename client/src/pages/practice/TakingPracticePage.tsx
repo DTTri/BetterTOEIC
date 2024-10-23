@@ -27,7 +27,7 @@ export default function TakingPracticePage() {
       <Header />
       <div className="content flex flex-row items-stretch gap-2 overflow-hidden">
         <LeftBar />
-        <div className="p-8 w-full flex flex-col gap-2">
+        <div className="max-w-[1200px] p-8 w-full flex flex-col gap-2">
           <div className="information w-full flex flex-row ">
             <h3 className="font-normal text-3xl text-[#000] w-[45%]">
               Câu hỏi số{selectedQuestion}
