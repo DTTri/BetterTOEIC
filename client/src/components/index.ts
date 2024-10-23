@@ -21,6 +21,8 @@ import Steps from "./roadmap/Steps";
 import ChaptersListContainer from "./roadmap/ChaptersListContainer";
 import ChaptersContainer from "./roadmap/personalRoadmap/ChaptersContainer";
 import CurrentPhaseContainer from "./roadmap/personalRoadmap/CurrentPhaseContainer";
+
+import SideBar from "./admin/SideBar";
 export {
   Footer,
   Header,
@@ -44,4 +46,5 @@ export {
   ChaptersListContainer,
   ChaptersContainer,
   CurrentPhaseContainer,
+  SideBar,
 };
