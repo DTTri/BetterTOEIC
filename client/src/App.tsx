@@ -20,6 +20,7 @@ import {
 import ErrorPage from "./pages/error/ErrorPage";
 import VocabCardGallery from "./pages/vocab/VocabCardGalleryPage";
 import VocabLearingPage from "./pages/vocab/VocabLearingPage";
+import LoginPage from "./pages/auth/LoginPage";
 function App() {
   // useSelector to get the test from the store by id, currently hardcode the test data
   // type Test = {
@@ -78,6 +79,7 @@ function App() {
       <Route path="/admin/forums" element={<ForumManagementPage />} />
       <Route path="/error" element={<ErrorPage />} />
       <Route path="*" element={<ErrorPage />} />
+      <Route path="/login" element={<LoginPage />} />
     </Routes>
   );
 }
