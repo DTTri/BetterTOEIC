@@ -53,9 +53,9 @@ export default function LoginForm() {
       </div>
       <div className="flex flex-row items-center justify-between w-full mt-4 mb-4">
         <FormControlLabel control={<Checkbox  value={rememberMe} onChange={(e) => {console.log(e.target.checked)}} />} label="Remember me" style={{fontFamily: "Nunito Sans"}}/>
-        <a href="#" className='text-[#000] text-sm font-normal hover:text-slate-500'>Forgot Password?</a>
+        <Link to='/forgot-password' className='text-[#000] text-sm font-normal hover:text-slate-500'>Forgot Password?</Link>
       </div>
-      <Link to=''><Button variant='outlined' style={{backgroundColor: '#3A7EE1', color: '#fff', fontFamily: 'Nunito Sans', fontSize: '20px', fontWeight: 'bold', textTransform: 'none', borderRadius: '8px', padding: '8px 0', width: '100%', cursor: 'pointer'}}>Log In</Button></Link>
+      <Link to=''><Button variant='outlined' style={{backgroundColor: '#3A7EE1', color: '#fff', fontFamily: 'Nunito Sans', fontSize: '18px', fontWeight: 'bold', textTransform: 'none', borderRadius: '8px', padding: '8px 0', width: '100%', cursor: 'pointer'}}>LOG IN</Button></Link>
       <div className="w-full relative my-6">
         <div className="w-full h-[0.5px] border-t-[1px] border-[#c9bfbf]"></div>
         <span className='block text-sm font-bold text-[#212121] bg-[#fff] py-1 px-2 absolute translate-y-[-60%] left-1/2 translate-x-[-50%]'>or</span>
