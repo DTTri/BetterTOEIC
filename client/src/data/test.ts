@@ -14,10 +14,10 @@ const testData: Test = {
   title: "TOEIC Sample Test 2024",
   description: "A sample TOEIC test for practice.",
   main_audio: "https://example.com/audio/test.mp3",
-  created_by: "653f1ae34b8f1e2f10111213",
-  created_at: "",
-  updated_at: "",
-  difficulty: "medium",
+  created_by: "Trí Dương",
+  created_at: "20/10/2024",
+  updated_at: "22/10/2024",
+  difficulty: "Trung bình",
   questions: [
     // Part 1: 6 câu hỏi với hình ảnh và 3 đáp án
     {

@@ -1,4 +1,5 @@
 import Vocab from "./Vocab";
+
 type VocabByTopic = {
     _id: string;
     topic_name: string;

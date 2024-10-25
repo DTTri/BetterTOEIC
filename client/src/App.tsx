@@ -1,12 +1,22 @@
 import { Route, Routes } from "react-router-dom";
-import TestsPage from "./pages/test/TestsPage";
-import TestDetailsPage from "./pages/test/TestDetailsPage";
-import RoadmapPage from "./pages/roadmap/RoadmapPage";
-import TakingTestPage from "./pages/test/TakingTestPage";
-import PracticePage from "./pages/practice/PracticePage";
-import TakingPracticePage from "./pages/practice/TakingPracticePage";
-import CreatingRoadmapPage from "./pages/roadmap/CreatingRoadmapPage";
-import DoingRoadmapExsPage from "./pages/roadmap/DoingRoadmapExsPage";
+
+import {
+  TestsPage,
+  TestDetailsPage,
+  TakingTestPage,
+  RoadmapPage,
+  CreatingRoadmapPage,
+  DoingRoadmapExsPage,
+  OverallManagementPage,
+  TestManagementPage,
+  PracticeManagementPage,
+  RoadmapManagementPage,
+  UserManagementPage,
+  VocabManagementPage,
+  ForumManagementPage,
+  PracticePage,
+  TakingPracticePage,
+} from "./pages";
 import ErrorPage from "./pages/error/ErrorPage";
 import VocabCardGallery from "./pages/vocab/VocabCardGalleryPage";
 import VocabLearingPage from "./pages/vocab/VocabLearingPage";
@@ -47,7 +57,10 @@ function App() {
       <Route path="/taking-test" element={<TakingTestPage />} />
       <Route path="/road-map" element={<RoadmapPage />} />
       <Route path="/practice" element={<PracticePage />} />
-      <Route path="/taking-practice/:part/:id" element={<TakingPracticePage />} />
+      <Route
+        path="/taking-practice/:part/:id"
+        element={<TakingPracticePage />}
+      />
       <Route path="/creating-roadmap" element={<CreatingRoadmapPage />} />
       <Route path="/vocab-gallery" element={<VocabCardGallery />} />
       <Route path="/vocab-learning/:id" element={<VocabLearingPage />} />
@@ -55,6 +68,14 @@ function App() {
         path="/doing-roadmap/:phase/:part/:chapter"
         element={<DoingRoadmapExsPage />}
       />
+
+      <Route path="/admin/overall" element={<OverallManagementPage />} />
+      <Route path="/admin/tests" element={<TestManagementPage />} />
+      <Route path="/admin/practices" element={<PracticeManagementPage />} />
+      <Route path="/admin/roadmaps" element={<RoadmapManagementPage />} />
+      <Route path="/admin/users" element={<UserManagementPage />} />
+      <Route path="/admin/vocabs" element={<VocabManagementPage />} />
+      <Route path="/admin/forums" element={<ForumManagementPage />} />
       <Route path="/error" element={<ErrorPage />} />
       <Route path="*" element={<ErrorPage />} />
     </Routes>

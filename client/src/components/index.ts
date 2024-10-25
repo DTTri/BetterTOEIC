@@ -23,6 +23,7 @@ import CurrentPhaseContainer from "./roadmap/personalRoadmap/CurrentPhaseContain
 import VocabByTopicCard from "./vocab/VocabByTopicCard";
 import FlashCard from "./vocab/FlashCard";
 import LeftBarVocab from "./vocab/LeftBarVocab";
+import SideBar from "./admin/SideBar";
 export {
   Footer,
   Header,
@@ -49,4 +50,5 @@ export {
   VocabByTopicCard,
   FlashCard,
   LeftBarVocab,
+  SideBar,
 };
