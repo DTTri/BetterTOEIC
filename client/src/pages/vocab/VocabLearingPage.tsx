@@ -20,14 +20,13 @@ export default function VocabLearingPage() {
   return (
     <div className=''>
         <Header />
-        <div className="flex flex-row">
+        <div className="flex flex-row items-stretch">
             <LeftBarVocab VocabLists={vocab_data}/>
             <div className="w-full flex flex-col gap-4 p-6">
                 <FlashCard vocab={vocabs[selectedVocab]}/>
                 <QuestionPalette questionNumber={vocabs.length} onQuestionSelectedChange={handleVocabSelectedChange}/>
             </div>
         </div>
-        <Footer />
     </div>
   )
 }

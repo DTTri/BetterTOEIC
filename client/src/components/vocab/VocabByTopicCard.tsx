@@ -5,7 +5,7 @@ import VocabByTopic from "@/entities/VocabByTopic";
 
 export default function VocabByTopicCard({vocabByTopic, onCardClick} : {vocabByTopic: VocabByTopic, onCardClick: (id: string) => void}) {
   return (
-    <div className="max-w-[305px] w-full max-h-[230px] h-full round-[20px] mx-auto bg-[#fff] rounded-[20px] overflow-hidden cursor-pointer"
+    <div className="max-w-[305px] w-full max-h-[230px] h-full round-[20px] mb-6 mx-auto bg-[#fff] rounded-[20px] overflow-hidden cursor-pointer"
           onClick={() => onCardClick(vocabByTopic._id)}>
       <div className="img w-full h-[73%] rounded-[20px] ">
         <img

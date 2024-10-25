@@ -15,7 +15,7 @@ const Flashcard = ({vocab} : {vocab : Vocab}) => {
   return (
     <ReactCardFlip isFlipped={isFlipped} flipDirection="vertical">
       {/* Front */}
-      <div className="rounded-[20px] h-[550px] bg-[#fff] overflow-hidden cursor-pointer p-6">
+      <div className="rounded-[20px] h-[500px] bg-[#fff] overflow-hidden cursor-pointer p-6">
         <div className="buttons w-full flex flex-row items-center justify-between mb-4">
           <VolumeUpIcon fontSize="large" />
           <SaveIcon fontSize="large" />
@@ -47,7 +47,7 @@ const Flashcard = ({vocab} : {vocab : Vocab}) => {
         </div>
       </div>
 
-      <div className="rounded-[20px] h-[550px] bg-[#fff] overflow-hidden cursor-pointer p-8">
+      <div className="rounded-[20px] h-[500px] bg-[#fff] overflow-hidden cursor-pointer p-8">
         <div className="buttons h-[8%] w-full flex flex-row items-center justify-between mb-4">
           <VolumeUpIcon fontSize="large" />
           <SaveIcon fontSize="large" />

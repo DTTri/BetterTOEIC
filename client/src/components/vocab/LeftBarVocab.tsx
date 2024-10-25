@@ -10,8 +10,7 @@ import VocabByTopic from "@/entities/VocabByTopic";
 export default function LeftBarVocab({ VocabLists }: { VocabLists: VocabByTopic[]}) {
   const [selectedTest, setSelectedTest] = useState<number>(0);
   return (
-    <div className="max-w-[300px] w-full items-center flex-col bg-[#fff] h-screen py-5">
-
+    <div className="max-w-[300px] w-full items-center flex-col bg-[#fff] max-h-screen overflow-y-auto py-5">
         <div className="flex flex-col items-center mx-auto">
           {VocabLists.map((vocab, index) => {
             console.log(vocab);

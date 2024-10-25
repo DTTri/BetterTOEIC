@@ -8,7 +8,7 @@ import TakingPracticePage from "./pages/practice/TakingPracticePage";
 import CreatingRoadmapPage from "./pages/roadmap/CreatingRoadmapPage";
 import DoingRoadmapExsPage from "./pages/roadmap/DoingRoadmapExsPage";
 import ErrorPage from "./pages/error/ErrorPage";
-import VocabCardGallery from "./pages/vocab/VocabCardGallery";
+import VocabCardGallery from "./pages/vocab/VocabCardGalleryPage";
 import VocabLearingPage from "./pages/vocab/VocabLearingPage";
 function App() {
   // useSelector to get the test from the store by id, currently hardcode the test data
