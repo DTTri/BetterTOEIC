@@ -21,6 +21,7 @@ import ErrorPage from "./pages/error/ErrorPage";
 import VocabCardGallery from "./pages/vocab/VocabCardGalleryPage";
 import VocabLearingPage from "./pages/vocab/VocabLearingPage";
 import LoginPage from "./pages/auth/LoginPage";
+import RegisterPage from "./pages/auth/RegisterPage";
 function App() {
   // useSelector to get the test from the store by id, currently hardcode the test data
   // type Test = {
@@ -80,6 +81,7 @@ function App() {
       <Route path="/error" element={<ErrorPage />} />
       <Route path="*" element={<ErrorPage />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
     </Routes>
   );
 }
