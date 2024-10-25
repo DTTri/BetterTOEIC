@@ -6,6 +6,7 @@ import { useState } from "react";
 import Question from "@/entities/Question";
 import { practiceForPart1 } from "@/data/practice_test";
 import QuestionComponent from "@/components/test/QuestionComponent";
+import practiceResult from "@/data/practice_result";
 
 //Testing for part 1
 //If having api, api should return the list of questions for each part (vd: https://bettertoeic.com/api/practice/part1/test1)
@@ -26,7 +27,7 @@ export default function TakingPracticePage() {
     <div className="">
       <Header />
       <div className="content flex flex-row items-stretch gap-2 overflow-hidden">
-        <LeftBar />
+        <LeftBar PracticeResult={practiceResult} PracticeLists={practiceForPart1}/>
         <div className="max-w-[1200px] p-8 w-full flex flex-col gap-2">
           <div className="information w-full flex flex-row ">
             <h3 className="font-normal text-3xl text-[#000] w-[45%]">

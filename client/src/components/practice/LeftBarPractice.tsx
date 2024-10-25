@@ -4,43 +4,14 @@ import { title } from "process";
 import React from "react";
 import { Link } from "react-router-dom";
 import DoneIcon from "@mui/icons-material/Done";
-import { practiceForPart1 } from "@/data/practice_test";
-import practiceResult from "@/data/practice_result";
+import Practice from "@/entities/Practice";
+import { UserPracticeData } from "@/entities/PracticeHisotry";
 
 //should be edited when call api from back-end
 
-const PracticeList = [
-  {
-    title: "Test 1",
-    totalQuestion: 10,
-    progress: 5,
-  },
-  {
-    title: "Test 2",
-    totalQuestion: 10,
-    progress: 5,
-  },
-  {
-    title: "Test 3",
-    totalQuestion: 10,
-    progress: 5,
-  },
-  {
-    title: "Test 4",
-    totalQuestion: 10,
-    progress: 5,
-  },
-  {
-    title: "Test 5",
-    totalQuestion: 10,
-    progress: 10,
-  },
-];
-
-export default function LeftBar() {
+export default function LeftBar({PracticeLists, PracticeResult} : {PracticeLists: Practice[], PracticeResult: UserPracticeData}) {
   const [choiced, setChoiced] = useState<String>("practices");
-  const [PracticeLists, setPracticeLists] = useState(PracticeList);
-  const [practiceTest, setPracticeTest] = useState();
+  const [selectedTest, setSelectedTest] = useState<number>(0);
   return (
     <div className="max-w-[300px] w-full items-center flex-col bg-[#fff] h-screen py-5">
       <div className="flex flex-row items-center justify-evenly mb-5">
@@ -77,18 +48,18 @@ export default function LeftBar() {
       </div>
       {choiced === "practices" && (
         <div className="flex flex-col items-center mx-auto">
-          {PracticeList.map((practice, index) => {
+          {PracticeLists.map((practice, index) => {
             console.log(practice);
             return (
-              <Link key={index} className="w-[80%] mx-auto mb-4" to={``}>
-                <div className="flex min-h-[45px] items-center justify-between px-2 py-2 rounded-[20px] bg-slate-400">
+              <Link key={index} className="w-[80%] mx-auto mb-4" to={``} onClick={() => setSelectedTest(index)}>
+                <div className="flex min-h-[45px] items-center justify-between px-2 py-2 rounded-[10px]" style={{backgroundColor: selectedTest === index ? '#94a3b8' :'#fff'}}>
                   <h3 className="text-base font-semibold text-[#202224]">
                     Test 1
                   </h3>
-                  {practice.progress !== practice.totalQuestion ? (
+                  {PracticeResult.part[index].practice_tests.length !== practice.questions.length ? (
                     <span className="font-normal text-[11px] text-[#ffffff] px-[3px] py-[5px] flex items-center justify-center aspect-square bg-[#00205C] rounded-full">
                       {(
-                        (practice.progress / practice.totalQuestion) *
+                        (PracticeResult.part[index].practice_tests.length / practice.questions.length) *
                         100
                       ).toFixed(0)}
                       %

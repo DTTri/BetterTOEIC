@@ -18,6 +18,8 @@ import {
   TakingPracticePage,
 } from "./pages";
 import ErrorPage from "./pages/error/ErrorPage";
+import VocabCardGallery from "./pages/vocab/VocabCardGalleryPage";
+import VocabLearingPage from "./pages/vocab/VocabLearingPage";
 function App() {
   // useSelector to get the test from the store by id, currently hardcode the test data
   // type Test = {
@@ -60,6 +62,8 @@ function App() {
         element={<TakingPracticePage />}
       />
       <Route path="/creating-roadmap" element={<CreatingRoadmapPage />} />
+      <Route path="/vocab-gallery" element={<VocabCardGallery />} />
+      <Route path="/vocab-learning/:id" element={<VocabLearingPage />} />
       <Route
         path="/doing-roadmap/:phase/:part/:chapter"
         element={<DoingRoadmapExsPage />}
