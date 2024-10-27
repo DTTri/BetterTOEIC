@@ -4,7 +4,6 @@ export default function QuestionPalette({ questionNumber, onQuestionSelectedChan
   const [questionSelected, setQuestionSelected] = useState(1);
 
   useEffect(() => {
-    console.log(questionSelected + 'from QuestionPalette');
     onQuestionSelectedChange(questionSelected - 1);
   }, [questionSelected, onQuestionSelectedChange]);
 

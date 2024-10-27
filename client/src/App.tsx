@@ -24,6 +24,9 @@ import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 import RessetPasswordPage from "./pages/auth/RessetPasswordPage";
+import PersonalImformationPage from "./pages/personal/PersonalImformationPage";
+import SavedPage from "./pages/personal/SavedPage";
+import ReportUserPage from "./pages/personal/ReportUserPage";
 function App() {
   // useSelector to get the test from the store by id, currently hardcode the test data
   // type Test = {
@@ -86,6 +89,9 @@ function App() {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/resset-password" element={<RessetPasswordPage />} />
+      <Route path="/personal-information" element={<PersonalImformationPage />} />
+      <Route path="/saved" element={<SavedPage />} />
+      <Route path="/report-user" element={<ReportUserPage />} />
     </Routes>
   );
 }
