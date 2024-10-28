@@ -9,14 +9,10 @@ import { UserPracticeData } from "@/entities/PracticeHisotry";
 
 //should be edited when call api from back-end
 
-export default function LeftBar({ PracticeLists, PracticeResult, onHandleTestPracticeChange }: { PracticeLists: Practice[], PracticeResult: UserPracticeData, onHandleTestPracticeChange: (selectedPracticeId: string) => void }) {
+export default function LeftBar({ PracticeLists, PracticeResult }: { PracticeLists: Practice[], PracticeResult: UserPracticeData }) {
   const [choiced, setChoiced] = useState<String>("practices");
   const [selectedTest, setSelectedTest] = useState<string>(PracticeLists[0]._id);
 
-  useEffect(() => {
-    console.log(selectedTest + ' from LeftBar');
-    onHandleTestPracticeChange(selectedTest);
-  }, [selectedTest, onHandleTestPracticeChange]);
 
   return (
     <div className="max-w-[300px] w-full items-center flex-col bg-[#fff] h-screen py-5">
@@ -56,7 +52,7 @@ export default function LeftBar({ PracticeLists, PracticeResult, onHandleTestPra
         <div className="flex flex-col items-center mx-auto">
           {PracticeLists.map((practice, index) => {
             return (
-              <Link key={index} className="w-[80%] mx-auto mb-4" to={``} onClick={() => setSelectedTest(practice._id)}>
+              <Link key={index} className="w-[80%] mx-auto mb-4" to={`/taking-practice/${practice.part}/${practice._id}`} onClick={() => setSelectedTest(practice._id)}>
                 <div className="flex min-h-[45px] items-center justify-between px-2 py-2 rounded-[10px]" style={{backgroundColor: selectedTest === practice._id ? '#94a3b8' :'#fff'}}>
                   <h3 className="text-base font-semibold text-[#202224]">
                     Test {index + 1}

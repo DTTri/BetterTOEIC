@@ -4,21 +4,17 @@ import { Link } from "react-router-dom";
 import DoneIcon from "@mui/icons-material/Done";
 import Vocab from "@/entities/Vocab";
 import VocabByTopic from "@/entities/VocabByTopic";
-import { on } from "events";
 
 //should be edited when call api from back-end
 
-export default function LeftBarVocab({ VocabLists, onHandleVocabTopicChange }: { VocabLists: VocabByTopic[], onHandleVocabTopicChange: (selectedVocab: string) => void }) {
+export default function LeftBarVocab({ VocabLists }: { VocabLists: VocabByTopic[] }) {
   const [selectedTest, setSelectedTest] = useState<string>(VocabLists[0]._id);
-  useEffect(() => {
-    onHandleVocabTopicChange(selectedTest);
-  }, [selectedTest, onHandleVocabTopicChange]);
   return (
     <div className="max-w-[300px] w-full items-center flex-col bg-[#fff] max-h-screen overflow-y-auto py-5">
         <div className="flex flex-col items-center mx-auto">
           {VocabLists.map((vocab, index) => {
             return (
-              <Link key={index} className="w-[80%] mx-auto mb-4" to={``} onClick={() => setSelectedTest(vocab._id)}>
+              <Link key={index} className="w-[80%] mx-auto mb-4" to={`/vocab-learning/${vocab._id}`} onClick={() => { if (selectedTest !== vocab._id) { setSelectedTest(vocab._id);}}}>
                 <div className="flex min-h-[45px] items-center justify-between px-2 py-2 rounded-[10px]" style={{backgroundColor: selectedTest === vocab._id ? '#94a3b8' :'#fff'}}>
                   <h3 className="text-base font-semibold text-[#202224]">
                     Test {index + 1}

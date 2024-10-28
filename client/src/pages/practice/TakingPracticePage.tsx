@@ -1,8 +1,8 @@
 import { Header, LeftBar, ListeningAudio, QuestionsGroup } from "@/components";
 import CountingTimer from "@/components/practice/CountingTimer";
 import QuestionPalette from "@/components/practice/QuestionPalette";
-import { useNavigate, useParams } from "react-router-dom";
-import { useRef, useState } from "react";
+import { useParams } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 import Question from "@/entities/Question";
 import { practiceForPart1 } from "@/data/practice_test";
 import QuestionComponent from "@/components/test/QuestionComponent";
@@ -11,22 +11,18 @@ import practiceResult from "@/data/practice_result";
 //Testing for part 1
 //If having api, api should return the list of questions for each part (vd: https://bettertoeic.com/api/practice/part1/test1)
 export default function TakingPracticePage() {
-  const navigate = useNavigate();
   const { part, id } = useParams();
+  const [selectedQuestion, setSelectedQuestion] = useState<number>(1);
 
   const [questions, setQuestions] = useState<Question[]>(
     practiceForPart1[0].questions
   );
 
-  const handleTestPracticeChange = (practiceId: string) => {
-    if(practiceId !== id) {
-      navigate(`/taking-practice/${part}/${practiceId}`);
-      setQuestions(practiceForPart1.find((practice) => practice._id === practiceId)?.questions || []);
-    }
-  };
+  useEffect(() => {
+    setQuestions(practiceForPart1.find((practice) => practice._id === id)?.questions || []);
+ }, [id]);
 
-
-  const [selectedQuestion, setSelectedQuestion] = useState<number>(1);
+  console.log(questions);
   
   const handleQuestionSelectedChange = (selectedQuestion: number) => {
     setSelectedQuestion(selectedQuestion);
@@ -36,7 +32,7 @@ export default function TakingPracticePage() {
     <div className="">
       <Header />
       <div className="content flex flex-row items-stretch gap-2 overflow-hidden">
-        <LeftBar PracticeResult={practiceResult} PracticeLists={practiceForPart1} onHandleTestPracticeChange={handleTestPracticeChange}/>
+        <LeftBar PracticeResult={practiceResult} PracticeLists={practiceForPart1} />
         <div className="max-w-[1200px] p-8 w-full flex flex-col gap-2">
           <div className="information w-full flex flex-row ">
             <h3 className="font-normal text-3xl text-[#000] w-[45%]">
