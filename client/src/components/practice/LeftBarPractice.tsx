@@ -11,8 +11,9 @@ import { UserPracticeData } from "@/entities/PracticeHisotry";
 
 export default function LeftBar({ PracticeLists, PracticeResult }: { PracticeLists: Practice[], PracticeResult: UserPracticeData }) {
   const [choiced, setChoiced] = useState<String>("practices");
+  console.log("left bar");
+  console.log(  PracticeLists);
   const [selectedTest, setSelectedTest] = useState<string>(PracticeLists[0]._id);
-
 
   return (
     <div className="max-w-[300px] w-full items-center flex-col bg-[#fff] h-screen py-5">
@@ -51,6 +52,7 @@ export default function LeftBar({ PracticeLists, PracticeResult }: { PracticeLis
       {choiced === "practices" && (
         <div className="flex flex-col items-center mx-auto">
           {PracticeLists.map((practice, index) => {
+            console.log('part: ' + practice.part);
             return (
               <Link key={index} className="w-[80%] mx-auto mb-4" to={`/taking-practice/${practice.part}/${practice._id}`} onClick={() => setSelectedTest(practice._id)}>
                 <div className="flex min-h-[45px] items-center justify-between px-2 py-2 rounded-[10px]" style={{backgroundColor: selectedTest === practice._id ? '#94a3b8' :'#fff'}}>
