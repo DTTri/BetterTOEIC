@@ -3,7 +3,7 @@ import React from 'react'
 
 export default function WordSaved({vocab} : {vocab: Vocab}) {
   return (
-    <div className='max-w-[880px] w-full px-8 py-3 bg-[#D9E7FF] rounded-[30px] flex flex-col gap-[10px]'>
+    <div className='w-full px-8 py-3 bg-[#D9E7FF] rounded-[30px] flex flex-col gap-[10px]'>
         <div className="flex flex-row items-center gap-4">
             <p className='text-lg font-bold text-[#000] '>{vocab.word}</p>
             <hr className='w-[1px] h-6 bg-black'/>
