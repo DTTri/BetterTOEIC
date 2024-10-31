@@ -94,101 +94,96 @@ export default function OverallManagementPage() {
   ];
 
   return (
-    <div className="w-full h-screen bg-background flex gap-2">
-      <SideBar />
-      <div className="w-full max-h-screen overflow-hidden p-4 flex flex-wrap justify-between">
-        {/* TODO: make this reponsive when screen size is small, adjust the this flex */}
-        <div className="new-users-info basis-full h-[45vh] flex flex-col gap-2">
-          <div className="new-users-info__header flex items-center gap-2">
-            <p className="text-xl font-bold text-primary">
-              Người dùng mới theo tháng
-            </p>
-            <div className="bg-white px-2 py-1 text-base text-primary rounded-lg border border-gray-500">
-              Tổng số người dùng: {totalUsers}
-            </div>
-          </div>
-          <div className="new-users-info__chart w-full h-full bg-white rounded-2xl">
-            <LineChart
-              dataset={newUsersPerMonthData}
-              xAxis={[{ dataKey: "month", scaleType: "point" }]}
-              series={[
-                {
-                  type: "line",
-                  dataKey: "newUsers",
-                  area: true,
-                  color: "#1814F3",
-                },
-              ]}
-              grid={{ vertical: true, horizontal: true }}
-              yAxis={[
-                {
-                  colorMap: {
-                    type: "continuous",
-                    min: 0,
-                    max: newUsersPerMonthData.reduce(
-                      (max, { newUsers }) => Math.max(max, newUsers),
-                      0
-                    ),
-                    color: ["#2D60FF33", "#1814F3"],
-                  },
-                },
-              ]}
-            />
+    <div className="w-full max-h-screen overflow-hidden p-4 flex flex-wrap justify-between h-screen bg-background">
+      {/* TODO: make this reponsive when screen size is small, adjust the this flex */}
+      <div className="new-users-info basis-full h-[45vh] flex flex-col gap-2">
+        <div className="new-users-info__header flex items-center gap-2">
+          <p className="text-xl font-bold text-primary">
+            Người dùng mới theo tháng
+          </p>
+          <div className="bg-white px-2 py-1 text-base text-primary rounded-lg border border-gray-500">
+            Tổng số người dùng: {totalUsers}
           </div>
         </div>
-        <div className="average-score basis-1/3 h-[42vh] flex flex-col gap-2">
-          <div className="average-score__header">
-            <p className="text-xl font-bold text-primary">
-              Band điểm trung bình
-            </p>
-          </div>
-          <div className="average-score__chart w-full h-full bg-white rounded-2xl p-2">
-            <PieChart
-              series={[
-                {
-                  data: averageScoreData,
+        <div className="new-users-info__chart w-full h-full bg-white rounded-2xl">
+          <LineChart
+            dataset={newUsersPerMonthData}
+            xAxis={[{ dataKey: "month", scaleType: "point" }]}
+            series={[
+              {
+                type: "line",
+                dataKey: "newUsers",
+                area: true,
+                color: "#1814F3",
+              },
+            ]}
+            grid={{ vertical: true, horizontal: true }}
+            yAxis={[
+              {
+                colorMap: {
+                  type: "continuous",
+                  min: 0,
+                  max: newUsersPerMonthData.reduce(
+                    (max, { newUsers }) => Math.max(max, newUsers),
+                    0
+                  ),
+                  color: ["#2D60FF33", "#1814F3"],
                 },
-              ]}
-            />
+              },
+            ]}
+          />
+        </div>
+      </div>
+      <div className="average-score basis-1/3 h-[42vh] flex flex-col gap-2">
+        <div className="average-score__header">
+          <p className="text-xl font-bold text-primary">Band điểm trung bình</p>
+        </div>
+        <div className="average-score__chart w-full h-full bg-white rounded-2xl p-2">
+          <PieChart
+            series={[
+              {
+                data: averageScoreData,
+              },
+            ]}
+          />
+        </div>
+      </div>
+      <div className="forum-infor basis-[65%] h-[42vh] flex flex-col gap-2">
+        <div className="forum-info__header flex items-center gap-2">
+          <p className="text-xl font-bold text-primary">
+            Lượt truy cập các bài viết
+          </p>
+          <div className="bg-white px-2 py-1 text-base text-primary rounded-lg border border-gray-500">
+            Tổng số lượt truy cập các bài viết: {totalPostAccess}
           </div>
         </div>
-        <div className="forum-infor basis-[65%] h-[42vh] flex flex-col gap-2">
-          <div className="forum-info__header flex items-center gap-2">
-            <p className="text-xl font-bold text-primary">
-              Lượt truy cập các bài viết
-            </p>
-            <div className="bg-white px-2 py-1 text-base text-primary rounded-lg border border-gray-500">
-              Tổng số lượt truy cập các bài viết: {totalPostAccess}
-            </div>
-          </div>
-          <div className="forum-info__chart w-full h-full bg-white rounded-2xl">
-            <LineChart
-              dataset={postsAccessPerMonthData}
-              xAxis={[{ dataKey: "month", scaleType: "point" }]}
-              series={[
-                {
-                  type: "line",
-                  dataKey: "postAccess",
-                  area: true,
-                  color: "#1814F3",
+        <div className="forum-info__chart w-full h-full bg-white rounded-2xl">
+          <LineChart
+            dataset={postsAccessPerMonthData}
+            xAxis={[{ dataKey: "month", scaleType: "point" }]}
+            series={[
+              {
+                type: "line",
+                dataKey: "postAccess",
+                area: true,
+                color: "#1814F3",
+              },
+            ]}
+            grid={{ vertical: true, horizontal: true }}
+            yAxis={[
+              {
+                colorMap: {
+                  type: "continuous",
+                  min: 0,
+                  max: postsAccessPerMonthData.reduce(
+                    (max, { postAccess }) => Math.max(max, postAccess),
+                    0
+                  ),
+                  color: ["#2D60FF33", "#1814F3"],
                 },
-              ]}
-              grid={{ vertical: true, horizontal: true }}
-              yAxis={[
-                {
-                  colorMap: {
-                    type: "continuous",
-                    min: 0,
-                    max: postsAccessPerMonthData.reduce(
-                      (max, { postAccess }) => Math.max(max, postAccess),
-                      0
-                    ),
-                    color: ["#2D60FF33", "#1814F3"],
-                  },
-                },
-              ]}
-            />
-          </div>
+              },
+            ]}
+          />
         </div>
       </div>
     </div>

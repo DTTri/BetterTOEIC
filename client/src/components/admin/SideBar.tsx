@@ -11,40 +11,34 @@ export default function SideBar() {
         >
           Tổng quan
         </Button>
-        <Button
-          className="menu-item w-full"
-          onClick={() => nav("/admin/tests")}
-        >
+        <Button className="menu-item w-full" onClick={() => nav("/admin/test")}>
           Đề thi
         </Button>
         <Button
           className="menu-item w-full"
-          onClick={() => nav("/admin/practices")}
+          onClick={() => nav("/admin/practice")}
         >
           Luyện tập
         </Button>
         <Button
           className="menu-item w-full"
-          onClick={() => nav("/admin/vocabs")}
+          onClick={() => nav("/admin/vocab")}
         >
           Từ vựng
         </Button>
         <Button
           className="menu-item w-full"
-          onClick={() => nav("/admin/roadmaps")}
+          onClick={() => nav("/admin/roadmap")}
         >
           Lộ trình
         </Button>
         <Button
           className="menu-item w-full"
-          onClick={() => nav("/admin/forums")}
+          onClick={() => nav("/admin/forum")}
         >
           Diễn đàn
         </Button>
-        <Button
-          className="menu-item w-full"
-          onClick={() => nav("/admin/users")}
-        >
+        <Button className="menu-item w-full" onClick={() => nav("/admin/user")}>
           Người dùng
         </Button>
       </div>

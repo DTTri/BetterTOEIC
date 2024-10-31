@@ -24,6 +24,8 @@ import VocabByTopicCard from "./vocab/VocabByTopicCard";
 import FlashCard from "./vocab/FlashCard";
 import LeftBarVocab from "./vocab/LeftBarVocab";
 import SideBar from "./admin/SideBar";
+import CreatingQuestion from "./admin/CreatingQuestion";
+import CreatingQuestionGroup from "./admin/CreatingQuestionGroup";
 export {
   Footer,
   Header,
@@ -51,4 +53,6 @@ export {
   FlashCard,
   LeftBarVocab,
   SideBar,
+  CreatingQuestion,
+  CreatingQuestionGroup,
 };

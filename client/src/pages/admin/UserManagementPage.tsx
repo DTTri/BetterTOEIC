@@ -70,33 +70,30 @@ export default function UserManagementPage() {
     },
   ];
   return (
-    <div className="w-full max-h-screen overflow-hidden bg-background flex gap-4">
-      <SideBar />
-      <div className="w-full h-screen p-4 flex flex-col gap-2">
-        <h2 className="text-2xl font-bold text-black">Danh sách người dùng</h2>
-        <div className="table-container w-full h-full">
-          <ThemeProvider theme={adminTableTheme}>
-            <DataGrid
-              style={{
-                borderRadius: "20px",
-                backgroundColor: "white",
-              }}
-              rows={rows}
-              columns={columns}
-              getRowId={(row) => row._id} // Specify custom id for each row
-              initialState={{
-                pagination: {
-                  paginationModel: {
-                    pageSize: 9,
-                  },
+    <div className="w-full h-screen p-4 flex flex-col gap-2 max-h-screen overflow-hidden bg-background">
+      <h2 className="text-2xl font-bold text-black">Danh sách người dùng</h2>
+      <div className="table-container w-full h-full">
+        <ThemeProvider theme={adminTableTheme}>
+          <DataGrid
+            style={{
+              borderRadius: "20px",
+              backgroundColor: "white",
+            }}
+            rows={rows}
+            columns={columns}
+            getRowId={(row) => row._id} // Specify custom id for each row
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 9,
                 },
-              }}
-              pageSizeOptions={[5]}
-              slots={{ toolbar: GridToolbar }}
-              rowSelection={false}
-            />
-          </ThemeProvider>
-        </div>
+              },
+            }}
+            pageSizeOptions={[5]}
+            slots={{ toolbar: GridToolbar }}
+            rowSelection={false}
+          />
+        </ThemeProvider>
       </div>
     </div>
   );

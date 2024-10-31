@@ -24,6 +24,14 @@ import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 import RessetPasswordPage from "./pages/auth/RessetPasswordPage";
+import CreatingTestPage from "./pages/admin/test/CreatingTestPage";
+import CreatingMiniTestPage from "./pages/admin/test/CreatingMiniTestPage";
+import CreatingPracticeExsPage from "./pages/admin/practice/CreatingPracticeExsPage";
+import CreatingPracticeLessonsPage from "./pages/admin/practice/CreatingPracticeLessonsPage";
+import CreatingRoadmapExsPage from "./pages/admin/roadmap/CreatingRoadmapExsPage";
+import CreatingPostPage from "./pages/admin/forum/CreatingPostPage";
+import CreatingVocabsPage from "./pages/admin/vocab/CreatingVocabsPage";
+import AdminLayout from "./components/admin/AdminLayout";
 function App() {
   // useSelector to get the test from the store by id, currently hardcode the test data
   // type Test = {
@@ -72,14 +80,35 @@ function App() {
         path="/doing-roadmap/:phase/:part/:chapter"
         element={<DoingRoadmapExsPage />}
       />
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route path="overall" element={<OverallManagementPage />} />
+        <Route path="test" element={<TestManagementPage />} />
+        <Route path="practice" element={<PracticeManagementPage />} />
+        <Route path="roadmap" element={<RoadmapManagementPage />} />
+        <Route path="forum" element={<ForumManagementPage />} />
+        <Route path="user" element={<UserManagementPage />} />
+        <Route path="vocab" element={<VocabManagementPage />} />
+        <Route path="test/creatingTest" element={<CreatingTestPage />} />
+        <Route
+          path="test/creatingMiniTest"
+          element={<CreatingMiniTestPage />}
+        />
+        <Route
+          path="pratice/creatingPracticeEx"
+          element={<CreatingPracticeExsPage />}
+        />
+        <Route
+          path="practice/creatingPracticeLesson"
+          element={<CreatingPracticeLessonsPage />}
+        />
+        <Route
+          path="roadmap/creatingRoadmapEx"
+          element={<CreatingRoadmapExsPage />}
+        />
+        <Route path="forum/creatingPost" element={<CreatingPostPage />} />
+        <Route path="vocab/creatingVocab" element={<CreatingVocabsPage />} />
+      </Route>
 
-      <Route path="/admin/overall" element={<OverallManagementPage />} />
-      <Route path="/admin/tests" element={<TestManagementPage />} />
-      <Route path="/admin/practices" element={<PracticeManagementPage />} />
-      <Route path="/admin/roadmaps" element={<RoadmapManagementPage />} />
-      <Route path="/admin/users" element={<UserManagementPage />} />
-      <Route path="/admin/vocabs" element={<VocabManagementPage />} />
-      <Route path="/admin/forums" element={<ForumManagementPage />} />
       <Route path="/error" element={<ErrorPage />} />
       <Route path="*" element={<ErrorPage />} />
       <Route path="/login" element={<LoginPage />} />
