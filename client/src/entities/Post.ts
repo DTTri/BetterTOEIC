@@ -15,10 +15,10 @@ export type Comment = {
 type Post = {
   postID: string;
   creator: Creator;
+  title: string;
   content: string;
-  image_content: string;
+  image_content: string[];
   totalLike: number;
-  totalComment: number;
   comments: Comment[];
   created_at: string;
   updated_at: string;
