@@ -5,9 +5,9 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import React, { useState, useRef } from "react";
 
-export default function PersonalImformationPages() {
+export default function PersonalImformationPage() {
   const [showPasswordChangePopup, setShowPasswordChangePopup] =
-    useState<boolean>(true);
+    useState<boolean>(false);
   const [avatarUrl, setAvatarUrl] = useState<string>(
     "https://images.unsplash.com/photo-1730051470698-f5c95d6d5120?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzNHx8fGVufDB8fHx8fA%3D%3D"
   );
@@ -45,9 +45,9 @@ export default function PersonalImformationPages() {
         <Button
           variant="contained"
           style={{
-            background: "#F2F2F2",
+            backgroundColor: "#F2F2F2",
             color: "#000",
-            borderRadius: "20px",
+            borderRadius: "10px",
             fontSize: "16px",
             textTransform: "none",
           }}
@@ -79,10 +79,12 @@ export default function PersonalImformationPages() {
           value={phoneNumber}
           onChange={(e) => setPhoneNumber(e.target.value)}
           margin="normal"
-          style={{ width: "30%", backgroundColor: "#F8FAFC" }}
+          style={{ width: "30%", backgroundColor: "#F8FAFC", marginBottom: "20px" }}
         />
          <div className="w-[40%] flex flex-row justify-between ">
-        <Button variant="outlined" style={{ backgroundColor: "#F2F2F2", color: "#000", borderRadius: "20px", fontSize: "16px", textTransform: "none" }}>Đổi mật khẩu</Button>
+        <Button 
+              onClick={() => setShowPasswordChangePopup(true)}
+              variant="outlined" style={{ backgroundColor: "#F2F2F2", color: "#000", borderRadius: "20px", fontSize: "16px", textTransform: "none" }}>Đổi mật khẩu</Button>
         <Button variant="outlined" style={{ backgroundColor: "#FFDCDC", color: "#000", borderRadius: "20px", fontSize: "16px", textTransform: "none" }}>Cập nhật</Button>
         </div>
       </div>
