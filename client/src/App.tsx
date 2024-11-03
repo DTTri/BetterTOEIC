@@ -24,6 +24,8 @@ import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 import RessetPasswordPage from "./pages/auth/RessetPasswordPage";
+import ForumPage from "./pages/forum/ForumPage";
+import PostDetailPage from "./pages/forum/PostDetailPage";
 import CreatingTestPage from "./pages/admin/test/CreatingTestPage";
 import CreatingMiniTestPage from "./pages/admin/test/CreatingMiniTestPage";
 import CreatingPracticeExsPage from "./pages/admin/practice/CreatingPracticeExsPage";
@@ -119,6 +121,8 @@ function App() {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/resset-password" element={<RessetPasswordPage />} />
+      <Route path="/forum" element={<ForumPage />} />
+      <Route path="/post-detail/:id" element={<PostDetailPage />} />
       <Route
         path="/personal-information"
         element={<PersonalImformationPage />}
