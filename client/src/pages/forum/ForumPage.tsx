@@ -146,7 +146,8 @@ export default function ForumPage() {
   return (
     <div className="flex flex-row w-full">
       <PostSearchBar />
-      <div className="content-post flex flex-col py-10 px-9 w-[70%] gap-7">
+      <div className="content-post flex flex-col py-10 px-9 w-[70%] gap-6">
+        <PostSharing />
         {posts.map((post) => (
           <PostComponent post={post} />))}
       </div>

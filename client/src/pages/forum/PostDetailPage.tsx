@@ -154,7 +154,7 @@ export default function PostDetailPage() {
   return (
     <div className="flex flex-row w-full">
       <PostSearchBar />
-      <div className="content-post flex flex-col py-10 px-9 w-[70%] gap-7">
+      <div className="content-post flex flex-col py-10 px-9 w-[70%] gap-6">
         <PostDetail post={post || posts[0]} />
         {post?.comments.map((comment, index) => (
           <Comment key={index} comment={comment} />

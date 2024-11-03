@@ -24,6 +24,13 @@ import VocabByTopicCard from "./vocab/VocabByTopicCard";
 import FlashCard from "./vocab/FlashCard";
 import LeftBarVocab from "./vocab/LeftBarVocab";
 import SideBar from "./admin/SideBar";
+import CommentComponent from "./forum/CommentComponent";
+import CommentCreating from "./forum/CommentCreating";
+import MustRead from "./forum/MustRead";
+import ImageModal from "./forum/ImageModal";
+import PostDetail from "./forum/PostDetail";
+import PostSearchBar from "./forum/PostSearchBar";
+import PostSharing from "./forum/PostSharing";
 export {
   Footer,
   Header,
@@ -51,4 +58,11 @@ export {
   FlashCard,
   LeftBarVocab,
   SideBar,
+  CommentComponent,
+  CommentCreating,
+  MustRead,
+  ImageModal,
+  PostDetail,
+  PostSearchBar,
+  PostSharing,
 };
