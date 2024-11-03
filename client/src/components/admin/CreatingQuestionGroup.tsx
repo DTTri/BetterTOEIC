@@ -1,21 +1,40 @@
 import { useState } from "react";
 import CreatingQuestion from "./CreatingQuestion";
 import { Button } from "@mui/material";
+import { v4 as uuidv4 } from "uuid";
+
 export default function CreatingQuestionGroup({
   part,
   questionNumberFrom,
+  onNewQuestionCreated,
+  onQuestionDeleted,
 }: {
   part: number;
   questionNumberFrom: number;
+  onNewQuestionCreated: () => void;
+  onQuestionDeleted: () => void;
 }) {
-  const [questions, setQuestions] = useState<number[]>([questionNumberFrom]);
+  const [questions, setQuestions] = useState<{ id: string; number: number }[]>([
+    { id: uuidv4(), number: questionNumberFrom },
+  ]);
   const [images, setImages] = useState<string[]>([]);
   const [paragraphs, setParagraphs] = useState<string[]>([]);
-  const deleteQuestion = (questionNumber: number) => {
-    setQuestions(questions.filter((qn) => qn !== questionNumber));
+
+  const addQuestion = () => {
+    setQuestions([
+      ...questions,
+      { id: uuidv4(), number: questionNumberFrom + questions.length },
+    ]);
+    onNewQuestionCreated();
   };
+
+  const deleteQuestion = (id: string) => {
+    setQuestions(questions.filter((question) => question.id !== id));
+    onQuestionDeleted();
+  };
+
   return (
-    <div className="w-full flex flex-col gap-2">
+    <div className="w-full flex flex-col gap-2 py-2 border-b-2 border-black">
       {part === 7 ? (
         <input
           type="file"
@@ -50,20 +69,19 @@ export default function CreatingQuestionGroup({
           paragraphs={paragraphs}
         />
       </div>
-      {questions.slice(1).map((questionNumber, index) => (
-        <div className="flex justify-between items-start">
+      {questions.slice(1).map((question, index) => (
+        <div key={question.id} className="flex justify-between items-start">
           <div className="w-2/3">
             <CreatingQuestion
-              key={index}
               part={part}
-              questionNumber={questionNumberFrom + index + 1}
+              questionNumber={index + questionNumberFrom + 1}
               questionGroupNumber={questionNumberFrom}
             />
           </div>
           <Button
             variant="contained"
             style={{ backgroundColor: "#F44336" }}
-            onClick={() => deleteQuestion(questionNumber)}
+            onClick={() => deleteQuestion(question.id)}
           >
             Delete
           </Button>
@@ -75,9 +93,7 @@ export default function CreatingQuestionGroup({
           backgroundColor: "#4CAF50",
           width: "fit-content",
         }}
-        onClick={() => {
-          setQuestions([...questions, questions[questions.length - 1] + 1]);
-        }}
+        onClick={addQuestion}
       >
         Add question
       </Button>
