@@ -32,6 +32,10 @@ import CreatingRoadmapExsPage from "./pages/admin/roadmap/CreatingRoadmapExsPage
 import CreatingPostPage from "./pages/admin/forum/CreatingPostPage";
 import CreatingVocabsPage from "./pages/admin/vocab/CreatingVocabsPage";
 import AdminLayout from "./components/admin/AdminLayout";
+import PersonalImformationPage from "./pages/personal/PersonalImformationPage";
+import ReportUserPage from "./pages/personal/ReportUserPage";
+import WordSavedPage from "./pages/personal/WordsSavedPage";
+import TestsSavedPage from "./pages/personal/TestsSavedPage";
 function App() {
   // useSelector to get the test from the store by id, currently hardcode the test data
   // type Test = {
@@ -115,6 +119,13 @@ function App() {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/resset-password" element={<RessetPasswordPage />} />
+      <Route
+        path="/personal-information"
+        element={<PersonalImformationPage />}
+      />
+      <Route path="/word-saved" element={<WordSavedPage />} />
+      <Route path="/test-saved" element={<TestsSavedPage />} />
+      <Route path="/report-user" element={<ReportUserPage />} />
     </Routes>
   );
 }

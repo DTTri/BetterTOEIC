@@ -25,7 +25,7 @@ function PracticeTest({
   // progress is a number descriping the number of test.length
   return (
     <div className="max-w-[640px] w-full flex flex-row items-center px-5 py-[8px] bg-[#F6F6F6] rounded-[30px] cursor-pointer"
-         onClick={() => navigate(`taking-practice/${part}/${practice._id}`)}>
+         onClick={() => navigate(`/taking-practice/${part}/${practice._id}`)}>
       <div className="w-[20px] h-[20px] mr-5">
         <img className="w-full h-full" src={book} alt="" />
       </div>
