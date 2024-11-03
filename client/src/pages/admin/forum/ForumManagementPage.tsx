@@ -1,4 +1,3 @@
-import { SideBar } from "@/components";
 import {
   DataGrid,
   GridActionsCellItem,
@@ -22,7 +21,7 @@ export default function ForumManagementPage() {
     },
     {
       field: "username",
-      headerName: "TÊN TÁC GIẢ",
+      headerName: "CREATOR",
       flex: 2,
       align: "center",
       headerAlign: "center",
@@ -32,7 +31,7 @@ export default function ForumManagementPage() {
     },
     {
       field: "content",
-      headerName: "NỘI DUNG",
+      headerName: "CONTENT",
       align: "center",
       headerAlign: "center",
       flex: 4,
@@ -40,28 +39,28 @@ export default function ForumManagementPage() {
 
     {
       field: "totalLike",
-      headerName: "LƯỢT THÍCH",
+      headerName: "LIKES",
       align: "center",
       headerAlign: "center",
       flex: 1,
     },
     {
       field: "totalComment",
-      headerName: "LƯỢT BÌNH LUẬN",
+      headerName: "COMMENTS",
       align: "center",
       headerAlign: "center",
       flex: 1,
     },
     {
       field: "created_at",
-      headerName: "NGÀY TẠO",
+      headerName: "CREATED AT",
       align: "center",
       headerAlign: "center",
       flex: 1,
     },
     {
       field: "updated_at",
-      headerName: "NGÀY SỬA",
+      headerName: "UPDATED AT",
       align: "center",
       headerAlign: "center",
       flex: 1,
@@ -75,7 +74,7 @@ export default function ForumManagementPage() {
       getActions: (params) => [
         <GridActionsCellItem
           icon={<DeleteForeverIcon />}
-          label="Xóa"
+          label="Delete"
           onClick={() => {
             console.log("Deleted: ", params.row);
             // Add delete logic here
@@ -83,7 +82,7 @@ export default function ForumManagementPage() {
         />,
         <GridActionsCellItem
           icon={<ModeEditOutlineIcon />}
-          label="Sửa"
+          label="Edit"
           onClick={() => {
             console.log(params.row);
             // Add edit logic here
@@ -95,36 +94,33 @@ export default function ForumManagementPage() {
   // Map the posts array to rows
   const rows: Post[] = posts;
   return (
-    <div className="w-full max-h-screen overflow-hidden bg-background flex gap-4">
-      <SideBar />
-      <div className="w-full h-screen p-4 flex flex-col gap-2">
-        <h2 className="text-2xl font-bold text-black">Danh sách bài viết</h2>
-        <div className="table-container w-full h-full">
-          <ThemeProvider theme={adminTableTheme}>
-            <DataGrid
-              style={{
-                borderRadius: "20px",
-                backgroundColor: "white",
-              }}
-              rows={rows}
-              columns={columns}
-              getRowId={(row) => row.postID} // Specify custom id for each row
-              initialState={{
-                pagination: {
-                  paginationModel: {
-                    pageSize: 8,
-                  },
+    <div className="w-full h-screen p-4 flex flex-col gap-2 max-h-screen overflow-hidden bg-background">
+      <h2 className="text-2xl font-bold text-black">Posts List</h2>
+      <div className="table-container w-full h-full">
+        <ThemeProvider theme={adminTableTheme}>
+          <DataGrid
+            style={{
+              borderRadius: "20px",
+              backgroundColor: "white",
+            }}
+            rows={rows}
+            columns={columns}
+            getRowId={(row) => row.postID} // Specify custom id for each row
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 8,
                 },
-              }}
-              pageSizeOptions={[5]}
-              slots={{ toolbar: GridToolbar }}
-              rowSelection={false}
-            />
-          </ThemeProvider>
-        </div>
-        <div className="buttons flex gap-2 justify-end">
-          <Button variant="contained">Tạo bài viết mới</Button>
-        </div>
+              },
+            }}
+            pageSizeOptions={[5]}
+            slots={{ toolbar: GridToolbar }}
+            rowSelection={false}
+          />
+        </ThemeProvider>
+      </div>
+      <div className="buttons flex gap-2 justify-end">
+        <Button variant="contained">Create post</Button>
       </div>
     </div>
   );

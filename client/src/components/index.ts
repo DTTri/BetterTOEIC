@@ -31,6 +31,8 @@ import ImageModal from "./forum/ImageModal";
 import PostDetail from "./forum/PostDetail";
 import PostSearchBar from "./forum/PostSearchBar";
 import PostSharing from "./forum/PostSharing";
+import CreatingQuestion from "./admin/CreatingQuestion";
+import CreatingQuestionGroup from "./admin/CreatingQuestionGroup";
 export {
   Footer,
   Header,
@@ -65,4 +67,6 @@ export {
   PostDetail,
   PostSearchBar,
   PostSharing,
+  CreatingQuestion,
+  CreatingQuestionGroup,
 };
