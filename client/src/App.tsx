@@ -94,7 +94,7 @@ function App() {
           element={<CreatingMiniTestPage />}
         />
         <Route
-          path="pratice/creatingPracticeEx"
+          path="practice/creatingPracticeEx"
           element={<CreatingPracticeExsPage />}
         />
         <Route
