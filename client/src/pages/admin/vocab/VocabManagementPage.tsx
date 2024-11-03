@@ -1,4 +1,3 @@
-import { SideBar } from "@/components";
 import {
   DataGrid,
   GridActionsCellItem,
@@ -23,14 +22,14 @@ export default function VocabManagementPage() {
     },
     {
       field: "topic_name",
-      headerName: "CHỦ ĐỀ",
+      headerName: "TOPIC",
       flex: 2,
       align: "center",
       headerAlign: "center",
     },
     {
       field: "numberOfVocabs",
-      headerName: "SỐ TỪ VỰNG",
+      headerName: "VOCABS",
       flex: 0.5,
       align: "center",
       headerAlign: "center",
@@ -40,14 +39,14 @@ export default function VocabManagementPage() {
     },
     {
       field: "created_at",
-      headerName: "NGÀY TẠO",
+      headerName: "CREATED AT",
       flex: 1,
       align: "center",
       headerAlign: "center",
     },
     {
       field: "updated_at",
-      headerName: "NGÀY CẬP NHẬT",
+      headerName: "UPDATED AT",
       flex: 1,
       align: "center",
       headerAlign: "center",
@@ -69,10 +68,8 @@ export default function VocabManagementPage() {
   ];
 
   return (
-    <div className="w-full h-screen p-4 flex flex-col gap-2 max-h-screen overflow-hidden bg-background">
-      <h2 className="text-2xl font-bold text-black">
-        Danh sách chủ đề từ vựng
-      </h2>
+    <div className="w-full h-screen p-4 rounded-xl flex flex-col gap-2 max-h-screen overflow-hidden bg-background">
+      <h2 className="text-2xl font-bold text-black">Topics List</h2>
       <div className="table-container w-full h-full">
         <ThemeProvider theme={adminTableTheme}>
           <DataGrid
@@ -97,7 +94,7 @@ export default function VocabManagementPage() {
         </ThemeProvider>
       </div>
       <div className="buttons flex gap-2 justify-end">
-        <Button variant="contained">Tạo chủ đề mới</Button>
+        <Button variant="contained">Create topic</Button>
       </div>
     </div>
   );

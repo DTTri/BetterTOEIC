@@ -19,7 +19,7 @@ export default function CreatingPracticeExsPage() {
   };
 
   return (
-    <div className="flex flex-col gap-4 p-4">
+    <div className="w-full min-h-screen rounded-xl bg-white text-black flex flex-col gap-4 p-4">
       <div className="select-part flex gap-2 items-center">
         <p className="text-3xl font-bold">Part:</p>
         <select

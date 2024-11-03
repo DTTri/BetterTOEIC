@@ -65,7 +65,7 @@ export default function CreatingTestPage() {
   };
 
   return (
-    <div className="flex flex-col gap-4 p-4">
+    <div className="w-full min-h-screen rounded-xl bg-white text-black flex flex-col gap-4 p-4">
       <div className="audio flex gap-2 items-center">
         <p className="text-2xl font-bold">Listening Audio:</p>
         <input type="file" accept="audio/*" />

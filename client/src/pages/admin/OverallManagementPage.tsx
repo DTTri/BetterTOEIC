@@ -1,4 +1,3 @@
-import { SideBar } from "@/components";
 import { LineChart } from "@mui/x-charts/LineChart";
 import { PieChart } from "@mui/x-charts/PieChart";
 
@@ -6,31 +5,31 @@ export default function OverallManagementPage() {
   const totalUsers = 10000;
   const newUsersPerMonthData = [
     {
-      month: "Tháng 1",
+      month: "January",
       newUsers: 100,
     },
     {
-      month: "Tháng 2",
+      month: "February",
       newUsers: 120,
     },
     {
-      month: "Tháng 3",
+      month: "March",
       newUsers: 400,
     },
     {
-      month: "Tháng 4",
+      month: "April",
       newUsers: 350,
     },
     {
-      month: "Tháng 5",
+      month: "May",
       newUsers: 420,
     },
     {
-      month: "Tháng 6",
+      month: "June",
       newUsers: 600,
     },
     {
-      month: "Tháng 7",
+      month: "July",
       newUsers: 550,
     },
   ];
@@ -64,45 +63,43 @@ export default function OverallManagementPage() {
   const totalPostAccess = 2000;
   const postsAccessPerMonthData = [
     {
-      month: "Tháng 1",
+      month: "January",
       postAccess: 50,
     },
     {
-      month: "Tháng 2",
+      month: "February",
       postAccess: 80,
     },
     {
-      month: "Tháng 3",
+      month: "March",
       postAccess: 60,
     },
     {
-      month: "Tháng 4",
+      month: "April",
       postAccess: 200,
     },
     {
-      month: "Tháng 5",
+      month: "May",
       postAccess: 250,
     },
     {
-      month: "Tháng 6",
+      month: "June",
       postAccess: 500,
     },
     {
-      month: "Tháng 7",
+      month: "July",
       postAccess: 450,
     },
   ];
 
   return (
-    <div className="w-full max-h-screen overflow-hidden p-4 flex flex-wrap justify-between h-screen bg-background">
+    <div className="w-full max-h-screen rounded-xl overflow-hidden p-4 flex flex-wrap justify-between h-screen bg-background">
       {/* TODO: make this reponsive when screen size is small, adjust the this flex */}
       <div className="new-users-info basis-full h-[45vh] flex flex-col gap-2">
         <div className="new-users-info__header flex items-center gap-2">
-          <p className="text-xl font-bold text-primary">
-            Người dùng mới theo tháng
-          </p>
+          <p className="text-xl font-bold text-primary">New users per month</p>
           <div className="bg-white px-2 py-1 text-base text-primary rounded-lg border border-gray-500">
-            Tổng số người dùng: {totalUsers}
+            Total users: {totalUsers}
           </div>
         </div>
         <div className="new-users-info__chart w-full h-full bg-white rounded-2xl">
@@ -136,7 +133,7 @@ export default function OverallManagementPage() {
       </div>
       <div className="average-score basis-1/3 h-[42vh] flex flex-col gap-2">
         <div className="average-score__header">
-          <p className="text-xl font-bold text-primary">Band điểm trung bình</p>
+          <p className="text-xl font-bold text-primary">User's band</p>
         </div>
         <div className="average-score__chart w-full h-full bg-white rounded-2xl p-2">
           <PieChart
@@ -151,10 +148,10 @@ export default function OverallManagementPage() {
       <div className="forum-infor basis-[65%] h-[42vh] flex flex-col gap-2">
         <div className="forum-info__header flex items-center gap-2">
           <p className="text-xl font-bold text-primary">
-            Lượt truy cập các bài viết
+            Total post access per month
           </p>
           <div className="bg-white px-2 py-1 text-base text-primary rounded-lg border border-gray-500">
-            Tổng số lượt truy cập các bài viết: {totalPostAccess}
+            Total post access: {totalPostAccess}
           </div>
         </div>
         <div className="forum-info__chart w-full h-full bg-white rounded-2xl">

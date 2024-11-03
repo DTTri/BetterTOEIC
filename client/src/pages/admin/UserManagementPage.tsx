@@ -1,4 +1,3 @@
-import { SideBar } from "@/components";
 import {
   DataGrid,
   GridActionsCellItem,
@@ -22,7 +21,7 @@ export default function UserManagementPage() {
     },
     {
       field: "username",
-      headerName: "TÊN",
+      headerName: "USERNAME",
       flex: 1.5,
       align: "center",
       headerAlign: "center",
@@ -36,14 +35,14 @@ export default function UserManagementPage() {
     },
     {
       field: "created_at",
-      headerName: "NGÀY TẠO",
+      headerName: "CREATED AT",
       flex: 1,
       align: "center",
       headerAlign: "center",
     },
     {
       field: "updated_at",
-      headerName: "NGÀY SỬA",
+      headerName: "UPDATED AT",
       flex: 1,
       align: "center",
       headerAlign: "center",
@@ -70,8 +69,8 @@ export default function UserManagementPage() {
     },
   ];
   return (
-    <div className="w-full h-screen p-4 flex flex-col gap-2 max-h-screen overflow-hidden bg-background">
-      <h2 className="text-2xl font-bold text-black">Danh sách người dùng</h2>
+    <div className="w-full h-screen rounded-xl p-4 flex flex-col gap-2 max-h-screen overflow-hidden bg-background">
+      <h2 className="text-2xl font-bold text-black">Users List</h2>
       <div className="table-container w-full h-full">
         <ThemeProvider theme={adminTableTheme}>
           <DataGrid
