@@ -18,6 +18,7 @@ const testData: Test = {
   created_at: "20/10/2024",
   updated_at: "22/10/2024",
   difficulty: "Trung bình",
+  isMiniTest: false,
   questions: [
     // Part 1: 6 câu hỏi với hình ảnh và 3 đáp án
     {

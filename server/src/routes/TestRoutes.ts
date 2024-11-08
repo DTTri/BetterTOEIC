@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import { testControllerInstance } from '~/controllers';
 import { testMiddlewareInstance } from '~/middlewares';
-
 const testRouter = Router();
 
 testRouter.post('/createTest', testMiddlewareInstance.createTest, testControllerInstance.createTest);

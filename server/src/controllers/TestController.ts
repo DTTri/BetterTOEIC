@@ -16,9 +16,9 @@ class TestController {
           EC: 3,
         });
       }
-    } catch (err) {
+    } catch (err: any) {
       res.status(500).json({
-        EM: 'Internal server error',
+        EM: err.message,
         EC: 4,
       });
     }
@@ -35,13 +35,13 @@ class TestController {
       } else {
         res.status(400).json({
           EM: 'Failed to delete test',
-          EC: 1,
+          EC: 2,
         });
       }
-    } catch (err) {
+    } catch (err: any) {
       res.status(500).json({
-        EM: 'Internal server error',
-        EC: 2,
+        EM: err.message,
+        EC: 3,
       });
     }
   }
@@ -60,9 +60,9 @@ class TestController {
           EC: 1,
         });
       }
-    } catch (err) {
+    } catch (err: any) {
       res.status(500).json({
-        EM: 'Internal server error',
+        EM: err.message,
         EC: 2,
       });
     }
@@ -80,13 +80,13 @@ class TestController {
       } else {
         res.status(400).json({
           EM: 'Failed to fetch test',
-          EC: 1,
+          EC: 2,
         });
       }
-    } catch (err) {
+    } catch (err: any) {
       res.status(500).json({
-        EM: 'Internal server error',
-        EC: 2,
+        EM: err.message,
+        EC: 3,
       });
     }
   }
