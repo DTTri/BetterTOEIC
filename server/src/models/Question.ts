@@ -1,5 +1,4 @@
 type Question = {
-  _id: string;
   text: string;
   image?: string[];
   passage?: string[];
@@ -8,7 +7,7 @@ type Question = {
   explanation: string;
   part: number;
   question_number: number;
-  question_group_id?: string;
+  question_group_numner: number;
 };
 
 export default Question;
