@@ -7,7 +7,7 @@ export default function Footer() {
   return (
     <>
       <footer className=' bg-[#ffffff] w-full pt-[40px] px-[130px] pb-4'>
-        <div className='footer-top flex flex-row justify-between border-b pb-[90px]'>
+        <div className='footer-top flex flex-row justify-between border-b pb-[50px]'>
           <div>
             <a href="#">
               <img
@@ -17,7 +17,7 @@ export default function Footer() {
               />
             </a>
             <p className='font-semibold text-xl max-w-[350px] text-wrap mb-[24px]'>
-              Hệ thống hỗ trợ luyện thi TOEIC số 1 Đại học Công nghệ Thông tin
+            The No. 1 TOEIC Test Preparation Support System at the University of Information Technology
             </p>
             <div className='flex flex-row gap-5 items-center'>
               <a href="#">
@@ -33,38 +33,38 @@ export default function Footer() {
           </div>
           <div className="footer-columns flex flex-row gap-[70px]">
             <div className='flex flex-col gap-6'>
-              <h4 className='font-bold text-[22px] leading-tight'>Về chúng tôi</h4>
+              <h4 className='font-bold text-[22px] leading-tight'>About us</h4>
               <ul className='flex flex-col gap-2'>
                 <li>
-                  <a className='text-[#6F6C90] text-[18px]' href="#">Giới thiệu</a>
+                  <a className='text-[#6F6C90] text-[17px] hover:text-[#3A7EE1]' href="#">Information</a>
                 </li>
                 <li>
-                  <a className='text-[#6F6C90] text-[18px]' href="#">FAQ</a>
+                  <a className='text-[#6F6C90] text-[17px] hover:text-[#3A7EE1]' href="#">FAQ</a>
                 </li>
               </ul>
             </div>
             <div className='flex flex-col gap-6'>
-              <h4 className='font-bold text-[22px] leading-tight'>Chính sách</h4>
+              <h4 className='font-bold text-[22px] leading-tight'>Terms</h4>
               <ul className='flex flex-col gap-2'>
                 <li>
-                  <a className='text-[#6F6C90] text-[18px]' href="#">Điều khoản</a>
+                  <a className='text-[#6F6C90] text-[17px] hover:text-[#3A7EE1]' href="#">Codition</a>
                 </li>
                 <li>
-                  <a className='text-[#6F6C90] text-[18px]' href="#">Quyền riêng tư</a>
+                  <a className='text-[#6F6C90] text-[17px] hover:text-[#3A7EE1]' href="#">Privacy</a>
                 </li>
               </ul>
             </div>
             <div className='flex flex-col gap-6'>
-              <h4 className='font-bold text-[22px] leading-tight'>Liên hệ</h4>
+              <h4 className='font-bold text-[22px] leading-tight'>Contact</h4>
               <ul className='flex flex-col gap-2'>
                 <li>
-                  <a className='text-[#6F6C90] text-[18px]' href="mailto:bettertoeic@gmail.com">bettertoeic@gmail.com</a>
+                  <a className='text-[#6F6C90] text-[17px] hover:text-[#3A7EE1]' href="mailto:bettertoeic@gmail.com">bettertoeic@gmail.com</a>
                 </li>
                 <li>
-                  <a className='text-[#6F6C90] text-[18px]' href="tel:0123456789">0123456789</a>
+                  <a className='text-[#6F6C90] text-[17px] hover:text-[#3A7EE1]' href="tel:0123456789">0123456789</a>
                 </li>
                 <li>
-                  <a className='text-[#6F6C90] text-[18px]' href="#">UIT - ĐHQGHCM</a>
+                  <a className='text-[#6F6C90] text-[17px] hover:text-[#3A7EE1]' href="#">UIT - ĐHQGHCM</a>
                 </li>
               </ul>
             </div>

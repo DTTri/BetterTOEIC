@@ -10,14 +10,12 @@ function VocabCardGalleryPage() {
   };
   return (
     <div>
-      <Header />
       <h2 className="text-5xl text-[#202224] font-bold my-5 text-center">Học từ vựng theo chủ đề cùng BetterTOEIC</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 py-6 px-10">
         {vocab_data.map((topic) => (
           <VocabByTopicCard vocabByTopic={topic} onCardClick={onCardClick} />
         ))}
       </div>
-      <Footer />
     </div>
   );
 }

@@ -59,7 +59,6 @@ export default function () {
 
   return (
     <div className="">
-      <Header />
       <div className='w-full py-8 flex flex-col items-center'>
         <h2 className='text-[#000] text-6xl font-bold mb-4'>
           {errorTitle}
@@ -71,7 +70,6 @@ export default function () {
         </div>
         <Button variant='contained' color='primary' href='/'>Quay về trang chủ</Button>
       </div>
-      <Footer />
     </div>
   )
 }

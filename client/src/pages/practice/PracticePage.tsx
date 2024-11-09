@@ -14,7 +14,6 @@ export default function PracticePage() {
   const [PracticeListsForPart5, setPracticeListsForPart5] = useState<Practice[]>(practiceForPart5);
   return (
     <div>
-        <Header/>
         <div className="content">
             <h1 className='text-[52px] text-center text-[#202224] mt-8 font-bold'>Luyện tập cùng BetterTOEIC</h1>
             <div className="flex flex-col items-center gap-5 py-8">
@@ -25,7 +24,6 @@ export default function PracticePage() {
                 <PracticeList part={5} title='Incomplete Sentences' practices={PracticeListsForPart5} PracticePart={practiceResult.part[4]}/>
             </div>
         </div>
-        <Footer/>
     </div>
   )
 }

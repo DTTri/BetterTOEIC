@@ -7,7 +7,6 @@ import { Header, SearchBar } from '@/components'
 export default function WordSavedPage() {
   return (
     <div className="">
-        <Header />
         <div className="w-full flex flex-row gap-8 items-stretch">
             <LeftBarPersonal />
             <div className="flex flex-col w-full px-12 py-7 gap-5 items-center">

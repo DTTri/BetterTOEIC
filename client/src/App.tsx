@@ -33,11 +33,12 @@ import CreatingPracticeLessonsPage from "./pages/admin/practice/CreatingPractice
 import CreatingRoadmapExsPage from "./pages/admin/roadmap/CreatingRoadmapExsPage";
 import CreatingPostPage from "./pages/admin/forum/CreatingPostPage";
 import CreatingVocabsPage from "./pages/admin/vocab/CreatingVocabsPage";
-import AdminLayout from "./components/admin/AdminLayout";
+import AdminLayout from "./pages/AdminLayout";
 import PersonalImformationPage from "./pages/personal/PersonalImformationPage";
 import ReportUserPage from "./pages/personal/ReportUserPage";
 import WordSavedPage from "./pages/personal/WordsSavedPage";
 import TestsSavedPage from "./pages/personal/TestsSavedPage";
+import UserLayout from "./pages/UserLayout";
 function App() {
   // useSelector to get the test from the store by id, currently hardcode the test data
   // type Test = {
@@ -53,40 +54,7 @@ function App() {
   // };
   return (
     <Routes>
-      <Route path="/" element={<TestsPage />} />
-      <Route
-        path="/test/:id"
-        element={
-          <TestDetailsPage
-            test={{
-              _id: "1",
-              title: "Test 1",
-              description: "Test 1 description",
-              main_audio: "Test 1 audio",
-              created_by: "Test 1 creator",
-              created_at: "Test 1 created at",
-              updated_at: "Test 1 updated at",
-              difficulty: "Test 1 difficulty",
-              questions: [],
-            }}
-          />
-        }
-      />
-      <Route path="/taking-test" element={<TakingTestPage />} />
-      <Route path="/road-map" element={<RoadmapPage />} />
-      <Route path="/practice" element={<PracticePage />} />
-      <Route
-        path="/taking-practice/:part/:id"
-        element={<TakingPracticePage />}
-      />
-      <Route path="/creating-roadmap" element={<CreatingRoadmapPage />} />
-      <Route path="/vocab-gallery" element={<VocabCardGallery />} />
-      <Route path="/vocab-learning/:id" element={<VocabLearingPage />} />
-      <Route
-        path="/doing-roadmap/:phase/:part/:chapter"
-        element={<DoingRoadmapExsPage />}
-      />
-      <Route path="/admin" element={<AdminLayout />}>
+            <Route path="/admin" element={<AdminLayout />}>
         <Route path="overall" element={<OverallManagementPage />} />
         <Route path="test" element={<TestManagementPage />} />
         <Route path="practice" element={<PracticeManagementPage />} />
@@ -114,22 +82,58 @@ function App() {
         <Route path="forum/creatingPost" element={<CreatingPostPage />} />
         <Route path="vocab/creatingVocab" element={<CreatingVocabsPage />} />
       </Route>
+      <Route path="/" element={<UserLayout><TestsPage /></UserLayout>} />
+      <Route
+        path="/test/:id"
+        element={
+          <UserLayout>
+            <TestDetailsPage
+              test={{
+                _id: "1",
+                title: "Test 1",
+                description: "Test 1 description",
+                main_audio: "Test 1 audio",
+                created_by: "Test 1 creator",
+                created_at: "Test 1 created at",
+                updated_at: "Test 1 updated at",
+                difficulty: "Test 1 difficulty",
+                questions: [],
+              }}
+            />
+          </UserLayout>
+        }
+      />
+      <Route path="/taking-test" element={<UserLayout haveFooter={false}><TakingTestPage /></UserLayout>} />
+      <Route path="/road-map" element={<UserLayout haveFooter={false}><RoadmapPage /></UserLayout>} />
+      <Route path="/practice" element={<UserLayout><PracticePage /></UserLayout>} />
+      <Route
+        path="/taking-practice/:part/:id"
+        element={<TakingPracticePage />}
+      />
+      <Route path="/creating-roadmap" element={<UserLayout haveFooter={false}><CreatingRoadmapPage /></UserLayout>} />
+      <Route path="/vocab-gallery" element={<UserLayout><VocabCardGallery /></UserLayout>} />
+      <Route path="/vocab-learning/:id" element={<UserLayout haveFooter={false}><VocabLearingPage /></UserLayout>} />
+      <Route
+        path="/doing-roadmap/:phase/:part/:chapter"
+        element={<UserLayout haveFooter={false}><DoingRoadmapExsPage /></UserLayout>}
+      />
 
-      <Route path="/error" element={<ErrorPage />} />
-      <Route path="*" element={<ErrorPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/register" element={<RegisterPage />} />
-      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-      <Route path="/resset-password" element={<RessetPasswordPage />} />
-      <Route path="/forum" element={<ForumPage />} />
-      <Route path="/post-detail/:id" element={<PostDetailPage />} />
+
+      <Route path="/error" element={<UserLayout><ErrorPage/></UserLayout>} />
+      <Route path="*" element={<UserLayout><ErrorPage/></UserLayout>} />
+      <Route path="/login" element={<UserLayout><LoginPage /></UserLayout>} />
+      <Route path="/register" element={<UserLayout><RegisterPage /></UserLayout>} />
+      <Route path="/forgot-password" element={<UserLayout><ForgotPasswordPage /></UserLayout>} />
+      <Route path="/resset-password" element={<UserLayout><RessetPasswordPage /></UserLayout>} />
+      <Route path="/forum" element={<UserLayout><ForumPage /></UserLayout>} />
+      <Route path="/post-detail/:id" element={<UserLayout haveFooter={false}><PostDetailPage /></UserLayout>} />
       <Route
         path="/personal-information"
-        element={<PersonalImformationPage />}
+        element={<UserLayout><PersonalImformationPage /></UserLayout>}
       />
-      <Route path="/word-saved" element={<WordSavedPage />} />
-      <Route path="/test-saved" element={<TestsSavedPage />} />
-      <Route path="/report-user" element={<ReportUserPage />} />
+      <Route path="/word-saved" element={<UserLayout haveFooter={false}><WordSavedPage /></UserLayout>} />
+      <Route path="/test-saved" element={<UserLayout haveFooter={false}><TestsSavedPage /></UserLayout>} />
+      <Route path="/report-user" element={<UserLayout haveFooter={false}><ReportUserPage /></UserLayout>} />
     </Routes>
   );
 }
