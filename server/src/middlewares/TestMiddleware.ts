@@ -1,5 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { checkSchema, validationResult } from 'express-validator';
+import { Test } from '~/models';
+import { CreateTestDTO } from '~/models/DTOs';
+import { testServiceInstance } from '~/services';
 
 class TestMiddleware {
   async createTest(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -51,35 +54,35 @@ class TestMiddleware {
       });
       return;
     }
-    const { isMiniTest, questions } = req.body;
-    if (isMiniTest === false) {
+    const newTest: CreateTestDTO = req.body as CreateTestDTO;
+    if (newTest.isMiniTest === false) {
       let invalidTestFormat = false;
-      if (questions.length !== 200) {
+      if (newTest.questions.length !== 200) {
         invalidTestFormat = true;
       }
       // TOEIC test format: 200 questions
       // part 1: 6 questions, part 2: 25 questions, part 3: 39 questions, part 4: 30 questions, part 5: 30 questions, part 6: 16 questions, part 7: 54 questions
       else {
         for (let i = 0; i < 200; i++) {
-          if (i < 6 && questions[i].part !== 1) {
+          if (i < 6 && newTest.questions[i].part !== 1) {
             invalidTestFormat = true;
             break;
-          } else if (i >= 6 && i < 31 && questions[i].part !== 2) {
+          } else if (i >= 6 && i < 31 && newTest.questions[i].part !== 2) {
             invalidTestFormat = true;
             break;
-          } else if (i >= 31 && i < 70 && questions[i].part !== 3) {
+          } else if (i >= 31 && i < 70 && newTest.questions[i].part !== 3) {
             invalidTestFormat = true;
             break;
-          } else if (i >= 70 && i < 100 && questions[i].part !== 4) {
+          } else if (i >= 70 && i < 100 && newTest.questions[i].part !== 4) {
             invalidTestFormat = true;
             break;
-          } else if (i >= 100 && i < 130 && questions[i].part !== 5) {
+          } else if (i >= 100 && i < 130 && newTest.questions[i].part !== 5) {
             invalidTestFormat = true;
             break;
-          } else if (i >= 130 && i < 146 && questions[i].part !== 6) {
+          } else if (i >= 130 && i < 146 && newTest.questions[i].part !== 6) {
             invalidTestFormat = true;
             break;
-          } else if (i >= 146 && i < 200 && questions[i].part !== 7) {
+          } else if (i >= 146 && i < 200 && newTest.questions[i].part !== 7) {
             invalidTestFormat = true;
             break;
           }
@@ -96,24 +99,34 @@ class TestMiddleware {
     next();
   }
 
-  async deleteTest(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const testId = req.params.testId;
-    if (!testId) {
-      res.status(400).json({
-        EM: 'Test ID is required',
-        EC: 1,
-      });
-      return;
-    }
-    next();
-  }
+  async completeTest(req: Request, res: Response, next: NextFunction): Promise<void> {
+    await checkSchema({
+      testId: {
+        isString: true,
+        notEmpty: true,
+        errorMessage: 'Test ID is required',
+      },
+      correctAnswersPerPart: {
+        isArray: true,
+        errorMessage: 'Correct answers per part is invalid',
+      },
+      choices: {
+        isArray: true,
+        errorMessage: 'Choices is invalid',
+      },
+    }).run(req);
+    const errors = validationResult(req);
 
-  async getTestById(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const testId = req.params.testId;
-    if (!testId) {
+    if (!errors.isEmpty()) {
       res.status(400).json({
-        EM: 'Test ID is required',
+        EM:
+          'Validation errors: ' +
+          errors
+            .array()
+            .map((error) => error.msg)
+            .join(', '),
         EC: 1,
+        DT: errors.array(),
       });
       return;
     }

@@ -1,20 +1,12 @@
 import { ObjectId } from 'mongodb';
 import { collections } from '~/config/connectDB';
 import { CompletedTest, Test, TestHistory, TestsSaved } from '~/models';
+import { CreateTestDTO } from '~/models/DTOs';
 
 class TestService {
-  async createTest(test: Test): Promise<Test | null> {
-    const newTest = {
-      ...test,
-      _id: new ObjectId(),
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    };
-    const result = await collections.tests?.insertOne(newTest);
-    if (result) {
-      return newTest;
-    }
-    return null;
+  async createTest(test: Test): Promise<boolean> {
+    const result = await collections.tests?.insertOne(test);
+    return result ? true : false;
   }
 
   async deleteTest(testId: string): Promise<boolean> {
@@ -109,6 +101,13 @@ class TestService {
       const result = await collections.testsSaved?.insertOne(newUserTestsSaved);
       return result ? true : false;
     }
+  }
+  async getTestsSaved(userId: string): Promise<TestsSaved | null> {
+    const result = await collections.testsSaved?.findOne({ _id: new ObjectId(userId) });
+    if (result) {
+      return result as TestsSaved;
+    }
+    return null;
   }
 }
 

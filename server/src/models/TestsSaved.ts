@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 
-type TestSaved = {
+type TestsSaved = {
   _id: ObjectId;
   created_at: string;
   updated_at: string;
@@ -12,4 +12,4 @@ type TestSaved = {
   ];
 };
 
-export default TestSaved;
+export default TestsSaved;

@@ -6,7 +6,7 @@ type Test = {
   title: string;
   description: string;
   main_audio: string;
-  created_by: ObjectId;
+  created_by: string;
   isMiniTest: boolean;
   questions: Question[];
   difficulty: string;
