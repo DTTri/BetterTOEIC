@@ -1,3 +1,3 @@
 import testServiceInstance from './TestService';
-
-export { testServiceInstance };
+import practiceServiceInstance from './PracticeService';
+export { testServiceInstance, practiceServiceInstance };

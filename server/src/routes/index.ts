@@ -1,2 +1,4 @@
 import testRouter from './TestRoutes';
-export { testRouter };
+import practiceRouter from './PracticeRoutes';
+
+export { testRouter, practiceRouter };

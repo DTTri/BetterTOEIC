@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb';
 import Question from './Question';
 
 type Test = {
-  _id?: ObjectId;
+  _id: ObjectId;
   title: string;
   description: string;
   main_audio: string;
@@ -10,8 +10,8 @@ type Test = {
   isMiniTest: boolean;
   questions: Question[];
   difficulty: string;
-  created_at?: string;
-  updated_at?: string;
+  created_at: string;
+  updated_at: string;
 };
 
 export default Test;

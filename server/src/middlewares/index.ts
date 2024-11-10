@@ -1,2 +1,3 @@
 import testMiddlewareInstance from './TestMiddleware';
-export { testMiddlewareInstance };
+import practiceMiddlewareInstance from './PracticeMiddleware';
+export { testMiddlewareInstance, practiceMiddlewareInstance };
