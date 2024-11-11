@@ -1,3 +1,4 @@
 import testServiceInstance from './TestService';
 import practiceServiceInstance from './PracticeService';
-export { testServiceInstance, practiceServiceInstance };
+import roadmapServiceInstance from './RoadmapService';
+export { testServiceInstance, practiceServiceInstance, roadmapServiceInstance };

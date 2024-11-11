@@ -1,3 +1,4 @@
 import testControllerInstance from './TestController';
 import practiceControllerInstance from './PracticeController';
-export { testControllerInstance, practiceControllerInstance };
+import roadmapControllerInstance from './RoadmapController';
+export { testControllerInstance, practiceControllerInstance, roadmapControllerInstance };

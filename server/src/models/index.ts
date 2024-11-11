@@ -8,6 +8,9 @@ import PracticeTestHistory from './PracticeTestHistory';
 import PracticeLessonHistory from './PracticeLessonHistory';
 import CompletedPracticeTest from './CompletedPracticeTest';
 import CompletedPracticeLesson from './CompletedPracticeLesson';
+import RoadmapExercise from './RoadmapExercise';
+import RoadmapHistory from './RoadmapHistory';
+import CompletedRoadmapExercise from './CompletedRoadmapExercise';
 export {
   Test,
   CompletedTest,
@@ -19,4 +22,7 @@ export {
   PracticeLessonHistory,
   CompletedPracticeTest,
   CompletedPracticeLesson,
+  RoadmapExercise,
+  RoadmapHistory,
+  CompletedRoadmapExercise,
 };
