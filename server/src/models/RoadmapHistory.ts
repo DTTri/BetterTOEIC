@@ -6,8 +6,8 @@ type RoadmapHistory = {
   start_level: number;
   target_level: number;
   current_level: number;
-  created_at: Date;
-  updated_at: Date;
+  created_at: string;
+  updated_at: string;
   completedRoadmapExercises: CompletedRoadmapExercise[];
 };
 export default RoadmapHistory;
