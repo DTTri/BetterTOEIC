@@ -243,55 +243,6 @@ class PracticeController {
       });
     }
   }
-  //   async completeTest(req: Request, res: Response) {
-  //     try {
-  //       const completeTestDTO: CompleteTestDTO = req.body;
-  //       const test = (await testServiceInstance.getTestById(completeTestDTO.testId)) as Test;
-  //       if (!test) {
-  //         res.status(400).json({
-  //           EM: 'Test not found',
-  //           EC: 2,
-  //         });
-  //         return;
-  //       }
-  //       if (completeTestDTO.choices.length !== test.questions.length) {
-  //         res.status(400).json({
-  //           EM: 'Number of choices is not equal to the number of questions',
-  //           EC: 3,
-  //         });
-  //         return;
-  //       }
-  //       const correctAnswersPerPart: number[] = [0, 0, 0, 0, 0, 0, 0];
-  //       test.questions.forEach((question, index) => {
-  //         if (question.correct_choice === completeTestDTO.choices[index]) {
-  //           correctAnswersPerPart[question.part - 1]++;
-  //         }
-  //       });
-  //       const completedTest: CompletedTest = {
-  //         ...completeTestDTO,
-  //         correctAnswersPerPart,
-  //         attempted_at: new Date().toISOString(),
-  //       };
-  //       const result = await testServiceInstance.updateTestHistory(req.params.userId, completedTest);
-  //       if (result) {
-  //         res.status(200).json({
-  //           EM: 'Test result saved successfully',
-  //           EC: 0,
-  //           DT: completedTest,
-  //         });
-  //       } else {
-  //         res.status(400).json({
-  //           EM: 'Failed to complete test',
-  //           EC: 4,
-  //         });
-  //       }
-  //     } catch (err: any) {
-  //       res.status(500).json({
-  //         EM: err.message,
-  //         EC: 4,
-  //       });
-  //     }
-  //   }
   async completePracticeTest(req: Request, res: Response): Promise<void> {
     const completePracticeTestDTO = req.body as CompletePracticeTestDTO;
     const practiceTest = (await practiceServiceInstance.getPracticeTestById(

@@ -24,14 +24,14 @@ practiceRouter.get('/getPracticeLessonById/:practiceLessonId', practiceControlle
 practiceRouter.get('/getPracticeLessonsByPart/:part', practiceControllerInstance.getPracticeLessonsByPart);
 
 practiceRouter.put(
-  '/completePracticeTest',
+  '/completePracticeTest/:userId',
   practiceMiddlewareInstance.completePracticeTest,
   practiceControllerInstance.completePracticeTest
 );
 practiceRouter.get('/getPracticeTestHistory/:userId', practiceControllerInstance.getPracticeTestHistory);
 
 practiceRouter.put(
-  '/completePracticeLesson',
+  '/completePracticeLesson/:userId',
   practiceMiddlewareInstance.completePracticeLesson,
   practiceControllerInstance.completePracticeLesson
 );

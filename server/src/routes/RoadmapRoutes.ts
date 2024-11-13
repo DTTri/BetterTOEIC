@@ -14,7 +14,7 @@ roadmapRouter.get('/getAllRoadmapExercises', roadmapControllerInstance.getAllRoa
 roadmapRouter.get('/getRoadmapExerciseById/:roadmapExerciseId', roadmapControllerInstance.getRoadmapExerciseById);
 roadmapRouter.get('/getRoadmapExercisesByPhase/:phase', roadmapControllerInstance.getRoadmapExercisesByPhase);
 roadmapRouter.put(
-  '/completeRoadmapExercise',
+  '/completeRoadmapExercise/:userId',
   roadmapMiddlewareInstance.completeRoadmapExercise,
   roadmapControllerInstance.completeRoadmapExercise
 );

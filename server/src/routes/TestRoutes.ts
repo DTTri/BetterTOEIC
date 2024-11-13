@@ -7,7 +7,7 @@ testRouter.post('/createTest', testMiddlewareInstance.createTest, testController
 testRouter.delete('/deleteTest/:testId', testControllerInstance.deleteTest);
 testRouter.get('/getAllTests', testControllerInstance.getAllTests);
 testRouter.get('/getTestById/:testId', testControllerInstance.getTestById);
-testRouter.put('/completeTest', testMiddlewareInstance.completeTest, testControllerInstance.completeTest);
+testRouter.put('/completeTest/:userId', testMiddlewareInstance.completeTest, testControllerInstance.completeTest);
 testRouter.get('/getTestHistory/:userId', testControllerInstance.getTestHistory);
 testRouter.put('/saveTest', testControllerInstance.saveTest);
 testRouter.get('/getTestsSaved/:userId', testControllerInstance.getTestsSaved);

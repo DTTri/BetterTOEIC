@@ -46,6 +46,19 @@ class RoadmapMiddleware {
     }
     const newRoadmapExercise: CreateRoadmapExerciseDTO = req.body as CreateRoadmapExerciseDTO;
     if (
+      newRoadmapExercise.phase < 1 ||
+      newRoadmapExercise.phase > 4 ||
+      newRoadmapExercise.part < 1 ||
+      newRoadmapExercise.part > 7 ||
+      newRoadmapExercise.chapter < 1
+    ) {
+      res.status(400).json({
+        EM: 'Invalid phase, part or chapter',
+        EC: 1,
+      });
+      return;
+    }
+    if (
       newRoadmapExercise.part < 5 &&
       (newRoadmapExercise.main_audio === null || newRoadmapExercise.main_audio === '')
     ) {

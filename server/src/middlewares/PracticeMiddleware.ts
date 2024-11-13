@@ -30,6 +30,13 @@ class PracticeMiddleware {
       return;
     }
     const newPracticeTest: CreatePracticeTestDTO = req.body as CreatePracticeTestDTO;
+    if (newPracticeTest.part < 1 || newPracticeTest.part > 7) {
+      res.status(400).json({
+        EM: 'Invalid part',
+        EC: 1,
+      });
+      return;
+    }
     if (newPracticeTest.part < 5 && (newPracticeTest.main_audio === null || newPracticeTest.main_audio === '')) {
       res.status(400).json({
         EM: 'Main audio is required',
@@ -98,6 +105,13 @@ class PracticeMiddleware {
             .join(', '),
         EC: 1,
         DT: errors.array(),
+      });
+      return;
+    }
+    if (req.body.part < 1 || req.body.part > 7) {
+      res.status(400).json({
+        EM: 'Invalid part',
+        EC: 1,
       });
       return;
     }
