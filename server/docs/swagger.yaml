@@ -1,0 +1,690 @@
+openapi: 3.0.0
+info:
+  title: BetterTOEIC API
+  description: API documentation for BetterTOEIC application
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000/api
+    description: Local server
+paths:
+  /test/createTest:
+    post:
+      summary: Create a new test
+      tags:
+        - Test
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTestDTO'
+      responses:
+        '201':
+          description: Test created successfully
+        '400':
+          description: Failed to create test
+        '500':
+          description: Internal server error
+  /test/deleteTest/{testId}:
+    delete:
+      summary: Delete a test
+      tags:
+        - Test
+      parameters:
+        - name: testId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Test deleted successfully
+        '400':
+          description: Failed to delete test
+        '500':
+          description: Internal server error
+  /test/getAllTests:
+    get:
+      summary: Get all tests
+      tags:
+        - Test
+      responses:
+        '200':
+          description: Tests fetched successfully
+        '400':
+          description: Failed to fetch tests
+        '500':
+          description: Internal server error
+  /test/getTestById/{testId}:
+    get:
+      summary: Get a test by ID
+      tags:
+        - Test
+      parameters:
+        - name: testId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Test fetched successfully
+        '400':
+          description: Failed to fetch test
+        '500':
+          description: Internal server error
+  /test/completeTest/{userId}:
+    put:
+      summary: Complete a test
+      tags:
+        - Test
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompleteTestDTO'
+      responses:
+        '200':
+          description: Test completed successfully
+        '400':
+          description: Failed to complete test
+        '500':
+          description: Internal server error
+  /test/getTestHistory/{userId}:
+    get:
+      summary: Get test history by user ID
+      tags:
+        - Test
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Test history fetched successfully
+        '400':
+          description: Failed to fetch test history
+        '500':
+          description: Internal server error
+  /test/saveTest:
+    put:
+      summary: Save a test
+      tags:
+        - Test
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                testId:
+                  type: string
+                unsave:
+                  type: boolean
+      responses:
+        '200':
+          description: Test saved successfully
+        '400':
+          description: Failed to save test
+        '500':
+          description: Internal server error
+  /test/getTestsSaved/{userId}:
+    get:
+      summary: Get saved tests by user ID
+      tags:
+        - Test
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Saved tests fetched successfully
+        '400':
+          description: Failed to fetch saved tests
+        '500':
+          description: Internal server error
+  /roadmap/createRoadmapExercise:
+    post:
+      summary: Create a new roadmap exercise
+      tags:
+        - Roadmap
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRoadmapExerciseDTO'
+      responses:
+        '201':
+          description: Roadmap exercise created successfully
+        '400':
+          description: Failed to create roadmap exercise
+        '500':
+          description: Internal server error
+  /roadmap/deleteRoadmapExercise/{roadmapExerciseId}:
+    delete:
+      summary: Delete a roadmap exercise
+      tags:
+        - Roadmap
+      parameters:
+        - name: roadmapExerciseId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Roadmap exercise deleted successfully
+        '400':
+          description: Failed to delete roadmap exercise
+        '500':
+          description: Internal server error
+  /roadmap/getAllRoadmapExercises:
+    get:
+      summary: Get all roadmap exercises
+      tags:
+        - Roadmap
+      responses:
+        '200':
+          description: Roadmap exercises fetched successfully
+        '400':
+          description: Failed to fetch roadmap exercises
+        '500':
+          description: Internal server error
+  /roadmap/getRoadmapExerciseById/{roadmapExerciseId}:
+    get:
+      summary: Get a roadmap exercise by ID
+      tags:
+        - Roadmap
+      parameters:
+        - name: roadmapExerciseId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Roadmap exercise fetched successfully
+        '400':
+          description: Failed to fetch roadmap exercise
+        '500':
+          description: Internal server error
+  /roadmap/getRoadmapExercisesByPhase/{phase}:
+    get:
+      summary: Get roadmap exercises by phase
+      tags:
+        - Roadmap
+      parameters:
+        - name: phase
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Roadmap exercises fetched successfully
+        '400':
+          description: Failed to fetch roadmap exercises
+        '500':
+          description: Internal server error
+  /roadmap/completeRoadmapExercise/{userId}:
+    put:
+      summary: Complete a roadmap exercise
+      tags:
+        - Roadmap
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompleteRoadmapExerciseDTO'
+      responses:
+        '200':
+          description: Roadmap exercise completed successfully
+        '400':
+          description: Failed to complete roadmap exercise
+        '500':
+          description: Internal server error
+  /roadmap/getRoadmapHistory/{userId}:
+    get:
+      summary: Get roadmap history by user ID
+      tags:
+        - Roadmap
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Roadmap history fetched successfully
+        '400':
+          description: Failed to fetch roadmap history
+        '500':
+          description: Internal server error
+  /roadmap/createPersonalRoadmap:
+    post:
+      summary: Create a personal roadmap
+      tags:
+        - Roadmap
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePersonalRoadmapDTO'
+      responses:
+        '201':
+          description: Personal roadmap created successfully
+        '400':
+          description: Failed to create personal roadmap
+        '500':
+          description: Internal server error
+  /practice/createPracticeTest:
+    post:
+      summary: Create a new practice test
+      tags:
+        - Practice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePracticeTestDTO'
+      responses:
+        '201':
+          description: Practice test created successfully
+        '400':
+          description: Failed to create practice test
+        '500':
+          description: Internal server error
+  /practice/deletePracticeTest/{practiceTestId}:
+    delete:
+      summary: Delete a practice test
+      tags:
+        - Practice
+      parameters:
+        - name: practiceTestId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Practice test deleted successfully
+        '400':
+          description: Failed to delete practice test
+        '500':
+          description: Internal server error
+  /practice/getAllPracticeTests:
+    get:
+      summary: Get all practice tests
+      tags:
+        - Practice
+      responses:
+        '200':
+          description: Practice tests fetched successfully
+        '400':
+          description: Failed to fetch practice tests
+        '500':
+          description: Internal server error
+  /practice/getPracticeTestById/{practiceTestId}:
+    get:
+      summary: Get a practice test by ID
+      tags:
+        - Practice
+      parameters:
+        - name: practiceTestId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Practice test fetched successfully
+        '400':
+          description: Failed to fetch practice test
+        '500':
+          description: Internal server error
+  /practice/getPracticeTestsByPart/{part}:
+    get:
+      summary: Get practice tests by part
+      tags:
+        - Practice
+      parameters:
+        - name: part
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Practice tests fetched successfully
+        '400':
+          description: Failed to fetch practice tests
+        '500':
+          description: Internal server error
+  /practice/completePracticeTest/{userId}:
+    put:
+      summary: Complete a practice test
+      tags:
+        - Practice
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompletePracticeTestDTO'
+      responses:
+        '200':
+          description: Practice test completed successfully
+        '400':
+          description: Failed to complete practice test
+        '500':
+          description: Internal server error
+  /practice/getPracticeTestHistory/{userId}:
+    get:
+      summary: Get practice test history by user ID
+      tags:
+        - Practice
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Practice test history fetched successfully
+        '400':
+          description: Failed to fetch practice test history
+        '500':
+          description: Internal server error
+  /practice/createPracticeLesson:
+    post:
+      summary: Create a new practice lesson
+      tags:
+        - Practice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePracticeLessonDTO'
+      responses:
+        '201':
+          description: Practice lesson created successfully
+        '400':
+          description: Failed to create practice lesson
+        '500':
+          description: Internal server error
+  /practice/deletePracticeLesson/{practiceLessonId}:
+    delete:
+      summary: Delete a practice lesson
+      tags:
+        - Practice
+      parameters:
+        - name: practiceLessonId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Practice lesson deleted successfully
+        '400':
+          description: Failed to delete practice lesson
+        '500':
+          description: Internal server error
+  /practice/getAllPracticeLessons:
+    get:
+      summary: Get all practice lessons
+      tags:
+        - Practice
+      responses:
+        '200':
+          description: Practice lessons fetched successfully
+        '400':
+          description: Failed to fetch practice lessons
+        '500':
+          description: Internal server error
+  /practice/getPracticeLessonById/{practiceLessonId}:
+    get:
+      summary: Get a practice lesson by ID
+      tags:
+        - Practice
+      parameters:
+        - name: practiceLessonId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Practice lesson fetched successfully
+        '400':
+          description: Failed to fetch practice lesson
+        '500':
+          description: Internal server error
+  /practice/getPracticeLessonsByPart/{part}:
+    get:
+      summary: Get practice lessons by part
+      tags:
+        - Practice
+      parameters:
+        - name: part
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Practice lessons fetched successfully
+        '400':
+          description: Failed to fetch practice lessons
+        '500':
+          description: Internal server error
+  /practice/completePracticeLesson/{userId}:
+    put:
+      summary: Complete a practice lesson
+      tags:
+        - Practice
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompletePracticeLessonDTO'
+      responses:
+        '200':
+          description: Practice lesson completed successfully
+        '400':
+          description: Failed to complete practice lesson
+        '500':
+          description: Internal server error
+  /practice/getPracticeLessonHistory/{userId}:
+    get:
+      summary: Get practice lesson history by user ID
+      tags:
+        - Practice
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Practice lesson history fetched successfully
+        '400':
+          description: Failed to fetch practice lesson history
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    CreateTestDTO:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        main_audio:
+          type: string
+        created_by:
+          type: string
+        isMiniTest:
+          type: boolean
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Question'
+        difficulty:
+          type: string
+    CompleteTestDTO:
+      type: object
+      properties:
+        testId:
+          type: string
+        choices:
+          type: array
+          items:
+            type: number
+    CreatePracticeTestDTO:
+      type: object
+      properties:
+        part:
+          type: number
+        main_audio:
+          type: string
+          nullable: true
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Question'
+        created_by:
+          type: string
+    CompletePracticeTestDTO:
+      type: object
+      properties:
+        practiceTestId:
+          type: string
+        choices:
+          type: array
+          items:
+            type: number
+    CreatePracticeLessonDTO:
+      type: object
+      properties:
+        part:
+          type: number
+        title:
+          type: string
+        content:
+          type: string
+        created_by:
+          type: string
+    CompletePracticeLessonDTO:
+      type: object
+      properties:
+        practiceLessonId:
+          type: string
+    CreateRoadmapExerciseDTO:
+      type: object
+      properties:
+        phase:
+          type: number
+        part:
+          type: number
+        chapter:
+          type: number
+        created_by:
+          type: string
+        main_audio:
+          type: string
+          nullable: true
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Question'
+    CompleteRoadmapExerciseDTO:
+      type: object
+      properties:
+        roadmapExerciseId:
+          type: string
+        choices:
+          type: array
+          items:
+            type: number
+    CreatePersonalRoadmapDTO:
+      type: object
+      properties:
+        userId:
+          type: string
+        start_level:
+          type: number
+        target_level:
+          type: number
+        current_level:
+          type: number
+    Question:
+      type: object
+      properties:
+        question_number:
+          type: integer
+        text:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
+          nullable: true
+        passages:
+          type: array
+          items:
+            type: string
+          nullable: true
+        choices:
+          type: array
+          items:
+            type: string
+          nullable: true
+        correct_choice:
+          type: string
+        explanation:
+          type: string
+        question_group_number:
+          type: integer
