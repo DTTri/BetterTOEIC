@@ -120,6 +120,12 @@ paths:
       summary: Save a test
       tags:
         - Test
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:

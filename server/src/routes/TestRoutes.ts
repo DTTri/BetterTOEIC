@@ -9,6 +9,6 @@ testRouter.get('/getAllTests', testControllerInstance.getAllTests);
 testRouter.get('/getTestById/:testId', testControllerInstance.getTestById);
 testRouter.put('/completeTest/:userId', testMiddlewareInstance.completeTest, testControllerInstance.completeTest);
 testRouter.get('/getTestHistory/:userId', testControllerInstance.getTestHistory);
-testRouter.put('/saveTest', testControllerInstance.saveTest);
+testRouter.put('/saveTest/:userId', testControllerInstance.saveTest);
 testRouter.get('/getTestsSaved/:userId', testControllerInstance.getTestsSaved);
 export default testRouter;
