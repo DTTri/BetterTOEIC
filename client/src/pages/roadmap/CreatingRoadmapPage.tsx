@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
+import SwiperCore from "swiper";
 // Import components
 import {
   Steps,
@@ -12,14 +13,78 @@ import {
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
-
+import { sCreatingPersonalRoadmap, sRoadmap, sUser } from "@/store";
+import { roadmapService } from "@/services";
+import { RoadmapExercise, RoadmapHistory } from "@/entities";
 export default function CreatingRoadmapPage() {
-  const [currentStep, setCurrentStep] = useState(1);
-  // TODO-1: haven't updated the Steps component when currentStep changes
-  // TODO-2:the BuildRoadmapProgressBar component is rendered as soon as the page is loaded
-  // not when its SwiperSlide is active -> need to fix this later
-  // TODO-3: use Buttons to navigate between SwiperSlides instead of Swiper's navigation
-  // havent optimized performance yet
+  const [currentStep, setCurrentStep] = useState(0);
+  const [completeCreatingRoadmap, setCompleteCreatingRoadmap] = useState(false);
+  const [swiperInstance, setSwiperInstance] = useState<SwiperCore | null>(null);
+
+  sCreatingPersonalRoadmap.watch((newValue) => {
+    console.log("sCreatingPersonalRoadmap: " + newValue);
+    if (newValue.targetLevel <= newValue.startLevel) {
+      alert("Mục tiêu không thể thấp hơn trình độ hiện tại");
+      newValue.targetLevel = newValue.startLevel + 1;
+    }
+  });
+
+  const handleNextSlide = () => {
+    if (swiperInstance) {
+      swiperInstance.slideNext();
+    }
+  };
+
+  const handlePrevSlide = () => {
+    if (swiperInstance) {
+      swiperInstance.slidePrev();
+    }
+  };
+
+  const handleSlideTo = (index: number) => {
+    if (swiperInstance) {
+      swiperInstance.slideTo(index);
+    }
+  };
+
+  const handleCreatingRoadmap = async () => {
+    try {
+      const start_level = sCreatingPersonalRoadmap.value.startLevel;
+      const target_level = sCreatingPersonalRoadmap.value.targetLevel;
+      const res = await roadmapService.createPersonalRoadmap({
+        start_level,
+        target_level,
+        userId: sUser.value.id,
+        current_level: sCreatingPersonalRoadmap.value.startLevel,
+      });
+      if (res.EC === 0) {
+        console.log("Create roadmap success: " + res.DT);
+        sRoadmap.set(
+          (pre) => (pre.value.userRoadmap = res.DT as RoadmapHistory)
+        );
+        const fetchRoadmapExercisesResponse =
+          await roadmapService.getRoadmapExercisesByPhase(start_level);
+        if (fetchRoadmapExercisesResponse.EC === 0) {
+          sRoadmap.set(
+            (pre) =>
+              (pre.value.exercises =
+                fetchRoadmapExercisesResponse.DT as RoadmapExercise[])
+          );
+          console.log(
+            "fetch roadmap exercises",
+            fetchRoadmapExercisesResponse.DT
+          );
+        } else {
+          console.log(fetchRoadmapExercisesResponse.EM);
+        }
+      } else {
+        console.log("Fetch failed: " + res.EM);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="bg-background flex flex-col gap-4 items-center py-4 px-12 w-full h-screen">
       <Steps currentStep={currentStep} />
@@ -28,9 +93,8 @@ export default function CreatingRoadmapPage() {
           modules={[Navigation]}
           spaceBetween={50}
           slidesPerView={1}
-          onSlideChange={() => console.log("slide change")}
-          onSwiper={(swiper) => console.log(swiper)}
-          navigation
+          onSlideChange={(swiper) => setCurrentStep(swiper.activeIndex)}
+          onSwiper={(swiper) => setSwiperInstance(swiper)}
           className="w-full h-full mb-12"
         >
           <SwiperSlide className="step-1.1 flex flex-col items-center gap-6">
@@ -43,49 +107,50 @@ export default function CreatingRoadmapPage() {
               trình độ hiện tại của bạn!
             </p>
             <div className="buttons-container flex gap-4 mt-4">
-              <button className="manual bg-white text-black text-lg px-3 py-2 border border-secondary rounded-md">
+              <button
+                className="manual bg-white text-black text-lg px-3 py-2 border border-secondary rounded-md"
+                onClick={() => handleSlideTo(1)}
+              >
                 Thiết lập trình độ
               </button>
-
-              <button className="taking-test bg-secondary text-white text-lg px-3 py-2 rounded-md">
+              <button
+                className="taking-test bg-secondary text-white text-lg px-3 py-2 rounded-md"
+                onClick={handleNextSlide}
+              >
                 Làm bài thi thử
               </button>
             </div>
           </SwiperSlide>
           <SwiperSlide className="step-1.2 flex flex-col gap-4">
-            {() => {
-              console.log("step 1.2 re-rendered");
-              return (
-                <>
-                  <h3 className="text-3xl font-bold">
-                    THIẾT LẬP TRÌNH ĐỘ HIỆN TẠI{" "}
-                  </h3>
-                  <div className="level-chart-container w-3/4 mx-auto">
-                    <LevelChart />
-                  </div>
-                  <div className="level-explain-container w-3/4 mx-auto">
-                    <LevelExplain
-                      level="470 - 725"
-                      explain="Bạn có thể chủ động bắt đầu và duy trì các cuộc trò chuyện trực tiếp có thể dự đoán được và đáp ứng các nhu cầu xã hội hạn chế."
-                    />
-                  </div>
-                  <div className="buttons-container absolute bottom-2 w-full flex justify-between items-center">
-                    <button className="prev-slide bg-white text-black text-lg px-3 py-2 border border-secondary rounded-md">
-                      Quay lại
-                    </button>
-
-                    <button className="next-slide bg-secondary text-white text-lg px-3 py-2 rounded-md">
-                      Tiếp tục
-                    </button>
-                  </div>
-                </>
-              );
-            }}
+            <h3 className="text-3xl font-bold">THIẾT LẬP TRÌNH ĐỘ HIỆN TẠI</h3>
+            <div className="level-chart-container w-3/4 mx-auto">
+              <LevelChart isStartChart={true} />
+            </div>
+            <div className="level-explain-container w-3/4 mx-auto">
+              <LevelExplain
+                level="470 - 725"
+                explain="Bạn có thể chủ động bắt đầu và duy trì các cuộc trò chuyện trực tiếp có thể dự đoán được và đáp ứng các nhu cầu xã hội hạn chế."
+              />
+            </div>
+            <div className="buttons-container absolute bottom-2 w-full flex justify-between items-center">
+              <button
+                className="prev-slide bg-white text-black text-lg px-3 py-2 border border-secondary rounded-md"
+                onClick={handlePrevSlide}
+              >
+                Quay lại
+              </button>
+              <button
+                className="next-slide bg-secondary text-white text-lg px-3 py-2 rounded-md"
+                onClick={handleNextSlide}
+              >
+                Tiếp tục
+              </button>
+            </div>
           </SwiperSlide>
           <SwiperSlide className="step-2 flex flex-col gap-4">
             <h3 className=" text-3xl font-bold">THIẾT LẬP MỤC TIÊU</h3>
             <div className="level-chart-container w-3/4 mx-auto">
-              <LevelChart />
+              <LevelChart isStartChart={false} />
             </div>
             <div className="level-explain-container w-3/4 mx-auto">
               <LevelExplain
@@ -94,41 +159,53 @@ export default function CreatingRoadmapPage() {
               />
             </div>
             <div className="buttons-container absolute bottom-2 w-full flex justify-between items-center mt-4">
-              <button className="prev-slide bg-white text-black text-lg px-3 py-2 border border-secondary rounded-md">
+              <button
+                className="prev-slide bg-white text-black text-lg px-3 py-2 border border-secondary rounded-md"
+                onClick={handlePrevSlide}
+              >
                 Quay lại
               </button>
-
-              <button className="next-slide bg-secondary text-white text-lg px-3 py-2 rounded-md">
-                Tiếp tục
+              <button
+                className="next-slide bg-secondary text-white text-lg px-3 py-2 rounded-md"
+                onClick={() => {
+                  handleCreatingRoadmap();
+                  handleNextSlide();
+                }}
+              >
+                Tạo lộ trình
               </button>
             </div>
           </SwiperSlide>
           <SwiperSlide className="step-3 flex flex-col gap-8">
-            {() => {
-              console.log("step 3 re-rendered");
-              return (
-                <>
-                  <h3 className="text-3xl font-bold">XÂY DỰNG LỘ TRÌNH</h3>
-                  <BuildRoadmapProgressBar />
+            <h3 className="text-3xl font-bold">XÂY DỰNG LỘ TRÌNH</h3>
+            {currentStep === 3 && (
+              <>
+                <BuildRoadmapProgressBar
+                  onComplete={() => setCompleteCreatingRoadmap(true)}
+                />
+                {completeCreatingRoadmap && (
                   <p className="text-xl font-semibold text-center">
                     Lộ trình học tập cá nhân hóa của bạn đã được khởi tạo thành
                     công. Hãy bắt đầu tham gia lộ trình để đạt được số điểm
                     TOEIC mong muốn!
                   </p>
-                  <div className="buttons-container absolute bottom-2 w-full flex justify-between items-center mt-4">
-                    <button className="prev-slide bg-white text-black text-lg px-3 py-2 border border-secondary rounded-md">
-                      Quay lại
-                    </button>
-
-                    <button className="end-swiper bg-secondary text-white text-lg px-3 py-2 rounded-md">
-                      <Link to="/roadmap">Bắt đầu</Link>
-                    </button>
-                  </div>
-                </>
-              );
-            }}
+                )}
+              </>
+            )}
+            <div className="buttons-container absolute bottom-2 w-full flex justify-between items-center mt-4">
+              <button
+                className="prev-slide bg-white text-black text-lg px-3 py-2 border border-secondary rounded-md"
+                onClick={handlePrevSlide}
+              >
+                Quay lại
+              </button>
+              {completeCreatingRoadmap && (
+                <button className="end-swiper bg-secondary text-white text-lg px-3 py-2 rounded-md">
+                  <Link to="/road-map">Bắt đầu</Link>
+                </button>
+              )}
+            </div>
           </SwiperSlide>
-          ...
         </Swiper>
       </div>
     </div>

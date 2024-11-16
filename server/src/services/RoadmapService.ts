@@ -76,7 +76,7 @@ class RoadmapService {
     }
     return null;
   }
-  async createPersonalRoadmap(personalRoadmap: CreatePersonalRoadmapDTO): Promise<boolean> {
+  async createPersonalRoadmap(personalRoadmap: CreatePersonalRoadmapDTO): Promise<RoadmapHistory | null> {
     const roadmapHistory: RoadmapHistory = (await collections.roadmapHistories?.findOne({
       _id: new ObjectId(personalRoadmap.userId),
     })) as RoadmapHistory;
@@ -92,7 +92,16 @@ class RoadmapService {
           },
         }
       );
-      return result ? true : false;
+      if (result) {
+        return {
+          ...roadmapHistory,
+          start_level: personalRoadmap.start_level,
+          target_level: personalRoadmap.target_level,
+          current_level: personalRoadmap.current_level,
+          updated_at: new Date().toISOString(),
+        };
+      }
+      return null;
     } else {
       const newRoadmapHistory: RoadmapHistory = {
         _id: new ObjectId(personalRoadmap.userId),
@@ -104,7 +113,10 @@ class RoadmapService {
         completedRoadmapExercises: [],
       };
       const result = await collections.roadmapHistories?.insertOne(newRoadmapHistory);
-      return result ? true : false;
+      if (result) {
+        return newRoadmapHistory;
+      }
+      return null;
     }
   }
 }

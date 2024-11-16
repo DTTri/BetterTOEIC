@@ -1,10 +1,8 @@
-import { useState } from "react";
-
 import LinearProgress, {
   linearProgressClasses,
 } from "@mui/material/LinearProgress";
 import { styled } from "@mui/material/styles";
-
+import { sCreatingPersonalRoadmap } from "@/store";
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 10,
   borderRadius: 5,
@@ -22,37 +20,96 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
     }),
   },
 }));
-export default function LevelChart() {
-  const [level, setLevel] = useState(1);
+
+export default function LevelChart({
+  isStartChart,
+}: {
+  isStartChart: boolean;
+}) {
+  console.log("LevelChart");
+  const currentLevel = sCreatingPersonalRoadmap.use();
   return (
     <div className="w-full flex flex-col gap-2">
       <div className="columns-container w-full flex justify-between items-end px-4">
         <div
-          onClick={() => setLevel(1)}
+          onClick={
+            isStartChart
+              ? () =>
+                  sCreatingPersonalRoadmap.set((pre) => {
+                    if (isStartChart) pre.value.startLevel = 1;
+                  })
+              : undefined
+          }
           className="w-10 h-20 shadow-inner bg-primary"
         ></div>
         <div
-          onClick={() => setLevel(2)}
+          onClick={() => {
+            sCreatingPersonalRoadmap.set((pre) =>
+              isStartChart
+                ? (pre.value.startLevel = 2)
+                : (pre.value.targetLevel = 2)
+            );
+          }}
           className={`w-10 h-32 shadow-inner shadow-gray-600 ${
-            level > 1 ? "bg-primary" : ""
+            (
+              isStartChart
+                ? currentLevel.startLevel > 1
+                : currentLevel.targetLevel > 1
+            )
+              ? "bg-primary"
+              : ""
           }`}
         ></div>
         <div
-          onClick={() => setLevel(3)}
+          onClick={() => {
+            sCreatingPersonalRoadmap.set((pre) =>
+              isStartChart
+                ? (pre.value.startLevel = 3)
+                : (pre.value.targetLevel = 3)
+            );
+          }}
           className={`w-10 h-40 shadow-inner shadow-gray-600 ${
-            level > 2 ? "bg-primary" : ""
+            (
+              isStartChart
+                ? currentLevel.startLevel > 2
+                : currentLevel.targetLevel > 2
+            )
+              ? "bg-primary"
+              : ""
           }`}
         ></div>
         <div
-          onClick={() => setLevel(4)}
+          onClick={() => {
+            sCreatingPersonalRoadmap.set((pre) =>
+              isStartChart
+                ? (pre.value.startLevel = 4)
+                : (pre.value.targetLevel = 4)
+            );
+          }}
           className={`w-10 h-52 shadow-inner shadow-gray-600 ${
-            level > 3 ? "bg-primary" : ""
+            (
+              isStartChart
+                ? currentLevel.startLevel > 3
+                : currentLevel.targetLevel > 3
+            )
+              ? "bg-primary"
+              : ""
           }`}
         ></div>
         <div
-          onClick={() => setLevel(5)}
+          onClick={() => {
+            sCreatingPersonalRoadmap.set((pre) => {
+              if (!isStartChart) pre.value.targetLevel = 5;
+            });
+          }}
           className={`w-10 h-60 shadow-inner shadow-gray-600 ${
-            level > 4 ? "bg-primary" : ""
+            (
+              isStartChart
+                ? currentLevel.startLevel > 4
+                : currentLevel.targetLevel > 4
+            )
+              ? "bg-primary"
+              : ""
           }`}
         ></div>
       </div>
@@ -60,7 +117,13 @@ export default function LevelChart() {
         <BorderLinearProgress
           className="w-full"
           variant="determinate"
-          value={25 * (level - 1)}
+          value={
+            25 *
+            ((isStartChart
+              ? currentLevel.startLevel
+              : currentLevel.targetLevel) -
+              1)
+          }
         />
       </div>
       <div className="values-container w-full flex justify-between">
