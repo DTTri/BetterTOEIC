@@ -1,3 +1,4 @@
+import { RoadmapExercise } from "@/entities";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import { useNavigate } from "react-router-dom";
 
@@ -33,18 +34,15 @@ function ChapterItem({
 }
 
 export default function ChaptersContainer({
-  currentPhase,
   part,
   unlockedChapters,
   chapters,
 }: {
-  currentPhase: number;
   part: number;
   unlockedChapters: number;
-  chapters: number;
+  chapters: RoadmapExercise[];
 }) {
   const nav = useNavigate();
-
   return (
     <div className="w-full bg-tertiary rounded-2xl p-4 pb-8">
       <div className="header mb-4">
@@ -52,20 +50,17 @@ export default function ChaptersContainer({
           Part {part}
         </h3>
         <p className="chapters-left text-sm text-rose-800">
-          {chapters - unlockedChapters} chapters left
+          {chapters.length - unlockedChapters} chapters left
         </p>
       </div>
       <div className="chapters-container flex flex-col items-center gap-2 px-2">
-        {[...Array(chapters).keys()].map((chapter) => (
+        {chapters.map((chapter) => (
           <ChapterItem
-            key={chapter}
-            isUnlocked={chapter < unlockedChapters}
-            chapter={chapter + 1}
-            numberOfQuestions={5}
-            onClick={() => {
-              if (chapter >= unlockedChapters) return;
-              nav(`/doing-roadmap/${currentPhase}/${part}/${chapter + 1}`);
-            }}
+            key={chapter._id}
+            isUnlocked={chapter.chapter <= unlockedChapters}
+            chapter={chapter.chapter}
+            numberOfQuestions={chapter.questions.length}
+            onClick={() => nav(`/roadmap/${chapter._id}`)}
           />
         ))}
       </div>

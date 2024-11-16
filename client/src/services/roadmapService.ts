@@ -1,6 +1,6 @@
 import http from "./http";
 class RoadmapService {
-  baseURI = "/roadmap";
+  baseURI = "roadmap";
   private getURI(uri: string) {
     return `${this.baseURI}/${uri}`;
   }
@@ -28,4 +28,12 @@ class RoadmapService {
       completedRoadmapExercise
     );
   }
+  async getRoadmapHistory(userId: string) {
+    return await http.get(this.getURI("getRoadmapHistory/" + userId));
+  }
+  async createPersonalRoadmap(data: object) {
+    return await http.post(this.getURI("createPersonalRoadmap"), data);
+  }
 }
+const roadmapService = new RoadmapService();
+export default roadmapService;
