@@ -39,19 +39,26 @@ import WordSavedPage from "./pages/personal/WordsSavedPage";
 import UserLayout from "./pages/UserLayout";
 import VocabCardGallery from "./pages/vocab/VocabCardGalleryPage";
 import VocabLearingPage from "./pages/vocab/VocabLearingPage";
+import { sRoadmap } from "./store";
+import { useEffect } from "react";
+import { roadmapService } from "./services";
 function App() {
-  // useSelector to get the test from the store by id, currently hardcode the test data
-  // type Test = {
-  //   _id: string;
-  //   title: string;
-  //   description: string;
-  //   main_audio: string;
-  //   created_by: string;
-  //   created_at: string;
-  //   updated_at: string;
-  //   difficulty: string;
-  //   questions: Question[];
-  // };
+  useEffect(() => {
+    const fetchRoadmapExercises = async () => {
+      try {
+        const res = await roadmapService.getRoadmapExercisesByPhase(1);
+        if (res.EC === 0) {
+          sRoadmap.set((pre) => (pre.value.exercises = res.DT));
+          console.log("fetch roadmap exercises", res.DT);
+        } else {
+          console.log(res.EM);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchRoadmapExercises();
+  });
   return (
     <Routes>
       <Route path="/admin" element={<AdminLayout />}>

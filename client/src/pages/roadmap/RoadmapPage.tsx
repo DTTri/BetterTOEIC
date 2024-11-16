@@ -3,14 +3,15 @@ import { useEffect, useState } from "react";
 import CreatingRoadmapPage from "./CreatingRoadmapPage";
 import { roadmapService } from "@/services";
 import { RoadmapExercise, RoadmapHistory } from "@/entities";
+import { sRoadmap } from "@/store";
 export default function RoadmapPage() {
+  const roadmapExercises: RoadmapExercise[] = sRoadmap.use((v) => v.exercises);
+
   const [userRoadmap, setUserRoadmap] = useState<RoadmapHistory | null>(null);
-  const [userId, setUserId] = useState("67307c740cf99774897385aa");
-  const [roadmapExercises, setRoadmapExercises] = useState<RoadmapExercise[]>(
-    []
-  );
+  const userId = "67307c740cf99774897385aa";
 
   useEffect(() => {
+    console.log("RoadmapPage");
     const fetchUserRoadmap = async () => {
       try {
         const res = await roadmapService.getRoadmapHistory(userId);
@@ -27,24 +28,11 @@ export default function RoadmapPage() {
     };
     fetchUserRoadmap();
   }, [userId]);
-  useEffect(() => {
-    if (!userRoadmap) return;
-    const fetchRoadmapExercises = async () => {
-      try {
-        const res = await roadmapService.getRoadmapExercisesByPhase(
-          userRoadmap.current_level
-        );
-        if (res.EC === 0) {
-          setRoadmapExercises(res.DT as RoadmapExercise[]);
-        } else {
-          console.log(res.EM);
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchRoadmapExercises();
-  }, [userRoadmap]);
+
+  // sRoadmap.watch((newValue) => {
+  //   console.log("sRoadmap: " + newValue.exercises);
+  //   setRoadmapExercises(newValue.exercises as RoadmapExercise[]);
+  // }, []);
   return (
     <>
       {!userRoadmap ? (

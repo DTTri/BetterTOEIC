@@ -31,6 +31,7 @@ export default function DoingRoadmapExsPage() {
     } else {
       const fetchRoadmapExercise = async () => {
         try {
+          console.log("fetch roadmap exercise");
           const res = await roadmapService.getRoadmapExerciseById(
             roadmapExerciseId
           );
@@ -48,7 +49,7 @@ export default function DoingRoadmapExsPage() {
       };
       fetchRoadmapExercise();
     }
-  });
+  }, [roadmapExerciseId, nav]);
 
   // Initialize question group length on first render
   useEffect(() => {
