@@ -183,6 +183,7 @@ class RoadmapController {
         res.status(201).json({
           EM: 'Personal roadmap created successfully',
           EC: 0,
+          DT: result,
         });
       } else {
         res.status(400).json({

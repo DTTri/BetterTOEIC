@@ -3,7 +3,9 @@ export default function Steps({ currentStep }: { currentStep: number }) {
     <div className="bg-white rounded-2xl p-4">
       <div className="progress-bar flex items-center gap-0">
         <div
-          className={`w-14 h-14 rounded-full flex items-center justify-center text-black font-bold text-xl border border-black bg-purple-600`}
+          className={`w-14 h-14 rounded-full flex items-center justify-center text-black font-bold text-xl border border-black  ${
+            currentStep > 0 ? "bg-purple-600" : "bg-blue-400"
+          }`}
         >
           1
         </div>

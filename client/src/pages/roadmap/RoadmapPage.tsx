@@ -1,34 +1,17 @@
 import { ChaptersContainer, CurrentPhaseContainer } from "@/components";
-import { useEffect, useState } from "react";
-import CreatingRoadmapPage from "./CreatingRoadmapPage";
-import { roadmapService } from "@/services";
 import { RoadmapExercise, RoadmapHistory } from "@/entities";
 import { sRoadmap } from "@/store";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
 export default function RoadmapPage() {
+  const nav = useNavigate();
   const roadmapExercises: RoadmapExercise[] = sRoadmap.use((v) => v.exercises);
 
-  const [userRoadmap, setUserRoadmap] = useState<RoadmapHistory | null>(null);
-  const userId = "67307c740cf99774897385aa";
+  const userRoadmap: RoadmapHistory | null = sRoadmap.use((v) => v.userRoadmap);
 
-  useEffect(() => {
-    console.log("RoadmapPage");
-    const fetchUserRoadmap = async () => {
-      try {
-        const res = await roadmapService.getRoadmapHistory(userId);
-        if (res.EC === 0) {
-          setUserRoadmap(res.DT as RoadmapHistory);
-          console.log(res.DT);
-        } else {
-          setUserRoadmap(null);
-          console.log(res.EM);
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchUserRoadmap();
-  }, [userId]);
-
+  sRoadmap.watch((newValue) => {
+    console.log("sRoadmap: " + newValue.exercises);
+  }, []);
   // sRoadmap.watch((newValue) => {
   //   console.log("sRoadmap: " + newValue.exercises);
   //   setRoadmapExercises(newValue.exercises as RoadmapExercise[]);
@@ -36,7 +19,21 @@ export default function RoadmapPage() {
   return (
     <>
       {!userRoadmap ? (
-        <CreatingRoadmapPage />
+        // inform user that they have not created a roadmap yet
+        <div className="bg-background w-full h-full py-8 flex flex-col items-center gap-4">
+          <h1 className="text-4xl font-bold">
+            You have not created a roadmap yet
+          </h1>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              nav("/creating-roadmap");
+            }}
+          >
+            Let's create
+          </Button>
+        </div>
       ) : (
         <div className="bg-background w-full h-full py-8 flex flex-col items-center gap-4">
           <div className="w-1/2 min-w-fit mx-auto">

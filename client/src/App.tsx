@@ -39,7 +39,7 @@ import WordSavedPage from "./pages/personal/WordsSavedPage";
 import UserLayout from "./pages/UserLayout";
 import VocabCardGallery from "./pages/vocab/VocabCardGalleryPage";
 import VocabLearingPage from "./pages/vocab/VocabLearingPage";
-import { sRoadmap } from "./store";
+import { sCreatingPersonalRoadmap, sRoadmap, sUser } from "./store";
 import { useEffect } from "react";
 import { roadmapService } from "./services";
 function App() {
@@ -57,7 +57,24 @@ function App() {
         console.log(err);
       }
     };
-    fetchRoadmapExercises();
+    const fetchUserRoadmap = async () => {
+      try {
+        const res = await roadmapService.getRoadmapHistory(sUser.value.id);
+        if (res.EC === 0) {
+          sRoadmap.set((pre) => (pre.value.userRoadmap = res.DT));
+          sCreatingPersonalRoadmap.set((pre) => {
+            pre.value.startLevel = res.DT.current_level;
+            pre.value.targetLevel = res.DT.target_level;
+          });
+          console.log("fetch user roadmap", res.DT);
+        } else {
+          console.log(res.EM);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    Promise.all([fetchRoadmapExercises(), fetchUserRoadmap()]);
   });
   return (
     <Routes>

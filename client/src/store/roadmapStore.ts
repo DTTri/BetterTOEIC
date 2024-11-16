@@ -1,17 +1,12 @@
 import { signify } from "react-signify";
+import { RoadmapExercise, RoadmapHistory } from "@/entities";
 const sRoadmap = signify({
-  exercises: [
-    {
-      _id: "",
-      phase: 0,
-      part: 0,
-      chapter: 0,
-      created_at: new Date(),
-      updated_at: new Date(),
-      created_by: "",
-      questions: [],
-    },
-  ],
+  exercises: [] as RoadmapExercise[],
+  userRoadmap: null as RoadmapHistory | null,
+});
+export const sCreatingPersonalRoadmap = signify({
+  startLevel: 1,
+  targetLevel: 5,
 });
 
 export default sRoadmap;
