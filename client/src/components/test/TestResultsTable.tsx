@@ -1,32 +1,33 @@
 // This is just a stub code (mock code)
+import { CompletedTest } from "@/entities/TestHistory";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
-export default function TestResultsTable() {
-  const data = [
-    {
-      date: "01/10/2024",
-      totalTime: "01:50:25",
-      correctAnswers: 185,
-      result: 880,
-    },
-    {
-      date: "01/10/2024",
-      totalTime: "01:50:25",
-      correctAnswers: 185,
-      result: 880,
-    },
-    {
-      date: "01/10/2024",
-      totalTime: "01:50:25",
-      correctAnswers: 185,
-      result: 880,
-    },
-    {
-      date: "01/10/2024",
-      totalTime: "01:50:25",
-      correctAnswers: 185,
-      result: 880,
-    },
-  ];
+export default function TestResultsTable( { testHistoryById } : {  testHistoryById: CompletedTest[] }) {
+  // const data = [
+  //   {
+  //     date: "01/10/2024",
+  //     totalTime: "01:50:25",
+  //     correctAnswers: 185,
+  //     result: 880,
+  //   },
+  //   {
+  //     date: "01/10/2024",
+  //     totalTime: "01:50:25",
+  //     correctAnswers: 185,
+  //     result: 880,
+  //   },
+  //   {
+  //     date: "01/10/2024",
+  //     totalTime: "01:50:25",
+  //     correctAnswers: 185,
+  //     result: 880,
+  //   },
+  //   {
+  //     date: "01/10/2024",
+  //     totalTime: "01:50:25",
+  //     correctAnswers: 185,
+  //     result: 880,
+  //   },
+  // ];
 
   return (
     <div className="overflow-x-auto">
@@ -47,19 +48,19 @@ export default function TestResultsTable() {
           </tr>
         </thead>
         <tbody className="text-sm font-light">
-          {data.map((item, index) => (
+          {testHistoryById.map((item, index) => (
             <tr key={index} className="border-b border-gray-200 ">
               <td className="py-3 px-6 text-center whitespace-nowrap border border-white">
-                {item.date}
+                {item.attempted_at}
               </td>
               <td className="py-3 px-6 text-center border border-white">
-                {item.totalTime}
+                {item.attempted_at}
               </td>
               <td className="py-3 px-6 text-center border border-white">
-                {item.correctAnswers}
+                {item.correctAnswersPerPart.length}
               </td>
               <td className="py-3 px-6 text-center border border-white">
-                {item.result}
+                {990}
               </td>
               <td className="py-3 px-6 text-center border border-white">
                 <button>

@@ -10,6 +10,9 @@ export default function TestDetailsPage() {
   const selectedTest = testStore
   .use((pre) => pre.testList)
   .find((test) => test._id === id);
+
+  const testHistoryById = testStore.use((pre) => pre.testHistory)
+  ?.filter((test) => test.testId === id);
   
   console.log(selectedTest);
   return (
@@ -32,7 +35,7 @@ export default function TestDetailsPage() {
             <AssignmentIcon fontSize="small" />
             <span>Kết quả làm bài:</span>
           </div>
-          <TestResultsTable />
+          <TestResultsTable testHistoryById={testHistoryById || []}/>
           <div className="w-full flex justify-center">
             <button className="bg-primary text-white px-4 py-2 rounded-lg">
               <Link to={`/taking-test/${selectedTest?._id}`}>Bắt đầu thi</Link>

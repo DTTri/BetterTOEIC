@@ -59,7 +59,33 @@ function App() {
         console.log("Fail to fetch tests: ", error);
       }
     };
-    fetchTests();
+    const fetchTestHistory = async () => {
+      try {
+        const response = await testService.getTestHistory(sUser.value.id);
+        console.log(response);
+        if (response.EC === 0) {
+          testStore.set((prev) => (prev.value.testHistory = response.DT));
+        } else {
+          console.log("Fail to fetch test history: ", response.EM);
+        }
+      } catch (error) {
+        console.log("Fail to fetch test history: ", error);
+      }
+    };
+    const fetchTestSaved = async () => {
+      try {
+        const response = await testService.getTestsSaved(sUser.value.id);
+        console.log(response);
+        if (response.EC === 0) {
+          testStore.set((prev) => (prev.value.testsSaved = response.DT));
+        } else {
+          console.log("Fail to fetch test saved: ", response.EM);
+        }
+      } catch (error) {
+        console.log("Fail to fetch test saved: ", error);
+      }
+    };
+    Promise.all([fetchTests(), fetchTestHistory(), fetchTestSaved()]);
   }, [])
   useEffect(() => {
     const fetchRoadmapExercises = async () => {

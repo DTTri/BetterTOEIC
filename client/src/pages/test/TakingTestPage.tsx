@@ -34,7 +34,9 @@ export default function TakingTestPage() {
     <div className="bg-background">
       <div className="max-w-[1500px] content py-3 px-12 m-auto overflow-hidden">
         <div className="info-test flex flex-row items-center justify-between mb-5">
+          {/* Add  break when time out*/}
           <Timer></Timer>
+          {/* Add link to audio*/}
           <ListeningAudio></ListeningAudio>
           <Button
             style={{
@@ -180,10 +182,10 @@ export default function TakingTestPage() {
               let questionGroupForPassing = [...questionGroup];
               if (
                 (questionGroup.length < 1 ||
-                  question.question_group_id ===
+                  question.question_group_number ===
                     dataForTest?.questions[
                       questionsPart1To5?.length || 0 + index - 1
-                    ].question_group_id) &&
+                    ].question_group_number) &&
                 index < questionsPart6AndAbove.length - 1 &&
                 questionsPart6AndAbove[index + 1].part === currentPart
               ) {

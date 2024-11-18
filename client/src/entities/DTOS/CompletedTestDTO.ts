@@ -1,5 +1,7 @@
-type CompletedTestDTO = {
-    testID: string;
+type CompleteTestDTO = {
+    testId: string;
+    correctAnswersPerPart: number[];
     choices: number[];
-}
-export default CompletedTestDTO;
+  };
+  export default CompleteTestDTO;
+  
