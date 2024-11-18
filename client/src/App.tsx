@@ -39,6 +39,9 @@ import ReportUserPage from "./pages/personal/ReportUserPage";
 import WordSavedPage from "./pages/personal/WordsSavedPage";
 import TestsSavedPage from "./pages/personal/TestsSavedPage";
 import UserLayout from "./pages/UserLayout";
+import { useEffect } from "react";
+import { testService } from "./services";
+import { testStore } from "./store/testStore";
 function App() {
   // useSelector to get the test from the store by id, currently hardcode the test data
   // type Test = {
@@ -52,9 +55,25 @@ function App() {
   //   difficulty: string;
   //   questions: Question[];
   // };
+  useEffect(() => {
+    const fetchTests = async () => {
+      try {
+        const response = await testService.getTests();
+        console.log(response);
+        if (response.EC === 0) {
+          testStore.set((prev) => (prev.value.testList = response.DT));
+        } else {
+          console.log("Fail to fetch tests: ", response.EM);
+        }
+      } catch (error) {
+        console.log("Fail to fetch tests: ", error);
+      }
+    };
+    fetchTests();
+  }, [])
   return (
     <Routes>
-            <Route path="/admin" element={<AdminLayout />}>
+        <Route path="/admin" element={<AdminLayout />}>
         <Route path="overall" element={<OverallManagementPage />} />
         <Route path="test" element={<TestManagementPage />} />
         <Route path="practice" element={<PracticeManagementPage />} />
@@ -82,28 +101,17 @@ function App() {
         <Route path="forum/creatingPost" element={<CreatingPostPage />} />
         <Route path="vocab/creatingVocab" element={<CreatingVocabsPage />} />
       </Route>
-      <Route path="/" element={<UserLayout><TestsPage /></UserLayout>} />
+      <Route path="/test" element={<UserLayout><TestsPage /></UserLayout>} />
       <Route
         path="/test/:id"
         element={
           <UserLayout>
             <TestDetailsPage
-              test={{
-                _id: "1",
-                title: "Test 1",
-                description: "Test 1 description",
-                main_audio: "Test 1 audio",
-                created_by: "Test 1 creator",
-                created_at: "Test 1 created at",
-                updated_at: "Test 1 updated at",
-                difficulty: "Test 1 difficulty",
-                questions: [],
-              }}
             />
           </UserLayout>
         }
       />
-      <Route path="/taking-test" element={<UserLayout haveFooter={false}><TakingTestPage /></UserLayout>} />
+      <Route path="/taking-test/:id" element={<UserLayout haveFooter={false}><TakingTestPage /></UserLayout>} />
       <Route path="/road-map" element={<UserLayout haveFooter={false}><RoadmapPage /></UserLayout>} />
       <Route path="/practice" element={<UserLayout><PracticePage /></UserLayout>} />
       <Route
