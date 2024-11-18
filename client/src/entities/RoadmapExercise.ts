@@ -1,17 +1,14 @@
 import Question from "./Question";
-
-type Chapter = {
-  questions: Question[];
-};
-
 type RoadmapExercise = {
-  id: string;
+  _id: string;
   phase: number;
   part: number;
-  audio?: string;
-  chapters: Chapter[];
-  created_at: string;
-  updated_at: string;
+  chapter: number;
+  main_audio?: string;
+  created_at: Date;
+  updated_at: Date;
+  created_by: string;
+  questions: Question[];
 };
 
 export default RoadmapExercise;

@@ -21,7 +21,11 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
     }),
   },
 }));
-export default function BuildRoadmapProgressBar() {
+export default function BuildRoadmapProgressBar({
+  onComplete,
+}: {
+  onComplete: () => void;
+}) {
   const [progress, setProgress] = useState(0);
   console.log("BuildRoadmapProgressBar rendered, progress: ", progress);
 
@@ -34,15 +38,16 @@ export default function BuildRoadmapProgressBar() {
         if (prevProgress === 100) {
           clearInterval(interval);
           console.log("interval cleared");
+          onComplete();
+
           return 100;
         }
         const diff = Math.random() * 10;
         return Math.min(prevProgress + diff, 100);
       });
     }, 200);
-    // Cleanup the interval on component unmount
+
     return () => {
-      console.log("Component unmounted");
       clearInterval(interval);
     };
   }, []); // Empty dependency array ensures this runs only once

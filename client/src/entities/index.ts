@@ -8,6 +8,7 @@ import User from "./User";
 import Vocab from "./Vocab";
 import VocabByTopic from "./VocabByTopic";
 import Practice from "./Practice";
+import RoadmapHistory from "./RoadmapHistory";
 export type {
   Test,
   RoadmapExercise,
@@ -20,4 +21,5 @@ export type {
   Vocab,
   VocabByTopic,
   Practice,
+  RoadmapHistory,
 };

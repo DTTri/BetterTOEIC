@@ -1,7 +1,8 @@
-import { useState } from "react";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import LockIcon from "@mui/icons-material/Lock";
 import { useNavigate } from "react-router-dom";
+import { sRoadmap } from "@/store";
+import { RoadmapExercise } from "@/entities";
 function NumberOfQuestions() {
   return (
     <div className="bg-tertiary rounded-3xl text-primary py-2 px-1 text-sm">
@@ -62,7 +63,13 @@ export default function ChaptersListContainer({
   chapter: number;
   unlockedChapters: number;
 }) {
+  console.log("ChaptersListContainer");
+
   const nav = useNavigate();
+
+  const chapters: RoadmapExercise[] = sRoadmap
+    .use((v) => v.exercises)
+    .filter((exercise) => exercise.phase === phase && exercise.part === part);
   return (
     <div className="bg-white rounded-2xl shadow-lg min-w-[220px] flex flex-col items-center gap-4 py-8 px-4">
       <div className="current-part flex justify-center items-center w-full px-4">
@@ -75,15 +82,13 @@ export default function ChaptersListContainer({
         </div>
       </div>
       <div className="chapters-container flex flex-col items-center gap-2 w-full px-4">
-        {Array.from({ length: 5 }).map((_, index) => (
+        {chapters.map((chapterItem) => (
           <ChapterItem
-            key={index}
-            chapter={index + 1}
+            key={chapterItem._id}
+            chapter={chapterItem.chapter}
             unlockedChapters={unlockedChapters}
             currentChapter={chapter}
-            onClick={() => {
-              nav(`/doing-roadmap/${phase}/${part}/${index + 1}`);
-            }}
+            onClick={() => nav(`/roadmap/${chapterItem._id}`)}
           />
         ))}
       </div>
