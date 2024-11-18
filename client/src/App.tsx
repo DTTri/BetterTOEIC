@@ -43,6 +43,8 @@ import VocabLearingPage from "./pages/vocab/VocabLearingPage";
 import { sCreatingPersonalRoadmap, sRoadmap, sUser } from "./store";
 import { roadmapService } from "./services";
 import { testStore } from "./store/testStore";
+import practiceService from "./services/practiceService";
+import { practiceStore } from "./store/practiceStore";
 
 function App() {
   useEffect(() => {
@@ -86,6 +88,62 @@ function App() {
       }
     };
     Promise.all([fetchTests(), fetchTestHistory(), fetchTestSaved()]);
+  }, [])
+  useEffect(() => {
+    const fetchPracticeTests = async () => {
+      try {
+        const response = await practiceService.getPracticeTests();
+        console.log(response);
+        if (response.EC === 0) {
+          practiceStore.set((prev) => (prev.value.practiceTestList = response.DT));
+        } else {
+          console.log("Fail to fetch practice tests: ", response.EM);
+        }
+      } catch (error) {
+        console.log("Fail to fetch practice tests: ", error);
+      }
+    };
+    const fetchPracticeTestHistory = async () => {
+      try {
+        const response = await practiceService.getPracticeTestHistory(sUser.value.id);
+        console.log(response);
+        if (response.EC === 0) {
+          practiceStore.set((prev) => (prev.value.practiceTestList = response.DT));
+        } else {
+          console.log("Fail to fetch pracitce test history: ", response.EM);
+        }
+      } catch (error) {
+        console.log("Fail to fetch pracitce test history: ", error);
+      }
+    };
+    const fetchPracticeLesson = async () => {
+      try {
+        const response = await practiceService.getPracticeLessons();
+        console.log(response);
+        if (response.EC === 0) {
+          practiceStore.set((prev) => (prev.value.practiceLesson = response.DT.completedPracticeTests));
+        } else {
+          console.log("Fail to fetch practice lesson: ", response.EM);
+        }
+      } catch (error) {
+        console.log("Fail to fetch practice lesson: ", error);
+      }
+    };
+    const fetchPracticeLessonHistory = async () => {
+      try {
+        const response = await practiceService.getPracticeLessonHistory(sUser.value.id);
+        console.log(response);
+        if (response.EC === 0) {
+          practiceStore.set((prev) => (prev.value.practiceTestList = response.DT.completedPracticeLessons));
+        } else {
+          console.log("Fail to fetch pracitce lesson history: ", response.EM);
+        }
+      } catch (error) {
+        console.log("Fail to fetch pracitce lesson history: ", error);
+      }
+    };
+
+    Promise.all([fetchPracticeTestHistory(), fetchPracticeTests(), fetchPracticeLessonHistory(), fetchPracticeLesson()]);
   }, [])
   useEffect(() => {
     const fetchRoadmapExercises = async () => {
