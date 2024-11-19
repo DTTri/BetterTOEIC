@@ -1,6 +1,6 @@
 import http from "./http";
 class TestService {
-  baseURI = "/test";
+  baseURI = "test";
   private getURI(uri: string) {
     return `${this.baseURI}/${uri}`;
   }

@@ -7,7 +7,6 @@ import { Comment, Creator } from "./Post";
 import User from "./User";
 import Vocab from "./Vocab";
 import VocabByTopic from "./VocabByTopic";
-import Practice from "./Practice";
 import RoadmapHistory from "./RoadmapHistory";
 export type {
   Test,
@@ -20,6 +19,5 @@ export type {
   User,
   Vocab,
   VocabByTopic,
-  Practice,
   RoadmapHistory,
 };

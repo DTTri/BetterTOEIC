@@ -1,5 +1,4 @@
 import { Route, Routes } from "react-router-dom";
-
 import {
   CreatingRoadmapPage,
   DoingRoadmapExsPage,
@@ -37,12 +36,115 @@ import ReportUserPage from "./pages/personal/ReportUserPage";
 import TestsSavedPage from "./pages/personal/TestsSavedPage";
 import WordSavedPage from "./pages/personal/WordsSavedPage";
 import UserLayout from "./pages/UserLayout";
+import { useEffect } from "react";
+import { testService } from "./services";
 import VocabCardGallery from "./pages/vocab/VocabCardGalleryPage";
 import VocabLearingPage from "./pages/vocab/VocabLearingPage";
 import { sCreatingPersonalRoadmap, sRoadmap, sUser } from "./store";
-import { useEffect } from "react";
 import { roadmapService } from "./services";
+import { testStore } from "./store/testStore";
+import practiceService from "./services/practiceService";
+import { practiceStore } from "./store/practiceStore";
+
 function App() {
+  useEffect(() => {
+    const fetchTests = async () => {
+      try {
+        const response = await testService.getTests();
+        console.log(response);
+        if (response.EC === 0) {
+          testStore.set((prev) => (prev.value.testList = response.DT));
+        } else {
+          console.log("Fail to fetch tests: ", response.EM);
+        }
+      } catch (error) {
+        console.log("Fail to fetch tests: ", error);
+      }
+    };
+    const fetchTestHistory = async () => {
+      try {
+        const response = await testService.getTestHistory(sUser.value.id);
+        console.log(response);
+        if (response.EC === 0) {
+          testStore.set((prev) => (prev.value.testHistory = response.DT));
+        } else {
+          console.log("Fail to fetch test history: ", response.EM);
+        }
+      } catch (error) {
+        console.log("Fail to fetch test history: ", error);
+      }
+    };
+    const fetchTestSaved = async () => {
+      try {
+        const response = await testService.getTestsSaved(sUser.value.id);
+        console.log(response);
+        if (response.EC === 0) {
+          testStore.set((prev) => (prev.value.testsSaved = response.DT));
+        } else {
+          console.log("Fail to fetch test saved: ", response.EM);
+        }
+      } catch (error) {
+        console.log("Fail to fetch test saved: ", error);
+      }
+    };
+    Promise.all([fetchTests(), fetchTestHistory(), fetchTestSaved()]);
+  }, [])
+  useEffect(() => {
+    const fetchPracticeTests = async () => {
+      try {
+        const response = await practiceService.getPracticeTests();
+        console.log(response);
+        if (response.EC === 0) {
+          practiceStore.set((prev) => (prev.value.practiceTestList = response.DT));
+        } else {
+          console.log("Fail to fetch practice tests: ", response.EM);
+        }
+      } catch (error) {
+        console.log("Fail to fetch practice tests: ", error);
+      }
+    };
+    const fetchPracticeTestHistory = async () => {
+      try {
+        const response = await practiceService.getPracticeTestHistory(sUser.value.id);
+        console.log(response);
+        if (response.EC === 0) {
+          practiceStore.set((prev) => (prev.value.practiceTestList = response.DT));
+        } else {
+          console.log("Fail to fetch pracitce test history: ", response.EM);
+        }
+      } catch (error) {
+        console.log("Fail to fetch pracitce test history: ", error);
+      }
+    };
+    const fetchPracticeLesson = async () => {
+      try {
+        const response = await practiceService.getPracticeLessons();
+        console.log(response);
+        if (response.EC === 0) {
+          practiceStore.set((prev) => (prev.value.practiceLesson = response.DT.completedPracticeTests));
+        } else {
+          console.log("Fail to fetch practice lesson: ", response.EM);
+        }
+      } catch (error) {
+        console.log("Fail to fetch practice lesson: ", error);
+      }
+    };
+    const fetchPracticeLessonHistory = async () => {
+      try {
+        const response = await practiceService.getPracticeLessonHistory(sUser.value.id);
+        console.log(response);
+        if (response.EC === 0) {
+          practiceStore.set((prev) => (prev.value.practiceTestList = response.DT.completedPracticeLessons));
+        } else {
+          console.log("Fail to fetch pracitce lesson history: ", response.EM);
+        }
+      } catch (error) {
+        console.log("Fail to fetch pracitce lesson history: ", error);
+      }
+    };
+
+    Promise.all([fetchPracticeTestHistory(), fetchPracticeTests(), fetchPracticeLessonHistory(), fetchPracticeLesson()]);
+  }, [])
   useEffect(() => {
     const fetchRoadmapExercises = async () => {
       try {
@@ -106,58 +208,19 @@ function App() {
         <Route path="forum/creatingPost" element={<CreatingPostPage />} />
         <Route path="vocab/creatingVocab" element={<CreatingVocabsPage />} />
       </Route>
-      <Route
-        path="/"
-        element={
-          <UserLayout>
-            <TestsPage />
-          </UserLayout>
-        }
-      />
+      <Route path="/test" element={<UserLayout><TestsPage /></UserLayout>} />
       <Route
         path="/test/:id"
         element={
           <UserLayout>
             <TestDetailsPage
-              test={{
-                _id: "1",
-                title: "Test 1",
-                description: "Test 1 description",
-                main_audio: "Test 1 audio",
-                created_by: "Test 1 creator",
-                created_at: "Test 1 created at",
-                updated_at: "Test 1 updated at",
-                difficulty: "Test 1 difficulty",
-                questions: [],
-              }}
             />
           </UserLayout>
         }
       />
-      <Route
-        path="/taking-test"
-        element={
-          <UserLayout haveFooter={false}>
-            <TakingTestPage />
-          </UserLayout>
-        }
-      />
-      <Route
-        path="/road-map"
-        element={
-          <UserLayout haveFooter={false}>
-            <RoadmapPage />
-          </UserLayout>
-        }
-      />
-      <Route
-        path="/practice"
-        element={
-          <UserLayout>
-            <PracticePage />
-          </UserLayout>
-        }
-      />
+      <Route path="/taking-test/:id" element={<UserLayout haveFooter={false}><TakingTestPage /></UserLayout>} />
+      <Route path="/road-map" element={<UserLayout haveFooter={false}><RoadmapPage /></UserLayout>} />
+      <Route path="/practice" element={<UserLayout><PracticePage /></UserLayout>} />
       <Route
         path="/taking-practice/:part/:id"
         element={<TakingPracticePage />}

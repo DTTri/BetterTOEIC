@@ -1,16 +1,28 @@
+import { TestResultsTable } from "@/components";
+import { testStore } from "@/store/testStore";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
 import AccountTreeIcon from "@mui/icons-material/AccountTree";
 import AssignmentIcon from "@mui/icons-material/Assignment";
-import { Test } from "@/entities";
-import { TestResultsTable } from "@/components";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
-export default function TestDetailsPage({ test }: { test: Test }) {
+export default function TestDetailsPage() {
+  const { id } = useParams();
+  const selectedTest = testStore
+  .use((pre) => pre.testList)
+  .find((test) => test._id === id);
+
+  const testHistoryById = testStore.use((pre) => pre.testHistory)
+  ?.filter((test) => test.testId === id);
+  
+  console.log(selectedTest);
   return (
     <div className="bg-background w-full">
       <div className="mt-8 w-11/12 mx-auto bg-white rounded-xl p-4">
-        <h2 className="text-2xl font-bold">{test.title}</h2>
+        <h2 className="text-2xl font-bold">{selectedTest?.title}</h2>
         <div className="flex flex-col gap-2">
+          <div>
+          <h3>{selectedTest?.title}</h3>
+          </div>
           <div className="flex gap-1 items-center">
             <AccessAlarmIcon fontSize="small" />
             <span>Thời gian làm bài: 120 phút</span>
@@ -23,10 +35,10 @@ export default function TestDetailsPage({ test }: { test: Test }) {
             <AssignmentIcon fontSize="small" />
             <span>Kết quả làm bài:</span>
           </div>
-          <TestResultsTable />
+          <TestResultsTable testHistoryById={testHistoryById || []}/>
           <div className="w-full flex justify-center">
             <button className="bg-primary text-white px-4 py-2 rounded-lg">
-              <Link to="/taking-test">Bắt đầu thi</Link>
+              <Link to={`/taking-test/${selectedTest?._id}`}>Bắt đầu thi</Link>
             </button>
           </div>
         </div>

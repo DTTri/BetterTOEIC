@@ -10,5 +10,6 @@ type Test = {
   updated_at: string;
   difficulty: string;
   questions: Question[];
+  isMiniTest?: boolean | false;
 };
 export default Test;

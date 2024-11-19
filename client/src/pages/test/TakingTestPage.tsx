@@ -1,5 +1,5 @@
 // This is just a stub code (mock code)
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import Timer from "../../components/test/Timer";
 import ListeningAudio from "../../components/test/ListeningAudio";
@@ -7,26 +7,36 @@ import QuestionsListContainer from "../../components/test/QuestionsListContainer
 import QuestionsGroup from "../../components/test/QuestionsGroup";
 import QuestionComponent from "../../components/test/QuestionComponent";
 import { Button } from "@mui/material";
-import dataTest from "../../data/test";
 import Question from "@/entities/Question";
+import { testStore } from "@/store/testStore";
+import { Test } from "@/entities";
+import { useParams } from "react-router-dom";
+import { testService } from "@/services";
 
 export default function TakingTestPage() {
+  const { id } = useParams();
+  const selectedTest = testStore
+  .use((pre) => pre.testList)
+  .find((test) => test._id === id);
+  
   const [currentPart, setCurrentPart] = useState(1);
-  const dataForTest = dataTest;
-  const questionsPart1To5 = dataForTest.questions.filter(
+  const [dataForTest, setDataForTest] = useState<Test>();
+
+  const questionsPart1To5 = dataForTest?.questions.filter(
     (question) => question.part < 6
   );
-  const questionsPart6AndAbove = dataForTest.questions.filter(
+  const questionsPart6AndAbove = dataForTest?.questions.filter(
     (question) => question.part >= 6
   );
   //console.log(questionsPart6AndAbove);
   let questionGroup: Question[] = [];
   return (
     <div className="bg-background">
-      <Header></Header>
       <div className="max-w-[1500px] content py-3 px-12 m-auto overflow-hidden">
         <div className="info-test flex flex-row items-center justify-between mb-5">
+          {/* Add  break when time out*/}
           <Timer></Timer>
+          {/* Add link to audio*/}
           <ListeningAudio></ListeningAudio>
           <Button
             style={{
@@ -154,7 +164,7 @@ export default function TakingTestPage() {
               </Button>
             </div>
             {/* // i just want to map questions until part 5 */}
-            {questionsPart1To5.map((question, index) => {
+            {questionsPart1To5?.map((question, index) => {
               //console.log(question.part, question._id);
               return (
                 question.part === currentPart && (
@@ -162,8 +172,7 @@ export default function TakingTestPage() {
                 )
               );
             })}
-            {questionsPart6AndAbove.map((question, index) => {
-              console.log(question.part, currentPart, question._id);
+            {questionsPart6AndAbove?.map((question, index) => {
               if (
                 index > 0 &&
                 questionsPart6AndAbove[index - 1].part !== currentPart
@@ -173,16 +182,16 @@ export default function TakingTestPage() {
               let questionGroupForPassing = [...questionGroup];
               if (
                 (questionGroup.length < 1 ||
-                  question.question_group_id ===
-                    dataForTest.questions[questionsPart1To5.length + index - 1]
-                      .question_group_id) &&
+                  question.question_group_number ===
+                    dataForTest?.questions[
+                      questionsPart1To5?.length || 0 + index - 1
+                    ].question_group_number) &&
                 index < questionsPart6AndAbove.length - 1 &&
                 questionsPart6AndAbove[index + 1].part === currentPart
               ) {
                 questionGroup.push(question);
               } else {
                 questionGroupForPassing = [...questionGroup];
-                console.log(questionGroupForPassing);
 
                 questionGroup = [];
                 if (

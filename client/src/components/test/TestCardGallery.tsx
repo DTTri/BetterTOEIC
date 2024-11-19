@@ -1,6 +1,6 @@
 import { Test } from "@/entities";
-import TestCard from "./TestCard";
 import { useNavigate } from "react-router-dom";
+import TestCard from "./TestCard";
 
 export default function TestCardGallery({ tests }: { tests: Test[] }) {
   const nav = useNavigate();
@@ -10,7 +10,9 @@ export default function TestCardGallery({ tests }: { tests: Test[] }) {
         <TestCard
           key={test._id}
           test={test}
-          onClick={() => nav(`/test/${test._id}`)}
+          onClick={() => {
+            nav(`/test/${test._id}`)
+          }}
         />
       ))}
     </div>
