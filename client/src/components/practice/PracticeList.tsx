@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import PracticeTest from "../../entities/PracticeTest";
 import PracticeTestHistory from "@/entities/PracticeHisotry";
 import CompletedPracticeTest from "@/entities/CompletedPracticeTest";
+import { practiceStore } from "@/store/practiceStore";
 
 function PracticeTestComponent({
   title,

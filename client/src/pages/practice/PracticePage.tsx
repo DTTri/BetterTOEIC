@@ -11,11 +11,11 @@ export default function PracticePage() {
   const PracticeListsPart4 = practiceStore.use((value) => value.practiceTestList).filter((practice) => practice.part === 4);
   const PracticeListsPart5 = practiceStore.use((value) => value.practiceTestList).filter((practice) => practice.part === 5);
 
-  const PracticeHistoryPart1  = practiceStore.use((value) => value.completedTests).filter((completedTests) => completedTests.part === 1);
-  const PracticeHistoryPart2  = practiceStore.use((value) => value.completedTests).filter((completedTests) => completedTests.part === 2);
-  const PracticeHistoryPart3  = practiceStore.use((value) => value.completedTests).filter((completedTests) => completedTests.part === 3);
-  const PracticeHistoryPart4  = practiceStore.use((value) => value.completedTests).filter((completedTests) => completedTests.part === 4);
-  const PracticeHistoryPart5  = practiceStore.use((value) => value.completedTests).filter((completedTests) => completedTests.part === 5);
+  const PracticeHistoryPart1  = practiceStore.use((value) => value.completedPracticeTests).filter((completedPracticeTest) => completedPracticeTest.part === 1);
+  const PracticeHistoryPart2  = practiceStore.use((value) => value.completedPracticeTests).filter((completedPracticeTest) => completedPracticeTest.part === 2);
+  const PracticeHistoryPart3  = practiceStore.use((value) => value.completedPracticeTests).filter((completedPracticeTest) => completedPracticeTest.part === 3);
+  const PracticeHistoryPart4  = practiceStore.use((value) => value.completedPracticeTests).filter((completedPracticeTest) => completedPracticeTest.part === 4);
+  const PracticeHistoryPart5  = practiceStore.use((value) => value.completedPracticeTests).filter((completedPracticeTest) => completedPracticeTest.part === 5);
 
   return (
     <div>

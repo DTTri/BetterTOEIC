@@ -4,9 +4,9 @@ import QuestionPalette from "@/components/practice/QuestionPalette";
 import { useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import Question from "@/entities/Question";
-import { practiceForPart1 } from "@/data/practice_test";
 import QuestionComponent from "@/components/test/QuestionComponent";
 import practiceResult from "@/data/practice_result";
+import { practiceStore } from "@/store/practiceStore";
 
 //Testing for part 1
 //If having api, api should return the list of questions for each part (vd: https://bettertoeic.com/api/practice/part1/test1)
@@ -14,13 +14,7 @@ export default function TakingPracticePage() {
   const { part, id } = useParams();
   const [selectedQuestion, setSelectedQuestion] = useState<number>(1);
 
-  const [questions, setQuestions] = useState<Question[]>(
-    practiceForPart1[0].questions
-  );
-
-  useEffect(() => {
-    setQuestions(practiceForPart1.find((practice) => practice._id === id)?.questions || []);
- }, [id]);
+  const questions = practiceStore.use((value) => value.practiceTestList).find((practice) => practice._id === id)?.questions || [];
 
   console.log(questions);
   
@@ -32,7 +26,7 @@ export default function TakingPracticePage() {
     <div className="">
       <Header />
       <div className="content flex flex-row items-stretch gap-2 overflow-hidden">
-        <LeftBar PracticeResult={practiceResult} PracticeLists={practiceForPart1} />
+        <LeftBar/>
         <div className="max-w-[1200px] p-8 w-full flex flex-col gap-2">
           <div className="information w-full flex flex-row ">
             <h3 className="font-normal text-3xl text-[#000] w-[45%]">

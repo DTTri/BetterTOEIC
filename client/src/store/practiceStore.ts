@@ -8,14 +8,14 @@ import { signify } from "react-signify";
 
 interface PracticeTestStoreConfig {
     practiceTestList: PracticeTest[];
-    completedTests: CompletedPracticeTest[];
+    completedPracticeTests: CompletedPracticeTest[];
     practiceLesson: PracticeLesson[];
     completedLessons: CompletedPracticeLesson[];
 }
 
 export const practiceStore = signify<PracticeTestStoreConfig>({
     practiceTestList: [],
-    completedTests: [],
+    completedPracticeTests: [],
     practiceLesson: [],
     completedLessons: [],
 })

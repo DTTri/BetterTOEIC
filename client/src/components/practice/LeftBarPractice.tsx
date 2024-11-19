@@ -1,26 +1,19 @@
-import { Button } from "@mui/material";
-import { useEffect, useState } from "react";
-import { title } from "process";
-import React from "react";
-import { Link } from "react-router-dom";
-import DoneIcon from "@mui/icons-material/Done";
 import Practice from "@/entities/PracticeTest";
-import { UserPracticeData } from "@/entities/PracticeHisotry";
+import { practiceStore } from "@/store/practiceStore";
+import DoneIcon from "@mui/icons-material/Done";
+import { Button } from "@mui/material";
+import { useState } from "react";
+import { Link, useParams } from "react-router-dom";
 
 //should be edited when call api from back-end
 
-export default function LeftBar({
-  PracticeLists,
-  PracticeResult,
-}: {
-  PracticeLists: Practice[];
-  PracticeResult: UserPracticeData;
-}) {
+export default function LeftBar() {
+  const { part } = useParams();
+  const practiceTests = practiceStore.use((s) => s.practiceTestList).filter((practice) => practice.part == Number.parseInt(part || '1'));
+  const completedPracticeTests = practiceStore.use((s) => s.completedPracticeTests).filter((practice) => practice.part == Number.parseInt(part || '1'));
   const [choiced, setChoiced] = useState<String>("practices");
-  console.log("left bar");
-  console.log(PracticeLists);
   const [selectedTest, setSelectedTest] = useState<string>(
-    PracticeLists[0]._id
+    practiceTests[0]._id
   );
 
   return (
@@ -59,7 +52,7 @@ export default function LeftBar({
       </div>
       {choiced === "practices" && (
         <div className="flex flex-col items-center mx-auto">
-          {PracticeLists.map((practice, index) => {
+          {practiceTests.map((practice, index) => {
             console.log("part: " + practice.part);
             return (
               <Link
@@ -78,19 +71,9 @@ export default function LeftBar({
                   <h3 className="text-base font-semibold text-[#202224]">
                     Test {index + 1}
                   </h3>
-                  {PracticeResult.part[index].practice_tests.length !==
-                  practice.questions.length ? (
-                    <span className="font-normal text-[11px] text-[#ffffff] px-[3px] py-[5px] flex items-center justify-center aspect-square bg-[#00205C] rounded-full">
-                      {(
-                        (PracticeResult.part[index].practice_tests.length /
-                          practice.questions.length) *
-                        100
-                      ).toFixed(0)}
-                      %
-                    </span>
-                  ) : (
+                  {completedPracticeTests.find((completedTest) => completedTest.practiceTestId === practice._id) ? (
                     <DoneIcon className="" />
-                  )}
+                  ) : (<></>)}
                 </div>
               </Link>
             );
