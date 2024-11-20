@@ -108,7 +108,7 @@ function App() {
         const response = await practiceService.getPracticeTestHistory(sUser.value.id);
         console.log(response);
         if (response.EC === 0) {
-          practiceStore.set((prev) => (prev.value.practiceTestList = response.DT));
+          practiceStore.set((prev) => (prev.value.completedPracticeTests = response.DT));
         } else {
           console.log("Fail to fetch pracitce test history: ", response.EM);
         }
@@ -134,7 +134,7 @@ function App() {
         const response = await practiceService.getPracticeLessonHistory(sUser.value.id);
         console.log(response);
         if (response.EC === 0) {
-          practiceStore.set((prev) => (prev.value.practiceTestList = response.DT.completedPracticeLessons));
+          practiceStore.set((prev) => (prev.value.completedLessons = response.DT.completedPracticeLessons));
         } else {
           console.log("Fail to fetch pracitce lesson history: ", response.EM);
         }

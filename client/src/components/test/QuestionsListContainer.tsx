@@ -1,15 +1,11 @@
+import { on } from "events";
 import { useState } from "react";
 
-const QuestionsListContainer = () => {
+const QuestionsListContainer = ( { ans, onMoveToChosenQuestion } : { ans: number[], onMoveToChosenQuestion: (question_number: number) => void }) => {
   const numberOfQuestionsPerPart = [6, 24, 38, 30, 30, 30, 30];
-  const [selectedQuestion, setSelectedQuestion] = useState<boolean[]>(new Array(200).fill(false));
 
   const handleQuestionClick = (index: number) => {
-    setSelectedQuestion((prev) => {
-      const newSelectedQuestion = [...prev];
-      newSelectedQuestion[index] = !newSelectedQuestion[index];
-      return newSelectedQuestion;
-    });
+    onMoveToChosenQuestion(index);
     // Scroll to question
   };
 
@@ -32,11 +28,11 @@ const QuestionsListContainer = () => {
                     <div
                       key={globalIndex}
                       className={`question-item w-10 h-10 text-center flex justify-center items-center rounded-xl cursor-pointer ${
-                        selectedQuestion[globalIndex]
+                        ans[globalIndex - 1] !== 0
                           ? "bg-primary text-white"
                           : "bg-gray-300 text-black"
                       }`}
-                      onClick={() => handleQuestionClick(globalIndex)}
+                      onClick={() => handleQuestionClick(globalIndex - 1)}
                     >
                       {globalIndex}
                     </div>
