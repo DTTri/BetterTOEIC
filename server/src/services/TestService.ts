@@ -32,25 +32,12 @@ class TestService {
     const getUserTestHistoryResult = await collections.testHistories?.findOne({ _id: new ObjectId(userId) });
     const userTestHistory = getUserTestHistoryResult as TestHistory;
     if (userTestHistory) {
-      //check if the test is already completed
-      const testIndex = userTestHistory.completedTests.findIndex(
-        (test: CompletedTest) => test.testId === completedTest.testId
+      userTestHistory.completedTests.push(completedTest);
+      const result = await collections.testHistories?.updateOne(
+        { _id: new ObjectId(userId) },
+        { $set: { completedTests: userTestHistory.completedTests, updated_at: new Date().toISOString() } }
       );
-      if (testIndex !== -1) {
-        userTestHistory.completedTests[testIndex] = completedTest;
-        const result = await collections.testHistories?.updateOne(
-          { _id: new ObjectId(userId) },
-          { $set: { completedTests: userTestHistory.completedTests, updated_at: new Date().toISOString() } }
-        );
-        return result ? true : false;
-      } else {
-        userTestHistory.completedTests.push(completedTest);
-        const result = await collections.testHistories?.updateOne(
-          { _id: new ObjectId(userId) },
-          { $set: { completedTests: userTestHistory.completedTests, updated_at: new Date().toISOString() } }
-        );
-        return result ? true : false;
-      }
+      return result ? true : false;
     } else {
       const newUserTestHistory: TestHistory = {
         _id: new ObjectId(userId),

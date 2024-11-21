@@ -164,7 +164,7 @@ class RoadmapController {
         });
       } else {
         res.status(400).json({
-          EM: 'Failed to complete roadmap exercise',
+          EM: 'Failed to complete roadmap exercise, user roadmap history not found',
           EC: 4,
         });
       }

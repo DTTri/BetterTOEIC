@@ -37,35 +37,17 @@ class RoadmapService {
     const getUserRoadmapHistoryResult = await collections.roadmapHistories?.findOne({ _id: new ObjectId(userId) });
     const userRoadmapHistory = getUserRoadmapHistoryResult as RoadmapHistory;
     if (userRoadmapHistory) {
-      const roadmapIndex = userRoadmapHistory.completedRoadmapExercises.findIndex(
-        (roadmapExercise: CompletedRoadmapExercise) =>
-          roadmapExercise.roadmapExerciseId === completedRoadmapExercise.roadmapExerciseId
+      userRoadmapHistory.completedRoadmapExercises.push(completedRoadmapExercise);
+      const result = await collections.roadmapHistories?.updateOne(
+        { _id: new ObjectId(userId) },
+        {
+          $set: {
+            completedRoadmapExercises: userRoadmapHistory.completedRoadmapExercises,
+            updated_at: new Date().toISOString(),
+          },
+        }
       );
-      if (roadmapIndex !== -1) {
-        userRoadmapHistory.completedRoadmapExercises[roadmapIndex] = completedRoadmapExercise;
-        const result = await collections.roadmapHistories?.updateOne(
-          { _id: new ObjectId(userId) },
-          {
-            $set: {
-              completedRoadmapExercises: userRoadmapHistory.completedRoadmapExercises,
-              updated_at: new Date().toISOString(),
-            },
-          }
-        );
-        return result ? true : false;
-      } else {
-        userRoadmapHistory.completedRoadmapExercises.push(completedRoadmapExercise);
-        const result = await collections.roadmapHistories?.updateOne(
-          { _id: new ObjectId(userId) },
-          {
-            $set: {
-              completedRoadmapExercises: userRoadmapHistory.completedRoadmapExercises,
-              updated_at: new Date().toISOString(),
-            },
-          }
-        );
-        return result ? true : false;
-      }
+      return result ? true : false;
     }
     return false;
   }
