@@ -118,35 +118,17 @@ class PracticeService {
     });
     const userPracticeTestHistory = getUserPracticeTestHistoryResult as PracticeTestHistory;
     if (userPracticeTestHistory) {
-      //check if the test is already completed
-      const testIndex = userPracticeTestHistory.completedPracticeTests.findIndex(
-        (test: CompletedPracticeTest) => test.practiceTestId === completedPracticeTest.practiceTestId
+      userPracticeTestHistory.completedPracticeTests.push(completedPracticeTest);
+      const result = await collections.practiceTestHistories?.updateOne(
+        { _id: new ObjectId(userId) },
+        {
+          $set: {
+            completedTests: userPracticeTestHistory.completedPracticeTests,
+            updated_at: new Date().toISOString(),
+          },
+        }
       );
-      if (testIndex !== -1) {
-        userPracticeTestHistory.completedPracticeTests[testIndex] = completedPracticeTest;
-        const result = await collections.practiceTestHistories?.updateOne(
-          { _id: new ObjectId(userId) },
-          {
-            $set: {
-              completedTests: userPracticeTestHistory.completedPracticeTests,
-              updated_at: new Date().toISOString(),
-            },
-          }
-        );
-        return result ? true : false;
-      } else {
-        userPracticeTestHistory.completedPracticeTests.push(completedPracticeTest);
-        const result = await collections.practiceTestHistories?.updateOne(
-          { _id: new ObjectId(userId) },
-          {
-            $set: {
-              completedTests: userPracticeTestHistory.completedPracticeTests,
-              updated_at: new Date().toISOString(),
-            },
-          }
-        );
-        return result ? true : false;
-      }
+      return result ? true : false;
     } else {
       const newUserPracticeTestHistory: PracticeTestHistory = {
         _id: new ObjectId(userId),
@@ -167,35 +149,17 @@ class PracticeService {
     });
     const userPracticeLessonHistory = getUserPracticeLessonHistoryResult as PracticeLessonHistory;
     if (userPracticeLessonHistory) {
-      //check if the test is already completed
-      const lessonIndex = userPracticeLessonHistory.completedPracticeLessons.findIndex(
-        (lesson: CompletedPracticeLesson) => lesson.practiceLessonId === completedPracticeLesson.practiceLessonId
+      userPracticeLessonHistory.completedPracticeLessons.push(completedPracticeLesson);
+      const result = await collections.practiceLessonHistories?.updateOne(
+        { _id: new ObjectId(userId) },
+        {
+          $set: {
+            completedTests: userPracticeLessonHistory.completedPracticeLessons,
+            updated_at: new Date().toISOString(),
+          },
+        }
       );
-      if (lessonIndex !== -1) {
-        userPracticeLessonHistory.completedPracticeLessons[lessonIndex] = completedPracticeLesson;
-        const result = await collections.practiceLessonHistories?.updateOne(
-          { _id: new ObjectId(userId) },
-          {
-            $set: {
-              completedTests: userPracticeLessonHistory.completedPracticeLessons,
-              updated_at: new Date().toISOString(),
-            },
-          }
-        );
-        return result ? true : false;
-      } else {
-        userPracticeLessonHistory.completedPracticeLessons.push(completedPracticeLesson);
-        const result = await collections.practiceLessonHistories?.updateOne(
-          { _id: new ObjectId(userId) },
-          {
-            $set: {
-              completedTests: userPracticeLessonHistory.completedPracticeLessons,
-              updated_at: new Date().toISOString(),
-            },
-          }
-        );
-        return result ? true : false;
-      }
+      return result ? true : false;
     } else {
       const newUserPracticeLessonHistory: PracticeLessonHistory = {
         _id: new ObjectId(userId),
