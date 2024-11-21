@@ -172,6 +172,7 @@ class RoadmapController {
       res.status(500).json({
         EM: err.message,
         EC: 5,
+        DT: req.params.userId,
       });
     }
   }

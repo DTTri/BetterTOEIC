@@ -9,6 +9,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Question, RoadmapExercise } from "@/entities";
 import { useEffect, useState } from "react";
 import { roadmapService } from "@/services";
+import { CompleteRoadmapExerciseDTO } from "@/entities/dtos";
+import { Button } from "@mui/material";
+import { sUser } from "@/store";
 export default function DoingRoadmapExsPage() {
   const [currentQuestion, setCurrentQuestion] = useState(1);
   const [questionGroupLength, setQuestionGroupLength] = useState(1);
@@ -22,9 +25,12 @@ export default function DoingRoadmapExsPage() {
     created_by: "",
     questions: [],
   });
+  const [answers, setAnswers] = useState<number[]>([]);
   const params = useParams();
   const nav = useNavigate();
   const roadmapExerciseId = params.roadmapExerciseId;
+  const userId = sUser.use((state) => state.id);
+
   useEffect(() => {
     if (!roadmapExerciseId) {
       nav("/");
@@ -36,14 +42,15 @@ export default function DoingRoadmapExsPage() {
             roadmapExerciseId
           );
           if (res.EC === 0) {
+            console.log("Roadmap exercise fetched: " + res.DT);
             setRoadmapExercise(res.DT as RoadmapExercise);
+            setAnswers(Array(res.DT.questions.length).fill(0));
           } else {
             nav("/");
             console.log(res.EM);
           }
         } catch (err) {
           nav("/");
-
           console.log(err);
         }
       };
@@ -73,6 +80,35 @@ export default function DoingRoadmapExsPage() {
     }
   }, [roadmapExercise]);
 
+  const onChoose = (choice: number, question_number: number) => {
+    setAnswers((prev) => {
+      prev[question_number] = choice;
+      return [...prev];
+    });
+  };
+
+  const onSubmit = async () => {
+    try {
+      const completedRoadmapExercise: CompleteRoadmapExerciseDTO = {
+        roadmapExerciseId: roadmapExercise._id,
+        choices: answers,
+      };
+      console.log("Completed roadmap exercise: ", completedRoadmapExercise);
+      const response = await roadmapService.completeRoadmapExercise(
+        userId,
+        completedRoadmapExercise
+      );
+      if (response.EC === 0) {
+        console.log("Submit success");
+        nav("/roadmap");
+      } else {
+        console.log("Submit failed" + response.EM);
+      }
+    } catch (error) {
+      console.log("Submit failed" + error);
+    }
+  };
+
   const questionGroup: Question[] = [];
 
   function QuestionButtonsList() {
@@ -94,14 +130,20 @@ export default function DoingRoadmapExsPage() {
           const prevStartIndex = startIndexOfQuestionGroup;
           startIndexOfQuestionGroup = index;
           const groupLength = startIndexOfQuestionGroup - prevStartIndex;
+          const isCurrentGroup = currentQuestion === prevStartIndex + 1;
+          const isGroupAnswered = roadmapExercise.questions
+            .slice(prevStartIndex, startIndexOfQuestionGroup)
+            .every((q) => answers[q.question_number - 1] !== 0);
           buttons.push(
             <button
-              className={`question-item bg-gray-400 text-black rounded-lg w-8 h-8 ${
-                currentQuestion === prevStartIndex + 1
+              className={`question-item rounded-lg w-8 h-8 ${
+                isCurrentGroup
+                  ? "bg-blue-400 text-white"
+                  : isGroupAnswered
                   ? "bg-primary text-white"
-                  : ""
+                  : "bg-gray-400 text-black"
               }`}
-              key={index}
+              key={prevStartIndex}
               onClick={() => {
                 setCurrentQuestion(prevStartIndex + 1);
                 setQuestionGroupLength(groupLength);
@@ -116,12 +158,18 @@ export default function DoingRoadmapExsPage() {
       if (startIndexOfQuestionGroup < roadmapExercise.questions.length) {
         const prevStartIndex = startIndexOfQuestionGroup;
         const groupLength = roadmapExercise.questions.length - prevStartIndex;
+        const isCurrentGroup = currentQuestion === prevStartIndex + 1;
+        const isGroupAnswered = roadmapExercise.questions
+          .slice(prevStartIndex, roadmapExercise.questions.length)
+          .every((q) => answers[q.question_number - 1] !== 0);
         buttons.push(
           <button
-            className={`question-item bg-gray-400 text-black rounded-lg w-8 h-8 ${
-              currentQuestion === prevStartIndex + 1
+            className={`question-item rounded-lg w-8 h-8 ${
+              isCurrentGroup
+                ? "bg-blue-400 text-white"
+                : isGroupAnswered
                 ? "bg-primary text-white"
-                : ""
+                : "bg-gray-400 text-black"
             }`}
             key={roadmapExercise.questions.length}
             onClick={() => {
@@ -137,17 +185,25 @@ export default function DoingRoadmapExsPage() {
     }
     return (
       <>
-        {roadmapExercise.questions.map((_, index) => (
-          <button
-            className={`question-item bg-gray-400 text-black rounded-lg w-8 h-8 ${
-              currentQuestion === index + 1 ? "bg-primary text-white" : ""
-            }`}
-            key={index}
-            onClick={() => setCurrentQuestion(index + 1)}
-          >
-            {index + 1}
-          </button>
-        ))}
+        {roadmapExercise.questions.map((_, index) => {
+          const isCurrentQuestion = currentQuestion === index + 1;
+          const isQuestionAnswered = answers[index] !== 0;
+          return (
+            <button
+              className={`question-item rounded-lg w-8 h-8 ${
+                isCurrentQuestion
+                  ? "bg-blue-400 text-white"
+                  : isQuestionAnswered
+                  ? "bg-primary text-white"
+                  : "bg-gray-400 text-black"
+              }`}
+              key={index}
+              onClick={() => setCurrentQuestion(index + 1)}
+            >
+              {index + 1}
+            </button>
+          );
+        })}
       </>
     );
   }
@@ -162,8 +218,11 @@ export default function DoingRoadmapExsPage() {
       />
       <div className="w-full p-4 flex flex-col gap-4">
         <div className="w-full flex items-center gap-4">
-          <Timer onEnd={() => {}} />
+          <Timer onEnd={onSubmit} />
           {roadmapExercise.part < 5 && <ListeningAudio />}
+          <Button variant="contained" color="primary" onClick={onSubmit}>
+            Submit
+          </Button>
         </div>
         <div className="questions-container w-full bg-white rounded-xl p-4 h-[70vh] overflow-y-auto overflow-x-hidden">
           {roadmapExercise.part === 3 ||
@@ -182,14 +241,26 @@ export default function DoingRoadmapExsPage() {
                   console.log("QuestionGroupLength: ", questionGroupLength);
                   console.log("questionGroup.length: ", questionGroup.length);
                   return (
-                    <QuestionsGroup key={index} questions={questionGroup} />
+                    <QuestionsGroup
+                      key={index}
+                      questions={questionGroup}
+                      ans={answers}
+                      onChoose={onChoose}
+                    />
                   );
                 }
                 return null;
               })
             : roadmapExercise.questions.map((question, index) => {
                 if (index + 1 === currentQuestion) {
-                  return <QuestionComponent key={index} question={question} />;
+                  return (
+                    <QuestionComponent
+                      key={index}
+                      question={question}
+                      ans={answers}
+                      onChoose={onChoose}
+                    />
+                  );
                 }
                 return null;
               })}

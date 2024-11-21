@@ -1,3 +1,4 @@
+import { CreatePersonalRoadmapDTO } from "@/entities/dtos";
 import http from "./http";
 class RoadmapService {
   baseURI = "roadmap";
@@ -31,7 +32,7 @@ class RoadmapService {
   async getRoadmapHistory(userId: string) {
     return await http.get(this.getURI("getRoadmapHistory/" + userId));
   }
-  async createPersonalRoadmap(data: object) {
+  async createPersonalRoadmap(data: CreatePersonalRoadmapDTO) {
     return await http.post(this.getURI("createPersonalRoadmap"), data);
   }
 }

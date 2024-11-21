@@ -11,15 +11,15 @@ import QuestionsGroup from "../../components/test/QuestionsGroup";
 import QuestionsListContainer from "../../components/test/QuestionsListContainer";
 import Timer from "../../components/test/Timer";
 import { testService } from "@/services";
-import CompleteTestDTO from "@/entities/DTOS/CompleteTestDTO";
+import CompleteTestDTO from "@/entities/dtos/CompleteTestDTO";
 
 export default function TakingTestPage() {
   const { id } = useParams();
   const selectedTest = testStore
-  .use((pre) => pre.testList)
-  .find((test) => test._id === id);
-  const userId = sUser.use(state => state.id);
-  
+    .use((pre) => pre.testList)
+    .find((test) => test._id === id);
+  const userId = sUser.use((state) => state.id);
+
   const [currentPart, setCurrentPart] = useState(1);
   const [answers, setAnswers] = useState<number[]>(Array(200).fill(0));
 
@@ -30,48 +30,49 @@ export default function TakingTestPage() {
       prev[question_number] = choice;
       return [...prev];
     });
-  }
+  };
 
   const countCorrectAnswerPerPart = () => {
     let correctAnswerPerPart: number[] = Array(7).fill(0);
-    for(let i = 1; i <= 7; i++){
+    for (let i = 1; i <= 7; i++) {
       let correctAnswer = 0;
       selectedTest?.questions.forEach((question) => {
-        if(question.part === i){
-          if(question.correct_choice === answers[question.question_number - 1]){
+        if (question.part === i) {
+          if (
+            question.correct_choice === answers[question.question_number - 1]
+          ) {
             correctAnswer++;
           }
         }
       });
-      correctAnswerPerPart[i - 1] = (correctAnswer);
+      correctAnswerPerPart[i - 1] = correctAnswer;
     }
     return correctAnswerPerPart;
-  }
+  };
 
   const onSubmit = async () => {
     try {
       const correctAnswersPerPart = countCorrectAnswerPerPart();
       const completedTest: CompleteTestDTO = {
-        testId: selectedTest?._id || '',
+        testId: selectedTest?._id || "",
         correctAnswersPerPart: correctAnswersPerPart,
         choices: answers,
-      }
+      };
       const response = await testService.completeTest(userId, completedTest);
-      if(response.EC === 0){
-        console.log('Submit success');
-        nav('/test/:' + selectedTest?._id);
-      }
-      else{
-        console.log('Submit failed' + response.EM);
+      if (response.EC === 0) {
+        console.log("Submit success");
+        nav("/test/:" + selectedTest?._id);
+      } else {
+        console.log("Submit failed" + response.EM);
       }
     } catch (error) {
-      console.log('Submit failed' + error);
+      console.log("Submit failed" + error);
     }
-  }
+  };
 
   const onMoveToChosenQuestion = (question_number: number) => {
     setCurrentPart(selectedTest?.questions[question_number].part || 1);
-  }
+  };
 
   const questionsPart1To5 = selectedTest?.questions.filter(
     (question) => question.part < 6
@@ -106,7 +107,10 @@ export default function TakingTestPage() {
           </Button>
         </div>
         <div className="test-ui flex flex-row gap-5 w-full items-start">
-          <QuestionsListContainer ans={answers} onMoveToChosenQuestion={onMoveToChosenQuestion}></QuestionsListContainer>
+          <QuestionsListContainer
+            ans={answers}
+            onMoveToChosenQuestion={onMoveToChosenQuestion}
+          ></QuestionsListContainer>
           <div className="Question-lists w-full bg-[#ffffff] rounded-[20px] py-8 px-10">
             <div className="parts flex flex-row gap-4 mb-5">
               <Button
@@ -220,7 +224,12 @@ export default function TakingTestPage() {
               //console.log(question.part, question._id);
               return (
                 question.part === currentPart && (
-                  <QuestionComponent ans={answers} onChoose={onChoose} key={index} question={question} />
+                  <QuestionComponent
+                    ans={answers}
+                    onChoose={onChoose}
+                    key={index}
+                    question={question}
+                  />
                 )
               );
             })}
@@ -235,7 +244,7 @@ export default function TakingTestPage() {
               if (
                 (questionGroup.length < 1 ||
                   question.question_group_number ===
-                  selectedTest?.questions[
+                    selectedTest?.questions[
                       questionsPart1To5?.length || 0 + index - 1
                     ].question_group_number) &&
                 index < questionsPart6AndAbove.length - 1 &&
@@ -282,7 +291,7 @@ export default function TakingTestPage() {
                 onClick={() => {
                   if (currentPart < 7) {
                     setCurrentPart((prev) => prev + 1);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    window.scrollTo({ top: 0, behavior: "smooth" });
                   } else {
                     onSubmit();
                   }
