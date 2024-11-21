@@ -5,15 +5,19 @@ import QuestionComponent from "./QuestionComponent";
 // Part 6 & 7 Component with Paragraph and Image Handling
 export default function QuestionsGroup({
   questions,
+  ans,
+  onChoose,
 }: {
   questions: Question[];
+  ans: number[];
+  onChoose: (choice: number, question_number: number) => void;
 }) {
   return (
     <div className="w-full flex justify-around mb-5">
       <div className="left-section w-1/3">
 
-        {questions[0].passage &&
-          questions[0].passage?.map((para, idx) => (
+        {questions[0].passages &&
+          questions[0].passages?.map((para, idx) => (
             <div
               key={idx}
               className="paragraph-container mb-4  max-h-[450px] overflow-auto"
@@ -28,8 +32,8 @@ export default function QuestionsGroup({
               ))}
             </div>
           ))}
-        {questions[0].image &&
-          questions[0].image?.map((img, idx) => (
+        {questions[0].images &&
+          questions[0].images?.map((img, idx) => (
             <div className="img mb-4">
               <img
                 key={idx}
@@ -45,7 +49,7 @@ export default function QuestionsGroup({
       <div className="right-section w-[55%]">
 
         {questions.map((question, idx) => (
-          <QuestionComponent key={idx} question={question} />
+          <QuestionComponent ans={ans} onChoose={onChoose} key={idx} question={question} />
         ))}
       </div>
     </div>

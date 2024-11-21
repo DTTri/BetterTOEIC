@@ -1,10 +1,8 @@
 import PracticeList from "@/components/practice/PracticeList";
-import practiceResult from "@/data/practice_result";
-import CompletedPracticeTest from "@/entities/CompletedPracticeTest";
-import PracticeTest from "@/entities/PracticeTest";
 import { practiceStore } from "@/store/practiceStore";
 
 export default function PracticePage() {
+  console.log(practiceStore.value)
   const PracticeListsPart1 = practiceStore.use((value) => value.practiceTestList).filter((practice) => practice.part === 1);
   const PracticeListsPart2 = practiceStore.use((value) => value.practiceTestList).filter((practice) => practice.part === 2);
   const PracticeListsPart3 = practiceStore.use((value) => value.practiceTestList).filter((practice) => practice.part === 3);

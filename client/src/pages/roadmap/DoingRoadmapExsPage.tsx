@@ -162,7 +162,7 @@ export default function DoingRoadmapExsPage() {
       />
       <div className="w-full p-4 flex flex-col gap-4">
         <div className="w-full flex items-center gap-4">
-          <Timer />
+          <Timer onEnd={() => {}} />
           {roadmapExercise.part < 5 && <ListeningAudio />}
         </div>
         <div className="questions-container w-full bg-white rounded-xl p-4 h-[70vh] overflow-y-auto overflow-x-hidden">
