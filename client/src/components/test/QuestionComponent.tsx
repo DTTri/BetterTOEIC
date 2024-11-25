@@ -19,7 +19,7 @@ export default function QuestionComponent({
         Question {question.question_number}: {question.text}
       </h4>
       <div className="content flex flex-row w-full gap-[24px] items-center">
-        {question.images && question.part < 5 && (
+        {question.images && question.part === 1 && (
           <div className="img w-[50%]">
             <img
               className="max-w-full w-full max-h-[400px] block object-contain object-center "

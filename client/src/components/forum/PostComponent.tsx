@@ -5,24 +5,8 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import CommentIcon from "@mui/icons-material/Comment";
 import { Post } from "@/entities";
 import { Link } from "react-router-dom";
+import OptionsComponent from "./OptionsComponent";
 
-function PostOptions() {
-  return (
-    <div className=" absolute top-9 right-[-8px] bg-[#fffafa] shadow-lg rounded-[15px] transition-transform duration-200 ease-out">
-      <div className="w-[200px] flex flex-col">
-        <div className="hover:bg-slate-100 text-sm p-2 cursor-pointer">
-          Edit
-        </div>
-        <div className="hover:bg-slate-100 text-sm p-2 cursor-pointer">
-          Delete
-        </div>
-        <div className="hover:bg-slate-100 text-sm p-2 cursor-pointer">
-          Update
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export default function PostComponent({ post }: { post: Post }) {
   const [showOptions, setShowOptions] = useState(false);
@@ -30,9 +14,18 @@ export default function PostComponent({ post }: { post: Post }) {
   return (
     <Link
       to={`/post-detail/${post.postID}`}
-      className="shadow-md max-w-[750px] py-8 px-9 w-full bg-[#fff] rounded-[15px]"
+      className="relative shadow-md max-w-[750px] py-8 px-9 w-full bg-[#fff] rounded-[15px]"
     >
-      <div className="relative first w-full flex flex-row items-center mb-4">
+      <MoreVertIcon
+        onClick={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          setShowOptions(!showOptions);
+        }}
+        className="absolute z-10 top-4 right-5 text-gray-400 cursor-pointer hover:bg-slate-100"
+      />
+      {showOptions && <OptionsComponent />}
+      <div className="first w-full flex flex-row items-center mb-4">
         <Avatar
           style={{ width: "45px", height: "45px" }}
           alt="avatar"
@@ -42,11 +35,6 @@ export default function PostComponent({ post }: { post: Post }) {
           <h2 className="text-[16px] font-semibold">{post.creator.username}</h2>
           <span>{post.created_at}</span>
         </div>
-        <MoreVertIcon
-          onClick={() => setShowOptions(!showOptions)}
-          className="text-gray-400 cursor-pointer hover:bg-slate-100"
-        />
-        {showOptions && <PostOptions />}
       </div>
       <div className="content mb-4">
         <p className="text-[18px] text-[#000] font-bold mb-1 ">{post.title}</p>
