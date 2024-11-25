@@ -6,17 +6,34 @@ import {
   Select,
   SelectContent,
   SelectGroup,
-  SelectItemWithImage,
+  SelectItemWithText,
   SelectLabel,
   SelectTrigger,
 } from "@/components/ui/select"
 import VN from '../assets/VN_Flag.png';
-import { Link } from 'react-router-dom';
-
+import { Link, useNavigate } from 'react-router-dom';
 export default function Header() {
-  const [language, setLanguauge] = useState('vi');
-  const [isChooseLanguauge, showChooseLanguauge] = useState(false);
-
+  const [selectedItem, setSelectedItem] = useState('');
+  const nav = useNavigate();
+  const handleItemChange = (e: string) => {
+    setSelectedItem(e);
+    if(e === 'log-out') {
+      nav('/login');
+    }
+    else if(e === 'user-info') {
+      nav('/user-info');
+    }
+    else if(e === 'report') {
+      nav('/user-report');
+    }
+    else if(e === 'word-saved') {
+      nav('/word-saved');
+    }
+    else if(e === 'test-saved') {
+      nav('/test-saved');
+    }
+    
+  }
   return (
     <>
       <header className=" bg-[#ffffff] w-full px-9 py-5 flex justify-center">
@@ -35,30 +52,9 @@ export default function Header() {
           <div className="icon_noti">
             <button className='flex items-center justify-center'><img src={Noti} alt="" /></button>
           </div>
-          
-          <Select onValueChange={(e: any) => {
-            console.log(e);
-            if(e === 'en'){
-              setLanguauge('en');
-            }else{
-              setLanguauge('vi');
-            }
-          }}> 
-          <SelectTrigger value={language} className="flex flex-row w-[180px] gap-2 justify-between shadow-none bg-background py-2 px-2 border-none">
-                <img src={language === 'vi' ? VN : VN} alt="" className="h-5 w-8 block object-cover object-fill" />
-                <span className='font-semibold text-base'>{language == 'vi' ? 'Tiếng Việt' :'English'}</span>
-            </SelectTrigger>
-            <SelectContent className='bg-background'>
-              <SelectGroup>
-                <SelectLabel>Language</SelectLabel>
-                <SelectItemWithImage value='vi' imageSrc={VN}>Tiếng Việt</SelectItemWithImage>
-                <SelectItemWithImage value='en' imageSrc={VN}>English</SelectItemWithImage>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-          <Select>
-          <SelectTrigger value={language} className="flex flex-row w-auto gap-4 justify-between shadow-none bg-background h-auto py-0 px-0 border-none">
-                <img src={language === 'vi' ? VN : VN} alt="" className="max-h-10 max-w-10 aspect-square w-full h-full inline-block rounded-full object-cover object-fill" />
+          <Select onValueChange={handleItemChange}>
+          <SelectTrigger value={selectedItem} className="flex flex-row w-auto gap-4 justify-between shadow-none bg-background h-auto py-1 px-2 border-none">
+                <img src={VN} alt="" className="max-h-10 max-w-10 aspect-square w-full h-full inline-block rounded-full object-fill" />
                 <div className="flex flex-col">
                   <span className='text-[16px] font-semibold '>Thinh</span>
                   <span className='text-[12px] font-normal '>User</span>
@@ -66,9 +62,11 @@ export default function Header() {
             </SelectTrigger>
             <SelectContent className='bg-background'>
               <SelectGroup>
-                <SelectLabel>Language</SelectLabel>
-                <SelectItemWithImage value='vi' imageSrc={VN}>Tiếng Việt</SelectItemWithImage>
-                <SelectItemWithImage value='en' imageSrc={VN}>English</SelectItemWithImage>
+                <SelectItemWithText value='report'>User report</SelectItemWithText>
+                <SelectItemWithText value='user-info'>User-info</SelectItemWithText>
+                <SelectItemWithText  value='test-saved'>Test saved list</SelectItemWithText>
+                <SelectItemWithText  value='word-saved'>Word saved list</SelectItemWithText>
+                <SelectItemWithText  value='log-out'>Log out</SelectItemWithText>
               </SelectGroup>
             </SelectContent>
           </Select>

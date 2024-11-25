@@ -6,7 +6,7 @@ import TestsSaved from "@/entities/TestSaved";
 interface TestStoreConfig {
     testList: Test[];
     testHistory: CompletedTest[] | null;
-    testsSaved: TestsSaved[] | null;
+    testsSaved: TestsSaved[];
 }
 
 export const testStore = signify<TestStoreConfig>({

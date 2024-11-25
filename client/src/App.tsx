@@ -77,8 +77,8 @@ function App() {
     const fetchTestSaved = async () => {
       try {
         const response = await testService.getTestsSaved(sUser.value.id);
-        console.log(response);
         if (response.EC === 0) {
+          console.log("Test saved" + response.DT.savedTests);
           testStore.set((prev) => (prev.value.testsSaved = response.DT));
         } else {
           console.log("Fail to fetch test saved: ", response.EM);
@@ -323,7 +323,7 @@ function App() {
         }
       />
       <Route
-        path="/personal-information"
+        path="/user-info"
         element={
           <UserLayout>
             <PersonalImformationPage />
@@ -347,7 +347,7 @@ function App() {
         }
       />
       <Route
-        path="/report-user"
+        path="/user-report"
         element={
           <UserLayout haveFooter={false}>
             <ReportUserPage />
