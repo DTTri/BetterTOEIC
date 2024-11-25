@@ -686,10 +686,10 @@ components:
         choices:
           type: array
           items:
-            type: string
+            type: integer
           nullable: true
         correct_choice:
-          type: string
+          type: integer
         explanation:
           type: string
         question_group_number:
