@@ -1,4 +1,3 @@
-// This is just a stub code (mock code)
 import Question from "@/entities/Question";
 import { testStore } from "@/store/testStore";
 import { sUser } from "@/store";
@@ -36,16 +35,19 @@ export default function TakingTestPage() {
     let correctAnswerPerPart: number[] = Array(7).fill(0);
     for (let i = 1; i <= 7; i++) {
       let correctAnswer = 0;
-      selectedTest?.questions.forEach((question) => {
+      selectedTest?.questions.forEach((question, index) => {
         if (question.part === i) {
           if (
-            question.correct_choice === answers[question.question_number - 1]
+            question.correct_choice === answers[index]
           ) {
+            console.log(question.correct_choice)
+            console.log(answers[index])
             correctAnswer++;
           }
         }
       });
-      correctAnswerPerPart[i - 1] = correctAnswer;
+      console.log(correctAnswer);
+      correctAnswerPerPart.push(correctAnswer);
     }
     return correctAnswerPerPart;
   };
@@ -74,22 +76,23 @@ export default function TakingTestPage() {
     setCurrentPart(selectedTest?.questions[question_number].part || 1);
   };
 
-  const questionsPart1To5 = selectedTest?.questions.filter(
-    (question) => question.part < 6
+  const singleQuestionParts = selectedTest?.questions.filter(
+    (question) => question.part < 3 || question.part === 5
   );
-  const questionsPart6AndAbove = selectedTest?.questions.filter(
-    (question) => question.part >= 6
+  const questionGroupParts = selectedTest?.questions.filter(
+    (question) => question.part >= 3 && question.part !== 5
   );
-  //console.log(questionsPart6AndAbove);
+
   let questionGroup: Question[] = [];
+
   return (
     <div className="bg-background">
       <div className="max-w-[1500px] content py-3 px-12 m-auto overflow-hidden">
         <div className="info-test flex flex-row items-center justify-between mb-5">
-          {/* Add  break when time out*/}
           <Timer onEnd={onSubmit}></Timer>
-          {/* Add link to audio*/}
-          <ListeningAudio audioFile={selectedTest?.main_audio || ''}></ListeningAudio>
+          <ListeningAudio
+            audioFile={selectedTest?.main_audio || ""}
+          ></ListeningAudio>
           <Button
             style={{
               backgroundColor: "#00C552",
@@ -113,115 +116,27 @@ export default function TakingTestPage() {
           ></QuestionsListContainer>
           <div className="Question-lists w-full bg-[#ffffff] rounded-[20px] py-8 px-10">
             <div className="parts flex flex-row gap-4 mb-5">
-              <Button
-                onClick={() => setCurrentPart(1)}
-                variant="contained"
-                style={{
-                  backgroundColor: currentPart === 1 ? "#0063F3" : "#EEE",
-                  color: currentPart === 1 ? "#FFFFFF" : "#000000",
-                  padding: "5px 10px 5px",
-                  fontSize: "16px",
-                  fontWeight: "600",
-                  borderRadius: "10px",
-                  textWrap: "nowrap",
-                }}
-              >
-                Part 1
-              </Button>
-              <Button
-                onClick={() => setCurrentPart(2)}
-                variant="contained"
-                style={{
-                  backgroundColor: currentPart === 2 ? "#0063F3" : "#EEE",
-                  color: currentPart === 2 ? "#FFFFFF" : "#000000",
-                  padding: "5px 10px 5px",
-                  fontSize: "16px",
-                  fontWeight: "600",
-                  borderRadius: "10px",
-                  textWrap: "nowrap",
-                }}
-              >
-                Part 2
-              </Button>
-              <Button
-                onClick={() => setCurrentPart(3)}
-                variant="contained"
-                style={{
-                  backgroundColor: currentPart === 3 ? "#0063F3" : "#EEE",
-                  color: currentPart === 3 ? "#FFFFFF" : "#000000",
-                  padding: "5px 10px 5px",
-                  fontSize: "16px",
-                  fontWeight: "600",
-                  borderRadius: "10px",
-                  textWrap: "nowrap",
-                }}
-              >
-                Part 3
-              </Button>
-              <Button
-                onClick={() => setCurrentPart(4)}
-                variant="contained"
-                style={{
-                  backgroundColor: currentPart === 4 ? "#0063F3" : "#EEE",
-                  color: currentPart === 4 ? "#FFFFFF" : "#000000",
-                  padding: "5px 10px 5px",
-                  fontSize: "16px",
-                  fontWeight: "600",
-                  borderRadius: "10px",
-                  textWrap: "nowrap",
-                }}
-              >
-                Part 4
-              </Button>
-              <Button
-                onClick={() => setCurrentPart(5)}
-                variant="contained"
-                style={{
-                  backgroundColor: currentPart === 5 ? "#0063F3" : "#EEE",
-                  color: currentPart === 5 ? "#FFFFFF" : "#000000",
-                  padding: "5px 10px 5px",
-                  fontSize: "16px",
-                  fontWeight: "600",
-                  borderRadius: "10px",
-                  textWrap: "nowrap",
-                }}
-              >
-                Part 5
-              </Button>
-              <Button
-                onClick={() => setCurrentPart(6)}
-                variant="contained"
-                style={{
-                  backgroundColor: currentPart === 6 ? "#0063F3" : "#EEE",
-                  color: currentPart === 6 ? "#FFFFFF" : "#000000",
-                  padding: "5px 10px 5px",
-                  fontSize: "16px",
-                  fontWeight: "600",
-                  borderRadius: "10px",
-                  textWrap: "nowrap",
-                }}
-              >
-                Part 6
-              </Button>
-              <Button
-                onClick={() => setCurrentPart(7)}
-                variant="contained"
-                style={{
-                  backgroundColor: currentPart === 7 ? "#0063F3" : "#EEE",
-                  color: currentPart === 7 ? "#FFFFFF" : "#000000",
-                  padding: "5px 10px 5px",
-                  fontSize: "16px",
-                  fontWeight: "600",
-                  borderRadius: "10px",
-                  textWrap: "nowrap",
-                }}
-              >
-                Part 7
-              </Button>
+              {[...Array(7)].map((_, i) => (
+                <Button
+                  key={i}
+                  onClick={() => setCurrentPart(i + 1)}
+                  variant="contained"
+                  style={{
+                    backgroundColor: currentPart === i + 1 ? "#0063F3" : "#EEE",
+                    color: currentPart === i + 1 ? "#FFFFFF" : "#000000",
+                    padding: "5px 10px 5px",
+                    fontSize: "16px",
+                    fontWeight: "600",
+                    borderRadius: "10px",
+                    textWrap: "nowrap",
+                  }}
+                >
+                  Part {i + 1}
+                </Button>
+              ))}
             </div>
-            {/* // Map questions until part 5 */}
-            {questionsPart1To5?.map((question, index) => {
-              //console.log(question.part, question._id);
+            {/* Map questions until part 2 */}
+            {singleQuestionParts?.map((question, index) => {
               return (
                 question.part === currentPart && (
                   <QuestionComponent
@@ -233,35 +148,22 @@ export default function TakingTestPage() {
                 )
               );
             })}
-            {questionsPart6AndAbove?.map((question, index) => {
+            {questionGroupParts?.map((question, index) => {
               if (
                 index > 0 &&
-                questionsPart6AndAbove[index - 1].part !== currentPart
+                questionGroupParts[index - 1].question_group_number !==
+                  question.question_group_number
               ) {
                 questionGroup = [];
               }
-              let questionGroupForPassing = [...questionGroup];
+              questionGroup.push(question);
               if (
-                (questionGroup.length < 1 ||
-                  question.question_group_number ===
-                    selectedTest?.questions[
-                      questionsPart1To5?.length || 0 + index - 1
-                    ].question_group_number) &&
-                index < questionsPart6AndAbove.length - 1 &&
-                questionsPart6AndAbove[index + 1].part === currentPart
+                index === questionGroupParts.length - 1 ||
+                questionGroupParts[index + 1].question_group_number !==
+                  question.question_group_number
               ) {
-                questionGroup.push(question);
-              } else {
-                questionGroupForPassing = [...questionGroup];
-
+                const questionGroupForPassing = [...questionGroup];
                 questionGroup = [];
-                if (
-                  index < questionsPart6AndAbove.length - 1 &&
-                  questionsPart6AndAbove[index + 1].part === currentPart
-                ) {
-                  questionGroup.push(question);
-                }
-                //console.log(questionGroupForPassing);
                 return (
                   question.part === currentPart && (
                     <QuestionsGroup
@@ -273,6 +175,7 @@ export default function TakingTestPage() {
                   )
                 );
               }
+              return null;
             })}
             <div className="w-full flex ">
               <Button
