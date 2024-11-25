@@ -73,11 +73,11 @@ export default function TakingTestPage() {
     setCurrentPart(selectedTest?.questions[question_number].part || 1);
   };
 
-  const questionsPart1To5 = selectedTest?.questions.filter(
-    (question) => question.part < 6
+  const singleQuestionParts = selectedTest?.questions.filter(
+    (question) => question.part < 3 || question.part === 5
   );
-  const questionsPart6AndAbove = selectedTest?.questions.filter(
-    (question) => question.part >= 6
+  const questionGroupParts = selectedTest?.questions.filter(
+    (question) => question.part >= 3 && question.part !== 5
   );
 
   let questionGroup: Question[] = [];
@@ -132,8 +132,8 @@ export default function TakingTestPage() {
                 </Button>
               ))}
             </div>
-            {/* Map questions until part 5 */}
-            {questionsPart1To5?.map((question, index) => {
+            {/* Map questions until part 2 */}
+            {singleQuestionParts?.map((question, index) => {
               return (
                 question.part === currentPart && (
                   <QuestionComponent
@@ -145,18 +145,18 @@ export default function TakingTestPage() {
                 )
               );
             })}
-            {questionsPart6AndAbove?.map((question, index) => {
+            {questionGroupParts?.map((question, index) => {
               if (
                 index > 0 &&
-                questionsPart6AndAbove[index - 1].question_group_number !==
+                questionGroupParts[index - 1].question_group_number !==
                   question.question_group_number
               ) {
                 questionGroup = [];
               }
               questionGroup.push(question);
               if (
-                index === questionsPart6AndAbove.length - 1 ||
-                questionsPart6AndAbove[index + 1].question_group_number !==
+                index === questionGroupParts.length - 1 ||
+                questionGroupParts[index + 1].question_group_number !==
                   question.question_group_number
               ) {
                 const questionGroupForPassing = [...questionGroup];
