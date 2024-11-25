@@ -2,7 +2,7 @@ type Question = {
   text: string;
   images?: string[];
   passages?: string[];
-  choices: string[];
+  choices: number[];
   correct_choice: number;
   explanation: string;
   part: number;
