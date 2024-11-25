@@ -11,7 +11,7 @@ import QuestionsGroup from "../../components/test/QuestionsGroup";
 import QuestionsListContainer from "../../components/test/QuestionsListContainer";
 import Timer from "../../components/test/Timer";
 import { testService } from "@/services";
-import CompleteTestDTO from "@/entities/dtos/CompleteTestDTO";
+import CompleteTestDTO from "@/entities/DTOS/CompleteTestDTO";
 
 export default function TakingTestPage() {
   const { id } = useParams();
@@ -89,7 +89,7 @@ export default function TakingTestPage() {
           {/* Add  break when time out*/}
           <Timer onEnd={onSubmit}></Timer>
           {/* Add link to audio*/}
-          <ListeningAudio></ListeningAudio>
+          <ListeningAudio audioFile={selectedTest?.main_audio || ''}></ListeningAudio>
           <Button
             style={{
               backgroundColor: "#00C552",

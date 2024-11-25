@@ -1,7 +1,7 @@
-export default function ListeningAudio() {
+export default function ListeningAudio({ audioFile }: { audioFile: string }) {
   return (
     <audio
-      src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+      src={audioFile}
       controls
     />
   );

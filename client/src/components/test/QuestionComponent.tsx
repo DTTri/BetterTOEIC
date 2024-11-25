@@ -14,15 +14,15 @@ export default function QuestionComponent({
 }) {
   //{strImg = '', questionText, questionNum, options} : {strImg?: string, questionText:string, questionNum: number, options: string[]}
   return (
-    <div className="mb-5">
+    <div className="mb-4">
       <h4 className="text-[18px] w-full font-bold mb-2 text-wrap">
         Question {question.question_number}: {question.text}
       </h4>
-      <div className="content flex flex-row w-full gap-[32px] items-center">
-        {question.images && question.part === 1 && (
-          <div className="img w-[40%]">
+      <div className="content flex flex-row w-full gap-[24px] items-center">
+        {question.images && question.part < 5 && (
+          <div className="img w-[50%]">
             <img
-              className="max-w-full w-full max-h-[280px] block object-cover object-center "
+              className="max-w-full w-full max-h-[400px] block object-contain object-center "
               src={question.images[0]}
               alt=""
             />
