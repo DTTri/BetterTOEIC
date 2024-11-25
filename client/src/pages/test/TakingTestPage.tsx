@@ -36,16 +36,19 @@ export default function TakingTestPage() {
     let correctAnswerPerPart: number[] = Array(7).fill(0);
     for (let i = 1; i <= 7; i++) {
       let correctAnswer = 0;
-      selectedTest?.questions.forEach((question) => {
+      selectedTest?.questions.forEach((question, index) => {
         if (question.part === i) {
           if (
-            question.correct_choice === answers[question.question_number - 1]
+            question.correct_choice === answers[index]
           ) {
+            console.log(question.correct_choice)
+            console.log(answers[index])
             correctAnswer++;
           }
         }
       });
-      correctAnswerPerPart[i - 1] = correctAnswer;
+      console.log(correctAnswer);
+      correctAnswerPerPart.push(correctAnswer);
     }
     return correctAnswerPerPart;
   };

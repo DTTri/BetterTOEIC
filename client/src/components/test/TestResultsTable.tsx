@@ -51,13 +51,13 @@ export default function TestResultsTable( { testHistoryById } : {  testHistoryBy
           {testHistoryById.map((item, index) => (
             <tr key={index} className="border-b border-gray-200 ">
               <td className="py-3 px-6 text-center whitespace-nowrap border border-white">
-                {item.attempted_at}
+                {item.attempted_at.split("T")[0] + " " + item.attempted_at.split("T")[1].toString().split(".")[0]}
               </td>
               <td className="py-3 px-6 text-center border border-white">
                 {item.attempted_at}
               </td>
               <td className="py-3 px-6 text-center border border-white">
-                {item.correctAnswersPerPart.length}
+                {item.correctAnswersPerPart.reduce((acc, cur) => acc + cur)}
               </td>
               <td className="py-3 px-6 text-center border border-white">
                 {990}
