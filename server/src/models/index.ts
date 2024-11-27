@@ -15,6 +15,7 @@ import VocabTopic from './VocabTopic';
 import Vocab from './Vocab';
 import VocabHistory from './VocabHistory';
 import VocabsSaved from './VocabsSaved';
+import User from './User';
 export {
   Test,
   CompletedTest,
@@ -33,4 +34,5 @@ export {
   Vocab,
   VocabHistory,
   VocabsSaved,
+  User,
 };

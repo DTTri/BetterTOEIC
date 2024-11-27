@@ -14,6 +14,7 @@ export const collections: {
   vocabTopics?: mongoDB.Collection;
   vocabHistories?: mongoDB.Collection;
   vocabsSaved?: mongoDB.Collection;
+  users?: mongoDB.Collection;
 } = {};
 
 export async function connectDB() {
@@ -33,6 +34,7 @@ export async function connectDB() {
   const VOCABTOPICS_COLLECTION_NAME = process.env.VOCABTOPICS_COLLECTION_NAME || '';
   const VOCAB_HISTORIES_COLLECTION_NAME = process.env.VOCAB_HISTORIES_COLLECTION_NAME || '';
   const VOCABS_SAVED_COLLECTION_NAME = process.env.VOCABS_SAVED_COLLECTION_NAME || '';
+  const USERS_COLLECTION_NAME = process.env.USERS_COLLECTION_NAME || '';
 
   const client = new mongoDB.MongoClient(MONGODB_URL);
   await client.connect();
@@ -51,7 +53,7 @@ export async function connectDB() {
   const vocabTopicsCollection = db.collection(VOCABTOPICS_COLLECTION_NAME);
   const vocabHistoriesCollection = db.collection(VOCAB_HISTORIES_COLLECTION_NAME);
   const vocabsSavedCollection = db.collection(VOCABS_SAVED_COLLECTION_NAME);
-
+  const usersCollection = db.collection(USERS_COLLECTION_NAME);
   collections.tests = testsCollection;
   collections.testHistories = testHistoriesCollection;
   collections.testsSaved = testsSavedCollection;
@@ -64,6 +66,6 @@ export async function connectDB() {
   collections.vocabTopics = vocabTopicsCollection;
   collections.vocabHistories = vocabHistoriesCollection;
   collections.vocabsSaved = vocabsSavedCollection;
-
+  collections.users = usersCollection;
   console.log('Successfully connected to database: ', DB_NAME);
 }
