@@ -558,7 +558,185 @@ paths:
           description: Failed to fetch practice lesson history
         '500':
           description: Internal server error
-
+  /vocab/createVocabTopic:
+    post:
+      summary: Create a new vocab topic
+      tags:
+        - Vocab
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVocabTopicDTO'
+      responses:
+        '201':
+          description: Vocab topic created successfully
+        '400':
+          description: Failed to create vocab topic
+        '500':
+          description: Internal server error
+  /vocab/updateVocabTopic/{topicId}:
+    put:
+      summary: Update a vocab topic
+      tags:
+        - Vocab
+      parameters:
+        - name: topicId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVocabTopicDTO'
+      responses:
+        '200':
+          description: Vocab topic updated successfully
+        '400':
+          description: Failed to update vocab topic
+        '500':
+          description: Internal server error
+  /vocab/deleteVocabTopic/{topicId}:
+    delete:
+      summary: Delete a vocab topic
+      tags:
+        - Vocab
+      parameters:
+        - name: topicId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Vocab topic deleted successfully
+        '400':
+          description: Failed to delete vocab topic
+        '500':
+          description: Internal server error
+  /vocab/getAllVocabTopics:
+    get:
+      summary: Get all vocab topics
+      tags:
+        - Vocab
+      responses:
+        '200':
+          description: Vocab topics fetched successfully
+        '400':
+          description: Failed to fetch vocab topics
+        '500':
+          description: Internal server error
+  /vocab/getVocabTopicById/{topicId}:
+    get:
+      summary: Get a vocab topic by ID
+      tags:
+        - Vocab
+      parameters:
+        - name: topicId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Vocab topic fetched successfully
+        '400':
+          description: Failed to fetch vocab topic
+        '500':
+          description: Internal server error
+  /vocab/completeVocabTopic/{userId}:
+    put:
+      summary: Complete a vocab topic
+      tags:
+        - Vocab
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompleteVocabDTO'
+      responses:
+        '200':
+          description: Vocab topic completed successfully
+        '400':
+          description: Failed to complete vocab topic
+        '500':
+          description: Internal server error
+  /vocab/getVocabHistory/{userId}:
+    get:
+      summary: Get vocab history by user ID
+      tags:
+        - Vocab
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Vocab history fetched successfully
+        '400':
+          description: Failed to fetch vocab history
+        '500':
+          description: Internal server error
+  /vocab/saveVocab/{userId}:
+    put:
+      summary: Save a vocab
+      tags:
+        - Vocab
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                vocabId:
+                  type: string
+                unsave:
+                  type: boolean
+      responses:
+        '200':
+          description: Vocab saved successfully
+        '400':
+          description: Failed to save vocab
+        '500':
+          description: Internal server error
+  /vocab/getVocabsSaved/{userId}:
+    get:
+      summary: Get saved vocabs by user ID
+      tags:
+        - Vocab
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Saved vocabs fetched successfully
+        '400':
+          description: Failed to fetch saved vocabs
+        '500':
+          description: Internal server error
 components:
   schemas:
     CreateTestDTO:
@@ -694,3 +872,36 @@ components:
           type: string
         question_group_number:
           type: integer
+    CreateVocabTopicDTO:
+      type: object
+      properties:
+        name:
+          type: string
+        image:
+          type: string
+        vocabs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Vocab'
+    Vocab:
+      type: object
+      properties:
+        word:
+          type: string
+        meaning_en:
+          type: string
+        meaning_vi:
+          type: string
+        image:
+          type: string
+        audio:
+          type: string
+        example:
+          type: string
+    CompleteVocabDTO:
+      type: object
+      properties:
+        topicId:
+          type: string
+        vocabId:
+          type: string

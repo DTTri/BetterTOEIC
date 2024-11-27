@@ -7,6 +7,8 @@ import CompletePracticeLessonDTO from './CompletePracticeLessonDTO';
 import CreateRoadmapExerciseDTO from './CreateRoadmapExerciseDTO';
 import CompleteRoadmapExerciseDTO from './CompleteRoadmapExerciseDTO';
 import CreatePersonalRoadmapDTO from './CreatePersonalRoadmapDTO';
+import CreateVocabTopicDTO from './CreateVocabTopicDTO';
+import CompleteVocabDTO from './CompleteVocabDTO';
 export {
   CompleteTestDTO,
   CreateTestDTO,
@@ -17,4 +19,6 @@ export {
   CreateRoadmapExerciseDTO,
   CompleteRoadmapExerciseDTO,
   CreatePersonalRoadmapDTO,
+  CreateVocabTopicDTO,
+  CompleteVocabDTO,
 };

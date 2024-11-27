@@ -1,4 +1,5 @@
 import testRouter from './TestRoutes';
 import practiceRouter from './PracticeRoutes';
 import roadmapRouter from './RoadmapRoutes';
-export { testRouter, practiceRouter, roadmapRouter };
+import vocabRouter from './VocabRoutes';
+export { testRouter, practiceRouter, roadmapRouter, vocabRouter };

@@ -11,6 +11,10 @@ import CompletedPracticeLesson from './CompletedPracticeLesson';
 import RoadmapExercise from './RoadmapExercise';
 import RoadmapHistory from './RoadmapHistory';
 import CompletedRoadmapExercise from './CompletedRoadmapExercise';
+import VocabTopic from './VocabTopic';
+import Vocab from './Vocab';
+import VocabHistory from './VocabHistory';
+import VocabsSaved from './VocabsSaved';
 export {
   Test,
   CompletedTest,
@@ -25,4 +29,8 @@ export {
   RoadmapExercise,
   RoadmapHistory,
   CompletedRoadmapExercise,
+  VocabTopic,
+  Vocab,
+  VocabHistory,
+  VocabsSaved,
 };

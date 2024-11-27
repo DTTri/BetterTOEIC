@@ -11,6 +11,9 @@ export const collections: {
   practiceLessonHistories?: mongoDB.Collection;
   roadmapExercises?: mongoDB.Collection;
   roadmapHistories?: mongoDB.Collection;
+  vocabTopics?: mongoDB.Collection;
+  vocabHistories?: mongoDB.Collection;
+  vocabsSaved?: mongoDB.Collection;
 } = {};
 
 export async function connectDB() {
@@ -27,6 +30,9 @@ export async function connectDB() {
   const PRACTICE_LESSON_HISTORIES_COLLECTION_NAME = process.env.PRACTICE_LESSON_HISTORIES_COLLECTION_NAME || '';
   const ROADMAP_EXERCISES_COLLECTION_NAME = process.env.ROADMAP_EXERCISES_COLLECTION_NAME || '';
   const ROADMAP_HISTORIES_COLLECTION_NAME = process.env.ROADMAP_HISTORIES_COLLECTION_NAME || '';
+  const VOCABTOPICS_COLLECTION_NAME = process.env.VOCABTOPICS_COLLECTION_NAME || '';
+  const VOCAB_HISTORIES_COLLECTION_NAME = process.env.VOCAB_HISTORIES_COLLECTION_NAME || '';
+  const VOCABS_SAVED_COLLECTION_NAME = process.env.VOCABS_SAVED_COLLECTION_NAME || '';
 
   const client = new mongoDB.MongoClient(MONGODB_URL);
   await client.connect();
@@ -42,6 +48,9 @@ export async function connectDB() {
   const practiceLessonHistoriesCollection = db.collection(PRACTICE_LESSON_HISTORIES_COLLECTION_NAME);
   const roadmapExercisesCollection = db.collection(ROADMAP_EXERCISES_COLLECTION_NAME);
   const roadmapHistoriesCollection = db.collection(ROADMAP_HISTORIES_COLLECTION_NAME);
+  const vocabTopicsCollection = db.collection(VOCABTOPICS_COLLECTION_NAME);
+  const vocabHistoriesCollection = db.collection(VOCAB_HISTORIES_COLLECTION_NAME);
+  const vocabsSavedCollection = db.collection(VOCABS_SAVED_COLLECTION_NAME);
 
   collections.tests = testsCollection;
   collections.testHistories = testHistoriesCollection;
@@ -52,6 +61,9 @@ export async function connectDB() {
   collections.practiceLessonHistories = practiceLessonHistoriesCollection;
   collections.roadmapExercises = roadmapExercisesCollection;
   collections.roadmapHistories = roadmapHistoriesCollection;
+  collections.vocabTopics = vocabTopicsCollection;
+  collections.vocabHistories = vocabHistoriesCollection;
+  collections.vocabsSaved = vocabsSavedCollection;
 
   console.log('Successfully connected to database: ', DB_NAME);
 }
