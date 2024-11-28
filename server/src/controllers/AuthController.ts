@@ -94,6 +94,7 @@ class AuthController {
         const accessToken = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '15m' });
         const refreshToken = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1y' });
         await userServiceInstance.updateLoginTokens(email, refreshToken);
+        user.refreshToken = '';
         const { password, ...userWithoutPassword } = user;
         res.cookie('refreshToken', refreshToken, {
           httpOnly: true,

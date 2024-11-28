@@ -56,6 +56,14 @@ class UserService {
     }
     return null;
   }
+
+  async getAllUsers(): Promise<User[]> {
+    const users = (await collections.users?.find().toArray()) as User[];
+    return users;
+  }
+  async updateUserInfo(user: User): Promise<void> {
+    await collections.users?.updateOne({ email: user.email }, { $set: user });
+  }
 }
 const userServiceInstance = new UserService();
 export default userServiceInstance;

@@ -2,7 +2,7 @@ import express, { Express, json } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import { connectDB } from './config/connectDB';
-import { practiceRouter, roadmapRouter, testRouter, vocabRouter, authRouter } from './routes';
+import { practiceRouter, roadmapRouter, testRouter, vocabRouter, authRouter, userRouter } from './routes';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yaml';
 import fs from 'fs';
@@ -22,6 +22,7 @@ app.use('/api/practice', practiceRouter);
 app.use('/api/roadmap', roadmapRouter);
 app.use('/api/vocab', vocabRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/user', userRouter);
 connectDB()
   .then(() => {
     app.listen(PORT, () => {

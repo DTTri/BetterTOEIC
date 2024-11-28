@@ -906,6 +906,119 @@ paths:
         '400':
           description: Email already verified or user not found
 
+  /user/:
+    get:
+      summary: Get all users
+      tags:
+        - User
+      responses:
+        '200':
+          description: Users fetched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EC:
+                    type: integer
+                    example: 0
+                  EM:
+                    type: string
+                    example: Users fetched successfully
+                  DT:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+        '400':
+          description: Failed to fetch users
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EC:
+                    type: integer
+                    example: 2
+                  EM:
+                    type: string
+                    example: Failed to fetch users
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EC:
+                    type: integer
+                    example: 1
+                  EM:
+                    type: string
+                    example: Internal server error
+
+  /user/{userId}:
+    patch:
+      summary: Update a user
+      tags:
+        - User
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                avatar:
+                  type: string
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EC:
+                    type: integer
+                    example: 0
+                  EM:
+                    type: string
+                    example: User updated successfully
+        '400':
+          description: Validation errors or user not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EC:
+                    type: integer
+                    example: 1
+                  EM:
+                    type: string
+                    example: User not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EC:
+                    type: integer
+                    example: 3
+                  EM:
+                    type: string
+                    example: Internal server error
+
 components:
   schemas:
     CreateTestDTO:
@@ -1074,3 +1187,26 @@ components:
           type: string
         vocabId:
           type: string
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+        email:
+          type: string
+        name:
+          type: string
+        avatar:
+          type: string
+        status:
+          type: string
+          enum:
+            - ACTIVE
+            - PENDING
+            - SUSPENDED
+        created_at:
+          type: string
+        updated_at:
+          type: string
+        isAdmin:
+          type: boolean
