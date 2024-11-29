@@ -16,6 +16,8 @@ import Vocab from './Vocab';
 import VocabHistory from './VocabHistory';
 import VocabsSaved from './VocabsSaved';
 import User from './User';
+import Post from './Post';
+import Comment from './Comment';
 export {
   Test,
   CompletedTest,
@@ -35,4 +37,6 @@ export {
   VocabHistory,
   VocabsSaved,
   User,
+  Post,
+  Comment
 };

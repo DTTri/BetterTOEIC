@@ -11,6 +11,8 @@ import CreateVocabTopicDTO from './CreateVocabTopicDTO';
 import CompleteVocabDTO from './CompleteVocabDTO';
 import CreateUserDTO from './CreateUserDTO';
 import SaveVocabDTO from './SaveVocabDTO';
+import CreatePostDTO from './CreatePostDTO';
+import CreateCommentDTO from './CreateCommentDTO';
 export {
   CompleteTestDTO,
   CreateTestDTO,
@@ -25,4 +27,6 @@ export {
   CompleteVocabDTO,
   CreateUserDTO,
   SaveVocabDTO,
+  CreatePostDTO,
+  CreateCommentDTO
 };

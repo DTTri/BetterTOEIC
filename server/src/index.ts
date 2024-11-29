@@ -6,6 +6,7 @@ import { practiceRouter, roadmapRouter, testRouter, vocabRouter, authRouter, use
 import YAML from 'yaml';
 import fs from 'fs';
 import path from 'path';
+import forumRouter from './routes/ForumRoutes';
 dotenv.config(); //configure env enviroment to use data from .env
 
 const app: Express = express();
@@ -23,6 +24,7 @@ app.use('/api/file', fileRouter)
 app.use('/api/vocab', vocabRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
+app.use('/api/forum', forumRouter);
 connectDB()
   .then(() => {
     app.listen(PORT, () => {

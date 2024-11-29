@@ -4,6 +4,8 @@ import roadmapControllerInstance from './RoadmapController';
 import vocabControllerInstance from './VocabController';
 import authControllerInstance from './AuthController';
 import userControllerInstance from './UserController';
+import { forumControllerInstance } from './ForumController';
+
 export {
   testControllerInstance,
   practiceControllerInstance,
@@ -11,4 +13,5 @@ export {
   vocabControllerInstance,
   authControllerInstance,
   userControllerInstance,
+  forumControllerInstance,
 };
