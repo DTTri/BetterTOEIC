@@ -126,8 +126,7 @@ function App() {
         console.log(response);
         if (response.EC === 0) {
           practiceStore.set(
-            (prev) =>
-              (prev.value.practiceLesson = response.DT.completedPracticeTests)
+            (prev) => (prev.value.practiceLesson = response.DT)
           );
         } else {
           console.log("Fail to fetch practice lesson: ", response.EM);

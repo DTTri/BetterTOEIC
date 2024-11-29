@@ -6,15 +6,22 @@ import {
 } from "@mui/x-data-grid";
 import { ThemeProvider } from "@mui/material";
 import { adminTableTheme } from "@/context";
-import { roadmapChapters } from "@/data";
-import { RoadmapChapter } from "@/entities";
+import { RoadmapChapter, RoadmapExercise } from "@/entities";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
+import { sRoadmap } from "@/store";
 export default function RoadmapManagementPage() {
   const columns: GridColDef[] = [
     {
+      field: "index",
+      headerName: "#",
+      flex: 0.5,
+      align: "center",
+      headerAlign: "center",
+    },
+    {
       field: "_id",
       headerName: "ID",
-      flex: 0.5,
+      flex: 1,
       align: "center",
       headerAlign: "center",
     },
@@ -76,8 +83,30 @@ export default function RoadmapManagementPage() {
       ],
     },
   ];
+  const roadmapExercises = sRoadmap.use((v) => v.exercises);
+  const rows = roadmapExercises.map((exercise, index) => {
+    return {
+      index: index + 1,
+      _id: exercise._id,
+      phase: exercise.phase,
+      part: exercise.part,
+      chapter: exercise.chapter,
+      questions: exercise.questions.length,
+      created_at: exercise.created_at
+        .toString()
+        .split("T")[0]
+        .split("-")
+        .reverse()
+        .join("/"),
 
-  const rows: RoadmapChapter[] = roadmapChapters;
+      updated_at: exercise.updated_at
+        .toString()
+        .split("T")[0]
+        .split("-")
+        .reverse()
+        .join("/"),
+    };
+  });
 
   return (
     <div className="w-full h-screen p-4 rounded-xl flex flex-col gap-2 max-h-screen overflow-hidden bg-background">

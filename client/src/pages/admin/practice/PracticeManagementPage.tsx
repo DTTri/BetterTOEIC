@@ -7,11 +7,37 @@ import {
 import { Button, ThemeProvider } from "@mui/material";
 import { adminTableTheme } from "@/context";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
-import { Practice } from "@/entities";
-import { practiceForPart1 } from "@/data/practice_test";
+import { practiceStore } from "@/store/practiceStore";
+import { useState } from "react";
 export default function PracticeManagementPage() {
-  const rows: Practice[] = practiceForPart1;
-  const columns: GridColDef[] = [
+  const [isTestList, setIsTestList] = useState(true);
+  const practiceTestList = practiceStore.use((v) => v.practiceTestList);
+  const practiceLessonList = practiceStore.use((v) => v.practiceLesson);
+  const testRows = practiceTestList.map((ex, index) => ({
+    ...ex,
+    index: index + 1,
+    questions: ex.questions.length,
+    updated_at: ex.updated_at
+      .toString()
+      .split("T")[0]
+      .split("-")
+      .reverse()
+      .join("/"),
+    created_at: ex.created_at
+      .toString()
+      .split("T")[0]
+      .split("-")
+      .reverse()
+      .join("/"),
+  }));
+  const testColumns: GridColDef[] = [
+    {
+      field: "index",
+      headerName: "#",
+      flex: 0.5,
+      align: "center",
+      headerAlign: "center",
+    },
     {
       field: "_id",
       headerName: "ID",
@@ -27,14 +53,93 @@ export default function PracticeManagementPage() {
       headerAlign: "center",
     },
     {
-      field: "numberOfQuestions",
+      field: "questions",
       headerName: "QUESTIONS",
       flex: 1,
       align: "center",
       headerAlign: "center",
-      valueGetter: (value, row) => {
-        return row.questions.length;
-      },
+    },
+    {
+      field: "created_at",
+      headerName: "CREATED AT",
+      flex: 1,
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: "updated_at",
+      headerName: "UPDATED AT",
+      flex: 1,
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: "edit",
+      type: "actions",
+      flex: 0.3,
+      getActions: (params) => [
+        <GridActionsCellItem
+          icon={<ModeEditOutlineIcon />}
+          label="Edit"
+          onClick={() => console.log("Edit", params.row)}
+        />,
+      ],
+    },
+  ];
+
+  const lessonRows = practiceLessonList.map((ex, index) => ({
+    ...ex,
+    index: index + 1,
+    updated_at: ex.updated_at
+      .toString()
+      .split("T")[0]
+      .split("-")
+      .reverse()
+      .join("/"),
+    created_at: ex.created_at
+      .toString()
+      .split("T")[0]
+      .split("-")
+      .reverse()
+      .join("/"),
+  }));
+  // type PracticeLesson = {
+  //   _id: string;
+  //   part: number;
+  //   title: string;
+  //   content: string;
+  //   created_by: string;
+  //   created_at: string;
+  //   updated_at: string;
+  // };
+  const lessonColumns: GridColDef[] = [
+    {
+      field: "index",
+      headerName: "#",
+      flex: 0.5,
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: "_id",
+      headerName: "ID",
+      flex: 0.5,
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: "part",
+      headerName: "PART",
+      flex: 1,
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: "title",
+      headerName: "TITLE",
+      flex: 1,
+      align: "center",
+      headerAlign: "center",
     },
     {
       field: "created_at",
@@ -65,7 +170,18 @@ export default function PracticeManagementPage() {
   ];
   return (
     <div className="w-full h-screen p-4 rounded-xl flex flex-col gap-2 max-h-screen overflow-hidden bg-background">
-      <h2 className="text-2xl font-bold text-black">Exercises List</h2>
+      <div className="header flex justify-between items-center">
+        <h2 className="text-2xl font-bold text-black">
+          {isTestList ? "Practice Tests" : "Lessons"}
+        </h2>
+        <Button
+          variant="contained"
+          onClick={() => setIsTestList(!isTestList)}
+          className="text-white"
+        >
+          {isTestList ? "Lessons" : "Practice Tests"}
+        </Button>
+      </div>
       <div className="table-container w-full h-full">
         <ThemeProvider theme={adminTableTheme}>
           <DataGrid
@@ -73,8 +189,8 @@ export default function PracticeManagementPage() {
               borderRadius: "20px",
               backgroundColor: "white",
             }}
-            rows={rows}
-            columns={columns}
+            rows={isTestList ? testRows : lessonRows}
+            columns={isTestList ? testColumns : lessonColumns}
             getRowId={(row) => row._id} // Specify custom id for each row
             initialState={{
               pagination: {
