@@ -9,6 +9,7 @@ import Vocab from "./Vocab";
 import VocabByTopic from "./VocabByTopic";
 import RoadmapHistory from "./RoadmapHistory";
 import { CompletedTest } from "./TestHistory";
+import SavedVocab from "./SavedVocab";
 export type {
   Test,
   RoadmapExercise,
@@ -22,4 +23,5 @@ export type {
   VocabByTopic,
   RoadmapHistory,
   CompletedTest,
+  SavedVocab,
 };

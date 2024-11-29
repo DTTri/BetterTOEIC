@@ -61,10 +61,60 @@ class VocabMiddleware {
   }
   async saveVocab(req: Request, res: Response, next: NextFunction): Promise<void> {
     await checkSchema({
-      vocabId: {
+      _id: {
         isString: true,
         notEmpty: true,
-        errorMessage: 'Vocab ID is required',
+        errorMessage: 'ID is required',
+      },
+      topicId: {
+        isString: true,
+        notEmpty: true,
+        errorMessage: 'Topic ID is required',
+      },
+      topicName: {
+        isString: true,
+        notEmpty: true,
+        errorMessage: 'Topic Name is required',
+      },
+      word: {
+        isString: true,
+        notEmpty: true,
+        errorMessage: 'Word is required',
+      },
+      meaning_en: {
+        isString: true,
+        notEmpty: true,
+        errorMessage: 'Meaning in English is required',
+      },
+      meaning_vi: {
+        isString: true,
+        notEmpty: true,
+        errorMessage: 'Meaning in Vietnamese is required',
+      },
+      image: {
+        isString: true,
+        notEmpty: true,
+        errorMessage: 'Image is required',
+      },
+      audio: {
+        isString: true,
+        notEmpty: true,
+        errorMessage: 'Audio is required',
+      },
+      example: {
+        isString: true,
+        notEmpty: true,
+        errorMessage: 'Example is required',
+      },
+      spelling: {
+        isString: true,
+        notEmpty: true,
+        errorMessage: 'Spelling is required',
+      },
+      isSaving: {
+        isBoolean: true,
+        notEmpty: true,
+        errorMessage: 'Is saving is required',
       },
     }).run(req);
     const errors = validationResult(req);

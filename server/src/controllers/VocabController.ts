@@ -1,7 +1,7 @@
 import { vocabServiceInstance } from '~/services';
 import { vocabMiddlewareInstance } from '~/middlewares';
 import { VocabTopic, Vocab, VocabHistory, VocabsSaved } from '~/models';
-import { CreateVocabTopicDTO, CompleteVocabDTO } from '~/models/DTOs';
+import { CreateVocabTopicDTO, CompleteVocabDTO, SaveVocabDTO } from '~/models/DTOs';
 
 import { Request, Response } from 'express';
 import { ObjectId } from 'mongodb';
@@ -183,8 +183,8 @@ class VocabController {
 
   async saveVocab(req: Request, res: Response) {
     try {
-      const { vocabId, unsave } = req.body;
-      const result = await vocabServiceInstance.updateVocabsSaved(req.params.userId, vocabId, unsave);
+      const savedVocab: SaveVocabDTO = req.body;
+      const result = await vocabServiceInstance.updateVocabsSaved(req.params.userId, savedVocab);
       if (result) {
         res.status(200).json({
           EM: 'Vocab saved successfully',
@@ -210,7 +210,7 @@ class VocabController {
         res.status(200).json({
           EM: 'Vocabs saved fetched successfully',
           EC: 0,
-          DT: vocabsSaved,
+          DT: vocabsSaved.vocabs,
         });
       } else {
         res.status(400).json({

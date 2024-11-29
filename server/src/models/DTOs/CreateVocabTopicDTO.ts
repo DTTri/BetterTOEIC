@@ -8,6 +8,7 @@ type CreateVocabTopicDTO = {
     image: string;
     audio: string;
     example: string;
+    spelling: string;
   }[];
 };
 export default CreateVocabTopicDTO;

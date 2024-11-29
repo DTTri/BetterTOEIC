@@ -10,6 +10,7 @@ import CreatePersonalRoadmapDTO from './CreatePersonalRoadmapDTO';
 import CreateVocabTopicDTO from './CreateVocabTopicDTO';
 import CompleteVocabDTO from './CompleteVocabDTO';
 import CreateUserDTO from './CreateUserDTO';
+import SaveVocabDTO from './SaveVocabDTO';
 export {
   CompleteTestDTO,
   CreateTestDTO,
@@ -23,4 +24,5 @@ export {
   CreateVocabTopicDTO,
   CompleteVocabDTO,
   CreateUserDTO,
+  SaveVocabDTO,
 };

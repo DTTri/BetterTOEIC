@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { collections } from '~/config/connectDB';
-import { VocabHistory, VocabsSaved, VocabTopic } from '~/models';
-import { CompleteVocabDTO } from '~/models/DTOs';
+import { Vocab, VocabHistory, VocabsSaved, VocabTopic } from '~/models';
+import { CompleteVocabDTO, SaveVocabDTO } from '~/models/DTOs';
 
 class VocabService {
   async createVocabTopic(topic: VocabTopic): Promise<boolean> {
@@ -73,25 +73,36 @@ class VocabService {
   //   _id: ObjectId; //userId
   //   vocabs: string[];
   // };
-  async updateVocabsSaved(userId: string, vocabId: string, unsave: boolean): Promise<boolean> {
+  async updateVocabsSaved(userId: string, savedVocab: SaveVocabDTO): Promise<boolean> {
     const getUserVocabsSavedResult = await collections.vocabsSaved?.findOne({ _id: new ObjectId(userId) });
     const userVocabsSaved = getUserVocabsSavedResult as VocabsSaved;
     if (userVocabsSaved) {
-      if (unsave) {
-        const vocabIndex = userVocabsSaved.vocabs.findIndex((vocab) => vocab === vocabId);
+      if (!savedVocab.isSaving) {
+        const vocabIndex = userVocabsSaved.vocabs.findIndex((vocabSaved) => vocabSaved._id === savedVocab._id);
         userVocabsSaved.vocabs.splice(vocabIndex, 1);
         const result = await collections.vocabsSaved?.updateOne(
           { _id: new ObjectId(userId) },
-          { $set: { vocabs: userVocabsSaved.vocabs, updated_at: new Date().toISOString() } }
+          { $set: userVocabsSaved }
         );
         return result ? true : false;
       } else {
-        const vocabIndex = userVocabsSaved.vocabs.findIndex((vocab) => vocab === vocabId);
+        const vocabIndex = userVocabsSaved.vocabs.findIndex((vocabSaved) => vocabSaved._id === savedVocab._id);
         if (vocabIndex === -1) {
-          userVocabsSaved.vocabs.push(vocabId);
+          userVocabsSaved.vocabs.push({
+            _id: savedVocab._id,
+            topicId: savedVocab.topicId,
+            topicName: savedVocab.topicName,
+            word: savedVocab.word,
+            meaning_en: savedVocab.meaning_en,
+            meaning_vi: savedVocab.meaning_vi,
+            image: savedVocab.image,
+            audio: savedVocab.audio,
+            example: savedVocab.example,
+            spelling: savedVocab.spelling,
+          });
           const result = await collections.vocabsSaved?.updateOne(
             { _id: new ObjectId(userId) },
-            { $set: { vocabs: userVocabsSaved.vocabs, updated_at: new Date().toISOString() } }
+            { $set: userVocabsSaved }
           );
           return result ? true : false;
         }
@@ -100,7 +111,22 @@ class VocabService {
     } else {
       const newUserVocabsSaved: VocabsSaved = {
         _id: new ObjectId(userId),
-        vocabs: [vocabId],
+        vocabs: [
+          {
+            _id: savedVocab._id,
+            topicId: savedVocab.topicId,
+            topicName: savedVocab.topicName,
+            word: savedVocab.word,
+            meaning_en: savedVocab.meaning_en,
+            meaning_vi: savedVocab.meaning_vi,
+            image: savedVocab.image,
+            audio: savedVocab.audio,
+            example: savedVocab.example,
+            spelling: savedVocab.spelling,
+          },
+        ],
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       };
       const result = await collections.vocabsSaved?.insertOne(newUserVocabsSaved);
       return result ? true : false;

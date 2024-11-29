@@ -706,22 +706,51 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                vocabId:
-                  type: string
-                unsave:
-                  type: boolean
+              $ref: '#/components/schemas/SaveVocabDTO'
       responses:
         '200':
           description: Vocab saved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EC:
+                    type: integer
+                    example: 0
+                  EM:
+                    type: string
+                    example: Vocab saved successfully
         '400':
           description: Failed to save vocab
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EC:
+                    type: integer
+                    example: 2
+                  EM:
+                    type: string
+                    example: Failed to save vocab
         '500':
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EC:
+                    type: integer
+                    example: 3
+                  EM:
+                    type: string
+                    example: Internal server error
+
   /vocab/getVocabsSaved/{userId}:
     get:
-      summary: Get saved vocabs by user ID
+      summary: Get saved vocabs
       tags:
         - Vocab
       parameters:
@@ -732,11 +761,49 @@ paths:
             type: string
       responses:
         '200':
-          description: Saved vocabs fetched successfully
+          description: Vocabs saved fetched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EC:
+                    type: integer
+                    example: 0
+                  EM:
+                    type: string
+                    example: Vocabs saved fetched successfully
+                  DT:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Vocab'
         '400':
-          description: Failed to fetch saved vocabs
+          description: Failed to fetch vocabs saved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EC:
+                    type: integer
+                    example: 2
+                  EM:
+                    type: string
+                    example: Failed to fetch vocabs saved
         '500':
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EC:
+                    type: integer
+                    example: 3
+                  EM:
+                    type: string
+                    example: Internal server error
+
   /auth/register:
     post:
       summary: Register a new user
@@ -1165,9 +1232,15 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Vocab'
-    Vocab:
+    SaveVocabDTO:
       type: object
       properties:
+        _id:
+          type: string
+        topicId:
+          type: string
+        topicName:
+          type: string
         word:
           type: string
         meaning_en:
@@ -1179,6 +1252,31 @@ components:
         audio:
           type: string
         example:
+          type: string
+        spelling:
+          type: string
+        isSaving:
+          type: boolean
+    Vocab:
+      type: object
+      properties:
+        _id:
+          type: string
+        topicId:
+          type: string
+        word:
+          type: string
+        meaning_en:
+          type: string
+        meaning_vi:
+          type: string
+        image:
+          type: string
+        audio:
+          type: string
+        example:
+          type: string
+        spelling:
           type: string
     CompleteVocabDTO:
       type: object

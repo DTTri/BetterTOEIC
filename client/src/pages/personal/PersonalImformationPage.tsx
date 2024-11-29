@@ -1,8 +1,8 @@
 import PasswordChangePopup from "@/components/personal/PasswordChangePopup";
 import { Avatar, Button, TextField } from "@mui/material";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import React, { useState, useRef } from "react";
 
 export default function PersonalImformationPage() {
@@ -37,11 +37,7 @@ export default function PersonalImformationPage() {
         Thông tin cá nhân
       </h2>
       <div className="bg-[#fff] py-5 px-5 flex flex-col items-center gap-3">
-        <Avatar
-          alt=""
-          src={avatarUrl}
-          sx={{ width: 160, height: 160 }}
-        />
+        <Avatar alt="" src={avatarUrl} sx={{ width: 160, height: 160 }} />
         <Button
           variant="contained"
           style={{
@@ -61,6 +57,7 @@ export default function PersonalImformationPage() {
           style={{ display: "none" }}
           accept="image/*"
           onChange={handleAvatarChange}
+          multiple={false}
         />
         <TextField
           label="Họ tên"
@@ -71,7 +68,10 @@ export default function PersonalImformationPage() {
           style={{ width: "30%", backgroundColor: "#F8FAFC" }}
         />
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker label="Ngày sinh" sx={{ width: "30%", backgroundColor: "#F8FAFC" }}/>
+          <DatePicker
+            label="Ngày sinh"
+            sx={{ width: "30%", backgroundColor: "#F8FAFC" }}
+          />
         </LocalizationProvider>
         <TextField
           label="Số điện thoại"
@@ -79,16 +79,41 @@ export default function PersonalImformationPage() {
           value={phoneNumber}
           onChange={(e) => setPhoneNumber(e.target.value)}
           margin="normal"
-          style={{ width: "30%", backgroundColor: "#F8FAFC", marginBottom: "20px" }}
+          style={{
+            width: "30%",
+            backgroundColor: "#F8FAFC",
+            marginBottom: "20px",
+          }}
         />
-         <div className="w-[40%] flex flex-row justify-between ">
-        <Button 
-              onClick={() => setShowPasswordChangePopup(true)}
-              variant="outlined" style={{ backgroundColor: "#F2F2F2", color: "#000", borderRadius: "20px", fontSize: "16px", textTransform: "none" }}>Đổi mật khẩu</Button>
-        <Button variant="outlined" style={{ backgroundColor: "#FFDCDC", color: "#000", borderRadius: "20px", fontSize: "16px", textTransform: "none" }}>Cập nhật</Button>
+        <div className="w-[40%] flex flex-row justify-between ">
+          <Button
+            onClick={() => setShowPasswordChangePopup(true)}
+            variant="outlined"
+            style={{
+              backgroundColor: "#F2F2F2",
+              color: "#000",
+              borderRadius: "20px",
+              fontSize: "16px",
+              textTransform: "none",
+            }}
+          >
+            Đổi mật khẩu
+          </Button>
+          <Button
+            variant="outlined"
+            style={{
+              backgroundColor: "#FFDCDC",
+              color: "#000",
+              borderRadius: "20px",
+              fontSize: "16px",
+              textTransform: "none",
+            }}
+          >
+            Cập nhật
+          </Button>
         </div>
       </div>
-     
+
       {showPasswordChangePopup && (
         <PasswordChangePopup
           onClose={() => setShowPasswordChangePopup(false)}

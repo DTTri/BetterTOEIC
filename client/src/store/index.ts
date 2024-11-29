@@ -1,4 +1,5 @@
 import sRoadmap from "./roadmapStore";
 import { sCreatingPersonalRoadmap } from "./roadmapStore";
 import sUser from "./userStore";
-export { sRoadmap, sCreatingPersonalRoadmap, sUser };
+import sVocab from "./vocabStore";
+export { sRoadmap, sCreatingPersonalRoadmap, sUser, sVocab };

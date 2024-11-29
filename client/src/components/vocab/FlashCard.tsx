@@ -5,7 +5,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import ReactCardFlip from "react-card-flip";
 import Vocab from "@/entities/Vocab";
 
-const Flashcard = ({vocab} : {vocab : Vocab}) => {
+const Flashcard = ({ vocab }: { vocab: Vocab }) => {
   const [isFlipped, setIsFlipped] = useState(false);
 
   const handleClick = () => {
@@ -23,7 +23,7 @@ const Flashcard = ({vocab} : {vocab : Vocab}) => {
         <div className="img mx-auto max-w-[400px] max-h-[300px] rounded-[20px] mb-4">
           <img
             className="w-full h-full object-cover object-center"
-            src={vocab.image_word}
+            src={vocab.image}
             alt=""
           />
         </div>
@@ -33,7 +33,7 @@ const Flashcard = ({vocab} : {vocab : Vocab}) => {
             {vocab.word}
           </h4>
           <p className="IPA text-center text-xl font-normal text-[rgba(32, 34, 36, 0.70)]">
-            {vocab.ipa_spelling}
+            {vocab.spelling}
           </p>
         </div>
 
@@ -43,7 +43,9 @@ const Flashcard = ({vocab} : {vocab : Vocab}) => {
             color="primary"
             className=""
             onClick={handleClick}
-          >Nhấn để xem giải thích</Button>
+          >
+            Nhấn để xem giải thích
+          </Button>
         </div>
       </div>
 
@@ -57,20 +59,17 @@ const Flashcard = ({vocab} : {vocab : Vocab}) => {
             {vocab.meaning_en}
           </h4>
           <p className="IPA text-center text-[20px] font-normal text-[rgba(32, 34, 36, 0.80)]">
-            {vocab.ex_sentence}
+            {vocab.example}
           </p>
         </div>
 
         <div className="w-full h-[10%] flex justify-center items-center gap-5">
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleClick}
-          >Quay lại</Button>
-          <Button
-            variant="contained"
-            color="primary"
-          >Đã nhớ</Button>
+          <Button variant="contained" color="primary" onClick={handleClick}>
+            Quay lại
+          </Button>
+          <Button variant="contained" color="primary">
+            Đã nhớ
+          </Button>
         </div>
       </div>
     </ReactCardFlip>

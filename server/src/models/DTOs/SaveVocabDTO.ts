@@ -1,6 +1,7 @@
-type Vocab = {
+type SaveVocabDTO = {
   _id: string;
   topicId: string;
+  topicName: string;
   word: string;
   meaning_en: string;
   meaning_vi: string;
@@ -8,6 +9,6 @@ type Vocab = {
   audio: string;
   example: string;
   spelling: string;
+  isSaving: boolean;
 };
-
-export default Vocab;
+export default SaveVocabDTO;
