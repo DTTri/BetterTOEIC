@@ -4,4 +4,5 @@ import roadmapRouter from './RoadmapRoutes';
 import vocabRouter from './VocabRoutes';
 import authRouter from './AuthRoutes';
 import userRouter from './UserRoutes';
-export { testRouter, practiceRouter, roadmapRouter, vocabRouter, authRouter, userRouter };
+import fileRouter from './FileRoutes';
+export { testRouter, practiceRouter, roadmapRouter, vocabRouter, authRouter, userRouter, fileRouter };

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Logo from '../assets/Logo_BetterTOEIC.png';
 import Noti from '../assets/Noti_icon.svg';
 import { Button } from '@mui/material';
@@ -11,10 +11,19 @@ import {
   SelectTrigger,
 } from "@/components/ui/select"
 import VN from '../assets/VN_Flag.png';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 export default function Header() {
   const [selectedItem, setSelectedItem] = useState('');
   const nav = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const headerPaths = ['/log-out', '/user-info', '/user-report', '/test-saved', '/word-saved'];
+    if (!headerPaths.includes(location.pathname)) {
+      setSelectedItem('');
+    }
+  }, [location.pathname]);
+
   const handleItemChange = (e: string) => {
     setSelectedItem(e);
     if(e === 'log-out') {
@@ -32,8 +41,8 @@ export default function Header() {
     else if(e === 'test-saved') {
       nav('/test-saved');
     }
-    
   }
+
   return (
     <>
       <header className=" bg-[#ffffff] w-full px-9 py-5 flex justify-center">

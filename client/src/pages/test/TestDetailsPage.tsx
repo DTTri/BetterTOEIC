@@ -11,16 +11,16 @@ import { Link, useParams } from "react-router-dom";
 
 export default function TestDetailsPage() {
   const { id } = useParams();
-  const [isSaved, setIsSaved] = useState(false);
-
+  
   const selectedTest = testStore
   .use((pre) => pre.testList)
   .find((test) => test._id === id);
-
+  
   const testHistoryById = testStore.use((pre) => pre.testHistory)
   ?.filter((test) => test.testId === id);
-
+  
   const testsSaved = testStore.use((pre) => pre.testsSaved);
+  const [isSaved, setIsSaved] = useState<boolean>(false);
 
   useEffect(() => {
     testsSaved.forEach((test) => {
@@ -28,7 +28,7 @@ export default function TestDetailsPage() {
         setIsSaved(true);
       }
     });
-  }, []);
+  }, [testsSaved]);
 
   console.log(isSaved);
 

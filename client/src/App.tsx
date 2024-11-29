@@ -79,7 +79,7 @@ function App() {
       try {
         const response = await testService.getTestsSaved(sUser.value.id);
         if (response.EC === 0) {
-          console.log("Test saved" + response.DT.savedTests);
+          console.log("Test saved" + response.DT);
           testStore.set((prev) => (prev.value.testsSaved = response.DT));
         } else {
           console.log("Fail to fetch test saved: ", response.EM);
