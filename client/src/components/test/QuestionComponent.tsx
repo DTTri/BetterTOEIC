@@ -1,7 +1,6 @@
 // This is just a stub code (mock code)
 
 import Question from "@/entities/Question";
-import { useState } from "react";
 
 export default function QuestionComponent({
   question,

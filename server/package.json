@@ -36,11 +36,13 @@
   },
   "dependencies": {
     "@types/swagger-jsdoc": "^6.0.4",
+    "aws-sdk": "^2.1692.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
     "express": "^4.21.1",
     "express-validator": "^7.2.0",
+    "firebase": "^11.0.2",
     "mongodb": "^6.9.0",
     "swagger-ui-express": "^5.0.1",
     "yaml": "^2.6.0"
