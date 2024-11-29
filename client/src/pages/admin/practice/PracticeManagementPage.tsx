@@ -90,18 +90,8 @@ export default function PracticeManagementPage() {
   const lessonRows = practiceLessonList.map((ex, index) => ({
     ...ex,
     index: index + 1,
-    updated_at: ex.updated_at
-      .toString()
-      .split("T")[0]
-      .split("-")
-      .reverse()
-      .join("/"),
-    created_at: ex.created_at
-      .toString()
-      .split("T")[0]
-      .split("-")
-      .reverse()
-      .join("/"),
+    updated_at: ex.updated_at.split("T")[0].split("-").reverse().join("/"),
+    created_at: ex.created_at.split("T")[0].split("-").reverse().join("/"),
   }));
   // type PracticeLesson = {
   //   _id: string;

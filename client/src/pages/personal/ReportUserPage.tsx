@@ -1,47 +1,76 @@
+import { CompletedTest } from "@/entities";
+import { testStore } from "@/store/testStore";
+import getAccuracyPerPart from "@/utils/CalculateAccuracyPerPart";
+import getTestScore from "@/utils/CalculateTestScore";
 import { BarChart } from "@mui/x-charts";
 import { LineChart } from "@mui/x-charts/LineChart";
-import React, { useState, useRef } from "react";
 
 export default function ReportUserPage() {
+  const completedTests = testStore.use((v) => v.testHistory);
+  function getAverageScore(fromDate: string, toDate: string) {
+    const scores = completedTests
+      .filter(
+        (test) =>
+          test.attempted_at.split("T")[0] >= fromDate &&
+          test.attempted_at.split("T")[0] <= toDate
+      )
+      .map((test) => getTestScore(test.correctAnswersPerPart));
+    return scores.reduce((a, b) => a + b, 0) / scores.length;
+  }
   const averageSocre = 800;
   const scorePerMonthData = [
     {
       month: "January",
-      score: 650,
+      score: getAverageScore("2022-01-01", "2022-01-31"),
     },
     {
       month: "February",
-      score: 600,
+      score: getAverageScore("2022-02-01", "2022-02-28"),
     },
     {
       month: "March",
-      score: 750,
+      score: getAverageScore("2022-03-01", "2022-03-31"),
     },
     {
       month: "April",
-      score: 800,
+      score: getAverageScore("2022-04-01", "2022-04-30"),
     },
     {
       month: "May",
-      score: 830,
+      score: getAverageScore("2022-05-01", "2022-05-31"),
     },
     {
       month: "June",
-      score: 900,
+      score: getAverageScore("2022-06-01", "2022-06-30"),
     },
     {
       month: "July",
-      score: 910,
+      score: getAverageScore("2022-07-01", "2022-07-31"),
     },
   ];
+  function getAverageCorrectAnswersPerPart(completedTests: CompletedTest[]) {
+    if (completedTests.length === 0) return [0, 0, 0, 0, 0, 0, 0];
+    const correctAnswersPerPart = completedTests.reduce(
+      (acc, test) => {
+        return acc.map((count, i) => count + test.correctAnswersPerPart[i]);
+      },
+      [0, 0, 0, 0, 0, 0, 0]
+    );
+    return correctAnswersPerPart.map((count) =>
+      Math.round(count / completedTests.length)
+    );
+  }
+  const accuracyPerPart = getAccuracyPerPart(
+    getAverageCorrectAnswersPerPart(completedTests)
+  );
   const accuracyPerPartData = [
-    { part: "Part 1", accuracy: 50 },
-    { part: "Part 2", accuracy: 60 },
-    { part: "Part 3", accuracy: 70 },
-    { part: "Part 4", accuracy: 80 },
-    { part: "Part 5", accuracy: 90 },
-    { part: "Part 6", accuracy: 95 },
-    { part: "Part 7", accuracy: 100 },
+    { part: "Part 1", accuracy: accuracyPerPart[0] },
+    { part: "Part 2", accuracy: accuracyPerPart[1] },
+    { part: "Part 3", accuracy: accuracyPerPart[2] },
+    { part: "Part 4", accuracy: accuracyPerPart[3] },
+    { part: "Part 5", accuracy: accuracyPerPart[4] },
+    { part: "Part 6", accuracy: accuracyPerPart[5] },
+    { part: "Part 7", accuracy: accuracyPerPart[6] },
   ];
 
   return (
@@ -88,26 +117,26 @@ export default function ReportUserPage() {
             />
           </div>
           <div className="w-full flex flex-row items-center gap-4 ml-4">
-              <h2 className="text-xl text-[#343C6A] font-semibold ">
-                Tỷ lệ chính xác theo từng part (%):
-              </h2>
-            </div>
-            <div className="part-accurac w-full ">
-              <BarChart
-                height={300}
-                dataset={accuracyPerPartData}
-                xAxis={[{ dataKey: "part", scaleType: "band" }]}
-                yAxis={[{ dataKey: "accuracy" , scaleType: "linear"}]}
-                series={[
-                  {
-                    type: "bar",
-                    dataKey: "accuracy",
-                    color: "#123",
-                  },
-                ]}
-                grid={{ vertical: true, horizontal: true }}
-              />
-            </div>
+            <h2 className="text-xl text-[#343C6A] font-semibold ">
+              Tỷ lệ chính xác theo từng part (%):
+            </h2>
+          </div>
+          <div className="part-accurac w-full ">
+            <BarChart
+              height={300}
+              dataset={accuracyPerPartData}
+              xAxis={[{ dataKey: "part", scaleType: "band" }]}
+              yAxis={[{ dataKey: "accuracy", scaleType: "linear" }]}
+              series={[
+                {
+                  type: "bar",
+                  dataKey: "accuracy",
+                  color: "#123",
+                },
+              ]}
+              grid={{ vertical: true, horizontal: true }}
+            />
+          </div>
         </div>
       </div>
     </div>
