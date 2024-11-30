@@ -5,7 +5,15 @@ import SaveIcon from "@mui/icons-material/Save";
 import ReactCardFlip from "react-card-flip";
 import Vocab from "@/entities/Vocab";
 
-const Flashcard = ({ vocab }: { vocab: Vocab }) => {
+const Flashcard = ({
+  vocab,
+  vocabNumber,
+  onVocabRemember,
+}: {
+  vocab: Vocab;
+  vocabNumber: number;
+  onVocabRemember: (vocabNumber: number) => void;
+}) => {
   const [isFlipped, setIsFlipped] = useState(false);
 
   const handleClick = () => {
@@ -67,7 +75,7 @@ const Flashcard = ({ vocab }: { vocab: Vocab }) => {
           <Button variant="contained" color="primary" onClick={handleClick}>
             Quay lại
           </Button>
-          <Button variant="contained" color="primary">
+          <Button onClick={() => onVocabRemember(vocabNumber)} variant="contained" color="primary">
             Đã nhớ
           </Button>
         </div>

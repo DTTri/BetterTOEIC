@@ -9,6 +9,7 @@ type CreateVocabTopicDTO = {
     audio: string;
     example: string;
     spelling: string;
+    type: string;
   }[];
 };
 export default CreateVocabTopicDTO;

@@ -211,6 +211,19 @@ function App() {
         console.log("Fail to fetch saved vocabs: ", error);
       }
     };
+    const fetchVocabHistory = async () => {
+      try {
+        const response = await vocabService.getVocabHistory(sUser.value.id);
+        if (response.EC === 0) {
+          console.log(response);
+          sVocab.set((prev) => (prev.value.vocabHistory = response.DT.topics));
+        } else {
+          console.log("Fail to fetch vocab history: ", response.EM);
+        }
+      } catch (error) {
+        console.log("Fail to fetch vocab history: ", error);
+      }
+    };
     Promise.all([
       fetchTests(),
       fetchTestHistory(),
@@ -223,6 +236,7 @@ function App() {
       fetchUserRoadmap(),
       fetchVocabs(),
       fetchSavedVocabs(),
+      fetchVocabHistory(),
     ]);
   }, []);
 
