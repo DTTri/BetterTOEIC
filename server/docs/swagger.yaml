@@ -1520,6 +1520,8 @@ components:
           type: string
         spelling:
           type: string
+        type:
+          type: string
     CompleteVocabDTO:
       type: object
       properties:

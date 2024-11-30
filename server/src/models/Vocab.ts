@@ -10,5 +10,6 @@ type Vocab = {
   audio: string;
   example: string;
   spelling: string;
+  type: string;
 };
 export default Vocab;

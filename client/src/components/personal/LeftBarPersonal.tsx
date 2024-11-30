@@ -1,23 +1,24 @@
-import { Button } from "@mui/material";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useRef } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 //should be edited when call api from back-end
 
 export default function LeftBarPersonal() {
-  const [choice, setChoice] = useState<string>('tests');
+  const location = useLocation();
+  const choice = location.pathname === '/test-saved' ? useRef('tests') : useRef('words');
+  
   return (
     <div className="max-w-[300px] h-screen w-full items-center flex-col bg-[#fff] max-h-screen overflow-y-auto py-5">
       <div className="flex flex-col items-center mx-auto">
         <Link
+          to={"/test-saved"}
           className="w-[80%] mx-auto mb-4"
-          to={`/test-saved`}
-          onClick={() => setChoice('tests')}
+          onClick={() => choice.current = 'tests'}
         >
           <div
             className="flex min-h-[45px] items-center justify-between px-2 py-2 rounded-[10px]"
             style={{
-              backgroundColor: choice === 'tests' ? "#94a3b8" : "#fff",
+              backgroundColor: choice.current === 'tests' ? "#94a3b8" : "#fff",
             }}
           >
             <h3 className="text-base font-semibold text-[#202224]">
@@ -26,14 +27,14 @@ export default function LeftBarPersonal() {
           </div>
         </Link>
         <Link
+          to={'/word-saved'}
           className="w-[80%] mx-auto mb-4"
-          to={`/word-saved`}
-          onClick={() => setChoice('words')}
+          onClick={() => choice.current = 'words'}
         >
           <div
             className="flex min-h-[45px] items-center justify-between px-2 py-2 rounded-[10px]"
             style={{
-              backgroundColor: choice === 'words' ? "#94a3b8" : "#fff",
+              backgroundColor: choice.current === 'words' ? "#94a3b8" : "#fff",
             }}
           >
             <h3 className="text-base font-semibold text-[#202224]">

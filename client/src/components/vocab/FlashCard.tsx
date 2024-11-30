@@ -1,16 +1,28 @@
 import { Button } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import SaveIcon from "@mui/icons-material/Save";
 import ReactCardFlip from "react-card-flip";
 import Vocab from "@/entities/Vocab";
 
-const Flashcard = ({ vocab }: { vocab: Vocab }) => {
+const Flashcard = ({
+  vocab,
+  vocabNumber,
+  onVocabRemember,
+}: {
+  vocab: Vocab;
+  vocabNumber: number;
+  onVocabRemember: (vocabNumber: number) => void;
+}) => {
   const [isFlipped, setIsFlipped] = useState(false);
 
   const handleClick = () => {
     setIsFlipped(!isFlipped);
   };
+
+  useEffect(() => {
+    setIsFlipped(false);
+  }, [vocab]);
 
   return (
     <ReactCardFlip isFlipped={isFlipped} flipDirection="vertical">
@@ -20,7 +32,7 @@ const Flashcard = ({ vocab }: { vocab: Vocab }) => {
           <VolumeUpIcon fontSize="large" />
           <SaveIcon fontSize="large" />
         </div>
-        <div className="img mx-auto max-w-[400px] max-h-[300px] rounded-[20px] mb-4">
+        <div className="img mx-auto max-w-[320px] max-h-[250px] rounded-[20px] mb-4">
           <img
             className="w-full h-full object-cover object-center"
             src={vocab.image}
@@ -67,7 +79,7 @@ const Flashcard = ({ vocab }: { vocab: Vocab }) => {
           <Button variant="contained" color="primary" onClick={handleClick}>
             Quay lại
           </Button>
-          <Button variant="contained" color="primary">
+          <Button onClick={() => onVocabRemember(vocabNumber)} variant="contained" color="primary">
             Đã nhớ
           </Button>
         </div>

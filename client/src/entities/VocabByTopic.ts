@@ -2,9 +2,9 @@ import Vocab from "./Vocab";
 
 type VocabByTopic = {
     _id: string;
-    topic_name: string;
+    name: string;
     vocabs: Vocab[];
-    image_background: string;
+    image: string;
     created_at: string;
     updated_at: string;
 }
