@@ -6,7 +6,6 @@ import {
 } from "@mui/x-data-grid";
 import { ThemeProvider } from "@mui/material";
 import { adminTableTheme } from "@/context";
-import { RoadmapChapter, RoadmapExercise } from "@/entities";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 import { sRoadmap } from "@/store";
 export default function RoadmapManagementPage() {
@@ -93,14 +92,12 @@ export default function RoadmapManagementPage() {
       chapter: exercise.chapter,
       questions: exercise.questions.length,
       created_at: exercise.created_at
-        .toString()
         .split("T")[0]
         .split("-")
         .reverse()
         .join("/"),
 
       updated_at: exercise.updated_at
-        .toString()
         .split("T")[0]
         .split("-")
         .reverse()

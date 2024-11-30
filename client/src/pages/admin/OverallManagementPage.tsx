@@ -1,62 +1,90 @@
+import { User } from "@/entities";
+import { sUser } from "@/store";
 import { LineChart } from "@mui/x-charts/LineChart";
 import { PieChart } from "@mui/x-charts/PieChart";
 
 export default function OverallManagementPage() {
-  const totalUsers = 10000;
+  const users = sUser.use((v) => v.users);
+  const totalUsers = users.length;
+  const getNewUsersPerMonth = (fromDate: string, toDate: string) => {
+    return users.filter(
+      (user) =>
+        user.created_at.split("T")[0] >= fromDate &&
+        user.created_at.split("T")[0] <= toDate
+    ).length;
+  };
   const newUsersPerMonthData = [
     {
       month: "January",
-      newUsers: 100,
+      newUsers: getNewUsersPerMonth("2024-01-01", "2024-01-31"),
     },
     {
       month: "February",
-      newUsers: 120,
+      newUsers: getNewUsersPerMonth("2024-02-01", "2024-02-29"),
     },
     {
       month: "March",
-      newUsers: 400,
+      newUsers: getNewUsersPerMonth("2024-03-01", "2024-03-31"),
     },
     {
       month: "April",
-      newUsers: 350,
+      newUsers: getNewUsersPerMonth("2024-04-01", "2024-04-30"),
     },
     {
       month: "May",
-      newUsers: 420,
+      newUsers: getNewUsersPerMonth("2024-05-01", "2024-05-31"),
     },
     {
       month: "June",
-      newUsers: 600,
+      newUsers: getNewUsersPerMonth("2024-06-01", "2024-06-30"),
     },
     {
       month: "July",
-      newUsers: 550,
+      newUsers: getNewUsersPerMonth("2024-07-01", "2024-07-31"),
+    },
+    {
+      month: "August",
+      newUsers: getNewUsersPerMonth("2024-08-01", "2024-08-31"),
+    },
+    {
+      month: "September",
+      newUsers: getNewUsersPerMonth("2024-09-01", "2024-09-30"),
+    },
+    {
+      month: "October",
+      newUsers: getNewUsersPerMonth("2024-10-01", "2024-10-31"),
+    },
+    {
+      month: "November",
+      newUsers: getNewUsersPerMonth("2024-11-01", "2024-11-30"),
     },
   ];
+  const totalUsersPerBand: number[] = sUser.use((v) => v.usersPerBand);
+
   const averageScoreData = [
     {
       label: "10 - 215",
-      value: 5,
+      value: Math.floor((totalUsersPerBand[0] / totalUsers) * 100),
       color: "#B3AA00",
     },
     {
       label: "220 - 465",
-      value: 15,
+      value: Math.floor((totalUsersPerBand[1] / totalUsers) * 100),
       color: "#00871D",
     },
     {
       label: "470 - 725",
-      value: 40,
+      value: Math.floor((totalUsersPerBand[2] / totalUsers) * 100),
       color: "#1CCF00",
     },
     {
       label: "730 - 855",
-      value: 30,
+      value: Math.floor((totalUsersPerBand[3] / totalUsers) * 100),
       color: "#005F88",
     },
     {
       label: "860 - 990",
-      value: 10,
+      value: Math.floor((totalUsersPerBand[4] / totalUsers) * 100),
       color: "#DDFF00",
     },
   ];

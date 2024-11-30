@@ -7,11 +7,26 @@ import {
 import { ThemeProvider } from "@mui/material";
 import { adminTableTheme } from "@/context";
 import { User } from "@/entities";
-import { users } from "@/data";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import { sUser } from "@/store";
 export default function UserManagementPage() {
-  const rows: User[] = users;
+  const users = sUser.use((v) => v.users);
+  const rows = users.map((user: User, index: number) => {
+    return {
+      ...user,
+      index: index + 1,
+      created_at: user.created_at.split("T")[0].split("-").reverse().join("/"),
+      updated_at: user.updated_at.split("T")[0].split("-").reverse().join("/"),
+    };
+  });
   const columns: GridColDef[] = [
+    {
+      field: "index",
+      headerName: "#",
+      flex: 0.5,
+      align: "center",
+      headerAlign: "center",
+    },
     {
       field: "_id",
       headerName: "ID",
@@ -20,8 +35,8 @@ export default function UserManagementPage() {
       headerAlign: "center",
     },
     {
-      field: "username",
-      headerName: "USERNAME",
+      field: "name",
+      headerName: "NAME",
       flex: 1.5,
       align: "center",
       headerAlign: "center",

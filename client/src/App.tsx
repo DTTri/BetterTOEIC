@@ -37,7 +37,7 @@ import TestsSavedPage from "./pages/personal/TestsSavedPage";
 import WordSavedPage from "./pages/personal/WordsSavedPage";
 import UserLayout from "./pages/UserLayout";
 import { useEffect } from "react";
-import { testService } from "./services";
+import { testService, userService } from "./services";
 import VocabCardGallery from "./pages/vocab/VocabCardGalleryPage";
 import VocabLearingPage from "./pages/vocab/VocabLearingPage";
 import { sCreatingPersonalRoadmap, sRoadmap, sUser, sVocab } from "./store";
@@ -224,6 +224,33 @@ function App() {
         console.log("Fail to fetch vocab history: ", error);
       }
     };
+    const fetchAllUsers = async () => {
+      try {
+        const response = await userService.getUsers();
+        console.log(response);
+        if (response.EC === 0) {
+          sUser.set((prev) => (prev.value.users = response.DT));
+        } else {
+          console.log("Fail to fetch all users: ", response.EM);
+        }
+      } catch (error) {
+        console.log("Fail to fetch all users: ", error);
+      }
+    };
+
+    const fetchUsersPerBand = async () => {
+      try {
+        const response = await userService.getTotalUsersPerBand();
+        console.log(response);
+        if (response.EC === 0) {
+          sUser.set((prev) => (prev.value.usersPerBand = response.DT));
+        } else {
+          console.log("Fail to fetch users per band: ", response.EM);
+        }
+      } catch (error) {
+        console.log("Fail to fetch users per band: ", error);
+      }
+    };
     Promise.all([
       fetchTests(),
       fetchTestHistory(),
@@ -237,6 +264,8 @@ function App() {
       fetchVocabs(),
       fetchSavedVocabs(),
       fetchVocabHistory(),
+      fetchAllUsers(),
+      fetchUsersPerBand(),
     ]);
   }, []);
 

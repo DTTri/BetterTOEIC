@@ -7,11 +7,30 @@ class UserController {
   async getAllUsers(req: Request, res: Response) {
     try {
       const users = await userServiceInstance.getAllUsers();
+      //   _id: ObjectId;
+      // email: string;
+      // password: string;
+      // name: string;
+      // avatar: string;
+      // forgotPasswordToken?: string;
+      // verifiedEmailToken?: string;
+      // status: UserStatus;
+      // refreshToken?: string;
+      // created_at: string;
+      // updated_at: string;
+      // isAdmin: boolean;
       if (users) {
         res.status(200).json({
           EC: 0,
           EM: 'Users fetched successfully',
-          DT: users,
+          DT: users.map((user) => ({
+            ...user,
+            _id: user._id.toString(),
+            password: '',
+            forgotPasswordToken: '',
+            verifiedEmailToken: '',
+            refreshToken: '',
+          })),
         });
       } else {
         res.status(400).json({

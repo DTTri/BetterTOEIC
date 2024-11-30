@@ -1,3 +1,4 @@
 import testService from "./testService";
 import roadmapService from "./roadmapService";
-export { testService, roadmapService };
+import userService from "./userService";
+export { testService, roadmapService, userService };
