@@ -95,14 +95,6 @@ class ForumController {
     async updatePost(req: Request, res: Response) {
         try {
             const postId = req.params.postId;
-            const curPost = await forumServiceInstance.getPostById(postId);
-            if(!curPost){
-                res.status(400).json({
-                    EM: 'Post not found',
-                    EC: 1
-                });
-                return;
-            }
             if(req.body.content === ''){
                 res.status(400).json({
                     EM: 'Content is required',
@@ -111,7 +103,6 @@ class ForumController {
                 return;
             }
             const updatedPost: Post = {
-                ...curPost,
                 ...req.body,
                 updated_at: new Date().toISOString()
             };
@@ -140,20 +131,11 @@ class ForumController {
                 });
                 return;
             }
-            const curPost = await forumServiceInstance.getPostById(postId);
-            if(!curPost){
-                res.status(400).json({
-                    EM: 'Post not found',
-                    EC: 2
-                });
-                return;
-            }
             const result = await forumServiceInstance.likePost(postId);
             if(result){
                 res.status(200).json({
                     EM: 'Post liked successfully',
                     EC: 0,
-                    DT: curPost
                 });
             }
         } catch (error: any) {
@@ -247,13 +229,6 @@ class ForumController {
             }
             const curPost = await forumServiceInstance.getPostById(postId);
             const curComment = curPost?.comments.find(comment => comment._id.toString() === commentId.toString());
-            if(!curPost){
-                res.status(400).json({
-                    EM: 'Post not found',
-                    EC: 2
-                });
-                return;
-            }
             if(!curComment){
                 res.status(400).json({
                     EM: 'Comment not found',
@@ -263,7 +238,6 @@ class ForumController {
             }
             const updatedComment: Comment = {
                 ...req.body,
-                ...curComment,
                 updated_at: new Date().toISOString()
             }
             const result = await forumServiceInstance.updateComment(postId, commentId, updatedComment);
@@ -288,22 +262,6 @@ class ForumController {
                 res.status(400).json({
                     EM: 'Post ID or Comment Id is required',
                     EC: 1
-                });
-                return;
-            }
-            const curPost = await forumServiceInstance.getPostById(postId);
-            const curComment = curPost?.comments.find(comment => comment._id.toString() === commentId.toString());
-            if(!curPost){
-                res.status(400).json({
-                    EM: 'Post not found',
-                    EC: 2
-                });
-                return;
-            }
-            if(!curComment){
-                res.status(400).json({
-                    EM: 'Comment not found',
-                    EC: 2
                 });
                 return;
             }

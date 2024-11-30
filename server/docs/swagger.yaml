@@ -1593,6 +1593,8 @@ components:
           type: string
         totalLike:
           type: integer
+        creator:
+          $ref: '#/components/schemas/User'
         created_at:
           type: string
         updated_at:
@@ -1600,13 +1602,7 @@ components:
     CreateCommentDTO:
       type: object
       properties:
-        user:
-          $ref: '#/components/schemas/User'
         content:
           type: string
-        _id:
-          type: string
-        username:
-          type: string
-        avatar:
-          type: string
+        creator:
+          $ref: '#/components/schemas/User'
