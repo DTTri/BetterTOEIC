@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-export default function QuestionPalette({
+export default function VocabQuestionPalette({
   numberOfQuestions,
   onQuestionSelectedChange,
   isRemembered,

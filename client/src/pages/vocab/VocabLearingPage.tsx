@@ -2,24 +2,24 @@ import { FlashCard, QuestionPalette } from "@/components";
 import Vocab from "@/entities/Vocab";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import vocab_data from "@/data/vocab_data_lists";
 import LeftBarVocab from "@/components/vocab/LeftBarVocab";
 import { sVocab } from "@/store";
+import LoadingProgress from "@/components/LoadingProgress";
 
 export default function VocabLearingPage() {
   const { id } = useParams();
 
-  console.log(id);
   const vocabs = sVocab.use((cur) => cur.vocabTopics).find((vocab) => vocab._id === id)?.vocabs || [];
-
 
   const [selectedVocab, setSelectedVocab] = useState<Vocab>();
   const [isRemembered, setIsRemembered] = useState<boolean[]>(Array(vocabs.length).fill(false));
-  useEffect(() => {
-    setSelectedVocab(vocabs[0]);
-  }, [vocabs]);
-
   const [curVocabQuestionNumber, setCurVocabQuestionNumber] = useState(0);
+
+  useEffect(() => {
+    if (vocabs.length > 0) {
+      setSelectedVocab(vocabs[0]);
+    }
+  }, [vocabs]);
 
   const handleOnQuestionNumberChange = (questionNumber: number) => {
     setCurVocabQuestionNumber(questionNumber);
@@ -31,11 +31,12 @@ export default function VocabLearingPage() {
       const newIsRemembered = [...prev];
       newIsRemembered[index] = !prev[index];
       return newIsRemembered;
-    })
-  }
+    });
+  };
 
-  console.log(selectedVocab);
-  console.log(curVocabQuestionNumber);
+  if (vocabs.length === 0) {
+    return <LoadingProgress/>;
+  }
 
   return (
     <div className="">

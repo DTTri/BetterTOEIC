@@ -10,7 +10,7 @@ import QuestionsListContainer from "./test/QuestionsListContainer";
 import TestResultsTable from "./test/TestResultsTable";
 import QuestionsGroup from "./test/QuestionsGroup";
 import PartItemsContainer from "./test/PartItemsContainer";
-import QuestionPalette from "./practice/QuestionPalette";
+import QuestionPalette from "./vocab/VocabQuestionPalette";
 import PracticeList from "./practice/PracticeList";
 import LeftBar from "./practice/LeftBarPractice";
 import BuildRoadmapProgressBar from "./roadmap/BuildRoadmapProgressBar";

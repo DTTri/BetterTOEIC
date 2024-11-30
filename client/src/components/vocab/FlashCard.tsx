@@ -1,5 +1,5 @@
 import { Button } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import SaveIcon from "@mui/icons-material/Save";
 import ReactCardFlip from "react-card-flip";
@@ -20,6 +20,10 @@ const Flashcard = ({
     setIsFlipped(!isFlipped);
   };
 
+  useEffect(() => {
+    setIsFlipped(false);
+  }, [vocab]);
+
   return (
     <ReactCardFlip isFlipped={isFlipped} flipDirection="vertical">
       {/* Front */}
@@ -28,7 +32,7 @@ const Flashcard = ({
           <VolumeUpIcon fontSize="large" />
           <SaveIcon fontSize="large" />
         </div>
-        <div className="img mx-auto max-w-[400px] max-h-[300px] rounded-[20px] mb-4">
+        <div className="img mx-auto max-w-[320px] max-h-[250px] rounded-[20px] mb-4">
           <img
             className="w-full h-full object-cover object-center"
             src={vocab.image}
