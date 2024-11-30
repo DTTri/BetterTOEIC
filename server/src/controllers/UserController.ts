@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
-import { User } from '~/models';
-import { userServiceInstance } from '~/services';
+import { TestHistory, User } from '~/models';
+import { testServiceInstance, userServiceInstance } from '~/services';
+import getAverageCorrectAnswersPerPart from '~/utils/CalculateAverageCorrectAnswersPerPart';
+import getTestScore from '~/utils/CalculateTestScore';
 class UserController {
   async getAllUsers(req: Request, res: Response) {
     try {
@@ -60,6 +62,30 @@ class UserController {
         EM: error.message,
       });
     }
+  }
+
+  async getTotalUsersPerBand(req: Request, res: Response) {
+    const totalUsersPerBand: number[] = [0, 0, 0, 0, 0];
+    const userTestHistories = (await testServiceInstance.getAllTestHistories()) as TestHistory[];
+    userTestHistories.forEach((userTestHistory) => {
+      const avgScore = getTestScore(getAverageCorrectAnswersPerPart(userTestHistory.completedTests));
+      if (avgScore < 215) {
+        totalUsersPerBand[0]++;
+      } else if (avgScore < 465) {
+        totalUsersPerBand[1]++;
+      } else if (avgScore < 725) {
+        totalUsersPerBand[2]++;
+      } else if (avgScore < 855) {
+        totalUsersPerBand[3]++;
+      } else {
+        totalUsersPerBand[4]++;
+      }
+    });
+    res.status(200).json({
+      EC: 0,
+      EM: 'Total users per band fetched successfully',
+      DT: totalUsersPerBand,
+    });
   }
 }
 const userControllerInstance = new UserController();

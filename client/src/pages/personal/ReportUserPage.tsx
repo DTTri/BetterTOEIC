@@ -1,6 +1,6 @@
-import { CompletedTest } from "@/entities";
 import { testStore } from "@/store/testStore";
 import getAccuracyPerPart from "@/utils/CalculateAccuracyPerPart";
+import getAverageCorrectAnswersPerPart from "@/utils/CalculateAverageCorrectAnswersPerPart";
 import getTestScore from "@/utils/CalculateTestScore";
 import { BarChart } from "@mui/x-charts";
 import { LineChart } from "@mui/x-charts/LineChart";
@@ -17,7 +17,6 @@ export default function ReportUserPage() {
       .map((test) => getTestScore(test.correctAnswersPerPart));
     return scores.reduce((a, b) => a + b, 0) / scores.length;
   }
-  const averageSocre = 800;
   const scorePerMonthData = [
     {
       month: "January",
@@ -48,21 +47,11 @@ export default function ReportUserPage() {
       score: getAverageScore("2022-07-01", "2022-07-31"),
     },
   ];
-  function getAverageCorrectAnswersPerPart(completedTests: CompletedTest[]) {
-    if (completedTests.length === 0) return [0, 0, 0, 0, 0, 0, 0];
-    const correctAnswersPerPart = completedTests.reduce(
-      (acc, test) => {
-        return acc.map((count, i) => count + test.correctAnswersPerPart[i]);
-      },
-      [0, 0, 0, 0, 0, 0, 0]
-    );
-    return correctAnswersPerPart.map((count) =>
-      Math.round(count / completedTests.length)
-    );
-  }
+
   const accuracyPerPart = getAccuracyPerPart(
     getAverageCorrectAnswersPerPart(completedTests)
   );
+  const averageScore = getTestScore(accuracyPerPart);
   const accuracyPerPartData = [
     { part: "Part 1", accuracy: accuracyPerPart[0] },
     { part: "Part 2", accuracy: accuracyPerPart[1] },
@@ -85,7 +74,7 @@ export default function ReportUserPage() {
               Biểu đồ kết quả thi:{" "}
             </h2>
             <span className="py-[3px] px-6 rounded-xl border-[1px] bg-[#FAFBFD]">
-              Điểm trung bình: {averageSocre}
+              Điểm trung bình: {averageScore}
             </span>
           </div>
           <div className="test-score w-full mb-4 ">

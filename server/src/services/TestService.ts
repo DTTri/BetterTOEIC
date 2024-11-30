@@ -58,6 +58,14 @@ class TestService {
     return null;
   }
 
+  async getAllTestHistories(): Promise<TestHistory[] | null> {
+    const result = await collections.testHistories?.find().toArray();
+    if (result) {
+      return result as TestHistory[];
+    }
+    return null;
+  }
+
   async updateTestsSaved(userId: string, testId: string, unsave: boolean): Promise<boolean> {
     const getUserTestsSavedResult = await collections.testsSaved?.findOne({ _id: new ObjectId(userId) });
     const userTestsSaved = getUserTestsSavedResult as TestsSaved;
