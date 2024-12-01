@@ -9,6 +9,7 @@ type SavedVocab = {
   audio: string;
   example: string;
   spelling: string;
+  type: string;
   isSaving: boolean;
 };
 export default SavedVocab;

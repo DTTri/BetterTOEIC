@@ -1,4 +1,5 @@
 type Vocab = {
+  _id: string;
   topicId: string;
   word: string;
   meaning_en: string;

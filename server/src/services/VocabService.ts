@@ -99,6 +99,7 @@ class VocabService {
             audio: savedVocab.audio,
             example: savedVocab.example,
             spelling: savedVocab.spelling,
+            type: savedVocab.type,
           });
           const result = await collections.vocabsSaved?.updateOne(
             { _id: new ObjectId(userId) },
@@ -123,6 +124,7 @@ class VocabService {
             audio: savedVocab.audio,
             example: savedVocab.example,
             spelling: savedVocab.spelling,
+            type: savedVocab.type,
           },
         ],
         created_at: new Date().toISOString(),

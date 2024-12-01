@@ -9,17 +9,19 @@ import LoadingProgress from "@/components/LoadingProgress";
 export default function VocabLearingPage() {
   const { id } = useParams();
 
-  const vocabs = sVocab.use((cur) => cur.vocabTopics).find((vocab) => vocab._id === id)?.vocabs || [];
+  const vocabTopic = sVocab.use((cur) => cur.vocabTopics).find((vocab) => vocab._id === id);
+  const [vocabs, setVocabs] = useState<Vocab[]>(vocabTopic?.vocabs || []);
 
   const [selectedVocab, setSelectedVocab] = useState<Vocab>();
   const [isRemembered, setIsRemembered] = useState<boolean[]>(Array(vocabs.length).fill(false));
   const [curVocabQuestionNumber, setCurVocabQuestionNumber] = useState(0);
 
   useEffect(() => {
-    if (vocabs.length > 0) {
+    if (vocabTopic) {
       setSelectedVocab(vocabs[0]);
+      setVocabs(vocabTopic?.vocabs);
     }
-  }, [vocabs]);
+  }, [vocabTopic]);
 
   const handleOnQuestionNumberChange = (questionNumber: number) => {
     setCurVocabQuestionNumber(questionNumber);
@@ -34,7 +36,8 @@ export default function VocabLearingPage() {
     });
   };
 
-  if (vocabs.length === 0) {
+  //Mark items that are not loaded yet
+  if (vocabs.length === 0 || !vocabTopic) {
     return <LoadingProgress/>;
   }
 
@@ -43,7 +46,7 @@ export default function VocabLearingPage() {
       <div className="flex flex-row items-stretch">
         <LeftBarVocab VocabLists={sVocab.value.vocabTopics} />
         <div className="w-full flex flex-col gap-4 p-6">
-          <FlashCard vocabNumber={curVocabQuestionNumber} onVocabRemember={handleOnRememberedChange} vocab={selectedVocab || vocabs[0]} />
+          <FlashCard topicName={vocabTopic.name} vocabNumber={curVocabQuestionNumber} onVocabRemember={handleOnRememberedChange} vocab={selectedVocab || vocabs[0]} />
           <QuestionPalette
             numberOfQuestions={vocabs.length}
             onQuestionSelectedChange={handleOnQuestionNumberChange}
