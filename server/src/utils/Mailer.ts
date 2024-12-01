@@ -23,7 +23,7 @@ const sendVerificationEmail = async (to: string, verifiedEmailToken: string, use
   await transporter.sendMail(mailOptions);
 };
 const sendForgotPasswordEmail = async (to: string, forgotPasswordToken: string) => {
-  const forgotPasswordLink = `http://localhost:5173/resetPassword/${forgotPasswordToken}`;
+  const forgotPasswordLink = `http://localhost:5173/reset-password/${forgotPasswordToken}`;
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to,

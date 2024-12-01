@@ -12,10 +12,13 @@ import {
 } from "@/components/ui/select"
 import VN from '../assets/VN_Flag.png';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { sUser } from '@/store';
 export default function Header() {
   const [selectedItem, setSelectedItem] = useState('');
   const nav = useNavigate();
   const location = useLocation();
+
+  const userInfo = sUser.use(cur => cur.info);
 
   useEffect(() => {
     const headerPaths = ['/log-out', '/user-info', '/user-report', '/test-saved', '/word-saved'];
@@ -63,10 +66,10 @@ export default function Header() {
           </div>
           <Select onValueChange={handleItemChange}>
           <SelectTrigger value={selectedItem} className="flex flex-row w-auto gap-4 justify-between shadow-none bg-background h-auto py-1 px-2 border-none">
-                <img src={VN} alt="" className="max-h-10 max-w-10 aspect-square w-full h-full inline-block rounded-full object-fill" />
+                <img src={userInfo.avatar} alt="" className="max-h-10 max-w-10 aspect-square w-full h-full inline-block rounded-full object-fill" />
                 <div className="flex flex-col">
-                  <span className='text-[16px] font-semibold '>Thinh</span>
-                  <span className='text-[12px] font-normal '>User</span>
+                  <span className='text-[16px] font-semibold '>{userInfo.name.split(' ')[0]}</span>
+                  <span className='text-[12px] font-normal '>{userInfo.isAdmin == true ? 'User' : 'Admin'}</span>
                 </div>
             </SelectTrigger>
             <SelectContent className='bg-background'>

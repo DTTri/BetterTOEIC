@@ -64,7 +64,7 @@ function App() {
     };
     const fetchTestHistory = async () => {
       try {
-        const response = await testService.getTestHistory(sUser.value.id);
+        const response = await testService.getTestHistory(sUser.value.info._id);
         console.log(response);
         if (response.EC === 0) {
           testStore.set((prev) => (prev.value.testHistory = response.DT));
@@ -77,7 +77,7 @@ function App() {
     };
     const fetchTestSaved = async () => {
       try {
-        const response = await testService.getTestsSaved(sUser.value.id);
+        const response = await testService.getTestsSaved(sUser.value.info._id);
         if (response.EC === 0) {
           console.log("Test saved" + response.DT);
           testStore.set((prev) => (prev.value.testsSaved = response.DT));
@@ -106,7 +106,7 @@ function App() {
     const fetchPracticeTestHistory = async () => {
       try {
         const response = await practiceService.getPracticeTestHistory(
-          sUser.value.id
+          sUser.value.info._id
         );
         console.log(response);
         if (response.EC === 0) {
@@ -138,7 +138,7 @@ function App() {
     const fetchPracticeLessonHistory = async () => {
       try {
         const response = await practiceService.getPracticeLessonHistory(
-          sUser.value.id
+          sUser.value.info._id
         );
         console.log(response);
         if (response.EC === 0) {
@@ -169,7 +169,7 @@ function App() {
     };
     const fetchUserRoadmap = async () => {
       try {
-        const res = await roadmapService.getRoadmapHistory(sUser.value.id);
+        const res = await roadmapService.getRoadmapHistory(sUser.value.info._id);
         if (res.EC === 0) {
           sRoadmap.set((pre) => (pre.value.userRoadmap = res.DT));
           sCreatingPersonalRoadmap.set((pre) => {
@@ -200,7 +200,7 @@ function App() {
     };
     const fetchSavedVocabs = async () => {
       try {
-        const response = await vocabService.getVocabsSaved(sUser.value.id);
+        const response = await vocabService.getVocabsSaved(sUser.value.info._id);
         if (response.EC === 0) {
           console.log(response);
           sVocab.set((prev) => (prev.value.vocabsSaved = response.DT));
@@ -213,7 +213,7 @@ function App() {
     };
     const fetchVocabHistory = async () => {
       try {
-        const response = await vocabService.getVocabHistory(sUser.value.id);
+        const response = await vocabService.getVocabHistory(sUser.value.info._id);
         if (response.EC === 0) {
           console.log(response);
           sVocab.set((prev) => (prev.value.vocabHistory = response.DT.topics));
@@ -417,7 +417,7 @@ function App() {
         }
       />
       <Route
-        path="/resset-password"
+        path="/reset-password/:token"
         element={
           <UserLayout>
             <RessetPasswordPage />

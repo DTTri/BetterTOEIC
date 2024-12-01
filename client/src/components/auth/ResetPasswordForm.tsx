@@ -1,8 +1,8 @@
-import React from 'react'
-import { Button, Checkbox, FormControl, FormControlLabel, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from '@mui/material';
-import { Link } from 'react-router-dom';
-import google_icon from '@/assets/google_icon.svg';
+import authService from '@/services/authService';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput } from '@mui/material';
+import React from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 
 export default function RessetPasswordForm() {
@@ -10,6 +10,35 @@ export default function RessetPasswordForm() {
   const [showPassword, setShowPassword] = React.useState(false);
   const [retypePassword, setRetypePassword] = React.useState('');
   const [showRetypePassword, setShowRetypePassword] = React.useState(false);
+
+  const { token } = useParams();
+  const nav = useNavigate();
+
+  const handleResetPassword = async () => {
+    if(password === '' || retypePassword === '') {
+      alert('Please fill in all fields');
+      return;
+    }
+    if(password !== retypePassword) {
+      alert('Passwords do not match');
+      return;
+    }
+    try {
+      const response = await authService.resetPassword({
+        "newPassword": password,
+        "confirmNewPassword": retypePassword,
+        "token": token
+      });
+      if(response.EC === 0) {
+        nav('/login');
+      }
+      else{
+        console.log("Fail to reset password " + response.EM);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
 
   return (
@@ -53,7 +82,7 @@ export default function RessetPasswordForm() {
                   aria-label={
                     showRetypePassword ? 'hide the password' : 'display the password'
                   }
-                  onClick={() => setShowRetypePassword(!showPassword)}
+                  onClick={() => setShowRetypePassword(!showRetypePassword)}
                   edge="end"
                 >
                   {showPassword ? <VisibilityOff /> : <Visibility />}
@@ -64,7 +93,8 @@ export default function RessetPasswordForm() {
           />
         </FormControl>
       </div>
-      <Link to=''><Button variant='outlined' style={{backgroundColor: '#3A7EE1', color: '#fff', fontFamily: 'Nunito Sans', fontSize: '18px', fontWeight: 'bold', textTransform: 'none', borderRadius: '8px', padding: '8px 0', width: '100%', cursor: 'pointer', marginTop: '20px'}}>RESET</Button></Link>
+      <Button onClick={handleResetPassword} 
+      variant='outlined' style={{backgroundColor: '#3A7EE1', color: '#fff', fontFamily: 'Nunito Sans', fontSize: '18px', fontWeight: 'bold', textTransform: 'none', borderRadius: '8px', padding: '8px 0', width: '100%', cursor: 'pointer', marginTop: '20px'}}>RESET</Button>
     </div>
   )
 }
