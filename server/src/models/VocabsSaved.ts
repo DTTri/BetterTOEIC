@@ -14,6 +14,7 @@ type VocabsSaved = {
       image: string;
       audio: string;
       example: string;
+      type: string;
       spelling: string;
     },
   ];

@@ -5,7 +5,9 @@ export default function WordSaved({ vocab }: { vocab: SavedVocab }) {
   return (
     <div className="w-full px-8 py-3 bg-[#D9E7FF] rounded-[30px] flex flex-col gap-[10px]">
       <div className="flex flex-row items-center gap-4">
-        <p className="text-lg font-bold text-[#000] ">{vocab.word}</p>
+        <p className="text-base font-bold text-[#000] ">{vocab.word}</p>
+        <hr className="w-[1px] h-6 bg-black" />
+        <p className="text-base font-medium text-[#000]">.{vocab.type}</p>
         <hr className="w-[1px] h-6 bg-black" />
         <p className="text-base font-normal text-[rgba(32, 34, 36, 0.5)] ">
           {vocab.spelling}
@@ -22,7 +24,7 @@ export default function WordSaved({ vocab }: { vocab: SavedVocab }) {
       </div>
       <div className="w-full">
         <p className="text-base font-normal text-[rgba(32, 34, 36, 0.80)] text-wrap">
-          {vocab.example}
+          Ex: {vocab.example}
         </p>
       </div>
     </div>

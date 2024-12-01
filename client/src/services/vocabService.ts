@@ -1,3 +1,4 @@
+import SaveVocabDTO from "@/entities/DTOS/SaveVocabDTO";
 import http from "./http";
 
 class VocabService {
@@ -29,11 +30,8 @@ class VocabService {
   async getVocabHistory(userId: string) {
     return await http.get(this.getURI("getVocabHistory/" + userId));
   }
-  async saveVocab(userId: string, vocabId: string, unsave: boolean) {
-    return await http.put(this.getURI("saveVocab/" + userId), {
-      vocabId,
-      unsave,
-    });
+  async saveVocab(userId: string, savedVocab: SaveVocabDTO) {
+    return await http.put(this.getURI("saveVocab/" + userId), savedVocab);
   }
   async getVocabsSaved(userId: string) {
     return await http.get(this.getURI("getVocabsSaved/" + userId));
