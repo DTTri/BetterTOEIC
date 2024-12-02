@@ -4,8 +4,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import google_icon from '@/assets/google_icon.svg';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import authService from '@/services/authService';
-import { sUser } from '@/store';
-
 
 export default function LoginForm() {
   const [email, setEmail] = React.useState('');
@@ -14,6 +12,7 @@ export default function LoginForm() {
   const [rememberMe, setRememberMe] = React.useState(false);
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const [show, setShow] = React.useState(false);
+  const [noti, setNoti] = React.useState('');
   const nav = useNavigate();
   
   const handleLogin = async () => {
@@ -32,11 +31,13 @@ export default function LoginForm() {
           localStorage.setItem('token', response.DT.accessToken);
         }
         sessionStorage.setItem('token', response.DT.accessToken);
-        sUser.set((pre) => pre.value.info = response.DT);
+        console.log(response.DT);
+        localStorage.setItem('_id', response.DT._id);
         nav('/');
       }
       else{
         console.log("Fail to login " + response.EM);
+        setNoti(response.EM);
       }
     } catch (error) {
       console.log(error);
@@ -112,6 +113,7 @@ export default function LoginForm() {
         <Link to='/forgot-password' className='text-[#000] text-sm font-normal hover:text-slate-500'>Forgot Password?</Link>
       </div>
       <Link to=''><Button onClick={handleLogin} variant='outlined' style={{backgroundColor: '#3A7EE1', color: '#fff', fontFamily: 'Nunito Sans', fontSize: '18px', fontWeight: 'bold', textTransform: 'none', borderRadius: '8px', padding: '8px 0', width: '100%', cursor: 'pointer'}}>LOG IN</Button></Link>
+      <span className='text-[#FF0000] text-sm font-normal'>{noti}</span>
       <div className="w-full relative my-6">
         <div className="w-full h-[0.5px] border-t-[1px] border-[#c9bfbf]"></div>
         <span className='block text-sm font-bold text-[#212121] bg-[#fff] py-1 px-2 absolute translate-y-[-60%] left-1/2 translate-x-[-50%]'>or</span>

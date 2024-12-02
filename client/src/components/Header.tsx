@@ -10,16 +10,23 @@ import {
   SelectLabel,
   SelectTrigger,
 } from "@/components/ui/select"
-import VN from '../assets/VN_Flag.png';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { sUser } from '@/store';
+import { User } from '@/entities';
 export default function Header() {
   const [selectedItem, setSelectedItem] = useState('');
   const nav = useNavigate();
   const location = useLocation();
 
-  const userInfo = sUser.use(cur => cur.info);
-
+  const user = sUser.use(cur => cur.info);
+  const [userInfo, setUserInfo] = useState<User>(user);
+  
+  useEffect(() => {
+    if(user._id && user._id !== '') {
+      setUserInfo(user);
+    }
+  }, [user._id]);
+  
   useEffect(() => {
     const headerPaths = ['/log-out', '/user-info', '/user-report', '/test-saved', '/word-saved'];
     if (!headerPaths.includes(location.pathname)) {
@@ -30,6 +37,9 @@ export default function Header() {
   const handleItemChange = (e: string) => {
     setSelectedItem(e);
     if(e === 'log-out') {
+      localStorage.removeItem('token');
+      localStorage.removeItem('_id');
+      sessionStorage.removeItem('token');
       nav('/login');
     }
     else if(e === 'user-info') {
@@ -45,6 +55,7 @@ export default function Header() {
       nav('/test-saved');
     }
   }
+  console.log("userInfo._id:", userInfo._id); // Add this line to log userInfo._id
 
   return (
     <>
@@ -55,33 +66,37 @@ export default function Header() {
           </Link>
         <div className="right flex flex-row gap-[32px] items-center justify-center">
           <ul className='flex flex-row gap-[18px]'>
-            <li><Link to='/road-map'><Button className='hover:bg-slate-100' style={{fontWeight: "700", fontSize: "16px", color:'#000000', fontFamily:'Nunito Sans'}} variant='text' sx={{textTransform:'none'}}>Roadmap</Button></Link></li>
+            { userInfo._id && (<li><Link to='/road-map'><Button className='hover:bg-slate-100' style={{fontWeight: "700", fontSize: "16px", color:'#000000', fontFamily:'Nunito Sans'}} variant='text' sx={{textTransform:'none'}}>Roadmap</Button></Link></li>)}
             <li><Link to='/test'><Button className='hover:bg-slate-100' style={{fontWeight: "700", fontSize: "16px", color:'#000000', fontFamily:'Nunito Sans'}} variant='text' sx={{textTransform:'none'}}>Tests</Button></Link></li>
             <li><Link to='/practice'><Button className='hover:bg-slate-100' style={{fontWeight: "700", fontSize: "16px", color:'#000000', fontFamily:'Nunito Sans'}} variant='text' sx={{textTransform:'none'}}>Practices</Button></Link></li>
             <li><Link to='/vocab-gallery'><Button className='hover:bg-slate-100' style={{fontWeight: "700", fontSize: "16px", color:'#000000', fontFamily:'Nunito Sans'}} variant='text' sx={{textTransform:'none'}}>Vocabulary</Button></Link></li>
             <li><Link to='/forum'><Button className='hover:bg-slate-100' style={{fontWeight: "700", fontSize: "16px", color:'#000000', fontFamily:'Nunito Sans'}} variant='text' sx={{textTransform:'none'}}>Forum</Button></Link></li>
           </ul>
-          <div className="icon_noti">
+          { userInfo._id && (<div className="icon_noti">
             <button className='flex items-center justify-center'><img src={Noti} alt="" /></button>
-          </div>
-          <Select onValueChange={handleItemChange}>
-          <SelectTrigger value={selectedItem} className="flex flex-row w-auto gap-4 justify-between shadow-none bg-background h-auto py-1 px-2 border-none">
-                <img src={userInfo.avatar} alt="" className="max-h-10 max-w-10 aspect-square w-full h-full inline-block rounded-full object-fill" />
-                <div className="flex flex-col">
-                  <span className='text-[16px] font-semibold '>{userInfo.name.split(' ')[0]}</span>
-                  <span className='text-[12px] font-normal '>{userInfo.isAdmin == true ? 'User' : 'Admin'}</span>
-                </div>
-            </SelectTrigger>
-            <SelectContent className='bg-background'>
-              <SelectGroup>
-                <SelectItemWithText value='report'>User report</SelectItemWithText>
-                <SelectItemWithText value='user-info'>User-info</SelectItemWithText>
-                <SelectItemWithText  value='test-saved'>Test saved list</SelectItemWithText>
-                <SelectItemWithText  value='word-saved'>Word saved list</SelectItemWithText>
-                <SelectItemWithText  value='log-out'>Log out</SelectItemWithText>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+          </div>)}
+          {
+            userInfo._id && (
+              <Select onValueChange={handleItemChange}>
+                <SelectTrigger value={selectedItem} className="flex flex-row w-auto gap-4 justify-between shadow-none bg-background h-auto py-1 px-2 border-none">
+                    <img src={userInfo.avatar} alt="" className="max-h-10 max-w-10 aspect-square w-full h-full inline-block rounded-full object-fill" />
+                    <div className="flex flex-col">
+                      <span className='text-[16px] font-semibold '>{userInfo.name.split(' ')[0]}</span>
+                      <span className='text-[12px] font-normal '>{userInfo.isAdmin == true ? 'User' : 'Admin'}</span>
+                    </div>
+                </SelectTrigger>
+                <SelectContent className='bg-background'>
+                  <SelectGroup>
+                    <SelectItemWithText value='report'>User report</SelectItemWithText>
+                    <SelectItemWithText value='user-info'>User-info</SelectItemWithText>
+                    <SelectItemWithText  value='test-saved'>Test saved list</SelectItemWithText>
+                    <SelectItemWithText  value='word-saved'>Word saved list</SelectItemWithText>
+                    <SelectItemWithText  value='log-out'>Log out</SelectItemWithText>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            )
+          }
         </div>
         </div>
       </header>

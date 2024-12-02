@@ -46,6 +46,8 @@ import { testStore } from "./store/testStore";
 import practiceService from "./services/practiceService";
 import { practiceStore } from "./store/practiceStore";
 import vocabService from "./services/vocabService";
+import VerifyEmailPage from "./pages/auth/VerifyEmailPage";
+import AuthLayout from "./pages/AuthLayout";
 
 function App() {
   useEffect(() => {
@@ -230,6 +232,14 @@ function App() {
         console.log(response);
         if (response.EC === 0) {
           sUser.set((prev) => (prev.value.users = response.DT));
+          const curUser = localStorage.getItem('_id');
+          if(curUser){
+            response.DT.forEach((user: any) => {
+              if (user._id === curUser) {
+                sUser.set((prev) => (prev.value.info = user));
+              }
+            });
+          }
         } else {
           console.log("Fail to fetch all users: ", response.EM);
         }
@@ -375,55 +385,6 @@ function App() {
           </UserLayout>
         }
       />
-
-      <Route
-        path="/error"
-        element={
-          <UserLayout>
-            <ErrorPage />
-          </UserLayout>
-        }
-      />
-      <Route
-        path="*"
-        element={
-          <UserLayout>
-            <ErrorPage />
-          </UserLayout>
-        }
-      />
-      <Route
-        path="/login"
-        element={
-          <UserLayout>
-            <LoginPage />
-          </UserLayout>
-        }
-      />
-      <Route
-        path="/register"
-        element={
-          <UserLayout>
-            <RegisterPage />
-          </UserLayout>
-        }
-      />
-      <Route
-        path="/forgot-password"
-        element={
-          <UserLayout>
-            <ForgotPasswordPage />
-          </UserLayout>
-        }
-      />
-      <Route
-        path="/reset-password/:token"
-        element={
-          <UserLayout>
-            <RessetPasswordPage />
-          </UserLayout>
-        }
-      />
       <Route
         path="/forum"
         element={
@@ -472,6 +433,40 @@ function App() {
           </UserLayout>
         }
       />
+            <Route path="" element={ <AuthLayout></AuthLayout>}>
+        <Route path="*" element={<ErrorPage />} />
+        <Route
+        path="/error"
+        element={
+            <ErrorPage />
+        }
+      />
+        <Route path="/login" element={<LoginPage />} />
+        <Route
+          path="/register"
+          element={
+            <RegisterPage />
+          }
+        />
+        <Route
+        path="/forgot-password"
+        element={
+            <ForgotPasswordPage />
+        }
+      />
+        <Route
+          path="/reset-password/:token"
+          element={
+              <RessetPasswordPage />
+          }
+        />
+        <Route
+          path="/verifyEmail/:token"
+          element={
+              <VerifyEmailPage />
+          }
+        />
+      </Route>
     </Routes>
   );
 }

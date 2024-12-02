@@ -32,8 +32,16 @@ export default function RegisterForm() {
     }
     try {
       const response = await authService.register({name, email, password});
-      if(response.EC === 0) {
-        setIsRegisterSuccess(true);
+      if(response.EC === 0) { 
+        const repsonseVerify = await authService.sendVerificationEmail({
+          "_id": response.DT,
+        });
+        if(repsonseVerify.EC === 0) {
+          setIsRegisterSuccess(true);
+        }
+        else {
+          console.log("Fail to send verification email " + repsonseVerify.EM);
+        }
       }
       else{
         console.log("Fail to register " + response.EM);

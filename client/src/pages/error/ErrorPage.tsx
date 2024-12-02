@@ -68,7 +68,7 @@ export default function () {
         <div className="image max-w-[570px] max-h-[400px] mb-9">
           <img className='w-full h-full object-cover object-center' src={imgError} alt=""/>
         </div>
-        <Button variant='contained' color='primary' href='/'>Quay về trang chủ</Button>
+        <Button variant='contained' color='primary' href='/login'>Quay về trang chủ</Button>
       </div>
     </div>
   )

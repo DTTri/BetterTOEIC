@@ -21,7 +21,7 @@ const Flashcard = ({
 }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const audioPlayRef = useRef<HTMLAudioElement>(null);
-  const userId = sUser.use((state) => state.id);
+  const userId = sUser.use((state) => state.info._id);
   const handleOnAudiPlay = () => {
     audioPlayRef.current?.play();
   }

@@ -4,7 +4,7 @@ import { Navigate, Outlet } from 'react-router-dom'
 
 import { ReactNode } from 'react';
 
-export default function UserLayout({ children, haveHeader = true, haveFooter = true }: { children: ReactNode, haveHeader?: boolean, haveFooter?: boolean }) {
+export default function UserLayout({ children, haveHeader = true, haveFooter = true }: { children: ReactNode, haveHeader?: boolean, haveFooter?: boolean}) {
   const token = localStorage.getItem('token') || sessionStorage.getItem('token');
   if(!token) {
     return <Navigate to='/login' />
