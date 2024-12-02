@@ -17,7 +17,7 @@ export default function TakingTestPage() {
   const selectedTest = testStore
     .use((pre) => pre.testList)
     .find((test) => test._id === id);
-  const userId = sUser.use((state) => state.id);
+  const userId = sUser.use((state) => state.info._id);
 
   const [currentPart, setCurrentPart] = useState(1);
   const [answers, setAnswers] = useState<number[]>(Array(200).fill(0));

@@ -16,7 +16,7 @@ class AuthController {
         ...req.body,
         _id: new ObjectId(),
         avatar:
-          'https://static.vecteezy.com/system/resources/thumbnails/013/360/247/small/default-avatar-photo-icon-social-media-profile-sign-symbol-vector.jpg',
+          'https://www.w3schools.com/howto/img_avatar.png',
         status: UserStatus.PENDING,
         verifiedEmailToken: '',
         forgotPasswordToken: '',

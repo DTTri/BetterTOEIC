@@ -34,7 +34,7 @@ export default function TestDetailsPage() {
 
   const handleOnSave = async () => {
     try {
-      const response = await testService.saveTest(sUser.value.id, selectedTest?._id || '', !isSaved);
+      const response = await testService.saveTest(sUser.value.info._id, selectedTest?._id || '', !isSaved);
       if(response.EC == 0) {
         setIsSaved(!isSaved);
       }

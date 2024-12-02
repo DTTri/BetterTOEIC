@@ -22,7 +22,7 @@ export default function TakingPracticePage() {
     .use((value) => value.practiceTestList)
     .find((practice) => practice._id === id);
 
-    const userId = sUser.use((state) => state.id);
+    const userId = sUser.use((state) => state.info._id);
 
     const [questions, setQuestions] = useState<Question[]>(selectedPracticeTest?.questions || []);
     const [selectedQuestion, setSelectedQuestion] = useState<Question>(questions[0]);

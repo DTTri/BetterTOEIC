@@ -46,6 +46,8 @@ import { testStore } from "./store/testStore";
 import practiceService from "./services/practiceService";
 import { practiceStore } from "./store/practiceStore";
 import vocabService from "./services/vocabService";
+import VerifyEmailPage from "./pages/auth/VerifyEmailPage";
+import AuthLayout from "./pages/AuthLayout";
 
 function App() {
   useEffect(() => {
@@ -64,7 +66,7 @@ function App() {
     };
     const fetchTestHistory = async () => {
       try {
-        const response = await testService.getTestHistory(sUser.value.id);
+        const response = await testService.getTestHistory(sUser.value.info._id);
         console.log(response);
         if (response.EC === 0) {
           testStore.set((prev) => (prev.value.testHistory = response.DT));
@@ -77,7 +79,7 @@ function App() {
     };
     const fetchTestSaved = async () => {
       try {
-        const response = await testService.getTestsSaved(sUser.value.id);
+        const response = await testService.getTestsSaved(sUser.value.info._id);
         if (response.EC === 0) {
           console.log("Test saved" + response.DT);
           testStore.set((prev) => (prev.value.testsSaved = response.DT));
@@ -106,7 +108,7 @@ function App() {
     const fetchPracticeTestHistory = async () => {
       try {
         const response = await practiceService.getPracticeTestHistory(
-          sUser.value.id
+          sUser.value.info._id
         );
         console.log(response);
         if (response.EC === 0) {
@@ -138,7 +140,7 @@ function App() {
     const fetchPracticeLessonHistory = async () => {
       try {
         const response = await practiceService.getPracticeLessonHistory(
-          sUser.value.id
+          sUser.value.info._id
         );
         console.log(response);
         if (response.EC === 0) {
@@ -169,7 +171,7 @@ function App() {
     };
     const fetchUserRoadmap = async () => {
       try {
-        const res = await roadmapService.getRoadmapHistory(sUser.value.id);
+        const res = await roadmapService.getRoadmapHistory(sUser.value.info._id);
         if (res.EC === 0) {
           sRoadmap.set((pre) => (pre.value.userRoadmap = res.DT));
           sCreatingPersonalRoadmap.set((pre) => {
@@ -200,7 +202,7 @@ function App() {
     };
     const fetchSavedVocabs = async () => {
       try {
-        const response = await vocabService.getVocabsSaved(sUser.value.id);
+        const response = await vocabService.getVocabsSaved(sUser.value.info._id);
         if (response.EC === 0) {
           console.log(response);
           sVocab.set((prev) => (prev.value.vocabsSaved = response.DT));
@@ -213,7 +215,7 @@ function App() {
     };
     const fetchVocabHistory = async () => {
       try {
-        const response = await vocabService.getVocabHistory(sUser.value.id);
+        const response = await vocabService.getVocabHistory(sUser.value.info._id);
         if (response.EC === 0) {
           console.log(response);
           sVocab.set((prev) => (prev.value.vocabHistory = response.DT.topics));
@@ -230,6 +232,14 @@ function App() {
         console.log(response);
         if (response.EC === 0) {
           sUser.set((prev) => (prev.value.users = response.DT));
+          const curUser = localStorage.getItem('_id');
+          if(curUser){
+            response.DT.forEach((user: any) => {
+              if (user._id === curUser) {
+                sUser.set((prev) => (prev.value.info = user));
+              }
+            });
+          }
         } else {
           console.log("Fail to fetch all users: ", response.EM);
         }
@@ -375,55 +385,6 @@ function App() {
           </UserLayout>
         }
       />
-
-      <Route
-        path="/error"
-        element={
-          <UserLayout>
-            <ErrorPage />
-          </UserLayout>
-        }
-      />
-      <Route
-        path="*"
-        element={
-          <UserLayout>
-            <ErrorPage />
-          </UserLayout>
-        }
-      />
-      <Route
-        path="/login"
-        element={
-          <UserLayout>
-            <LoginPage />
-          </UserLayout>
-        }
-      />
-      <Route
-        path="/register"
-        element={
-          <UserLayout>
-            <RegisterPage />
-          </UserLayout>
-        }
-      />
-      <Route
-        path="/forgot-password"
-        element={
-          <UserLayout>
-            <ForgotPasswordPage />
-          </UserLayout>
-        }
-      />
-      <Route
-        path="/resset-password"
-        element={
-          <UserLayout>
-            <RessetPasswordPage />
-          </UserLayout>
-        }
-      />
       <Route
         path="/forum"
         element={
@@ -472,6 +433,40 @@ function App() {
           </UserLayout>
         }
       />
+            <Route path="" element={ <AuthLayout></AuthLayout>}>
+        <Route path="*" element={<ErrorPage />} />
+        <Route
+        path="/error"
+        element={
+            <ErrorPage />
+        }
+      />
+        <Route path="/login" element={<LoginPage />} />
+        <Route
+          path="/register"
+          element={
+            <RegisterPage />
+          }
+        />
+        <Route
+        path="/forgot-password"
+        element={
+            <ForgotPasswordPage />
+        }
+      />
+        <Route
+          path="/reset-password/:token"
+          element={
+              <RessetPasswordPage />
+          }
+        />
+        <Route
+          path="/verifyEmail/:token"
+          element={
+              <VerifyEmailPage />
+          }
+        />
+      </Route>
     </Routes>
   );
 }
