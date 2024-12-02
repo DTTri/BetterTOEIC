@@ -1,6 +1,7 @@
 import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
-// use global state to store if user click the Save all questions button, if it's true, then call onQuestionCreated for all questions
+import { Question } from "@/entities";
+
 export default function CreatingQuestion({
   part,
   questionNumber,
@@ -8,42 +9,84 @@ export default function CreatingQuestion({
   images,
   paragraphs,
   onQuestionCreated,
+  triggerSave,
 }: {
   part: number;
   questionNumber: number;
   questionGroupNumber?: number;
-  //for question group: if this is the first question of questionGroup, store images and paragraphs[] to this question
   images?: string[];
   paragraphs?: string[];
-  onQuestionCreated: () => void; // parameter is the question object (havent implemented yet)
+  onQuestionCreated: (question: Question) => void;
+  triggerSave: boolean;
 }) {
   const [isEditing, setIsEditing] = useState(true);
   const [correctOption, setCorrectOption] = useState(1);
-
+  const [text, setText] = useState("");
+  const [choices, setChoices] = useState<string[]>([]);
+  const [explanation, setExplanation] = useState("");
+  const [image, setImage] = useState<string | null>(null); // for part 1
   const handleMarkCorrect = (option: number) => {
     setCorrectOption(option);
   };
 
   useEffect(() => {
-    if (!isEditing) {
-      // Save the question to the global state
-      // if(part === 6 or 7 && questionNumber === questionGroupNumber) newQuestion.images = images; newQuestion.paragraphs = paragraphs;
+    if (triggerSave) {
+      saveQuestion();
     }
-  }, [isEditing]);
+  }, [triggerSave, questionNumber]);
+
+  const saveQuestion = () => {
+    const newQuestion: Question = {
+      text,
+      images,
+      passages: paragraphs,
+      choices,
+      correct_choice: correctOption,
+      explanation,
+      part,
+      question_number: questionNumber,
+      question_group_number: questionGroupNumber || 0,
+    };
+    onQuestionCreated(newQuestion);
+  };
+
   return (
     <form className="w-full flex flex-col gap-2">
       <div className="flex gap-4 items-center">
         <p className="text-xl font-medium">Question {questionNumber}:</p>
         {part === 1 ? (
-          <input disabled={!isEditing} type="file" accept="image/*" />
+          <input
+            disabled={!isEditing}
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                setImage(URL.createObjectURL(file));
+              }
+            }}
+            multiple={false}
+          />
         ) : (part > 2 && part < 6) || part === 7 ? (
-          <input disabled={!isEditing} type="text" />
+          <input
+            disabled={!isEditing}
+            type="text"
+            onChange={(e) => setText(e.target.value)}
+          />
         ) : null}
       </div>
       <div className="options-container w-1/2 flex flex-col gap-2 pl-2">
         <div className="option flex items-center gap-2">
           <p>a.</p>
-          <input disabled={!isEditing} type="text" />
+          <input
+            disabled={!isEditing}
+            type="text"
+            onChange={(e) => {
+              const newChoices = choices;
+              newChoices[0] = e.target.value;
+              setChoices(newChoices);
+            }}
+          />
           {correctOption !== 1 ? (
             <button className="ml-2" onClick={() => handleMarkCorrect(1)}>
               Marked as Correct
@@ -52,7 +95,15 @@ export default function CreatingQuestion({
         </div>
         <div className="option flex items-center gap-2">
           <p>b.</p>
-          <input disabled={!isEditing} type="text" />
+          <input
+            disabled={!isEditing}
+            type="text"
+            onChange={(e) => {
+              const newChoices = choices;
+              newChoices[1] = e.target.value;
+              setChoices(newChoices);
+            }}
+          />
           {correctOption !== 2 ? (
             <button className="ml-2" onClick={() => handleMarkCorrect(2)}>
               Marked as Correct
@@ -61,7 +112,15 @@ export default function CreatingQuestion({
         </div>
         <div className="option flex items-center gap-2">
           <p>c.</p>
-          <input disabled={!isEditing} type="text" />
+          <input
+            disabled={!isEditing}
+            type="text"
+            onChange={(e) => {
+              const newChoices = choices;
+              newChoices[2] = e.target.value;
+              setChoices(newChoices);
+            }}
+          />
           {correctOption !== 3 ? (
             <button className="ml-2" onClick={() => handleMarkCorrect(3)}>
               Marked as Correct
@@ -70,7 +129,15 @@ export default function CreatingQuestion({
         </div>
         <div className="option flex items-center gap-2">
           <p>d.</p>
-          <input disabled={!isEditing} type="text" />
+          <input
+            disabled={!isEditing}
+            type="text"
+            onChange={(e) => {
+              const newChoices = choices;
+              newChoices[3] = e.target.value;
+              setChoices(newChoices);
+            }}
+          />
           {correctOption !== 4 ? (
             <button className="ml-2" onClick={() => handleMarkCorrect(4)}>
               Marked as Correct
@@ -82,6 +149,7 @@ export default function CreatingQuestion({
         disabled={!isEditing}
         className="w-full border border-gray-400 p-2 rounded-lg"
         placeholder="Explanation"
+        onChange={(e) => setExplanation(e.target.value)}
       />
       <Button
         variant="contained"
@@ -93,6 +161,9 @@ export default function CreatingQuestion({
         onClick={(e) => {
           e.preventDefault();
           setIsEditing(!isEditing);
+          if (!isEditing) {
+            saveQuestion();
+          }
         }}
       >
         {isEditing ? "Save" : "Edit"}

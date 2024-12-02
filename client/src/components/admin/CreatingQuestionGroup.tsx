@@ -1,16 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CreatingQuestion from "./CreatingQuestion";
 import { Button } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
+import { Question } from "@/entities";
 
 export default function CreatingQuestionGroup({
   part,
   questionNumberFrom,
+  onQuestionsCreated,
+  triggerSave,
   onNewQuestionCreated,
   onQuestionDeleted,
 }: {
   part: number;
   questionNumberFrom: number;
+  onQuestionsCreated: (questions: Question[]) => void;
+  triggerSave: boolean;
   onNewQuestionCreated: () => void;
   onQuestionDeleted: () => void;
 }) {
@@ -19,18 +24,36 @@ export default function CreatingQuestionGroup({
   ]);
   const [images, setImages] = useState<string[]>([]);
   const [paragraphs, setParagraphs] = useState<string[]>([]);
+  const [createdQuestions, setCreatedQuestions] = useState<Question[]>([]);
+
+  useEffect(() => {
+    if (triggerSave) {
+      onQuestionsCreated(createdQuestions);
+    } else {
+      onQuestionsCreated([]);
+    }
+  }, [triggerSave, createdQuestions]);
 
   const addQuestion = () => {
     setQuestions([
       ...questions,
       { id: uuidv4(), number: questionNumberFrom + questions.length },
     ]);
+    setCreatedQuestions([]);
+
     onNewQuestionCreated();
   };
 
   const deleteQuestion = (id: string) => {
     setQuestions(questions.filter((question) => question.id !== id));
+    setCreatedQuestions([]);
+
     onQuestionDeleted();
+  };
+
+  const handleQuestionCreated = (question: Question) => {
+    //console.log("Question created:", question);
+    setCreatedQuestions((prev) => [...prev, question]);
   };
 
   return (
@@ -56,7 +79,6 @@ export default function CreatingQuestionGroup({
           placeholder="Type question group's paragraph here"
           onChange={(e) => {
             setParagraphs(e.target.value.split("\n\n"));
-            //split paragraphs by double line breaks -> should let admin know that they need to type double line breaks to separate paragraphs
           }}
         />
       ) : null}
@@ -67,6 +89,8 @@ export default function CreatingQuestionGroup({
           questionGroupNumber={questionNumberFrom}
           images={images}
           paragraphs={paragraphs}
+          onQuestionCreated={handleQuestionCreated}
+          triggerSave={triggerSave}
         />
       </div>
       {questions.slice(1).map((question, index) => (
@@ -76,6 +100,8 @@ export default function CreatingQuestionGroup({
               part={part}
               questionNumber={index + questionNumberFrom + 1}
               questionGroupNumber={questionNumberFrom}
+              onQuestionCreated={handleQuestionCreated}
+              triggerSave={triggerSave}
             />
           </div>
           <Button

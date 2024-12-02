@@ -1,7 +1,11 @@
 import { CreatingQuestionGroup } from "@/components";
 import { Button } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import testService from "@/services/testService";
+import { Question } from "@/entities";
+import CreateTestDTO from "@/entities/dtos/CreateTestDTO";
+
 export default function CreatingTestPage() {
   const [numberOfQuestionsPart1, setNumberOfQuestionsPart1] = useState(1);
   const [numberOfQuestionsPart2, setNumberOfQuestionsPart2] = useState(1);
@@ -64,13 +68,132 @@ export default function CreatingTestPage() {
     }
   };
 
+  const [isMiniTest, setIsMiniTest] = useState(false);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [createdBy, setCreatedBy] = useState("");
+  const [mainAudio, setMainAudio] = useState<File | null>(null);
+  const [difficulty, setDifficulty] = useState("");
+  const [questions, setQuestions] = useState<Question[]>(
+    Array.from({ length: 200 }, (_, i) => ({
+      text: "",
+      images: [],
+      passages: [],
+      choices: [],
+      correct_choice: 1,
+      explanation: "",
+      part: i + 1,
+      question_number: i + 1,
+      question_group_number: 0,
+    }))
+  );
+  const [triggerSave, setTriggerSave] = useState(false);
+
+  const handleQuestionsCreated = (newQuestions: Question[]) => {
+    newQuestions.forEach((question) => {
+      questions[question.question_number - 1] = question;
+    });
+  };
+
+  const handleCreateTest = async () => {
+    setTriggerSave(true);
+    const newTest: CreateTestDTO = {
+      title,
+      description,
+      main_audio: mainAudio ? URL.createObjectURL(mainAudio) : "example.mp3",
+      isMiniTest,
+      created_by: createdBy,
+      difficulty: "easy",
+      questions,
+    };
+
+    try {
+      console.log("Creating test:", newTest);
+      const response = await testService.createTest(newTest);
+      if (response.EC === 0) {
+        alert("Test created successfully");
+      } else {
+        alert("Failed to create test: " + response.EM);
+        setQuestions(
+          Array.from({ length: 200 }, (_, i) => ({
+            text: "",
+            images: [],
+            passages: [],
+            choices: [],
+            correct_choice: 1,
+            explanation: "",
+            part: i + 1,
+            question_number: i + 1,
+            question_group_number: 0,
+          }))
+        );
+      }
+    } catch (error) {
+      console.error("Error creating test:", error);
+      alert("An error occurred while creating the test");
+    }
+    setTriggerSave(false);
+  };
+
+  useEffect(() => {
+    setTriggerSave(true);
+    setTriggerSave(false);
+  }, [
+    numberOfQuestionsPart1,
+    numberOfQuestionsPart2,
+    questionGroupsPart3,
+    questionGroupsPart4,
+    numberOfQuestionsPart5,
+    questionGroupsPart6,
+    questionGroupsPart7,
+  ]);
+
   return (
     <div className="w-full min-h-screen rounded-xl bg-white text-black flex flex-col gap-4 p-4">
+      <div className="flex gap-2 items-center">
+        <p className="text-2xl font-bold">Title:</p>
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+      </div>
+      <div className="flex gap-2 items-center">
+        <p className="text-2xl font-bold">Description:</p>
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+      </div>
+      <div className="flex gap-2 items-center">
+        <p className="text-2xl font-bold">Created by:</p>
+        <input
+          type="text"
+          value={createdBy}
+          onChange={(e) => setCreatedBy(e.target.value)}
+        />
+      </div>
+      <div className="flex gap-2 items-center">
+        <p className="text-2xl font-bold">Difficulty:</p>
+        <input
+          type="text"
+          value={difficulty}
+          onChange={(e) => setDifficulty(e.target.value)}
+        />
+      </div>
+      <div className="flex gap-2 items-center">
+        <p className="text-2xl font-bold">Is mini test:</p>
+        <input
+          type="checkbox"
+          checked={isMiniTest}
+          onChange={(e) => setIsMiniTest(e.target.checked)}
+        />
+      </div>
       <div className="audio flex gap-2 items-center">
         <p className="text-2xl font-bold">Listening Audio:</p>
         <input type="file" accept="audio/*" />
       </div>
-      <div className="part-1 flex flex-col gap-2 border-b border-black">
+      <div className="part-1 flex flex-col gap-2">
         <p className="text-2xl font-bold">Part 1</p>
         <CreatingQuestionGroup
           part={1}
@@ -83,9 +206,11 @@ export default function CreatingTestPage() {
             setNumberOfQuestionsPart1(numberOfQuestionsPart1 - 1);
             console.log("question deleted");
           }}
+          onQuestionsCreated={handleQuestionsCreated}
+          triggerSave={triggerSave}
         />
       </div>
-      <div className="part-2 flex flex-col gap-2 border-b border-black">
+      <div className="part-2 flex flex-col gap-2">
         <p className="text-2xl font-bold">Part 2</p>
         <CreatingQuestionGroup
           part={2}
@@ -96,12 +221,17 @@ export default function CreatingTestPage() {
           onQuestionDeleted={() => {
             setNumberOfQuestionsPart2(numberOfQuestionsPart2 - 1);
           }}
+          onQuestionsCreated={handleQuestionsCreated}
+          triggerSave={triggerSave}
         />
       </div>
-      <div className="part-3 flex flex-col gap-2 border-b border-black">
+      <div className="part-3 flex flex-col gap-2">
         <p className="text-2xl font-bold">Part 3</p>
         {questionGroupsPart3.map((questionGroup, index) => (
-          <div className="relative" key={questionGroup.id}>
+          <div
+            className="flex justify-between items-start"
+            key={questionGroup.id}
+          >
             <div className="w-5/6">
               <CreatingQuestionGroup
                 part={3}
@@ -136,6 +266,8 @@ export default function CreatingTestPage() {
                     ...questionGroupsPart3.slice(index + 1),
                   ]);
                 }}
+                onQuestionsCreated={handleQuestionsCreated}
+                triggerSave={triggerSave}
               />
             </div>
             <Button
@@ -145,13 +277,11 @@ export default function CreatingTestPage() {
               }}
               style={{
                 backgroundColor: "#F44336",
+                width: "fit-content",
                 fontSize: "0.8rem",
-                position: "absolute",
-                top: 0,
-                right: 0,
               }}
             >
-              Delete group
+              Delete question group
             </Button>
           </div>
         ))}
@@ -171,10 +301,13 @@ export default function CreatingTestPage() {
           Add question group
         </Button>
       </div>
-      <div className="part-4 flex flex-col gap-2 border-b border-black">
+      <div className="part-4 flex flex-col gap-2">
         <p className="text-2xl font-bold">Part 4</p>
         {questionGroupsPart4.map((questionGroup, index) => (
-          <div className="relative" key={questionGroup.id}>
+          <div
+            className="flex justify-between items-start"
+            key={questionGroup.id}
+          >
             <div className="w-5/6">
               <CreatingQuestionGroup
                 key={questionGroup.id}
@@ -214,6 +347,8 @@ export default function CreatingTestPage() {
                     ...questionGroupsPart4.slice(index + 1),
                   ]);
                 }}
+                onQuestionsCreated={handleQuestionsCreated}
+                triggerSave={triggerSave}
               />
             </div>
             <Button
@@ -225,12 +360,9 @@ export default function CreatingTestPage() {
                 backgroundColor: "#F44336",
                 width: "fit-content",
                 fontSize: "0.8rem",
-                position: "absolute",
-                top: 0,
-                right: 0,
               }}
             >
-              Delete group
+              Delete question group
             </Button>
           </div>
         ))}
@@ -250,7 +382,7 @@ export default function CreatingTestPage() {
           Add question group
         </Button>
       </div>
-      <div className="part-5 flex flex-col gap-2 border-b border-black">
+      <div className="part-5 flex flex-col gap-2">
         <p className="text-2xl font-bold">Part 5</p>
         <CreatingQuestionGroup
           part={5}
@@ -273,12 +405,17 @@ export default function CreatingTestPage() {
           onQuestionDeleted={() => {
             setNumberOfQuestionsPart5(numberOfQuestionsPart5 - 1);
           }}
+          onQuestionsCreated={handleQuestionsCreated}
+          triggerSave={triggerSave}
         />
       </div>
-      <div className="part-6 flex flex-col gap-2 border-b border-black">
+      <div className="part-6 flex flex-col gap-2">
         <p className="text-2xl font-bold">Part 6</p>
         {questionGroupsPart6.map((questionGroup, index) => (
-          <div className="relative" key={questionGroup.id}>
+          <div
+            className="flex justify-between items-start"
+            key={questionGroup.id}
+          >
             <div className="w-5/6">
               <CreatingQuestionGroup
                 key={questionGroup.id}
@@ -323,6 +460,8 @@ export default function CreatingTestPage() {
                     ...questionGroupsPart6.slice(index + 1),
                   ]);
                 }}
+                onQuestionsCreated={handleQuestionsCreated}
+                triggerSave={triggerSave}
               />
             </div>
             <Button
@@ -334,12 +473,9 @@ export default function CreatingTestPage() {
                 backgroundColor: "#F44336",
                 width: "fit-content",
                 fontSize: "0.8rem",
-                position: "absolute",
-                top: 0,
-                right: 0,
               }}
             >
-              Delete group
+              Delete question group
             </Button>
           </div>
         ))}
@@ -359,10 +495,13 @@ export default function CreatingTestPage() {
           Add question group
         </Button>
       </div>
-      <div className="part-7 flex flex-col gap-2 border-b border-black">
+      <div className="part-7 flex flex-col gap-2">
         <p className="text-2xl font-bold">Part 7</p>
         {questionGroupsPart7.map((questionGroup, index) => (
-          <div className="relative" key={questionGroup.id}>
+          <div
+            className="flex justify-between items-start"
+            key={questionGroup.id}
+          >
             <div className="w-5/6">
               <CreatingQuestionGroup
                 key={questionGroup.id}
@@ -411,6 +550,8 @@ export default function CreatingTestPage() {
                     ...questionGroupsPart7.slice(index + 1),
                   ]);
                 }}
+                onQuestionsCreated={handleQuestionsCreated}
+                triggerSave={triggerSave}
               />
             </div>
             <Button
@@ -422,12 +563,9 @@ export default function CreatingTestPage() {
                 backgroundColor: "#F44336",
                 width: "fit-content",
                 fontSize: "0.8rem",
-                position: "absolute",
-                top: 0,
-                right: 0,
               }}
             >
-              Delete group
+              Delete question group
             </Button>
           </div>
         ))}
@@ -454,6 +592,7 @@ export default function CreatingTestPage() {
           width: "fit-content",
           margin: "auto",
         }}
+        onClick={handleCreateTest}
       >
         Create
       </Button>
