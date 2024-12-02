@@ -1,12 +1,13 @@
 import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
-
+// use global state to store if user click the Save all questions button, if it's true, then call onQuestionCreated for all questions
 export default function CreatingQuestion({
   part,
   questionNumber,
   questionGroupNumber,
   images,
   paragraphs,
+  onQuestionCreated,
 }: {
   part: number;
   questionNumber: number;
@@ -14,6 +15,7 @@ export default function CreatingQuestion({
   //for question group: if this is the first question of questionGroup, store images and paragraphs[] to this question
   images?: string[];
   paragraphs?: string[];
+  onQuestionCreated: () => void; // parameter is the question object (havent implemented yet)
 }) {
   const [isEditing, setIsEditing] = useState(true);
   const [correctOption, setCorrectOption] = useState(1);
@@ -31,7 +33,7 @@ export default function CreatingQuestion({
   return (
     <form className="w-full flex flex-col gap-2">
       <div className="flex gap-4 items-center">
-        <p className="text-xl font-semibold">Question {questionNumber}:</p>
+        <p className="text-xl font-medium">Question {questionNumber}:</p>
         {part === 1 ? (
           <input disabled={!isEditing} type="file" accept="image/*" />
         ) : (part > 2 && part < 6) || part === 7 ? (
@@ -78,7 +80,7 @@ export default function CreatingQuestion({
       </div>
       <textarea
         disabled={!isEditing}
-        className="w-full"
+        className="w-full border border-gray-400 p-2 rounded-lg"
         placeholder="Explanation"
       />
       <Button

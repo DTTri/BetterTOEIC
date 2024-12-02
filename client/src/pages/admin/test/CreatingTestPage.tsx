@@ -70,7 +70,7 @@ export default function CreatingTestPage() {
         <p className="text-2xl font-bold">Listening Audio:</p>
         <input type="file" accept="audio/*" />
       </div>
-      <div className="part-1 flex flex-col gap-2">
+      <div className="part-1 flex flex-col gap-2 border-b border-black">
         <p className="text-2xl font-bold">Part 1</p>
         <CreatingQuestionGroup
           part={1}
@@ -85,7 +85,7 @@ export default function CreatingTestPage() {
           }}
         />
       </div>
-      <div className="part-2 flex flex-col gap-2">
+      <div className="part-2 flex flex-col gap-2 border-b border-black">
         <p className="text-2xl font-bold">Part 2</p>
         <CreatingQuestionGroup
           part={2}
@@ -98,13 +98,10 @@ export default function CreatingTestPage() {
           }}
         />
       </div>
-      <div className="part-3 flex flex-col gap-2">
+      <div className="part-3 flex flex-col gap-2 border-b border-black">
         <p className="text-2xl font-bold">Part 3</p>
         {questionGroupsPart3.map((questionGroup, index) => (
-          <div
-            className="flex justify-between items-start"
-            key={questionGroup.id}
-          >
+          <div className="relative" key={questionGroup.id}>
             <div className="w-5/6">
               <CreatingQuestionGroup
                 part={3}
@@ -148,11 +145,13 @@ export default function CreatingTestPage() {
               }}
               style={{
                 backgroundColor: "#F44336",
-                width: "fit-content",
                 fontSize: "0.8rem",
+                position: "absolute",
+                top: 0,
+                right: 0,
               }}
             >
-              Delete question group
+              Delete group
             </Button>
           </div>
         ))}
@@ -172,13 +171,10 @@ export default function CreatingTestPage() {
           Add question group
         </Button>
       </div>
-      <div className="part-4 flex flex-col gap-2">
+      <div className="part-4 flex flex-col gap-2 border-b border-black">
         <p className="text-2xl font-bold">Part 4</p>
         {questionGroupsPart4.map((questionGroup, index) => (
-          <div
-            className="flex justify-between items-start"
-            key={questionGroup.id}
-          >
+          <div className="relative" key={questionGroup.id}>
             <div className="w-5/6">
               <CreatingQuestionGroup
                 key={questionGroup.id}
@@ -229,9 +225,12 @@ export default function CreatingTestPage() {
                 backgroundColor: "#F44336",
                 width: "fit-content",
                 fontSize: "0.8rem",
+                position: "absolute",
+                top: 0,
+                right: 0,
               }}
             >
-              Delete question group
+              Delete group
             </Button>
           </div>
         ))}
@@ -251,7 +250,7 @@ export default function CreatingTestPage() {
           Add question group
         </Button>
       </div>
-      <div className="part-5 flex flex-col gap-2">
+      <div className="part-5 flex flex-col gap-2 border-b border-black">
         <p className="text-2xl font-bold">Part 5</p>
         <CreatingQuestionGroup
           part={5}
@@ -276,13 +275,10 @@ export default function CreatingTestPage() {
           }}
         />
       </div>
-      <div className="part-6 flex flex-col gap-2">
+      <div className="part-6 flex flex-col gap-2 border-b border-black">
         <p className="text-2xl font-bold">Part 6</p>
         {questionGroupsPart6.map((questionGroup, index) => (
-          <div
-            className="flex justify-between items-start"
-            key={questionGroup.id}
-          >
+          <div className="relative" key={questionGroup.id}>
             <div className="w-5/6">
               <CreatingQuestionGroup
                 key={questionGroup.id}
@@ -338,9 +334,12 @@ export default function CreatingTestPage() {
                 backgroundColor: "#F44336",
                 width: "fit-content",
                 fontSize: "0.8rem",
+                position: "absolute",
+                top: 0,
+                right: 0,
               }}
             >
-              Delete question group
+              Delete group
             </Button>
           </div>
         ))}
@@ -360,13 +359,10 @@ export default function CreatingTestPage() {
           Add question group
         </Button>
       </div>
-      <div className="part-7 flex flex-col gap-2">
+      <div className="part-7 flex flex-col gap-2 border-b border-black">
         <p className="text-2xl font-bold">Part 7</p>
         {questionGroupsPart7.map((questionGroup, index) => (
-          <div
-            className="flex justify-between items-start"
-            key={questionGroup.id}
-          >
+          <div className="relative" key={questionGroup.id}>
             <div className="w-5/6">
               <CreatingQuestionGroup
                 key={questionGroup.id}
@@ -426,9 +422,12 @@ export default function CreatingTestPage() {
                 backgroundColor: "#F44336",
                 width: "fit-content",
                 fontSize: "0.8rem",
+                position: "absolute",
+                top: 0,
+                right: 0,
               }}
             >
-              Delete question group
+              Delete group
             </Button>
           </div>
         ))}

@@ -8,7 +8,9 @@ import {
 import { Button, ThemeProvider } from "@mui/material";
 import { adminTableTheme } from "@/context";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import { useNavigate } from "react-router-dom";
 export default function TestManagementPage() {
+  const nav = useNavigate();
   const columns: GridColDef[] = [
     {
       field: "_id",
@@ -98,7 +100,14 @@ export default function TestManagementPage() {
         </ThemeProvider>
       </div>
       <div className="buttons flex gap-2 justify-end">
-        <Button variant="contained">Create Test</Button>
+        <Button
+          variant="contained"
+          onClick={() => {
+            nav("/admin/test/creatingTest");
+          }}
+        >
+          Create Test
+        </Button>
       </div>
     </div>
   );

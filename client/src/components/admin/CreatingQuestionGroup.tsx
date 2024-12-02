@@ -34,7 +34,7 @@ export default function CreatingQuestionGroup({
   };
 
   return (
-    <div className="w-full flex flex-col gap-2 py-2 border-b-2 border-black">
+    <div className="w-full flex flex-col gap-2 py-2 border-b border-gray-400">
       {part === 7 ? (
         <input
           type="file"
@@ -70,8 +70,8 @@ export default function CreatingQuestionGroup({
         />
       </div>
       {questions.slice(1).map((question, index) => (
-        <div key={question.id} className="flex justify-between items-start">
-          <div className="w-2/3">
+        <div key={question.id} className="relative">
+          <div className="w-full">
             <CreatingQuestion
               part={part}
               questionNumber={index + questionNumberFrom + 1}
@@ -80,7 +80,12 @@ export default function CreatingQuestionGroup({
           </div>
           <Button
             variant="contained"
-            style={{ backgroundColor: "#F44336" }}
+            style={{
+              backgroundColor: "#F44336",
+              position: "absolute",
+              top: 0,
+              right: 0,
+            }}
             onClick={() => deleteQuestion(question.id)}
           >
             Delete
