@@ -232,8 +232,8 @@ function App() {
         console.log(response);
         if (response.EC === 0) {
           sUser.set((prev) => (prev.value.users = response.DT));
-          const curUser = localStorage.getItem('_id');
-          if(curUser){
+          const curUser = localStorage.getItem('_id') || sessionStorage.getItem('_id');
+          if(curUser && curUser !== '') {
             response.DT.forEach((user: any) => {
               if (user._id === curUser) {
                 sUser.set((prev) => (prev.value.info = user));
