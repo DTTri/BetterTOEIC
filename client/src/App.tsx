@@ -37,7 +37,7 @@ import TestsSavedPage from "./pages/personal/TestsSavedPage";
 import WordSavedPage from "./pages/personal/WordsSavedPage";
 import UserLayout from "./pages/UserLayout";
 import { useEffect } from "react";
-import { testService, userService } from "./services";
+import { forumService, testService, userService } from "./services";
 import VocabCardGallery from "./pages/vocab/VocabCardGalleryPage";
 import VocabLearingPage from "./pages/vocab/VocabLearingPage";
 import { sCreatingPersonalRoadmap, sRoadmap, sUser, sVocab } from "./store";
@@ -48,9 +48,45 @@ import { practiceStore } from "./store/practiceStore";
 import vocabService from "./services/vocabService";
 import VerifyEmailPage from "./pages/auth/VerifyEmailPage";
 import AuthLayout from "./pages/AuthLayout";
+import sForum from "./store/forumStore";
 
 function App() {
   useEffect(() => {
+    const fetchAllUsers = async () => {
+      try {
+        const response = await userService.getUsers();
+        console.log(response);
+        if (response.EC === 0) {
+          sUser.set((prev) => (prev.value.users = response.DT));
+          const curUser = localStorage.getItem('_id') || sessionStorage.getItem('_id');
+          if(curUser && curUser !== '') {
+            response.DT.forEach((user: any) => {
+              if (user._id === curUser) {
+                sUser.set((prev) => (prev.value.info = user));
+              }
+            });
+          }
+        } else {
+          console.log("Fail to fetch all users: ", response.EM);
+        }
+      } catch (error) {
+        console.log("Fail to fetch all users: ", error);
+      }
+    };
+
+    const fetchUsersPerBand = async () => {
+      try {
+        const response = await userService.getTotalUsersPerBand();
+        console.log(response);
+        if (response.EC === 0) {
+          sUser.set((prev) => (prev.value.usersPerBand = response.DT));
+        } else {
+          console.log("Fail to fetch users per band: ", response.EM);
+        }
+      } catch (error) {
+        console.log("Fail to fetch users per band: ", error);
+      }
+    };
     const fetchTests = async () => {
       try {
         const response = await testService.getTests();
@@ -226,41 +262,19 @@ function App() {
         console.log("Fail to fetch vocab history: ", error);
       }
     };
-    const fetchAllUsers = async () => {
+    const fetchForum = async () => {
       try {
-        const response = await userService.getUsers();
-        console.log(response);
+        const response = await forumService.getAllPosts();
         if (response.EC === 0) {
-          sUser.set((prev) => (prev.value.users = response.DT));
-          const curUser = localStorage.getItem('_id') || sessionStorage.getItem('_id');
-          if(curUser && curUser !== '') {
-            response.DT.forEach((user: any) => {
-              if (user._id === curUser) {
-                sUser.set((prev) => (prev.value.info = user));
-              }
-            });
-          }
+          console.log(response);
+          sForum.set((prev) => (prev.value.posts = response.DT));
         } else {
-          console.log("Fail to fetch all users: ", response.EM);
+          console.log("Fail to fetch forum: ", response.EM);
         }
       } catch (error) {
-        console.log("Fail to fetch all users: ", error);
+        console.log("Fail to fetch forum: ", error);
       }
-    };
-
-    const fetchUsersPerBand = async () => {
-      try {
-        const response = await userService.getTotalUsersPerBand();
-        console.log(response);
-        if (response.EC === 0) {
-          sUser.set((prev) => (prev.value.usersPerBand = response.DT));
-        } else {
-          console.log("Fail to fetch users per band: ", response.EM);
-        }
-      } catch (error) {
-        console.log("Fail to fetch users per band: ", error);
-      }
-    };
+    }
     Promise.all([
       fetchTests(),
       fetchTestHistory(),
@@ -276,6 +290,7 @@ function App() {
       fetchVocabHistory(),
       fetchAllUsers(),
       fetchUsersPerBand(),
+      fetchForum(),
     ]);
   }, []);
 

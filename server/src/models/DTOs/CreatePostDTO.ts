@@ -1,7 +1,10 @@
-import User from "../User";
 
 type CreatePostDTO = {
-    creator: User;
+    creator: {
+        _id: string;
+        username: string;
+        avatar: string;
+    };
     content: string;
     contentImage?: string[];
 }

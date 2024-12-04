@@ -69,6 +69,21 @@ export default function LoginForm() {
     setShow(true);
   }, []);
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Enter') {
+        handleLogin();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [email, password, rememberMe]);
+
+
   console.log(rememberMe)
 
   return (

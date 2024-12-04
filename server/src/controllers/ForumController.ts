@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import { Comment, Post } from "~/models";
-import { CreatePostDTO } from "~/models/DTOs";
+import { CreateCommentDTO, CreatePostDTO } from "~/models/DTOs";
 import { Request, Response } from 'express';
 import { forumMiddlewareInstance } from "~/middlewares/ForumMiddleware";
 import { forumServiceInstance } from "~/services/ForumService";
@@ -10,10 +10,10 @@ class ForumController {
         try {
             const createdPostDTO: CreatePostDTO = req.body;
             const newPost: Post = {
+                _id: new ObjectId(),
                 ...createdPostDTO,
                 comments: [],
                 totalLike: 0,
-                _id: new ObjectId(),
                 created_at: new Date().toISOString(),
                 updated_at: new Date().toISOString()
             };
@@ -131,7 +131,7 @@ class ForumController {
                 });
                 return;
             }
-            const result = await forumServiceInstance.likePost(postId);
+            const result = await forumServiceInstance.likePost(postId, req.body.isLike);
             if(result){
                 res.status(200).json({
                     EM: 'Post liked successfully',
@@ -195,8 +195,9 @@ class ForumController {
                 });
                 return;
             }
+            const createdComment: CreateCommentDTO = req.body;
             const newComment: Comment = {
-                ...req.body,
+                ...createdComment,
                 _id: new ObjectId(),
                 totalLike: 0,
                 created_at: new Date().toISOString(),
@@ -305,7 +306,7 @@ class ForumController {
                 });
                 return;
             }
-            const result = await forumServiceInstance.likeComment(postId, commentId);
+            const result = await forumServiceInstance.likeComment(postId, commentId, req.body.isLike);
             if(result){
                 res.status(201).json({
                     EM: 'Comment liked successfully',

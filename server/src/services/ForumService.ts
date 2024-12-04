@@ -31,11 +31,15 @@ class ForumService {
     }
     return null;
   }
-  async likePost(postId: string): Promise<boolean> {
+  async likePost(postId: string, isLike: boolean): Promise<boolean> {
     const result = await collections.posts?.findOne( { _id: new ObjectId(postId) });
     const foundPost = result as Post;
     if(result){
-      foundPost.totalLike += 1;
+      if(isLike){
+        foundPost.totalLike += 1;
+      } else {
+        foundPost.totalLike -= 1;
+      }
       const likeResult = await collections.posts?.updateOne(
         { _id: new ObjectId(postId) },
         { $set: { totalLike: foundPost.totalLike, updated_at: new Date().toISOString() } }
@@ -59,7 +63,7 @@ class ForumService {
     }
     return false;
   }
-  async likeComment(postId: string, commentId: string): Promise<boolean> {
+  async likeComment(postId: string, commentId: string, isLike: boolean): Promise<boolean> {
     const result = await collections.posts?.findOne(
       { _id: new ObjectId(postId) },
     ) ;
@@ -67,7 +71,11 @@ class ForumService {
     if (foundPost){
         const commentIndex = foundPost.comments.findIndex((comment) => comment._id.toString() === commentId);
         if (commentIndex !== -1) {
-          foundPost.comments[commentIndex].totalLike += 1;
+          if(isLike){
+            foundPost.comments[commentIndex].totalLike += 1;
+          } else {
+            foundPost.comments[commentIndex].totalLike -= 1;
+          }
         }
         const result = await collections.posts?.updateOne(
           { _id: new ObjectId(postId) },

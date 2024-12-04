@@ -1,7 +1,6 @@
-import { ObjectId } from 'mongodb';
 
 type Comment = {
-    _id: ObjectId;
+    _id: string;
     content: string;
     creator: {
         _id: string;
@@ -12,5 +11,4 @@ type Comment = {
     created_at: string;
     updated_at: string;
 }
-
 export default Comment;
