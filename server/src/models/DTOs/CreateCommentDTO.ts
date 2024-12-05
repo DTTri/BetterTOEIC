@@ -1,7 +1,11 @@
 import User from "../User";
 
 type CreateCommentDTO = {
-    user: User
+    creator: {
+        _id: string;
+        username: string;
+        avatar: string;
+    };
     content: string;
 }
 

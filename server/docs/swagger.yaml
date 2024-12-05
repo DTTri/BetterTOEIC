@@ -1558,7 +1558,12 @@ components:
         _id:
           type: string
         creator:
-          $ref: '#/components/schemas/User'
+          id:
+            type: string
+          name:
+            type: string
+          avatar:
+            type: string
         content:
           type: string
         contentImage:
@@ -1579,7 +1584,12 @@ components:
       type: object
       properties:
         creator:
-          $ref: '#/components/schemas/User'
+          id:
+            type: string
+          name:
+            type: string
+          avatar:
+            type: string
         content:
           type: string
         contentImage:
@@ -1596,7 +1606,12 @@ components:
         totalLike:
           type: integer
         creator:
-          $ref: '#/components/schemas/User'
+          id:
+            type: string
+          name:
+            type: string
+          avatar:
+            type: string
         created_at:
           type: string
         updated_at:
@@ -1607,4 +1622,9 @@ components:
         content:
           type: string
         creator:
-          $ref: '#/components/schemas/User'
+          id:
+            type: string
+          name:
+            type: string
+          avatar:
+            type: string

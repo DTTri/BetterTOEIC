@@ -5,26 +5,16 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import CommentIcon from "@mui/icons-material/Comment";
 import { Post } from "@/entities";
 import { Link } from "react-router-dom";
-import OptionsComponent from "./OptionsComponent";
+import { sUser } from "@/store";
 
 
 export default function PostComponent({ post }: { post: Post }) {
-  const [showOptions, setShowOptions] = useState(false);
-
+  
   return (
     <Link
-      to={`/post-detail/${post.postID}`}
-      className="relative shadow-md max-w-[750px] py-8 px-9 w-full bg-[#fff] rounded-[15px]"
+      to={`/post-detail/${post._id}`}
+      className="relative shadow-md max-w-[750px] py-6 px-7 w-full bg-[#fff] rounded-[15px]"
     >
-      <MoreVertIcon
-        onClick={(e) => {
-          e.stopPropagation();
-          e.preventDefault();
-          setShowOptions(!showOptions);
-        }}
-        className="absolute z-10 top-4 right-5 text-gray-400 cursor-pointer hover:bg-slate-100"
-      />
-      {showOptions && <OptionsComponent />}
       <div className="first w-full flex flex-row items-center mb-4">
         <Avatar
           style={{ width: "45px", height: "45px" }}
@@ -32,18 +22,24 @@ export default function PostComponent({ post }: { post: Post }) {
           src={post.creator.avatar}
         />
         <div className="flex-1 flex flex-col ml-2">
-          <h2 className="text-[16px] font-semibold">{post.creator.username}</h2>
-          <span>{post.created_at}</span>
+          <h2 className="text-[18px] font-semibold">{post.creator.username}</h2>
+            <span className="text-[14px] font-medium">
+            {new Date(post.created_at).toLocaleString([], { hour: '2-digit', minute: '2-digit', hour12: true })}, {new Date(post.created_at).toLocaleDateString()}
+            </span>
         </div>
       </div>
       <div className="content mb-4">
-        <p className="text-[18px] text-[#000] font-bold mb-1 ">{post.title}</p>
         <p
-          className="overflow-hidden text-ellipsis text-nowrap text-[14px] text-[#000] font-normal "
+          className="overflow-hidden text-ellipsis text-nowrap text-[16px] text-[#000] font-normal "
           style={{ WebkitLineClamp: "1" }}
         >
           {post.content}
         </p>
+        <div className="images w-full overflow-auto flex flex-row gap-3 mt-2">
+          {post.contentImage.map((image, index) => (
+            <img key={index} src={image} alt='image' className="w-[120px] h-[120px] object-cover rounded-[6px] hover:shadow-gray-800 cursor-pointer"/>)
+          )}
+        </div>
       </div>
       <div className="react flex flex-row items-center gap-6">
         <div className="flex flex-row items-center gap-1">

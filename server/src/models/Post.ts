@@ -1,14 +1,17 @@
 import { ObjectId } from 'mongodb';
-import User from './User';
 import Comment from './Comment';
 
 type Post = {
     _id: ObjectId;
-    creator: User;
+    creator: {
+        _id: string;
+        username: string;
+        avatar: string;
+    };
     content: string;
     contentImage?: string[];
     totalLike: number;
-     comments: Comment[];
+    comments: Comment[];
     created_at: string;
     updated_at: string;
 }

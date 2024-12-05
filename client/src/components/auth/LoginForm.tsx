@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import google_icon from '@/assets/google_icon.svg';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import authService from '@/services/authService';
+import { sUser } from '@/store';
 
 export default function LoginForm() {
   const [email, setEmail] = React.useState('');
@@ -33,6 +34,13 @@ export default function LoginForm() {
         sessionStorage.setItem('token', response.DT.accessToken);
         console.log(response.DT);
         localStorage.setItem('_id', response.DT._id);
+        if(response.DT._id && response.DT._id !== '') {
+          sUser.value.users.forEach((user: any) => {
+            if (user._id === response.DT._id) {
+              sUser.set((prev) => (prev.value.info = user));
+            }
+          });
+        }
         nav('/');
       }
       else{
@@ -60,6 +68,21 @@ export default function LoginForm() {
   useEffect(() => {
     setShow(true);
   }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Enter') {
+        handleLogin();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [email, password, rememberMe]);
+
 
   console.log(rememberMe)
 

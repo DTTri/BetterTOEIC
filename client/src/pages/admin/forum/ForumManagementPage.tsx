@@ -6,14 +6,29 @@ import {
 } from "@mui/x-data-grid";
 import { Button, ThemeProvider } from "@mui/material";
 import { adminTableTheme } from "@/context";
-import { posts } from "@/data";
 import { Post } from "@/entities";
-import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import sForum from "@/store/forumStore";
+import { useEffect, useState } from "react";
+import LoadingProgress from "@/components/LoadingProgress";
+import { forumService } from "@/services";
 export default function ForumManagementPage() {
+  const forumStore = sForum.use((cur) => cur.posts);
+  const [posts, setPosts] = useState<Post[]>(forumStore);
+
+  useEffect(() => {
+    if (forumStore.length > 0) {
+      setPosts(forumStore);
+    }
+  }, [forumStore]);
+
+  if (!posts) {
+    return <LoadingProgress />;
+  }
+
   const columns: GridColDef[] = [
     {
-      field: "postID",
+      field: "_id",
       headerName: "ID",
       flex: 0.5,
       align: "center",
@@ -50,6 +65,9 @@ export default function ForumManagementPage() {
       align: "center",
       headerAlign: "center",
       flex: 1,
+      valueGetter: (value, row) => {
+        return row.comments.length;
+      },
     },
     {
       field: "created_at",
@@ -75,24 +93,28 @@ export default function ForumManagementPage() {
         <GridActionsCellItem
           icon={<DeleteForeverIcon />}
           label="Delete"
-          onClick={() => {
+          onClick={async () => {
             console.log("Deleted: ", params.row);
             // Add delete logic here
-          }}
-        />,
-        <GridActionsCellItem
-          icon={<ModeEditOutlineIcon />}
-          label="Edit"
-          onClick={() => {
-            console.log(params.row);
-            // Add edit logic here
+            try {
+              const response = await forumService.deletePost(params.row._id);
+              if (response.EC === 0) {
+                setPosts((prev) =>
+                  prev.filter((post) => post._id !== params.row._id)
+                );
+              } else {
+                console.log("Error deleting post: ", response.EM);
+              }
+            } catch (error) {
+              console.log("Error deleting post: ", error);
+            }
           }}
         />,
       ],
     },
   ];
+
   // Map the posts array to rows
-  const rows: Post[] = posts;
   return (
     <div className="w-full h-screen p-4 flex flex-col gap-2 max-h-screen overflow-hidden bg-background">
       <h2 className="text-2xl font-bold text-black">Posts List</h2>
@@ -103,9 +125,9 @@ export default function ForumManagementPage() {
               borderRadius: "20px",
               backgroundColor: "white",
             }}
-            rows={rows}
+            rows={posts}
             columns={columns}
-            getRowId={(row) => row.postID} // Specify custom id for each row
+            getRowId={(row) => row._id} // Specify custom id for each row
             initialState={{
               pagination: {
                 paginationModel: {

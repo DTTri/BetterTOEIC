@@ -22,10 +22,12 @@ export default function Header() {
   const [userInfo, setUserInfo] = useState<User>(user);
   
   useEffect(() => {
-    if(user._id && user._id !== '') {
+    if(user._id !== '') {
       setUserInfo(user);
     }
   }, [user._id]);
+
+  console.log("userInfo:", userInfo); // Add this line to log userInfo
   
   useEffect(() => {
     const headerPaths = ['/log-out', '/user-info', '/user-report', '/test-saved', '/word-saved'];
@@ -40,6 +42,7 @@ export default function Header() {
       localStorage.removeItem('token');
       localStorage.removeItem('_id');
       sessionStorage.removeItem('token');
+      sUser.reset();
       nav('/login');
     }
     else if(e === 'user-info') {

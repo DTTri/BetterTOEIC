@@ -8,7 +8,7 @@ export default function PostSharing() {
               <div className="flex-1 px-5 py-2 bg-[#f3f2f2] rounded-2xl mx-4">
                   <span className='text-[16px] text-[#20222480] select-none'>Bạn có điều gì muốn chia sẻ không?</span>
               </div>
-              <Link to={''}>
+              <Link to={'create-post'}>
               <Button variant='contained' className='text-[#fff]' style={{backgroundColor: "#FE5507", borderRadius: '6px'}}>Tạo bài viết</Button></Link>
           </div>
       </div>

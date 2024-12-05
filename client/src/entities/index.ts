@@ -3,7 +3,7 @@ import RoadmapExercise from "./RoadmapExercise";
 import Question from "./Question";
 import RoadmapChapter from "./RoadmapChapter";
 import Post from "./Post";
-import { Comment, Creator } from "./Post";
+import Comment from "./Comment";
 import User from "./User";
 import Vocab from "./Vocab";
 import VocabByTopic from "./VocabByTopic";
@@ -18,12 +18,11 @@ export type {
   RoadmapChapter,
   Post,
   Comment,
-  Creator,
   User,
   Vocab,
   VocabByTopic,
   RoadmapHistory,
   CompletedTest,
   SavedVocab,
-  VocabHistory
+  VocabHistory,
 };
