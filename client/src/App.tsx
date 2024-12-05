@@ -409,6 +409,14 @@ function App() {
         }
       />
       <Route
+        path="/forum/create-post"
+        element={
+          <UserLayout haveFooter={false}>
+            <CreatingPostPage />
+          </UserLayout>
+        }
+      />
+      <Route
         path="/post-detail/:id"
         element={
           <UserLayout haveFooter={false}>

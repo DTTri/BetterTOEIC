@@ -38,10 +38,6 @@ class VocabMiddleware {
         notEmpty: true,
         errorMessage: 'Topic ID is required',
       },
-      completedVocabs: {
-        isArray: true,
-        errorMessage: 'Completed vocabs is required',
-      },
     }).run(req);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

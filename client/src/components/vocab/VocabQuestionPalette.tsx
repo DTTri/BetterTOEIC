@@ -1,3 +1,4 @@
+import { Button } from "@mui/material";
 import React, { useState, useEffect } from "react";
 
 export default function VocabQuestionPalette({
@@ -5,18 +6,20 @@ export default function VocabQuestionPalette({
   onQuestionSelectedChange,
   isRemembered,
   curQuestionNumber,
+  onSubmit
 }: {
   numberOfQuestions: number;
   onQuestionSelectedChange: (selectedQuestion: number) => void;
   isRemembered: boolean[];
   curQuestionNumber: number;
+  onSubmit: () => void;
 }) {
   return (
-    <div className="w-full px-8 py-6 bg-[#fff] rounded-2xl ">
-      <h3 className="text-2xl font-normal text-[#000] mb-3">
+    <div className="w-full px-8 py-3 bg-[#fff] rounded-2xl ">
+      <h3 className="text-2xl font-normal text-[#000] mb-2">
         Question Palette
       </h3>
-      <div className="flex flex-row gap-2 scroll-m-2 overflow-auto">
+      <div className="flex flex-row gap-2 scroll-m-2 overflow-auto mb-2">
         {Array.from(Array(numberOfQuestions).keys()).map((question, index) => (
           <div
             className="min-w-[32px] min-h-[32px] flex items-center justify-center text-sm bg-[#F6F6F6] rounded-[10px] text-center hover:bg-slate-300 cursor-pointer"
@@ -31,6 +34,9 @@ export default function VocabQuestionPalette({
             {index + 1}
           </div>
         ))}
+      </div>
+      <div className="flex flex-row justify-end">
+        <Button onClick={onSubmit} variant="contained" color="primary" style={ { background: "#00C552" }}>Submit</Button>
       </div>
     </div>
   );
