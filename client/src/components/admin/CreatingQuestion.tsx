@@ -72,6 +72,7 @@ export default function CreatingQuestion({
             disabled={!isEditing}
             type="text"
             onChange={(e) => setText(e.target.value)}
+            className="border border-gray-400 p-2 rounded-lg"
           />
         ) : null}
       </div>
@@ -86,6 +87,7 @@ export default function CreatingQuestion({
               newChoices[0] = e.target.value;
               setChoices(newChoices);
             }}
+            className="border border-gray-400 p-2 rounded-lg"
           />
           {correctOption !== 1 ? (
             <button className="ml-2" onClick={() => handleMarkCorrect(1)}>
@@ -103,6 +105,7 @@ export default function CreatingQuestion({
               newChoices[1] = e.target.value;
               setChoices(newChoices);
             }}
+            className="border border-gray-400 p-2 rounded-lg"
           />
           {correctOption !== 2 ? (
             <button className="ml-2" onClick={() => handleMarkCorrect(2)}>
@@ -120,6 +123,7 @@ export default function CreatingQuestion({
               newChoices[2] = e.target.value;
               setChoices(newChoices);
             }}
+            className="border border-gray-400 p-2 rounded-lg"
           />
           {correctOption !== 3 ? (
             <button className="ml-2" onClick={() => handleMarkCorrect(3)}>
@@ -137,6 +141,7 @@ export default function CreatingQuestion({
               newChoices[3] = e.target.value;
               setChoices(newChoices);
             }}
+            className="border border-gray-400 p-2 rounded-lg"
           />
           {correctOption !== 4 ? (
             <button className="ml-2" onClick={() => handleMarkCorrect(4)}>

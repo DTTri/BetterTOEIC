@@ -87,7 +87,7 @@ export default function CreatingTestPage() {
       question_group_number: 0,
     }))
   );
-  const [triggerSave, setTriggerSave] = useState(false);
+  const [triggerSave, setTriggerSave] = useState(false); // try using global state instead
 
   const handleQuestionsCreated = (newQuestions: Question[]) => {
     newQuestions.forEach((question) => {
@@ -135,18 +135,18 @@ export default function CreatingTestPage() {
     setTriggerSave(false);
   };
 
-  useEffect(() => {
-    setTriggerSave(true);
-    setTriggerSave(false);
-  }, [
-    numberOfQuestionsPart1,
-    numberOfQuestionsPart2,
-    questionGroupsPart3,
-    questionGroupsPart4,
-    numberOfQuestionsPart5,
-    questionGroupsPart6,
-    questionGroupsPart7,
-  ]);
+  // useEffect(() => {
+  //   setTriggerSave(true);
+  //   setTriggerSave(false);
+  // }, [
+  //   numberOfQuestionsPart1,
+  //   numberOfQuestionsPart2,
+  //   questionGroupsPart3,
+  //   questionGroupsPart4,
+  //   numberOfQuestionsPart5,
+  //   questionGroupsPart6,
+  //   questionGroupsPart7,
+  // ]);
 
   return (
     <div className="w-full min-h-screen rounded-xl bg-white text-black flex flex-col gap-4 p-4">

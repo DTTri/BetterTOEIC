@@ -29,8 +29,6 @@ export default function CreatingQuestionGroup({
   useEffect(() => {
     if (triggerSave) {
       onQuestionsCreated(createdQuestions);
-    } else {
-      onQuestionsCreated([]);
     }
   }, [triggerSave, createdQuestions]);
 
