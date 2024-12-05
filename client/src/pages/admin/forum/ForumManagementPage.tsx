@@ -113,9 +113,8 @@ export default function ForumManagementPage() {
       ],
     },
   ];
-  console.log(posts);
+
   // Map the posts array to rows
-  const rows: Post[] = posts.map((post) => post);
   return (
     <div className="w-full h-screen p-4 flex flex-col gap-2 max-h-screen overflow-hidden bg-background">
       <h2 className="text-2xl font-bold text-black">Posts List</h2>
@@ -126,9 +125,9 @@ export default function ForumManagementPage() {
               borderRadius: "20px",
               backgroundColor: "white",
             }}
-            rows={rows}
+            rows={posts}
             columns={columns}
-            getRowId={(row) => row.postID} // Specify custom id for each row
+            getRowId={(row) => row._id} // Specify custom id for each row
             initialState={{
               pagination: {
                 paginationModel: {
