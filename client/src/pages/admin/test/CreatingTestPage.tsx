@@ -6,8 +6,10 @@ import testService from "@/services/testService";
 import { Question } from "@/entities";
 import CreateTestDTO from "@/entities/dtos/CreateTestDTO";
 import { sNewTest } from "@/store";
+import { useNavigate } from "react-router-dom";
 
 export default function CreatingTestPage() {
+  const nav = useNavigate();
   const [numberOfQuestionsPart1, setNumberOfQuestionsPart1] = useState(1);
   const [numberOfQuestionsPart2, setNumberOfQuestionsPart2] = useState(1);
   const [questionGroupsPart3, setQuestionGroupsPart3] = useState<
@@ -114,6 +116,7 @@ export default function CreatingTestPage() {
       const response = await testService.createTest(newTest);
       if (response.EC === 0) {
         alert("Test created successfully");
+        nav("/admin/tests");
       } else {
         alert("Failed to create test: " + response.EM);
         setQuestions(

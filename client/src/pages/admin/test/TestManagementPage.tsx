@@ -9,6 +9,7 @@ import { Button, ThemeProvider } from "@mui/material";
 import { adminTableTheme } from "@/context";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { useNavigate } from "react-router-dom";
+import { testStore } from "@/store/testStore";
 export default function TestManagementPage() {
   const nav = useNavigate();
   const columns: GridColDef[] = [
@@ -72,7 +73,7 @@ export default function TestManagementPage() {
     },
   ];
 
-  const rows = testList;
+  const rows = testStore.use((v) => v.testList);
   return (
     <div className="w-full h-screen rounded-xl p-4 flex flex-col gap-2 max-h-screen overflow-hidden bg-background">
       <h2 className="text-2xl font-bold text-black">Tests List</h2>

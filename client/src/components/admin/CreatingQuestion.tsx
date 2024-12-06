@@ -96,7 +96,7 @@ export default function CreatingQuestion({
             }}
             className="border border-gray-400 p-2 rounded-lg"
           />
-          {correctOption !== 1 ? (
+          {correctOption !== 1 && isEditing ? (
             <button className="ml-2" onClick={() => handleMarkCorrect(1)}>
               Marked as Correct
             </button>
@@ -114,7 +114,7 @@ export default function CreatingQuestion({
             }}
             className="border border-gray-400 p-2 rounded-lg"
           />
-          {correctOption !== 2 ? (
+          {correctOption !== 2 && isEditing ? (
             <button className="ml-2" onClick={() => handleMarkCorrect(2)}>
               Marked as Correct
             </button>
@@ -132,7 +132,7 @@ export default function CreatingQuestion({
             }}
             className="border border-gray-400 p-2 rounded-lg"
           />
-          {correctOption !== 3 ? (
+          {correctOption !== 3 && isEditing ? (
             <button className="ml-2" onClick={() => handleMarkCorrect(3)}>
               Marked as Correct
             </button>
@@ -150,7 +150,7 @@ export default function CreatingQuestion({
             }}
             className="border border-gray-400 p-2 rounded-lg"
           />
-          {correctOption !== 4 ? (
+          {correctOption !== 4 && isEditing ? (
             <button className="ml-2" onClick={() => handleMarkCorrect(4)}>
               Marked as Correct
             </button>

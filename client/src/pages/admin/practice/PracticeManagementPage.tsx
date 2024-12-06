@@ -9,7 +9,9 @@ import { adminTableTheme } from "@/context";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 import { practiceStore } from "@/store/practiceStore";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 export default function PracticeManagementPage() {
+  const nav = useNavigate();
   const [isTestList, setIsTestList] = useState(true);
   const practiceTestList = practiceStore.use((v) => v.practiceTestList);
   const practiceLessonList = practiceStore.use((v) => v.practiceLesson);
@@ -196,7 +198,14 @@ export default function PracticeManagementPage() {
         </ThemeProvider>
       </div>
       <div className="buttons flex gap-2 justify-end">
-        <Button variant="contained">Create exercise</Button>
+        <Button
+          variant="contained"
+          onClick={() => {
+            nav("creatingPracticeEx");
+          }}
+        >
+          Create exercise
+        </Button>
       </div>
     </div>
   );
