@@ -1,6 +1,7 @@
 import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Question } from "@/entities";
+import { sNewTest } from "@/store";
 
 export default function CreatingQuestion({
   part,
@@ -9,7 +10,6 @@ export default function CreatingQuestion({
   images,
   paragraphs,
   onQuestionCreated,
-  triggerSave,
 }: {
   part: number;
   questionNumber: number;
@@ -17,7 +17,6 @@ export default function CreatingQuestion({
   images?: string[];
   paragraphs?: string[];
   onQuestionCreated: (question: Question) => void;
-  triggerSave: boolean;
 }) {
   const [isEditing, setIsEditing] = useState(true);
   const [correctOption, setCorrectOption] = useState(1);
@@ -29,26 +28,34 @@ export default function CreatingQuestion({
     setCorrectOption(option);
   };
 
+  const isAllBlocked = sNewTest.use((v) => v.isSaved);
   useEffect(() => {
-    if (triggerSave) {
-      saveQuestion();
+    setIsEditing(true);
+    if (isAllBlocked) {
+      setIsEditing(false);
     }
-  }, [triggerSave, questionNumber]);
+  }, [isAllBlocked]);
 
-  const saveQuestion = () => {
-    const newQuestion: Question = {
-      text,
-      images,
-      passages: paragraphs,
-      choices,
-      correct_choice: correctOption,
-      explanation,
-      part,
-      question_number: questionNumber,
-      question_group_number: questionGroupNumber || 0,
-    };
-    onQuestionCreated(newQuestion);
-  };
+  useEffect(() => {
+    console.log("isAllBlocked", isAllBlocked);
+    if (!isEditing) {
+      const newQuestion: Question = {
+        text,
+        images,
+        passages: paragraphs,
+        choices,
+        correct_choice: correctOption,
+        explanation,
+        part,
+        question_number: questionNumber,
+        question_group_number: questionGroupNumber || 0,
+      };
+      console.log("Question created:", newQuestion);
+      onQuestionCreated(newQuestion);
+    } else {
+      sNewTest.set((v) => (v.value.isSaved = false));
+    }
+  }, [isEditing]);
 
   return (
     <form className="w-full flex flex-col gap-2">
@@ -166,10 +173,8 @@ export default function CreatingQuestion({
         onClick={(e) => {
           e.preventDefault();
           setIsEditing(!isEditing);
-          if (!isEditing) {
-            saveQuestion();
-          }
         }}
+        disabled={isAllBlocked}
       >
         {isEditing ? "Save" : "Edit"}
       </Button>

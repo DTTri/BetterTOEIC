@@ -3,19 +3,18 @@ import CreatingQuestion from "./CreatingQuestion";
 import { Button } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
 import { Question } from "@/entities";
+import { sNewTest } from "@/store";
 
 export default function CreatingQuestionGroup({
   part,
   questionNumberFrom,
   onQuestionsCreated,
-  triggerSave,
   onNewQuestionCreated,
   onQuestionDeleted,
 }: {
   part: number;
   questionNumberFrom: number;
   onQuestionsCreated: (questions: Question[]) => void;
-  triggerSave: boolean;
   onNewQuestionCreated: () => void;
   onQuestionDeleted: () => void;
 }) {
@@ -25,12 +24,18 @@ export default function CreatingQuestionGroup({
   const [images, setImages] = useState<string[]>([]);
   const [paragraphs, setParagraphs] = useState<string[]>([]);
   const [createdQuestions, setCreatedQuestions] = useState<Question[]>([]);
+  const [isChanged, setIsChanged] = useState(false);
+  const isAllBlocked = sNewTest.use((v) => v.isSaved);
+  useEffect(() => {
+    onQuestionsCreated(createdQuestions);
+    console.log("Questions created:", createdQuestions);
+  }, [isChanged]);
 
   useEffect(() => {
-    if (triggerSave) {
-      onQuestionsCreated(createdQuestions);
+    if (!isAllBlocked) {
+      setCreatedQuestions([]);
     }
-  }, [triggerSave, createdQuestions]);
+  }, [isAllBlocked]);
 
   const addQuestion = () => {
     setQuestions([
@@ -51,7 +56,15 @@ export default function CreatingQuestionGroup({
 
   const handleQuestionCreated = (question: Question) => {
     //console.log("Question created:", question);
-    setCreatedQuestions((prev) => [...prev, question]);
+    createdQuestions.forEach((createdQuestion, index) => {
+      if (createdQuestion.question_number === question.question_number) {
+        createdQuestions[index] = question;
+        setIsChanged(!isChanged);
+        return;
+      }
+    });
+    createdQuestions.push(question);
+    setIsChanged(!isChanged);
   };
 
   return (
@@ -88,7 +101,6 @@ export default function CreatingQuestionGroup({
           images={images}
           paragraphs={paragraphs}
           onQuestionCreated={handleQuestionCreated}
-          triggerSave={triggerSave}
         />
       </div>
       {questions.slice(1).map((question, index) => (
@@ -99,7 +111,6 @@ export default function CreatingQuestionGroup({
               questionNumber={index + questionNumberFrom + 1}
               questionGroupNumber={questionNumberFrom}
               onQuestionCreated={handleQuestionCreated}
-              triggerSave={triggerSave}
             />
           </div>
           <Button
@@ -111,6 +122,7 @@ export default function CreatingQuestionGroup({
               right: 0,
             }}
             onClick={() => deleteQuestion(question.id)}
+            disabled={isAllBlocked}
           >
             Delete
           </Button>
@@ -123,6 +135,7 @@ export default function CreatingQuestionGroup({
           width: "fit-content",
         }}
         onClick={addQuestion}
+        disabled={isAllBlocked}
       >
         Add question
       </Button>

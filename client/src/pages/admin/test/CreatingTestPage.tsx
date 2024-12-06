@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import testService from "@/services/testService";
 import { Question } from "@/entities";
 import CreateTestDTO from "@/entities/dtos/CreateTestDTO";
+import { sNewTest } from "@/store";
 
 export default function CreatingTestPage() {
   const [numberOfQuestionsPart1, setNumberOfQuestionsPart1] = useState(1);
@@ -74,29 +75,27 @@ export default function CreatingTestPage() {
   const [createdBy, setCreatedBy] = useState("");
   const [mainAudio, setMainAudio] = useState<File | null>(null);
   const [difficulty, setDifficulty] = useState("");
-  const [questions, setQuestions] = useState<Question[]>(
-    Array.from({ length: 200 }, (_, i) => ({
-      text: "",
-      images: [],
-      passages: [],
-      choices: [],
-      correct_choice: 1,
-      explanation: "",
-      part: i + 1,
-      question_number: i + 1,
-      question_group_number: 0,
-    }))
-  );
-  const [triggerSave, setTriggerSave] = useState(false); // try using global state instead
+  const [questions, setQuestions] = useState<Question[]>([]);
 
+  const isAllBlocked = sNewTest.use((v) => v.isSaved);
+  useEffect(() => {
+    if (!isAllBlocked) {
+      setQuestions([]);
+    }
+  }, [isAllBlocked]);
   const handleQuestionsCreated = (newQuestions: Question[]) => {
-    newQuestions.forEach((question) => {
-      questions[question.question_number - 1] = question;
+    newQuestions.forEach((newQuestion) => {
+      if (newQuestion.question_number > questions.length) {
+        questions.push(newQuestion);
+      } else {
+        questions[newQuestion.question_number - 1] = newQuestion;
+      }
     });
   };
-
+  const handleChangeBlockStatus = () => {
+    sNewTest.set((v) => (v.value.isSaved = !v.value.isSaved));
+  };
   const handleCreateTest = async () => {
-    setTriggerSave(true);
     const newTest: CreateTestDTO = {
       title,
       description,
@@ -106,7 +105,10 @@ export default function CreatingTestPage() {
       difficulty: "easy",
       questions,
     };
+    createTest(newTest);
+  };
 
+  const createTest = async (newTest: CreateTestDTO) => {
     try {
       console.log("Creating test:", newTest);
       const response = await testService.createTest(newTest);
@@ -132,21 +134,7 @@ export default function CreatingTestPage() {
       console.error("Error creating test:", error);
       alert("An error occurred while creating the test");
     }
-    setTriggerSave(false);
   };
-
-  // useEffect(() => {
-  //   setTriggerSave(true);
-  //   setTriggerSave(false);
-  // }, [
-  //   numberOfQuestionsPart1,
-  //   numberOfQuestionsPart2,
-  //   questionGroupsPart3,
-  //   questionGroupsPart4,
-  //   numberOfQuestionsPart5,
-  //   questionGroupsPart6,
-  //   questionGroupsPart7,
-  // ]);
 
   return (
     <div className="w-full min-h-screen rounded-xl bg-white text-black flex flex-col gap-4 p-4">
@@ -207,7 +195,6 @@ export default function CreatingTestPage() {
             console.log("question deleted");
           }}
           onQuestionsCreated={handleQuestionsCreated}
-          triggerSave={triggerSave}
         />
       </div>
       <div className="part-2 flex flex-col gap-2">
@@ -222,7 +209,6 @@ export default function CreatingTestPage() {
             setNumberOfQuestionsPart2(numberOfQuestionsPart2 - 1);
           }}
           onQuestionsCreated={handleQuestionsCreated}
-          triggerSave={triggerSave}
         />
       </div>
       <div className="part-3 flex flex-col gap-2">
@@ -267,7 +253,6 @@ export default function CreatingTestPage() {
                   ]);
                 }}
                 onQuestionsCreated={handleQuestionsCreated}
-                triggerSave={triggerSave}
               />
             </div>
             <Button
@@ -280,6 +265,7 @@ export default function CreatingTestPage() {
                 width: "fit-content",
                 fontSize: "0.8rem",
               }}
+              disabled={isAllBlocked}
             >
               Delete question group
             </Button>
@@ -297,6 +283,7 @@ export default function CreatingTestPage() {
               },
             ]);
           }}
+          disabled={isAllBlocked}
         >
           Add question group
         </Button>
@@ -348,7 +335,6 @@ export default function CreatingTestPage() {
                   ]);
                 }}
                 onQuestionsCreated={handleQuestionsCreated}
-                triggerSave={triggerSave}
               />
             </div>
             <Button
@@ -361,6 +347,7 @@ export default function CreatingTestPage() {
                 width: "fit-content",
                 fontSize: "0.8rem",
               }}
+              disabled={isAllBlocked}
             >
               Delete question group
             </Button>
@@ -378,6 +365,7 @@ export default function CreatingTestPage() {
               },
             ]);
           }}
+          disabled={isAllBlocked}
         >
           Add question group
         </Button>
@@ -406,7 +394,6 @@ export default function CreatingTestPage() {
             setNumberOfQuestionsPart5(numberOfQuestionsPart5 - 1);
           }}
           onQuestionsCreated={handleQuestionsCreated}
-          triggerSave={triggerSave}
         />
       </div>
       <div className="part-6 flex flex-col gap-2">
@@ -461,7 +448,6 @@ export default function CreatingTestPage() {
                   ]);
                 }}
                 onQuestionsCreated={handleQuestionsCreated}
-                triggerSave={triggerSave}
               />
             </div>
             <Button
@@ -474,6 +460,7 @@ export default function CreatingTestPage() {
                 width: "fit-content",
                 fontSize: "0.8rem",
               }}
+              disabled={isAllBlocked}
             >
               Delete question group
             </Button>
@@ -491,6 +478,7 @@ export default function CreatingTestPage() {
               },
             ]);
           }}
+          disabled={isAllBlocked}
         >
           Add question group
         </Button>
@@ -551,7 +539,6 @@ export default function CreatingTestPage() {
                   ]);
                 }}
                 onQuestionsCreated={handleQuestionsCreated}
-                triggerSave={triggerSave}
               />
             </div>
             <Button
@@ -564,6 +551,7 @@ export default function CreatingTestPage() {
                 width: "fit-content",
                 fontSize: "0.8rem",
               }}
+              disabled={isAllBlocked}
             >
               Delete question group
             </Button>
@@ -581,21 +569,32 @@ export default function CreatingTestPage() {
               },
             ]);
           }}
+          disabled={isAllBlocked}
         >
           Add question group
         </Button>
       </div>
-      <Button
-        variant="contained"
-        color="primary"
-        style={{
-          width: "fit-content",
-          margin: "auto",
-        }}
-        onClick={handleCreateTest}
-      >
-        Create
-      </Button>
+      <div className="buttons-container flex justify-center">
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={handleChangeBlockStatus}
+        >
+          {isAllBlocked ? "Unblock" : "Block"}
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          style={{
+            width: "fit-content",
+            margin: "auto",
+          }}
+          onClick={handleCreateTest}
+          disabled={!isAllBlocked}
+        >
+          Create
+        </Button>
+      </div>
     </div>
   );
 }
