@@ -6,9 +6,6 @@ import CommentIcon from "@mui/icons-material/Comment";
 import ImageModal from "./ImageModal";
 import { Post } from "@/entities";
 import { useParams } from "react-router-dom";
-import sForum from "@/store/forumStore";
-import LoadingProgress from "../LoadingProgress";
-import { forumService } from "@/services";
 import { sUser } from "@/store";
 
 function PostOptions(

@@ -1,18 +1,19 @@
+import { Vocab } from "@/entities";
 import { Button } from "@mui/material";
 import React, { useState, useEffect } from "react";
 
 export default function VocabQuestionPalette({
   numberOfQuestions,
   onQuestionSelectedChange,
-  isRemembered,
+  completedVocabs,
+  vocabs,
   curQuestionNumber,
-  onSubmit
 }: {
   numberOfQuestions: number;
   onQuestionSelectedChange: (selectedQuestion: number) => void;
-  isRemembered: boolean[];
+  completedVocabs: string[];
+  vocabs: Vocab[];
   curQuestionNumber: number;
-  onSubmit: () => void;
 }) {
   return (
     <div className="w-full px-8 py-3 bg-[#fff] rounded-2xl ">
@@ -27,16 +28,13 @@ export default function VocabQuestionPalette({
             key={index}
             style={{
               backgroundColor:
-                isRemembered[index] ? "#FF0000" :  curQuestionNumber === index ? "#3A7EE1" : "#F6F6F6",
-              color: isRemembered[index]  ? "#fff" :  curQuestionNumber === index ? "#fff" : "#000",
+                completedVocabs.includes(vocabs[index]._id) ? "#FF0000" :  curQuestionNumber === index ? "#3A7EE1" : "#F6F6F6",
+              color: completedVocabs.includes(vocabs[index]._id)  ? "#fff" :  curQuestionNumber === index ? "#fff" : "#000",
             }}
           >
             {index + 1}
           </div>
         ))}
-      </div>
-      <div className="flex flex-row justify-end">
-        <Button onClick={onSubmit} variant="contained" color="primary" style={ { background: "#00C552" }}>Submit</Button>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import { on } from "events";
 import { useState } from "react";
 
-const QuestionsListContainer = ( { ans, onMoveToChosenQuestion } : { ans: number[], onMoveToChosenQuestion: (question_number: number) => void }) => {
+const QuestionsListContainer = ( { ans, onMoveToChosenQuestion } : { ans?: number[], onMoveToChosenQuestion: (question_number: number) => void }) => {
   const numberOfQuestionsPerPart = [6, 24, 38, 30, 30, 30, 30];
 
   const handleQuestionClick = (index: number) => {
@@ -28,7 +28,7 @@ const QuestionsListContainer = ( { ans, onMoveToChosenQuestion } : { ans: number
                     <div
                       key={globalIndex}
                       className={`question-item w-10 h-10 text-center flex justify-center items-center rounded-xl cursor-pointer ${
-                        ans[globalIndex - 1] !== 0
+                        (ans?.[globalIndex - 1] ?? 0) !== 0
                           ? "bg-primary text-white"
                           : "bg-gray-300 text-black"
                       }`}

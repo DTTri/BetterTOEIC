@@ -49,8 +49,10 @@ import vocabService from "./services/vocabService";
 import VerifyEmailPage from "./pages/auth/VerifyEmailPage";
 import AuthLayout from "./pages/AuthLayout";
 import sForum from "./store/forumStore";
+import ReviewTestPage from "./pages/test/ReviewTestPage";
 
 function App() {
+  const curUser = localStorage.getItem('_id') || sessionStorage.getItem('_id');
   useEffect(() => {
     const fetchAllUsers = async () => {
       try {
@@ -58,7 +60,6 @@ function App() {
         console.log(response);
         if (response.EC === 0) {
           sUser.set((prev) => (prev.value.users = response.DT));
-          const curUser = localStorage.getItem('_id') || sessionStorage.getItem('_id');
           if(curUser && curUser !== '') {
             response.DT.forEach((user: any) => {
               if (user._id === curUser) {
@@ -102,7 +103,7 @@ function App() {
     };
     const fetchTestHistory = async () => {
       try {
-        const response = await testService.getTestHistory(sUser.value.info._id);
+        const response = await testService.getTestHistory(curUser || '');
         console.log(response);
         if (response.EC === 0) {
           testStore.set((prev) => (prev.value.testHistory = response.DT));
@@ -115,7 +116,7 @@ function App() {
     };
     const fetchTestSaved = async () => {
       try {
-        const response = await testService.getTestsSaved(sUser.value.info._id);
+        const response = await testService.getTestsSaved(curUser || '');
         if (response.EC === 0) {
           console.log("Test saved" + response.DT);
           testStore.set((prev) => (prev.value.testsSaved = response.DT));
@@ -144,7 +145,7 @@ function App() {
     const fetchPracticeTestHistory = async () => {
       try {
         const response = await practiceService.getPracticeTestHistory(
-          sUser.value.info._id
+          curUser || ''
         );
         console.log(response);
         if (response.EC === 0) {
@@ -176,7 +177,7 @@ function App() {
     const fetchPracticeLessonHistory = async () => {
       try {
         const response = await practiceService.getPracticeLessonHistory(
-          sUser.value.info._id
+          curUser || ''
         );
         console.log(response);
         if (response.EC === 0) {
@@ -207,7 +208,7 @@ function App() {
     };
     const fetchUserRoadmap = async () => {
       try {
-        const res = await roadmapService.getRoadmapHistory(sUser.value.info._id);
+        const res = await roadmapService.getRoadmapHistory(curUser || '');
         if (res.EC === 0) {
           sRoadmap.set((pre) => (pre.value.userRoadmap = res.DT));
           sCreatingPersonalRoadmap.set((pre) => {
@@ -238,7 +239,7 @@ function App() {
     };
     const fetchSavedVocabs = async () => {
       try {
-        const response = await vocabService.getVocabsSaved(sUser.value.info._id);
+        const response = await vocabService.getVocabsSaved(curUser || '');
         if (response.EC === 0) {
           console.log(response);
           sVocab.set((prev) => (prev.value.vocabsSaved = response.DT));
@@ -251,7 +252,7 @@ function App() {
     };
     const fetchVocabHistory = async () => {
       try {
-        const response = await vocabService.getVocabHistory(sUser.value.info._id);
+        const response = await vocabService.getVocabHistory(curUser || '');
         if (response.EC === 0) {
           console.log(response);
           sVocab.set((prev) => (prev.value.vocabHistory = response.DT.topics));
@@ -275,7 +276,9 @@ function App() {
         console.log("Fail to fetch forum: ", error);
       }
     }
+    fetchAllUsers();
     Promise.all([
+      fetchUsersPerBand(),
       fetchTests(),
       fetchTestHistory(),
       fetchTestSaved(),
@@ -288,8 +291,6 @@ function App() {
       fetchVocabs(),
       fetchSavedVocabs(),
       fetchVocabHistory(),
-      fetchAllUsers(),
-      fetchUsersPerBand(),
       fetchForum(),
     ]);
   }, []);
@@ -345,6 +346,14 @@ function App() {
         element={
           <UserLayout haveFooter={false}>
             <TakingTestPage />
+          </UserLayout>
+        }
+      />
+      <Route
+        path="/review-test/:id"
+        element={
+          <UserLayout haveFooter={false}>
+            <ReviewTestPage />
           </UserLayout>
         }
       />

@@ -1,6 +1,8 @@
 // This is just a stub code (mock code)
 import { CompletedTest } from "@/entities/TestHistory";
+import getTestScore from "@/utils/CalculateTestScore";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import { useNavigate, useParams } from "react-router-dom";
 export default function TestResultsTable( { testHistoryById } : {  testHistoryById: CompletedTest[] }) {
   // const data = [
   //   {
@@ -29,6 +31,8 @@ export default function TestResultsTable( { testHistoryById } : {  testHistoryBy
   //   },
   // ];
 
+  const nav = useNavigate();
+  const {id} = useParams();
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full bg-primary text-white">
@@ -60,10 +64,10 @@ export default function TestResultsTable( { testHistoryById } : {  testHistoryBy
                 {item.correctAnswersPerPart.reduce((acc, cur) => acc + cur)}
               </td>
               <td className="py-3 px-6 text-center border border-white">
-                {990}
+                {getTestScore(item.correctAnswersPerPart)}
               </td>
               <td className="py-3 px-6 text-center border border-white">
-                <button>
+                <button onClick={() => nav(`/review-test/${id}`)}>
                   <RemoveRedEyeIcon color="primary" />
                 </button>
               </td>
