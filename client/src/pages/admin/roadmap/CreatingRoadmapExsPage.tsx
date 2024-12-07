@@ -1,8 +1,14 @@
 import { CreatingQuestionGroup } from "@/components";
+import { Question } from "@/entities";
+import { CreateRoadmapExerciseDTO } from "@/entities/dtos";
+import { roadmapService } from "@/services";
+import { sNewTest } from "@/store";
 import { Button } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 export default function CreatingRoadmapExsPage() {
+  const nav = useNavigate();
   const [phase, setPhase] = useState<number>(1);
   const [part, setPart] = useState<number>(1);
   const [chapter, setChapter] = useState<number>(1);
@@ -14,10 +20,51 @@ export default function CreatingRoadmapExsPage() {
       number: 1,
     },
   ]);
+  const [questions, setQuestions] = useState<Question[]>([]);
+
+  const isAllBlocked = sNewTest.use((v) => v.isSaved);
+  useEffect(() => {
+    if (!isAllBlocked) {
+      setQuestions([]);
+    }
+  }, [isAllBlocked]);
+  const handleQuestionsCreated = (newQuestions: Question[]) => {
+    newQuestions.forEach((newQuestion) => {
+      if (newQuestion.question_number > questions.length) {
+        questions.push(newQuestion);
+      } else {
+        questions[newQuestion.question_number - 1] = newQuestion;
+      }
+    });
+  };
+  const handleChangeBlockStatus = () => {
+    sNewTest.set((v) => (v.value.isSaved = !v.value.isSaved));
+  };
   const deleteQuestionGroup = (id: string) => {
     setQuestionGroups(
       questionGroups.filter((questionGroup) => questionGroup.id !== id)
     );
+  };
+
+  const handleCreateRoadmapEx = async () => {
+    try {
+      const newRoadmapEx: CreateRoadmapExerciseDTO = {
+        phase,
+        part,
+        chapter,
+        questions,
+        created_by: "admin",
+        main_audio: "",
+      };
+      console.log(newRoadmapEx);
+      const res = await roadmapService.createRoadmapExercise(newRoadmapEx);
+      console.log(res);
+      if (res.EC === 0) {
+        nav("/admin/roadmap");
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -31,6 +78,7 @@ export default function CreatingRoadmapExsPage() {
             onChange={(e) => {
               setPhase(parseInt(e.target.value));
             }}
+            disabled={isAllBlocked}
           >
             <option value="1">1</option>
             <option value="2">2</option>
@@ -46,6 +94,7 @@ export default function CreatingRoadmapExsPage() {
             onChange={(e) => {
               setPart(parseInt(e.target.value));
             }}
+            disabled={isAllBlocked}
           >
             <option value="1">1</option>
             <option value="2">2</option>
@@ -58,25 +107,21 @@ export default function CreatingRoadmapExsPage() {
         </div>
         <div className="flex gap-2 items-center">
           <p className="text-3xl font-bold">Chapter:</p>
-          <select
-            className="p-2"
+          <input
+            type="number"
             value={chapter}
+            disabled={isAllBlocked}
             onChange={(e) => {
               setChapter(parseInt(e.target.value));
             }}
-          >
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-          </select>
+            min={1}
+          />
         </div>
       </div>
       {part < 5 && (
         <div className="audio flex gap-2 items-center">
           <p className="text-2xl font-bold">Listening Audio:</p>
-          <input type="file" accept="audio/*" />
+          <input type="file" accept="audio/*" disabled={isAllBlocked} />
         </div>
       )}
 
@@ -118,6 +163,7 @@ export default function CreatingRoadmapExsPage() {
                     ...questionGroups.slice(index + 1),
                   ]);
                 }}
+                onQuestionsCreated={handleQuestionsCreated}
               />
             </div>
             {index > 0 && (
@@ -155,16 +201,27 @@ export default function CreatingRoadmapExsPage() {
           </Button>
         )}
       </div>
-      <Button
-        variant="contained"
-        color="primary"
-        style={{
-          width: "fit-content",
-          margin: "auto",
-        }}
-      >
-        Create
-      </Button>
+      <div className="buttons-container flex gap-4 justify-end">
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={handleChangeBlockStatus}
+        >
+          {isAllBlocked ? "Unblock" : "Block"}
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          style={{
+            width: "fit-content",
+            margin: "auto",
+          }}
+          onClick={handleCreateRoadmapEx}
+          disabled={!isAllBlocked}
+        >
+          Create
+        </Button>
+      </div>
     </div>
   );
 }

@@ -4,11 +4,13 @@ import {
   GridColDef,
   GridToolbar,
 } from "@mui/x-data-grid";
-import { ThemeProvider } from "@mui/material";
+import { Button, ThemeProvider } from "@mui/material";
 import { adminTableTheme } from "@/context";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 import { sRoadmap } from "@/store";
+import { useNavigate } from "react-router-dom";
 export default function RoadmapManagementPage() {
+  const nav = useNavigate();
   const columns: GridColDef[] = [
     {
       field: "index",
@@ -131,6 +133,14 @@ export default function RoadmapManagementPage() {
           />
         </ThemeProvider>
       </div>
+      <Button
+        variant="contained"
+        onClick={() => {
+          nav("/admin/roadmap/creatingRoadmapEx");
+        }}
+      >
+        Create Chapter
+      </Button>
     </div>
   );
 }
