@@ -53,16 +53,14 @@ export default function CreatingPostPage() {
           throw new Error("Failed to upload image to S3");
         }
         console.log(result);
-        setImages((previewImage) => [...previewImage, "https://seuit-qlnt.s3.amazonaws.com/" + response.key]);
+        images.push("https://seuit-qlnt.s3.amazonaws.com/" + response.key);
       });
       await Promise.all(uploadPromises);
-      setTimeout(() => {
-        console.log("Images uploaded:", images);
-      }, 2000);
-      return true;
+      console.log("Images uploaded:", images);
+      return images;
     } catch (error) {
       console.error("Error uploading images:", error);
-      return false;
+      return null;
     }
   };
   console.log("image console" + images);
@@ -99,7 +97,7 @@ export default function CreatingPostPage() {
   const handleCreateButtonClick = async () => {
     if (dropzoneRef.current && dropzoneRef.current.files.length > 0) {
       const uploadSuccess = await handleSubmit(dropzoneRef.current.files);
-      if (uploadSuccess && images.length === dropzoneRef.current.files.length) {
+      if (uploadSuccess !== null && uploadSuccess.length > 0) {
         handleCreatePost();
       }
     } else {

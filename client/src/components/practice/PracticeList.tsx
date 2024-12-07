@@ -26,7 +26,14 @@ function PracticeTestComponent({
   return (
     <div
       className="max-w-[640px] w-full flex flex-row items-center px-5 py-[8px] bg-[#F6F6F6] rounded-[30px] cursor-pointer"
-      onClick={() => navigate(`/taking-practice/${practiceTest.part}/${practiceTest._id}`)}
+      onClick={() => {
+        if(!completedTest){
+          navigate(`/taking-practice/${practiceTest.part}/${practiceTest._id}`);
+        }
+        else{
+          navigate(`/review-practice/${practiceTest.part}/${practiceTest._id}`);
+        }
+      }}
     >
       <div className="w-[20px] h-[20px] mr-5">
         <img className="w-full h-full" src={book} alt="" />
@@ -88,7 +95,8 @@ export default function PracticeList({
       </div>
 
       {isShow && (
-        <div className="flex flex-col items-center gap-4 border-t py-4">
+        <div className={`flex flex-col items-center gap-4 border-t py-4 transition-all ease-linear ${
+                isShow ? "fade-in" : ""}`}>
           {practiceTests.map((practiceTest, index) => {
             return (
               <PracticeTestComponent

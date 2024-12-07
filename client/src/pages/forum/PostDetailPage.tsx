@@ -49,9 +49,10 @@ export default function PostDetailPage() {
     try {
       const response = await forumService.deletePost(post._id);
       if (response.EC === 0) {
-        setTimeout(() => {
-          nav("/forum");
-        }, 1000);
+        sForum.set((prev) => {
+          return prev.value.posts.filter(post => post._id !== post._id);
+        });
+        nav("/forum");
       }
     } catch (error) {
       console.log("Fail to delete post");
