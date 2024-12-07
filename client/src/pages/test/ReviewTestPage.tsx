@@ -102,7 +102,7 @@ export default function ReviewTestPage() {
                   }
                 }}
               >
-                {currentPart !== 7 ? "Next part" : "Submit"}
+                {currentPart !== 7 ? "Next part" : "Back"}
               </Button>
             </div>
           </div>

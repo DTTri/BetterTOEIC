@@ -13,6 +13,8 @@ export default function QuestionReviewComponent({
   choice: number;
 }) {
   const [showExplanation, setShowExplanation] = useState(false);
+  console.log(question.correct_choice);
+  console.log(choice);
   return (
     <div className="mb-4">
       <h4 className="text-[18px] w-full font-bold mb-2 text-wrap">
@@ -40,7 +42,9 @@ export default function QuestionReviewComponent({
                   name={`question-${question.question_number}`}
                   id={`optionValue-${question.question_number}-${index}`}
                   className="w-[20px] h-[20px] border-solid border-[1px] border-gray-400"
-                  defaultChecked={choice > 0 ? true : false}
+                  value={index + 1}
+                  checked={index + 1 === choice}
+                  disabled={true}
                 />
                 <label
                   htmlFor={`optionValue-${question.question_number}-${index}`}

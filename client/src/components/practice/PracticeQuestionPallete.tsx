@@ -9,10 +9,9 @@ export default function PracticeQuestionPallete({
   questionNumber: number;
   onQuestionSelectedChange: (selectedQuestion: number) => void;
   selectedQuestion: number;
-  answers: number[];
+  answers?: number[];
 }) {
   console.log(selectedQuestion);
-  console.log(answers[selectedQuestion]);
   return (
     <div className="w-full px-8 py-6 bg-[#fff] rounded-2xl ">
       <h3 className="text-2xl font-normal text-[#000] mb-3">
@@ -27,8 +26,8 @@ export default function PracticeQuestionPallete({
             key={index}
             style={{
               backgroundColor:
-                answers[index] > 0 ? '#FF0000' : selectedQuestion - 1 === index ? "#3A7EE1" : "#F6F6F6",
-              color: answers[index] > 0 ? '#fff' : selectedQuestion - 1 === index ? "#fff" : "#000",
+                (answers?.[index] ?? 0) > 0 ? '#FF0000' : selectedQuestion - 1 === index ? "#3A7EE1" : "#F6F6F6",
+              color: (answers?.[index] ?? 0) > 0 ? '#fff' : selectedQuestion - 1 === index ? "#fff" : "#000",
             }}
           >
             {index + 1}

@@ -50,6 +50,7 @@ import VerifyEmailPage from "./pages/auth/VerifyEmailPage";
 import AuthLayout from "./pages/AuthLayout";
 import sForum from "./store/forumStore";
 import ReviewTestPage from "./pages/test/ReviewTestPage";
+import ReviewPracticePage from "./pages/practice/ReviewPracticePage";
 
 function App() {
   const curUser = localStorage.getItem('_id') || sessionStorage.getItem('_id');
@@ -375,7 +376,11 @@ function App() {
       />
       <Route
         path="/taking-practice/:part/:id"
-        element={<TakingPracticePage />}
+        element={<UserLayout haveFooter={false}><TakingPracticePage/></UserLayout>}
+      />
+      <Route
+        path="/review-practice/:part/:id"
+        element={<UserLayout haveFooter={false}><ReviewPracticePage/></UserLayout>}
       />
       <Route
         path="/creating-roadmap"
