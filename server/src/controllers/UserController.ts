@@ -106,6 +106,46 @@ class UserController {
       DT: totalUsersPerBand,
     });
   }
+  async changePassword(req: Request, res: Response) {
+    try {
+      const userId = req.params.userId;
+      const currentUser = await userServiceInstance.findUserById(userId);
+      if (!currentUser) {
+        res.status(400).json({
+          EC: 1,
+          EM: 'User not found',
+        });
+        return;
+      }
+      const { oldPassword, newPassword } = req.body;
+      if (oldPassword === newPassword) {
+        res.status(400).json({
+          EC: 2,
+          EM: 'Old password and new password must be different',
+        });
+        return;
+      }
+      const user = await userServiceInstance.findUserWithPassword(currentUser.email, oldPassword);
+      if (!user) {
+        res.status(400).json({
+          EC: 3,
+          EM: 'Old password is incorrect',
+        });
+        return;
+      }
+      await userServiceInstance.updateUserPassword(currentUser.email, newPassword);
+
+      res.status(200).json({
+        EC: 0,
+        EM: 'Password changed successfully',
+      });
+    } catch (error: any) {
+      res.status(500).json({
+        EC: 4,
+        EM: error.message,
+      });
+    }
+  }
 }
 const userControllerInstance = new UserController();
 export default userControllerInstance;

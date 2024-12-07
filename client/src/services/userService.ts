@@ -16,6 +16,10 @@ class UserService {
   async getTotalUsersPerBand() {
     return await http.get(this.getURI("totalUsersPerBand"));
   }
+  async changePassword(id: string, data: object) {
+    return await http.put(this.getURI(`change-password/${id}`), data);
+  }
+  // userRouter.put('/change-password/userId', UserMiddlewareInstance.changePassword, userControllerInstance.changePassword);
 }
 const userService = new UserService();
 export default userService;
