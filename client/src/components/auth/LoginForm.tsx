@@ -30,10 +30,14 @@ export default function LoginForm() {
       if(response.EC === 0) {
         if(rememberMe) {
           localStorage.setItem('token', response.DT.accessToken);
+          localStorage.setItem('_id', response.DT._id);
         }
-        sessionStorage.setItem('token', response.DT.accessToken);
+        else{
+          sessionStorage.setItem('token', response.DT.accessToken);
+          sessionStorage.setItem('_id', response.DT._id);
+        }
+        sUser.set((prev) => (prev.value.info = response.DT));
         console.log(response.DT);
-        localStorage.setItem('_id', response.DT._id);
         if(response.DT._id && response.DT._id !== '') {
           sUser.value.users.forEach((user: any) => {
             if (user._id === response.DT._id) {

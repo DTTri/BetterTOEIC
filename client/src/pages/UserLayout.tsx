@@ -3,6 +3,8 @@ import React from 'react'
 import { Navigate, Outlet } from 'react-router-dom'
 
 import { ReactNode } from 'react';
+import { userService } from '@/services';
+import { sUser } from '@/store';
 
 export default function UserLayout({ children, haveHeader = true, haveFooter = true }: { children: ReactNode, haveHeader?: boolean, haveFooter?: boolean}) {
   const token = localStorage.getItem('token') || sessionStorage.getItem('token');
