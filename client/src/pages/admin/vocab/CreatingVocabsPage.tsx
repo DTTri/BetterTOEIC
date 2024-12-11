@@ -1,4 +1,5 @@
 import CreatingVocab from "@/components/admin/CreatingVocab";
+import LoadingProgress from "@/components/LoadingProgress";
 import CreateVocabDTO from "@/entities/DTOS/CreateVocabDTO";
 import http from "@/services/http";
 import vocabService from "@/services/vocabService";
@@ -17,6 +18,7 @@ export default function CreatingVocabsPage() {
       vocab: {} as CreateVocabDTO,
     },
   ]);
+  const [isWaiting, setIsWaiting] = useState<boolean>(false);
 
   const handleOnSave = (createdVocab: CreateVocabDTO, createdVocabId: string) => {
     setVocabs(vocabs.map((v) => (v.id === createdVocabId ? { ...v, vocab: createdVocab } : v)));
@@ -48,6 +50,7 @@ export default function CreatingVocabsPage() {
       alert("Please enter topic name");
       return;
     }
+    setIsWaiting(true);
     let topicAvatarUrl = "";
     if(topicAvt) {
       topicAvatarUrl = await uploadFile(topicAvt);
@@ -85,13 +88,15 @@ export default function CreatingVocabsPage() {
     try {
       const responseTopic = await vocabService.createVocabTopic(topicData);
       if(responseTopic.EC === 0) {
+        setIsWaiting(false);
         nav("/admin/vocab");
       }
     } catch (error) {
       console.error("Failed to create topic", error);
     }
-
-    
+  }
+  if(isWaiting) {
+    return <LoadingProgress />
   }
   console.log(vocabs);
   return (

@@ -8,22 +8,29 @@ import { Button, ThemeProvider } from "@mui/material";
 import { adminTableTheme } from "@/context";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 import { VocabByTopic } from "@/entities";
-import { vocabsByTopics } from "@/data";
+import { sVocab } from "@/store";
+import LoadingProgress from "@/components/LoadingProgress";
+import { useNavigate } from "react-router-dom";
 
 export default function VocabManagementPage() {
+  const vocabsByTopics = sVocab.use((state) => state.vocabTopics);
+  if (!vocabsByTopics) {
+    return <LoadingProgress />;
+  }
   const rows: VocabByTopic[] = vocabsByTopics;
+  const nav = useNavigate();
   const columns: GridColDef[] = [
     {
       field: "_id",
       headerName: "ID",
-      flex: 0.5,
+      flex: 1,
       align: "center",
       headerAlign: "center",
     },
     {
-      field: "topic_name",
+      field: "name",
       headerName: "TOPIC",
-      flex: 2,
+      flex: 1.1,
       align: "center",
       headerAlign: "center",
     },
@@ -43,6 +50,9 @@ export default function VocabManagementPage() {
       flex: 1,
       align: "center",
       headerAlign: "center",
+      valueFormatter: (params, row) => {
+        return new Date(row.created_at).toLocaleString();
+      },
     },
     {
       field: "updated_at",
@@ -50,6 +60,9 @@ export default function VocabManagementPage() {
       flex: 1,
       align: "center",
       headerAlign: "center",
+      valueFormatter: (params, row) => {
+        return new Date(row.updated_at).toLocaleString();
+      },
     },
     {
       field: "edit",
@@ -93,7 +106,12 @@ export default function VocabManagementPage() {
           />
         </ThemeProvider>
       </div>
-      <div className="buttons flex gap-2 justify-end">
+      <div
+        onClick={() => {
+          nav("/admin/vocab/creatingVocab");
+        }}
+        className="buttons flex gap-2 justify-end"
+      >
         <Button variant="contained">Create topic</Button>
       </div>
     </div>
