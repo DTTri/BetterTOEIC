@@ -1,16 +1,99 @@
 import CreatingVocab from "@/components/admin/CreatingVocab";
+import CreateVocabDTO from "@/entities/DTOS/CreateVocabDTO";
+import http from "@/services/http";
+import vocabService from "@/services/vocabService";
 import { Button } from "@mui/material";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 export default function CreatingVocabsPage() {
   const [topicName, setTopicName] = useState<string>("");
-  const [topicAvt, setTopicAvt] = useState<string>("");
-  const [vocabs, setVocabs] = useState<{ id: string; number: number }[]>([
+  const nav = useNavigate();
+  const [topicAvt, setTopicAvt] = useState<File | null>(null);
+  const [vocabs, setVocabs] = useState<{ id: string; number: number, vocab: CreateVocabDTO }[]>([
     {
       id: uuidv4(),
       number: 1,
+      vocab: {} as CreateVocabDTO,
     },
   ]);
+
+  const handleOnSave = (createdVocab: CreateVocabDTO, createdVocabId: string) => {
+    setVocabs(vocabs.map((v) => (v.id === createdVocabId ? { ...v, vocab: createdVocab } : v)));
+  }
+
+  console.log("vocabs " + vocabs[0].vocab.image);
+
+  const uploadFile = async (file: File) => {
+    const response = await http.get(`file/presigned-url?fileName=${file.name}&contentType=${file.type}`);
+    console.log(response);
+    
+    const result = await fetch(response.presignedUrl, {
+      method: "PUT",
+      headers: {
+        "Content-Type": file.type,
+      },
+      body: file,
+    });
+    if (!result.ok) {
+      throw new Error("Failed to upload file to S3");
+    }
+    console.log(result);
+
+    return "https://seuit-qlnt.s3.amazonaws.com/" + response.key;
+  }
+
+  const handleCreateTopic = async () => {
+    if(!topicName) {
+      alert("Please enter topic name");
+      return;
+    }
+    let topicAvatarUrl = "";
+    if(topicAvt) {
+      topicAvatarUrl = await uploadFile(topicAvt);
+    }
+
+    const vocabUploadPromises = vocabs.map(async (vocab) => {
+      let imageUrl = "";
+      let audioUrl = "";
+
+      if(vocab.vocab.image){
+        imageUrl = await uploadFile(vocab.vocab.image);
+      }
+
+      if (vocab.vocab.audio) {
+        audioUrl = await uploadFile(vocab.vocab.audio);
+      }
+      
+      console.log(imageUrl, audioUrl);
+
+      return {
+        ...vocab.vocab,
+        image: imageUrl,
+        audio: audioUrl,
+      };
+    });
+
+    const uploadedVocabs = await Promise.all(vocabUploadPromises);
+
+    const topicData = {
+      name: topicName,
+      image: topicAvatarUrl,
+      vocabs: uploadedVocabs,
+    };
+
+    try {
+      const responseTopic = await vocabService.createVocabTopic(topicData);
+      if(responseTopic.EC === 0) {
+        nav("/admin/vocab");
+      }
+    } catch (error) {
+      console.error("Failed to create topic", error);
+    }
+
+    
+  }
+  console.log(vocabs);
   return (
     <div className="w-full min-h-screen rounded-xl bg-white text-black p-4 flex flex-col gap-6">
       <div className="flex gap-2 items-center">
@@ -31,7 +114,7 @@ export default function CreatingVocabsPage() {
           onChange={(e) => {
             const file = e.target.files?.[0];
             if (file) {
-              setTopicAvt(URL.createObjectURL(file));
+              setTopicAvt(file);
             }
           }}
         />
@@ -41,6 +124,8 @@ export default function CreatingVocabsPage() {
         <div className="flex flex-col gap-4">
           {vocabs.map((vocab, index) => (
             <CreatingVocab
+              vocabId={vocab.id}
+              onSave={handleOnSave}
               key={vocab.id}
               vocabNumber={index + 1}
               onDelete={() => {
@@ -51,11 +136,16 @@ export default function CreatingVocabsPage() {
         </div>
         <Button
           onClick={() =>
-            setVocabs([...vocabs, { id: uuidv4(), number: vocabs.length + 1 }])
+            setVocabs([...vocabs, { id: uuidv4(), number: vocabs.length + 1, vocab: {} as CreateVocabDTO }])
           }
         >
           Add vocabulary
         </Button>
+        <div className="flex flex-row justify-end items-center p-2">
+          <Button variant="contained" onClick={handleCreateTopic}>
+            Create Topic
+          </Button>
+        </div>
       </div>
     </div>
   );
