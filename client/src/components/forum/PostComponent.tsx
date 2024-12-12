@@ -5,11 +5,11 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import CommentIcon from "@mui/icons-material/Comment";
 import { Post } from "@/entities";
 import { Link } from "react-router-dom";
-import { sUser } from "@/store";
+import LoadingProgress from "../LoadingProgress";
 
 
-export default function PostComponent({ post }: { post: Post }) {
-  
+export default function PostComponent({ userInfo, post }: { userInfo: string, post: Post }) {
+  const isLiked = post.totalLike.find((item) => item === userInfo);
   return (
     <Link
       to={`/post-detail/${post._id}`}
@@ -44,11 +44,14 @@ export default function PostComponent({ post }: { post: Post }) {
       <div className="react flex flex-row items-center gap-6">
         <div className="flex flex-row items-center gap-1">
           <FavoriteBorderIcon
-            style={{ width: "20px", height: "18px" }}
-            className="cursor-pointer hover:text-red-500"
+            style={{
+              width: "22px",
+              height: "20px",
+              color: isLiked ? "red" : "",
+            }}
           />
           <span className="text-[#202224] font-bold text-sm">
-            {post.totalLike}
+            {post.totalLike.length}
           </span>
         </div>
         <div className="flex flex-row items-center gap-1">

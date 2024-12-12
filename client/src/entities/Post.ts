@@ -9,7 +9,7 @@ type Post = {
   };
   content: string;
   contentImage: string[];
-  totalLike: number;
+  totalLike: string[];
   comments: Comment[];
   created_at: string;
   updated_at: string;

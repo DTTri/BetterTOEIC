@@ -1,11 +1,11 @@
-import Comment from "@/components/forum/CommentComponent";
+import CommentComp from "@/components/forum/CommentComponent";
 import CommentCreating from "@/components/forum/CommentCreating";
 import MustRead from "@/components/forum/MustRead";
 import PostComponent from "@/components/forum/PostComponent";
 import PostDetail from "@/components/forum/PostDetail";
 import PostSearchBar from "@/components/forum/PostSearchBar";
 import LoadingProgress from "@/components/LoadingProgress";
-import { Post } from "@/entities";
+import { Comment, Post } from "@/entities";
 import CreateCommentDTO from "@/entities/DTOS/CreateCommentDTO";
 import { forumService } from "@/services";
 import { sUser } from "@/store";
@@ -20,29 +20,41 @@ export default function PostDetailPage() {
   const [post, setPost] = useState<Post>(
     postLists.find((post) => post._id === id) || postLists[0]
   );
+  const [comments, setComments] = useState<Comment[]>(
+    postLists.find((post) => post._id === id)?.comments || []
+  );
   const user = sUser.use((cur) => cur.info);
 
   useEffect(() => {
     if (postLists.length > 0) {
       setPost(postLists.find((post) => post._id === id) || postLists[0]);
+      setComments(postLists.find((post) => post._id === id)?.comments || []);
     }
   }, [postLists]);
-  
-  if (!post) {
+
+  if (!post || !user) {
     return <LoadingProgress />;
   }
-  console.log("post in detail page" + post);
-  console.log("post comments" + post.comments);
 
   const handleOnLikePost = async (isLiked: boolean) => {
     try {
-      const response = await forumService.likePost(post._id, isLiked);
+      console.log("isLiked in Page" + isLiked);
+      const response = await forumService.likePost(post._id, {
+        isLike: isLiked,
+        userId: user._id,
+      });
       if (response.EC === 0) {
-        const newLike = isLiked ? post.totalLike + 1 : post.totalLike - 1
-        setPost({ ...post, totalLike: newLike });
+        setPost(response.DT);
+        sForum.set((prev) => {
+          return prev.value.posts.map((post) =>
+            post._id === post._id ? response.DT : post
+          );
+        });
+      } else {
+        console.log("Fail to like post" + response.EM);
       }
     } catch (error) {
-      console.log("Fail to like post");
+      console.log("Fail to like post" + error);
     }
   };
   const handleDeletePost = async () => {
@@ -50,22 +62,43 @@ export default function PostDetailPage() {
       const response = await forumService.deletePost(post._id);
       if (response.EC === 0) {
         sForum.set((prev) => {
-          return prev.value.posts.filter(post => post._id !== post._id);
+          return prev.value.posts.filter((post) => post._id !== post._id);
         });
         nav("/forum");
       }
     } catch (error) {
       console.log("Fail to delete post");
     }
-  }
+  };
 
   const handleOnLikeComment = async (isLiked: boolean, commentId: string) => {
     try {
-      const response = await forumService.likeComment(post._id, commentId, isLiked);
+      const response = await forumService.likeComment(post._id, commentId, {
+        isLike: isLiked,
+        userId: user._id,
+      });
       if (response.EC === 0) {
-        const commentIndex = post.comments.findIndex(comment => comment._id === commentId);
-        const newLike = isLiked ? post.comments[commentIndex].totalLike + 1 : post.comments[commentIndex].totalLike - 1;
-        setPost({ ...post, comments: post.comments.map((comment, index) => index === commentIndex ? { ...comment, totalLike: newLike } : comment) });
+        sForum.set((prev) => {
+          return prev.value.posts.map((post) =>
+            post._id === post._id
+              ? {
+                  ...post,
+                  comments: post.comments.map((comment) =>
+                    comment._id === commentId
+                      ? response.DT
+                      : comment
+                  ),
+                }
+              : post
+          );
+        });
+        setComments(
+          comments.map((comment) =>
+            comment._id === commentId
+              ? response.DT
+              : comment
+          )
+        );
       }
     } catch (error) {
       console.log("Fail to like post");
@@ -76,12 +109,24 @@ export default function PostDetailPage() {
     try {
       const response = await forumService.deleteComment(post._id, commentId);
       if (response.EC === 0) {
-        setPost({ ...post, comments: post.comments.filter(comment => comment._id !== commentId) });
+        setComments(comments.filter((comment) => comment._id !== commentId));
+        sForum.set((prev) => {
+          return prev.value.posts.map((post) =>
+            post._id === post._id
+              ? {
+                  ...post,
+                  comments: post.comments.filter(
+                    (comment) => comment._id !== commentId
+                  ),
+                }
+              : post
+          );
+        });
       }
     } catch (error) {
       console.log("Fail to delete comment");
     }
-  }
+  };
 
   const handleOnComment = async (content: string) => {
     const CreateComment: CreateCommentDTO = {
@@ -90,26 +135,45 @@ export default function PostDetailPage() {
         _id: user._id,
         username: user.name,
         avatar: user.avatar,
-      }
-    }
+      },
+    };
     try {
-      const response = await forumService.createComment(post._id, CreateComment);
+      const response = await forumService.createComment(
+        post._id,
+        CreateComment
+      );
       if (response.EC === 0) {
-        setPost({ ...post, comments: [...post.comments, response.DT] });
+        setComments([...comments, response.DT]);
+        sForum.set((prev) => {
+          return prev.value.posts.map((post) =>
+            post._id === post._id
+              ? { ...post, comments: [...post.comments, response.DT] }
+              : post
+          );
+        });
       }
     } catch (error) {
-      console.log
+      console.log;
     }
   };
-
+  console.log("comment in post" + post.comments);
   return (
-    <div className="flex flex-row w-full">
-      <PostSearchBar />
-      <div className="content-post flex flex-col py-10 px-9 w-[70%] gap-4">
-        <PostDetail onDelete={handleDeletePost} onLike={handleOnLikePost} post={post} />
-        <CommentCreating onCommentCreated={handleOnComment}/>
-        {post?.comments.map((comment, index) => (
-          <Comment onDelete={handleDeleteComment} onLike={handleOnLikeComment} key={index} comment={comment} />
+    <div className="px-10 pl-20 flex flex-row w-full gap-8">
+      <div className="content-post flex flex-col py-10 px-9 w-[60%] gap-4">
+        <PostDetail
+          onDelete={handleDeletePost}
+          onLike={handleOnLikePost}
+          post={post}
+        />
+        <CommentCreating onCommentCreated={handleOnComment} />
+        {comments.map((comment, index) => (
+          <CommentComp
+            userId={user._id}
+            onDelete={handleDeleteComment}
+            onLike={handleOnLikeComment}
+            key={post._id}
+            comment={comment}
+          />
         ))}
       </div>
       <div className="py-10 px-5 pl-1 gap-7 w-[30%]">

@@ -1571,7 +1571,9 @@ components:
           items:
             type: string
         totalLike:
-          type: integer
+          type: array
+          items:
+            type: string
         comments:
           type: array
           items:
@@ -1604,7 +1606,9 @@ components:
         content:
           type: string
         totalLike:
-          type: integer
+          type: array
+          items:
+            type: string
         creator:
           id:
             type: string

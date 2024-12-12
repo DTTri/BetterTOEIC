@@ -52,10 +52,15 @@ class ForumMiddleware {
   }
   async likePost(req: Request, res: Response, next: NextFunction): Promise<void> {
     await checkSchema({
-        postId: {
+        userId: {
             isString: true,
             notEmpty: true,
-            errorMessage: 'Post ID is required',
+            errorMessage: 'User ID is required',
+        },
+        isLike: {
+          isBoolean: true,
+          notEmpty: true,
+          errorMessage: 'isLike is required',
         }
     }).run(req);
     const errors = validationResult(req);
@@ -76,16 +81,16 @@ class ForumMiddleware {
   }
   async likeComment(req: Request, res: Response, next: NextFunction): Promise<void> {
     await checkSchema({
-        postId: {
+      userId: {
             isString: true,
             notEmpty: true,
-            errorMessage: 'Post ID is required',
+            errorMessage: 'User ID is required',
         },
-        commentId: {
-            isString: true,
-            notEmpty: true,
-            errorMessage: 'Post ID is required',
-        }
+      isLike: {
+        isBoolean: true,
+        notEmpty: true,
+        errorMessage: 'isLike is required',
+      }
     }).run(req);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

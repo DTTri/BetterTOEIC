@@ -31,22 +31,27 @@ class ForumService {
     }
     return null;
   }
-  async likePost(postId: string, isLike: boolean): Promise<boolean> {
-    const result = await collections.posts?.findOne( { _id: new ObjectId(postId) });
-    const foundPost = result as Post;
-    if(result){
-      if(isLike){
-        foundPost.totalLike += 1;
-      } else {
-        foundPost.totalLike -= 1;
+  async likePost(postId: string, body: { isLike: boolean; userId: string }): Promise<Post | null> {
+    try {
+      const result = await collections.posts?.findOne({ _id: new ObjectId(postId) });
+      if (result) {
+        const foundPost = result as Post;
+        if (body.isLike) {
+          foundPost.totalLike.push(body.userId);
+        } else {
+          foundPost.totalLike = foundPost.totalLike.filter((id) => id !== body.userId);
+        }
+        console.log("back-end totalLike:", foundPost.totalLike);
+        const likeResult = await collections.posts?.updateOne(
+          { _id: new ObjectId(postId) },
+          { $set: { totalLike: foundPost.totalLike, updated_at: new Date().toISOString() } }
+        );
+        return foundPost as Post;
       }
-      const likeResult = await collections.posts?.updateOne(
-        { _id: new ObjectId(postId) },
-        { $set: { totalLike: foundPost.totalLike, updated_at: new Date().toISOString() } }
-      );
-      return result ? true : false;
+    } catch (error) {
+      return null;
     }
-    return false;
+    return null;
   }
   async createComment(postId: string, newComment: Comment): Promise<boolean> {
     const result = await collections.posts?.findOne(
@@ -63,7 +68,7 @@ class ForumService {
     }
     return false;
   }
-  async likeComment(postId: string, commentId: string, isLike: boolean): Promise<boolean> {
+  async likeComment(postId: string, commentId: string, body: { isLike: boolean; userId: string }): Promise<Comment | null> {
     const result = await collections.posts?.findOne(
       { _id: new ObjectId(postId) },
     ) ;
@@ -71,25 +76,26 @@ class ForumService {
     if (foundPost){
         const commentIndex = foundPost.comments.findIndex((comment) => comment._id.toString() === commentId);
         if (commentIndex !== -1) {
-          if(isLike){
-            foundPost.comments[commentIndex].totalLike += 1;
+          if(body.isLike === true){
+            foundPost.comments[commentIndex].totalLike.push(body.userId);
           } else {
-            foundPost.comments[commentIndex].totalLike -= 1;
+            foundPost.comments[commentIndex].totalLike = foundPost.comments[commentIndex].totalLike.filter((id) => id 
+            !== body.userId);
           }
         }
         const result = await collections.posts?.updateOne(
           { _id: new ObjectId(postId) },
           { $set: { comments: foundPost.comments, updated_at: new Date().toISOString() } }
         );
-        return result ? true : false;
+        return foundPost.comments[commentIndex] as Comment;
     }
-    return false;
+    return null;
   }
   async updateComment(postId: string, commentId: string, updateComment: Comment): Promise<boolean> {
     const result = await collections.posts?.findOne( {_id: new ObjectId(postId) });
     const foundPost = result as Post;
     if(foundPost){
-      const commentIndex = foundPost.comments.findIndex((comment) => comment._id.toString() === commentId);
+      const commentIndex = foundPost.comments.findIndex((comment) => comment._id.toString() !== commentId);
       if (commentIndex !== -1) {
         foundPost.comments[commentIndex] = updateComment;
         const result = await collections.posts?.updateOne(
@@ -106,7 +112,7 @@ class ForumService {
     const result = await collections.posts?.findOne( {_id: new ObjectId(postId) });
     const foundPost = result as Post;
     if(foundPost){
-      const updatedComments = foundPost.comments.filter((comment) => comment._id.toString() != commentId);
+      const updatedComments = foundPost.comments.filter((comment) => comment._id.toString() !== commentId);
       const result = await collections.posts?.updateOne(
         { _id: new ObjectId(postId) },
         { $set: { comments: updatedComments, updated_at: new Date().toISOString() } }

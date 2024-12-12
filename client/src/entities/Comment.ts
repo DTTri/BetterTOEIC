@@ -7,7 +7,7 @@ type Comment = {
         username: string;
         avatar: string;
     };
-    totalLike: number;
+    totalLike: string[];
     created_at: string;
     updated_at: string;
 }
