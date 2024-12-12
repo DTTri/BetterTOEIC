@@ -1,5 +1,6 @@
 import { User } from "@/entities";
 import { sUser } from "@/store";
+import sForum from "@/store/forumStore";
 import { LineChart } from "@mui/x-charts/LineChart";
 import { PieChart } from "@mui/x-charts/PieChart";
 
@@ -88,35 +89,64 @@ export default function OverallManagementPage() {
       color: "#DDFF00",
     },
   ];
-  const totalPostAccess = 2000;
-  const postsAccessPerMonthData = [
-    {
-      month: "January",
-      postAccess: 50,
-    },
-    {
-      month: "February",
-      postAccess: 80,
-    },
-    {
-      month: "March",
-      postAccess: 60,
-    },
-    {
-      month: "April",
-      postAccess: 200,
-    },
+  const posts = sForum.use((v) => v.posts);
+  const totalPostCreated = posts.length;
+  const postsCreatedPerMonthData = [
     {
       month: "May",
-      postAccess: 250,
+      postCreated: posts.filter(
+        (post) =>
+          post.created_at.split("T")[0] >= "2024-05-01" &&
+          post.created_at.split("T")[0] <= "2024-05-31"
+      ).length,
     },
     {
       month: "June",
-      postAccess: 500,
+      postCreated: posts.filter(
+        (post) =>
+          post.created_at.split("T")[0] >= "2024-06-01" &&
+          post.created_at.split("T")[0] <= "2024-06-30"
+      ).length,
     },
     {
       month: "July",
-      postAccess: 450,
+      postCreated: posts.filter(
+        (post) =>
+          post.created_at.split("T")[0] >= "2024-07-01" &&
+          post.created_at.split("T")[0] <= "2024-07-31"
+      ).length,
+    },
+    {
+      month: "August",
+      postCreated: posts.filter(
+        (post) =>
+          post.created_at.split("T")[0] >= "2024-08-01" &&
+          post.created_at.split("T")[0] <= "2024-08-31"
+      ).length,
+    },
+    {
+      month: "September",
+      postCreated: posts.filter(
+        (post) =>
+          post.created_at.split("T")[0] >= "2024-09-01" &&
+          post.created_at.split("T")[0] <= "2024-09-30"
+      ).length,
+    },
+    {
+      month: "October",
+      postCreated: posts.filter(
+        (post) =>
+          post.created_at.split("T")[0] >= "2024-10-01" &&
+          post.created_at.split("T")[0] <= "2024-10-31"
+      ).length,
+    },
+    {
+      month: "November",
+      postCreated: posts.filter(
+        (post) =>
+          post.created_at.split("T")[0] >= "2024-11-01" &&
+          post.created_at.split("T")[0] <= "2024-11-30"
+      ).length,
     },
   ];
 
@@ -176,15 +206,15 @@ export default function OverallManagementPage() {
       <div className="forum-infor basis-[65%] h-[42vh] flex flex-col gap-2">
         <div className="forum-info__header flex items-center gap-2">
           <p className="text-xl font-bold text-primary">
-            Total post access per month
+            Total post created per month
           </p>
           <div className="bg-white px-2 py-1 text-base text-primary rounded-lg border border-gray-500">
-            Total post access: {totalPostAccess}
+            Total post created: {totalPostCreated}
           </div>
         </div>
         <div className="forum-info__chart w-full h-full bg-white rounded-2xl">
           <LineChart
-            dataset={postsAccessPerMonthData}
+            dataset={postsCreatedPerMonthData}
             xAxis={[{ dataKey: "month", scaleType: "point" }]}
             series={[
               {
@@ -200,8 +230,8 @@ export default function OverallManagementPage() {
                 colorMap: {
                   type: "continuous",
                   min: 0,
-                  max: postsAccessPerMonthData.reduce(
-                    (max, { postAccess }) => Math.max(max, postAccess),
+                  max: postsCreatedPerMonthData.reduce(
+                    (max, { postCreated }) => Math.max(max, postCreated),
                     0
                   ),
                   color: ["#2D60FF33", "#1814F3"],
