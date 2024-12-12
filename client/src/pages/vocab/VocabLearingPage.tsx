@@ -67,8 +67,7 @@ export default function VocabLearingPage() {
   }
 
   return (
-    <div className="">
-      <div className="flex flex-row items-stretch">
+      <div className="w-full h-screen flex flex-row items-stretch">
         <LeftBarVocab VocabLists={sVocab.value.vocabTopics} />
         <div className="w-full flex flex-col gap-4 py-4 px-6">
           <FlashCard
@@ -86,6 +85,5 @@ export default function VocabLearingPage() {
           />
         </div>
       </div>
-    </div>
   );
 }

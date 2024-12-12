@@ -132,10 +132,11 @@ class ForumController {
                 return;
             }
             const result = await forumServiceInstance.likePost(postId, req.body);
-            if(result){
+            if(result !== null){
                 res.status(200).json({
                     EM: 'Post liked successfully',
                     EC: 0,
+                    DT: result
                 });
             }
         } catch (error: any) {
@@ -266,10 +267,11 @@ class ForumController {
                 return;
             }
             const result = await forumServiceInstance.likeComment(postId, commentId, req.body);
-            if(result){
+            if(result !== null){
                 res.status(201).json({
                     EM: 'Comment liked successfully',
                     EC: 0,
+                    DT: result
                 });
             }
         } catch (error: any) {

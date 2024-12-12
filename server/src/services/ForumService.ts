@@ -31,26 +31,27 @@ class ForumService {
     }
     return null;
   }
-  async likePost(postId: string, body: any): Promise<boolean> {
-    const result = await collections.posts?.findOne( { _id: new ObjectId(postId) });
-    const foundPost = result as Post;
-    if(result){
-      console.log("back-end" + body.isLike);
-      console.log("back-end" + body.userId);
-      if(body.isLike == true){
-        foundPost.totalLike.push(body.userId);
-      } else {
-        console.log("back-end flase called");
-        foundPost.totalLike = foundPost.totalLike.filter((id) => id !== body.userId);
+  async likePost(postId: string, body: { isLike: boolean; userId: string }): Promise<Post | null> {
+    try {
+      const result = await collections.posts?.findOne({ _id: new ObjectId(postId) });
+      if (result) {
+        const foundPost = result as Post;
+        if (body.isLike) {
+          foundPost.totalLike.push(body.userId);
+        } else {
+          foundPost.totalLike = foundPost.totalLike.filter((id) => id !== body.userId);
+        }
+        console.log("back-end totalLike:", foundPost.totalLike);
+        const likeResult = await collections.posts?.updateOne(
+          { _id: new ObjectId(postId) },
+          { $set: { totalLike: foundPost.totalLike, updated_at: new Date().toISOString() } }
+        );
+        return foundPost as Post;
       }
-      console.log("back-end" + foundPost.totalLike);
-      const likeResult = await collections.posts?.updateOne(
-        { _id: new ObjectId(postId) },
-        { $set: { totalLike: foundPost.totalLike, updated_at: new Date().toISOString() } }
-      );
-      return result ? true : false;
+    } catch (error) {
+      return null;
     }
-    return false;
+    return null;
   }
   async createComment(postId: string, newComment: Comment): Promise<boolean> {
     const result = await collections.posts?.findOne(
@@ -67,7 +68,7 @@ class ForumService {
     }
     return false;
   }
-  async likeComment(postId: string, commentId: string, body: any): Promise<boolean> {
+  async likeComment(postId: string, commentId: string, body: { isLike: boolean; userId: string }): Promise<Comment | null> {
     const result = await collections.posts?.findOne(
       { _id: new ObjectId(postId) },
     ) ;
@@ -86,9 +87,9 @@ class ForumService {
           { _id: new ObjectId(postId) },
           { $set: { comments: foundPost.comments, updated_at: new Date().toISOString() } }
         );
-        return result ? true : false;
+        return foundPost.comments[commentIndex] as Comment;
     }
-    return false;
+    return null;
   }
   async updateComment(postId: string, commentId: string, updateComment: Comment): Promise<boolean> {
     const result = await collections.posts?.findOne( {_id: new ObjectId(postId) });
