@@ -2,6 +2,7 @@ import { CreatingQuestionGroup } from "@/components";
 import { Question } from "@/entities";
 import { CreateRoadmapExerciseDTO } from "@/entities/dtos";
 import { roadmapService } from "@/services";
+import http from "@/services/http";
 import { sNewTest } from "@/store";
 import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -12,6 +13,8 @@ export default function CreatingRoadmapExsPage() {
   const [phase, setPhase] = useState<number>(1);
   const [part, setPart] = useState<number>(1);
   const [chapter, setChapter] = useState<number>(1);
+  const [mainAudio, setMainAudio] = useState<File | null>(null);
+
   const [questionGroups, setQuestionGroups] = useState<
     { id: string; number: number }[]
   >([
@@ -45,8 +48,38 @@ export default function CreatingRoadmapExsPage() {
       questionGroups.filter((questionGroup) => questionGroup.id !== id)
     );
   };
-
+  const uploadFile = async (file: File) => {
+    try {
+      const response = await http.get(
+        `file/presigned-url?fileName=${file.name}&contentType=${file.type}`
+      );
+      //console.log(response);
+      console.log(response);
+      const result = await fetch(response.presignedUrl, {
+        method: "PUT",
+        headers: {
+          "Content-Type": file.type,
+        },
+        body: file,
+      });
+      console.log(result);
+      if (!result.ok) {
+        console.log("Failed to upload file to S3");
+        return "";
+      }
+      return "https://seuit-qlnt.s3.amazonaws.com/" + response.key;
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      return "";
+    }
+  };
   const handleCreateRoadmapEx = async () => {
+    if (part < 5 && !mainAudio) {
+      alert("Please upload main audio");
+      return;
+    }
+    const mainAudioUrl =
+      part < 5 && mainAudio ? await uploadFile(mainAudio) : "";
     try {
       const newRoadmapEx: CreateRoadmapExerciseDTO = {
         phase,
@@ -54,7 +87,7 @@ export default function CreatingRoadmapExsPage() {
         chapter,
         questions,
         created_by: "admin",
-        main_audio: "",
+        main_audio: mainAudioUrl,
       };
       console.log(newRoadmapEx);
       const res = await roadmapService.createRoadmapExercise(newRoadmapEx);
@@ -121,7 +154,17 @@ export default function CreatingRoadmapExsPage() {
       {part < 5 && (
         <div className="audio flex gap-2 items-center">
           <p className="text-2xl font-bold">Listening Audio:</p>
-          <input type="file" accept="audio/*" disabled={isAllBlocked} />
+          <input
+            type="file"
+            accept="audio/*"
+            multiple={false}
+            disabled={isAllBlocked}
+            onChange={(e) => {
+              if (e.target.files) {
+                setMainAudio(e.target.files[0]);
+              }
+            }}
+          />
         </div>
       )}
 

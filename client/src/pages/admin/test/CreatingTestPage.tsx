@@ -7,6 +7,7 @@ import { Question } from "@/entities";
 import CreateTestDTO from "@/entities/dtos/CreateTestDTO";
 import { sNewTest } from "@/store";
 import { useNavigate } from "react-router-dom";
+import http from "@/services/http";
 
 export default function CreatingTestPage() {
   const nav = useNavigate();
@@ -78,7 +79,31 @@ export default function CreatingTestPage() {
   const [mainAudio, setMainAudio] = useState<File | null>(null);
   const [difficulty, setDifficulty] = useState("");
   const [questions, setQuestions] = useState<Question[]>([]);
-
+  const uploadFile = async (file: File) => {
+    try {
+      const response = await http.get(
+        `file/presigned-url?fileName=${file.name}&contentType=${file.type}`
+      );
+      //console.log(response);
+      console.log(response);
+      const result = await fetch(response.presignedUrl, {
+        method: "PUT",
+        headers: {
+          "Content-Type": file.type,
+        },
+        body: file,
+      });
+      console.log(result);
+      if (!result.ok) {
+        console.log("Failed to upload file to S3");
+        return "";
+      }
+      return "https://seuit-qlnt.s3.amazonaws.com/" + response.key;
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      return "";
+    }
+  };
   const isAllBlocked = sNewTest.use((v) => v.isSaved);
   useEffect(() => {
     if (!isAllBlocked) {
@@ -98,13 +123,22 @@ export default function CreatingTestPage() {
     sNewTest.set((v) => (v.value.isSaved = !v.value.isSaved));
   };
   const handleCreateTest = async () => {
+    if (!title || !description || !createdBy || !difficulty || !mainAudio) {
+      alert("Please fill all fields");
+      return;
+    }
+    const mainAudioUrl = await uploadFile(mainAudio);
+    if (!mainAudioUrl) {
+      alert("Failed to upload main audio");
+      return;
+    }
     const newTest: CreateTestDTO = {
       title,
       description,
-      main_audio: mainAudio ? URL.createObjectURL(mainAudio) : "example.mp3",
+      main_audio: mainAudioUrl,
       isMiniTest,
       created_by: createdBy,
-      difficulty: "easy",
+      difficulty: difficulty,
       questions,
     };
     createTest(newTest);
@@ -182,7 +216,16 @@ export default function CreatingTestPage() {
       </div>
       <div className="audio flex gap-2 items-center">
         <p className="text-2xl font-bold">Listening Audio:</p>
-        <input type="file" accept="audio/*" />
+        <input
+          type="file"
+          accept="audio/*"
+          multiple={false}
+          onChange={(e) => {
+            if (e.target.files) {
+              setMainAudio(e.target.files[0]);
+            }
+          }}
+        />
       </div>
       <div className="part-1 flex flex-col gap-2">
         <p className="text-2xl font-bold">Part 1</p>

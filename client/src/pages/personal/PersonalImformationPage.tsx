@@ -1,7 +1,6 @@
 import PasswordChangePopup from "@/components/personal/PasswordChangePopup";
 import { Avatar, Button, TextField } from "@mui/material";
-import React, { useState, useRef, useEffect } from "react";
-import Dropzone, { IFileWithMeta, StatusValue } from "react-dropzone-uploader";
+import React, { useState, useEffect } from "react";
 import http from "@/services/http";
 import { userService } from "@/services";
 import { sUser } from "@/store";
@@ -10,12 +9,9 @@ export default function PersonalImformationPage() {
   const currentUser = sUser.use((v) => v.info);
   const [showPasswordChangePopup, setShowPasswordChangePopup] =
     useState<boolean>(false);
-  const [avatarUrl, setAvatarUrl] = useState<string>(
-    "https://images.unsplash.com/photo-1730051470698-f5c95d6d5120?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzNHx8fGVufDB8fHx8fA%3D%3D"
-  );
+  const [avatarUrl, setAvatarUrl] = useState<string>("");
   const [fullName, setFullName] = useState<string>("");
-  const [selectedFile, setSelectedFile] = useState<IFileWithMeta | null>(null);
-  const dropzoneRef = useRef<Dropzone | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   let key = "";
   useEffect(() => {
     if (currentUser) {
@@ -23,22 +19,6 @@ export default function PersonalImformationPage() {
       setAvatarUrl(currentUser.avatar || "");
     }
   }, [currentUser]);
-
-  const handleChangeStatus = (
-    { meta, file }: { meta: { name: string }; file: File },
-    status: StatusValue
-  ) => {
-    if (status === "done") {
-      // const reader = new FileReader();
-      // reader.onload = (e) => {
-      //   setAvatarUrl(e.target?.result as string);
-      // };
-      // reader.readAsDataURL(file);
-      setAvatarUrl(URL.createObjectURL(file));
-      setSelectedFile({ meta, file });
-    }
-    console.log(status, meta);
-  };
 
   const handleSubmit = async (file: File) => {
     try {
@@ -89,7 +69,7 @@ export default function PersonalImformationPage() {
 
   const handleUpdateButtonClick = async () => {
     if (selectedFile) {
-      const file = await handleSubmit(selectedFile.file);
+      const file = await handleSubmit(selectedFile);
       if (file === null) {
         return;
       } else {
@@ -107,27 +87,17 @@ export default function PersonalImformationPage() {
       </h2>
       <div className="bg-[#fff] py-5 px-5 flex flex-col items-center gap-3">
         <Avatar alt="" src={avatarUrl} sx={{ width: 160, height: 160 }} />
-        <div className="upload-button w-12 h-6 flex justify-center items-center">
-          <Dropzone
-            ref={dropzoneRef}
-            onChangeStatus={handleChangeStatus}
-            maxFiles={1}
-            multiple={false}
-            accept="image/*"
-            submitButtonDisabled={false}
-            canRemove={true}
-            inputContent={null}
-            classNames={{
-              dropzone: `w-12 bg-gray-100`,
-              submitButton: "hidden",
-              previewImage: "hidden",
-              submitButtonContainer: "hidden",
-              input: "cursor-pointer",
-              inputLabel: "",
-              inputLabelWithFiles: "w-full",
-            }}
-          />
-        </div>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => {
+            if (e.target.files) {
+              const file = e.target.files[0];
+              setAvatarUrl(URL.createObjectURL(file));
+              setSelectedFile(file);
+            }
+          }}
+        />
         <TextField
           label="Họ tên"
           variant="outlined"
