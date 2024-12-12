@@ -22,8 +22,8 @@ class ForumService {
   async deletePost(id: string) {
     return await http.delete(this.getURI(`deletePost/${id}`));
   }
-  async likePost(id: string, isLike: boolean) {
-    return await http.put(this.getURI(`likePost/${id}`), {isLike});
+  async likePost(id: string, likeDTO: { isLike: boolean, userId: string }) {
+    return await http.put(this.getURI(`likePost/${id}`), { ...likeDTO });
   }
   async createComment(postId: string, data: CreateCommentDTO) {
     return await http.post(this.getURI(`createComment/${postId}`), data);
@@ -34,8 +34,8 @@ class ForumService {
   async deleteComment(postId: string, commentId: string) {
     return await http.delete(this.getURI(`deleteComment/${postId}/${commentId}`));
   }
-  async likeComment(postId: string, commentId: string, isLike: boolean) {
-    return await http.put(this.getURI(`likeComment/${postId}/${commentId}`), {isLike});
+  async likeComment(postId: string, commentId: string, likeDTO: { isLike: boolean, userId: string }) {
+    return await http.put(this.getURI(`likeComment/${postId}/${commentId}`), {...likeDTO});
   }
 }
 export default new ForumService();

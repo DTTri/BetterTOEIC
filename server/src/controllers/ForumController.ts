@@ -13,7 +13,7 @@ class ForumController {
                 _id: new ObjectId(),
                 ...createdPostDTO,
                 comments: [],
-                totalLike: 0,
+                totalLike: [],
                 created_at: new Date().toISOString(),
                 updated_at: new Date().toISOString()
             };
@@ -131,7 +131,7 @@ class ForumController {
                 });
                 return;
             }
-            const result = await forumServiceInstance.likePost(postId, req.body.isLike);
+            const result = await forumServiceInstance.likePost(postId, req.body);
             if(result){
                 res.status(200).json({
                     EM: 'Post liked successfully',
@@ -152,14 +152,6 @@ class ForumController {
                 res.status(400).json({
                     EM: 'Post ID is required',
                     EC: 1
-                });
-                return;
-            }
-            const curPost = await forumServiceInstance.getPostById(postId);
-            if(!curPost){
-                res.status(400).json({
-                    EM: 'Post not found',
-                    EC: 2
                 });
                 return;
             }
@@ -187,19 +179,11 @@ class ForumController {
                 });
                 return;
             }
-            const curPost = await forumServiceInstance.getPostById(postId);
-            if(!curPost){
-                res.status(400).json({
-                    EM: 'Post not found',
-                    EC: 2
-                });
-                return;
-            }
             const createdComment: CreateCommentDTO = req.body;
             const newComment: Comment = {
                 ...createdComment,
                 _id: new ObjectId(),
-                totalLike: 0,
+                totalLike: [],
                 created_at: new Date().toISOString(),
                 updated_at: new Date().toISOString()
             }
@@ -225,15 +209,6 @@ class ForumController {
                 res.status(400).json({
                     EM: 'Post ID or Comment Id is required',
                     EC: 1
-                });
-                return;
-            }
-            const curPost = await forumServiceInstance.getPostById(postId);
-            const curComment = curPost?.comments.find(comment => comment._id.toString() === commentId.toString());
-            if(!curComment){
-                res.status(400).json({
-                    EM: 'Comment not found',
-                    EC: 2
                 });
                 return;
             }
@@ -290,23 +265,7 @@ class ForumController {
                 });
                 return;
             }
-            const curPost = await forumServiceInstance.getPostById(postId);
-            const curComment = curPost?.comments.find(comment => comment._id.toString() === commentId.toString());
-            if(!curPost){
-                res.status(400).json({
-                    EM: 'Post not found',
-                    EC: 2
-                });
-                return;
-            }
-            if(!curComment){
-                res.status(400).json({
-                    EM: 'Comment not found',
-                    EC: 2
-                });
-                return;
-            }
-            const result = await forumServiceInstance.likeComment(postId, commentId, req.body.isLike);
+            const result = await forumServiceInstance.likeComment(postId, commentId, req.body);
             if(result){
                 res.status(201).json({
                     EM: 'Comment liked successfully',

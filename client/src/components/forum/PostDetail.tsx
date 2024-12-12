@@ -7,6 +7,8 @@ import ImageModal from "./ImageModal";
 import { Post } from "@/entities";
 import { useParams } from "react-router-dom";
 import { sUser } from "@/store";
+import LoadingProgress from "../LoadingProgress";
+import { Item } from "@radix-ui/react-select";
 
 function PostOptions(
     { onDelete, onEdit } : { 
@@ -37,13 +39,20 @@ export default function PostDetail( { post
   const { id } = useParams();
 //   const postLists = sForum.use((cur) => cur.posts);
 //   const [post, setPost] = useState<Post>();
+  const userId = sUser.use((cur) => cur.info._id);
+  if(!post || !userId) {
+    return <LoadingProgress />
+  }
   const [showOptions, setShowOptions] = useState(false);
   const [image, setImage] = useState("");
-  const [isLiked, setIsLiked] = useState(false);
-  const userId = sUser.use((cur) => cur.info._id);
-  console.log(post);
+
+  const [isLiked, setIsLiked] = useState(() => {
+    const findPost =  post.totalLike.find(item => item === userId);
+    return findPost ? true : false;
+  });
   
   const handleOnLike = () => {
+    console.log("isLiked in Comp" + isLiked);
     onLike(!isLiked);
     setIsLiked(!isLiked);
   }
@@ -105,7 +114,7 @@ export default function PostDetail( { post
             className="cursor-pointer hover:bg-zinc-100 rounded-full"
           />
           <span className="text-[#202224] font-bold text-sm">
-            {post.totalLike}
+            {post.totalLike.length}
           </span>
         </div>
         <div className="flex flex-row items-center gap-1">
