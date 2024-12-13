@@ -20,8 +20,8 @@ export default function DoingRoadmapExsPage() {
     phase: 0,
     part: 0,
     chapter: 0,
-    created_at: new Date(),
-    updated_at: new Date(),
+    created_at: "",
+    updated_at: "",
     created_by: "",
     questions: [],
   });
@@ -29,7 +29,7 @@ export default function DoingRoadmapExsPage() {
   const params = useParams();
   const nav = useNavigate();
   const roadmapExerciseId = params.roadmapExerciseId;
-  const userId = sUser.use((state) => state.id);
+  const userId = sUser.use((state) => state.info._id);
 
   useEffect(() => {
     if (!roadmapExerciseId) {
@@ -219,7 +219,9 @@ export default function DoingRoadmapExsPage() {
       <div className="w-full p-4 flex flex-col gap-4">
         <div className="w-full flex items-center gap-4">
           <Timer onEnd={onSubmit} />
-          {roadmapExercise.part < 5 && <ListeningAudio />}
+          {roadmapExercise.part < 5 && (
+            <ListeningAudio audioFile={roadmapExercise.main_audio || ""} />
+          )}
           <Button variant="contained" color="primary" onClick={onSubmit}>
             Submit
           </Button>

@@ -54,7 +54,7 @@ export default function CreatingRoadmapPage() {
       const res = await roadmapService.createPersonalRoadmap({
         start_level,
         target_level,
-        userId: sUser.value.id,
+        userId: sUser.value.info._id,
         current_level: sCreatingPersonalRoadmap.value.startLevel,
       });
       if (res.EC === 0) {
@@ -99,71 +99,75 @@ export default function CreatingRoadmapPage() {
         >
           <SwiperSlide className="step-1.1 flex flex-col items-center gap-6">
             <h3 className="text-3xl font-bold text-center">
-              THIẾT LẬP TRÌNH ĐỘ HIỆN TẠI
+              {/* THIẾT LẬP TRÌNH ĐỘ HIỆN TẠI */}
+              SET YOUR CURRENT LEVEL
             </h3>
             <img className="h-56" src="/src/assets/geotag.png" alt="geotag" />
             <p className="text-xl font-bold text-center">
-              Để có được một lộ trình đúng đắn và cụ thể, hãy cho chúng tôi biết
-              trình độ hiện tại của bạn!
+              {/* Để có được một lộ trình đúng đắn và cụ thể, hãy cho chúng tôi biết
+              trình độ hiện tại của bạn! */}
+              To have an accurate and specific roadmap, let us know your current
+              level!
             </p>
             <div className="buttons-container flex gap-4 mt-4">
               <button
                 className="manual bg-white text-black text-lg px-3 py-2 border border-secondary rounded-md"
                 onClick={() => handleSlideTo(1)}
               >
-                Thiết lập trình độ
+                {/* Thiết lập trình độ */}
+                Set level
               </button>
-              <button
+              {/* <button
                 className="taking-test bg-secondary text-white text-lg px-3 py-2 rounded-md"
                 onClick={handleNextSlide}
               >
                 Làm bài thi thử
-              </button>
+              </button> */}
             </div>
           </SwiperSlide>
           <SwiperSlide className="step-1.2 flex flex-col gap-4">
-            <h3 className="text-3xl font-bold">THIẾT LẬP TRÌNH ĐỘ HIỆN TẠI</h3>
+            <h3 className="text-3xl font-bold">
+              {/*ThIẾT LẬP TRÌNH ĐỘ HIỆN TẠI */}
+              SET YOUR CURRENT LEVEL
+            </h3>
             <div className="level-chart-container w-3/4 mx-auto">
               <LevelChart isStartChart={true} />
             </div>
             <div className="level-explain-container w-3/4 mx-auto">
-              <LevelExplain
-                level="470 - 725"
-                explain="Bạn có thể chủ động bắt đầu và duy trì các cuộc trò chuyện trực tiếp có thể dự đoán được và đáp ứng các nhu cầu xã hội hạn chế."
-              />
+              <LevelExplain isStartLevel={true} />
             </div>
             <div className="buttons-container absolute bottom-2 w-full flex justify-between items-center">
               <button
                 className="prev-slide bg-white text-black text-lg px-3 py-2 border border-secondary rounded-md"
                 onClick={handlePrevSlide}
               >
-                Quay lại
+                Back
               </button>
               <button
                 className="next-slide bg-secondary text-white text-lg px-3 py-2 rounded-md"
                 onClick={handleNextSlide}
               >
-                Tiếp tục
+                Next
               </button>
             </div>
           </SwiperSlide>
           <SwiperSlide className="step-2 flex flex-col gap-4">
-            <h3 className=" text-3xl font-bold">THIẾT LẬP MỤC TIÊU</h3>
+            <h3 className=" text-3xl font-bold">
+              {/* THIẾT LẬP MỤC TIÊU */}
+              SET YOUR TARGET LEVEL
+            </h3>
             <div className="level-chart-container w-3/4 mx-auto">
               <LevelChart isStartChart={false} />
             </div>
             <div className="level-explain-container w-3/4 mx-auto">
-              <LevelExplain
-                level="860 - 990"
-                explain="Bạn có thể hiểu được các ý chính của văn bản phức tạp, bao gồm cả các thảo luận chuyên ngành. Bạn có thể tương tác với người bản xứ."
-              />
+              <LevelExplain isStartLevel={false} />
             </div>
             <div className="buttons-container absolute bottom-2 w-full flex justify-between items-center mt-4">
               <button
                 className="prev-slide bg-white text-black text-lg px-3 py-2 border border-secondary rounded-md"
                 onClick={handlePrevSlide}
               >
-                Quay lại
+                Back
               </button>
               <button
                 className="next-slide bg-secondary text-white text-lg px-3 py-2 rounded-md"
@@ -172,12 +176,15 @@ export default function CreatingRoadmapPage() {
                   handleNextSlide();
                 }}
               >
-                Tạo lộ trình
+                Create roadmap
               </button>
             </div>
           </SwiperSlide>
           <SwiperSlide className="step-3 flex flex-col gap-8">
-            <h3 className="text-3xl font-bold">XÂY DỰNG LỘ TRÌNH</h3>
+            <h3 className="text-3xl font-bold">
+              {/* XÂY DỰNG LỘ TRÌNH HỌC */}
+              BUILDING YOUR ROADMAP
+            </h3>
             {currentStep === 3 && (
               <>
                 <BuildRoadmapProgressBar
@@ -185,9 +192,12 @@ export default function CreatingRoadmapPage() {
                 />
                 {completeCreatingRoadmap && (
                   <p className="text-xl font-semibold text-center">
-                    Lộ trình học tập cá nhân hóa của bạn đã được khởi tạo thành
+                    {/* Lộ trình học tập cá nhân hóa của bạn đã được khởi tạo thành
                     công. Hãy bắt đầu tham gia lộ trình để đạt được số điểm
-                    TOEIC mong muốn!
+                    TOEIC mong muốn! */}
+                    Your personalized learning roadmap has been successfully set
+                    up. Let's start the journey to achieve your desired TOEIC
+                    score!
                   </p>
                 )}
               </>
@@ -197,7 +207,7 @@ export default function CreatingRoadmapPage() {
                 className="prev-slide bg-white text-black text-lg px-3 py-2 border border-secondary rounded-md"
                 onClick={handlePrevSlide}
               >
-                Quay lại
+                Back
               </button>
               {completeCreatingRoadmap && (
                 <button className="end-swiper bg-secondary text-white text-lg px-3 py-2 rounded-md">

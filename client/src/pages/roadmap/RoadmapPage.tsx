@@ -1,6 +1,6 @@
 import { ChaptersContainer, CurrentPhaseContainer } from "@/components";
 import { RoadmapExercise, RoadmapHistory } from "@/entities";
-import { sRoadmap } from "@/store";
+import { sCreatingPersonalRoadmap, sRoadmap } from "@/store";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 export default function RoadmapPage() {
@@ -12,10 +12,7 @@ export default function RoadmapPage() {
   sRoadmap.watch((newValue) => {
     console.log("sRoadmap: " + newValue.exercises);
   }, []);
-  // sRoadmap.watch((newValue) => {
-  //   console.log("sRoadmap: " + newValue.exercises);
-  //   setRoadmapExercises(newValue.exercises as RoadmapExercise[]);
-  // }, []);
+
   return (
     <>
       {!userRoadmap ? (
@@ -42,7 +39,22 @@ export default function RoadmapPage() {
               progress={50}
             />
           </div>
-          <div className="roadmap-exercise-container rounded-xl w-5/6 bg-white p-8 mx-auto">
+          <div className="roadmap-exercise-container rounded-xl w-5/6 bg-white p-8 mx-auto relative">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                sCreatingPersonalRoadmap.reset();
+                nav("/creating-roadmap");
+              }}
+              style={{
+                position: "absolute",
+                top: "1rem",
+                right: "1rem",
+              }}
+            >
+              Change roadmap
+            </Button>
             <div className="parts-list w-3/5 mx-auto flex flex-col items-center gap-4">
               {/* sua lai map roadmapExercises ra sao cho cac phan tu co cung part se duoc truyen vao 1 ChaptersContainer, property cua 
              ChaptersContainer se la part (number), chapters (RoadmapExercise[]) va unlockedChapters (number) */}

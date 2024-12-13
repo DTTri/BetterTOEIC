@@ -40,7 +40,7 @@ import { useEffect } from "react";
 import { forumService, testService, userService } from "./services";
 import VocabCardGallery from "./pages/vocab/VocabCardGalleryPage";
 import VocabLearingPage from "./pages/vocab/VocabLearingPage";
-import { sCreatingPersonalRoadmap, sRoadmap, sUser, sVocab } from "./store";
+import { sRoadmap, sUser, sVocab } from "./store";
 import { roadmapService } from "./services";
 import { testStore } from "./store/testStore";
 import practiceService from "./services/practiceService";
@@ -51,9 +51,10 @@ import AuthLayout from "./pages/AuthLayout";
 import sForum from "./store/forumStore";
 import ReviewTestPage from "./pages/test/ReviewTestPage";
 import ReviewPracticePage from "./pages/practice/ReviewPracticePage";
+import { User } from "./entities";
 
 function App() {
-  const curUser = localStorage.getItem('_id') || sessionStorage.getItem('_id');
+  const curUser = localStorage.getItem("_id") || sessionStorage.getItem("_id");
   useEffect(() => {
     const fetchAllUsers = async () => {
       try {
@@ -61,8 +62,8 @@ function App() {
         console.log(response);
         if (response.EC === 0) {
           sUser.set((prev) => (prev.value.users = response.DT));
-          if(curUser && curUser !== '') {
-            response.DT.forEach((user: any) => {
+          if (curUser && curUser !== "") {
+            response.DT.forEach((user: User) => {
               if (user._id === curUser) {
                 sUser.set((prev) => (prev.value.info = user));
               }
@@ -104,7 +105,7 @@ function App() {
     };
     const fetchTestHistory = async () => {
       try {
-        const response = await testService.getTestHistory(curUser || '');
+        const response = await testService.getTestHistory(curUser || "");
         console.log(response);
         if (response.EC === 0) {
           testStore.set((prev) => (prev.value.testHistory = response.DT));
@@ -117,7 +118,7 @@ function App() {
     };
     const fetchTestSaved = async () => {
       try {
-        const response = await testService.getTestsSaved(curUser || '');
+        const response = await testService.getTestsSaved(curUser || "");
         if (response.EC === 0) {
           console.log("Test saved" + response.DT);
           testStore.set((prev) => (prev.value.testsSaved = response.DT));
@@ -146,7 +147,7 @@ function App() {
     const fetchPracticeTestHistory = async () => {
       try {
         const response = await practiceService.getPracticeTestHistory(
-          curUser || ''
+          curUser || ""
         );
         console.log(response);
         if (response.EC === 0) {
@@ -178,7 +179,7 @@ function App() {
     const fetchPracticeLessonHistory = async () => {
       try {
         const response = await practiceService.getPracticeLessonHistory(
-          curUser || ''
+          curUser || ""
         );
         console.log(response);
         if (response.EC === 0) {
@@ -196,7 +197,10 @@ function App() {
     };
     const fetchRoadmapExercises = async () => {
       try {
-        const res = await roadmapService.getRoadmapExercisesByPhase(1);
+        console.log("User roadmap: " + sRoadmap.value.userRoadmap);
+        const res = await roadmapService.getRoadmapExercisesByPhase(
+          sRoadmap.value.userRoadmap?.current_level || 1
+        );
         if (res.EC === 0) {
           sRoadmap.set((pre) => (pre.value.exercises = res.DT));
           console.log("fetch roadmap exercises", res.DT);
@@ -209,13 +213,10 @@ function App() {
     };
     const fetchUserRoadmap = async () => {
       try {
-        const res = await roadmapService.getRoadmapHistory(curUser || '');
+        const res = await roadmapService.getRoadmapHistory(curUser || "");
         if (res.EC === 0) {
           sRoadmap.set((pre) => (pre.value.userRoadmap = res.DT));
-          sCreatingPersonalRoadmap.set((pre) => {
-            pre.value.startLevel = res.DT.current_level;
-            pre.value.targetLevel = res.DT.target_level;
-          });
+
           console.log("fetch user roadmap", res.DT);
         } else {
           console.log(res.EM);
@@ -240,7 +241,7 @@ function App() {
     };
     const fetchSavedVocabs = async () => {
       try {
-        const response = await vocabService.getVocabsSaved(curUser || '');
+        const response = await vocabService.getVocabsSaved(curUser || "");
         if (response.EC === 0) {
           console.log(response);
           sVocab.set((prev) => (prev.value.vocabsSaved = response.DT));
@@ -253,7 +254,7 @@ function App() {
     };
     const fetchVocabHistory = async () => {
       try {
-        const response = await vocabService.getVocabHistory(curUser || '');
+        const response = await vocabService.getVocabHistory(curUser || "");
         if (response.EC === 0) {
           console.log(response);
           sVocab.set((prev) => (prev.value.vocabHistory = response.DT.topics));
@@ -276,24 +277,27 @@ function App() {
       } catch (error) {
         console.log("Fail to fetch forum: ", error);
       }
-    }
-    fetchAllUsers();
-    Promise.all([
-      fetchUsersPerBand(),
-      fetchTests(),
-      fetchTestHistory(),
-      fetchTestSaved(),
-      fetchPracticeTests(),
-      fetchPracticeTestHistory(),
-      fetchPracticeLesson(),
-      fetchPracticeLessonHistory(),
-      fetchRoadmapExercises(),
-      fetchUserRoadmap(),
-      fetchVocabs(),
-      fetchSavedVocabs(),
-      fetchVocabHistory(),
-      fetchForum(),
-    ]);
+    };
+    const fetchData = async () => {
+      await fetchAllUsers();
+      await fetchUserRoadmap();
+      await Promise.all([
+        fetchUsersPerBand(),
+        fetchTests(),
+        fetchTestHistory(),
+        fetchTestSaved(),
+        fetchPracticeTests(),
+        fetchPracticeTestHistory(),
+        fetchPracticeLesson(),
+        fetchPracticeLessonHistory(),
+        fetchRoadmapExercises(),
+        fetchVocabs(),
+        fetchSavedVocabs(),
+        fetchVocabHistory(),
+        fetchForum(),
+      ]);
+    };
+    fetchData();
   }, []);
 
   return (
@@ -376,11 +380,19 @@ function App() {
       />
       <Route
         path="/taking-practice/:part/:id"
-        element={<UserLayout haveFooter={false}><TakingPracticePage/></UserLayout>}
+        element={
+          <UserLayout haveFooter={false}>
+            <TakingPracticePage />
+          </UserLayout>
+        }
       />
       <Route
         path="/review-practice/:part/:id"
-        element={<UserLayout haveFooter={false}><ReviewPracticePage/></UserLayout>}
+        element={
+          <UserLayout haveFooter={false}>
+            <ReviewPracticePage />
+          </UserLayout>
+        }
       />
       <Route
         path="/creating-roadmap"
@@ -470,39 +482,14 @@ function App() {
           </UserLayout>
         }
       />
-            <Route path="" element={ <AuthLayout></AuthLayout>}>
+      <Route path="" element={<AuthLayout></AuthLayout>}>
         <Route path="*" element={<ErrorPage />} />
-        <Route
-        path="/error"
-        element={
-            <ErrorPage />
-        }
-      />
+        <Route path="/error" element={<ErrorPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route
-          path="/register"
-          element={
-            <RegisterPage />
-          }
-        />
-        <Route
-        path="/forgot-password"
-        element={
-            <ForgotPasswordPage />
-        }
-      />
-        <Route
-          path="/reset-password/:token"
-          element={
-              <RessetPasswordPage />
-          }
-        />
-        <Route
-          path="/verifyEmail/:token"
-          element={
-              <VerifyEmailPage />
-          }
-        />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password/:token" element={<RessetPasswordPage />} />
+        <Route path="/verifyEmail/:token" element={<VerifyEmailPage />} />
       </Route>
     </Routes>
   );
