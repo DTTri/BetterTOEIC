@@ -1,7 +1,6 @@
 // This is just a stub code (mock code)
 
 import Question from "@/entities/Question";
-import { useState } from "react";
 
 export default function QuestionComponent({
   question,
@@ -37,7 +36,7 @@ export default function QuestionComponent({
                 id={`optionValue-${question.question_number}-${index}`}
                 onChange={(e) => {
                   //because array index is 0-based, but the question number 1-based, so we set question number -1
-                  onChoose(index + 1, question.question_number -1);
+                  onChoose(index + 1, question.question_number - 1);
                 }}
                 className="w-[20px] h-[20px] border-solid border-[1px] border-gray-400"
                 value={index}

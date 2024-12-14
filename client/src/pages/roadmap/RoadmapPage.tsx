@@ -36,7 +36,20 @@ export default function RoadmapPage() {
           <div className="w-1/2 min-w-fit mx-auto">
             <CurrentPhaseContainer
               currentPhase={userRoadmap.current_level}
-              progress={50}
+              progress={(() => {
+                const completedChapters =
+                  userRoadmap.completedRoadmapExercises.filter(
+                    (exercise) => exercise.phase === userRoadmap.current_level
+                  ).length;
+                if (roadmapExercises.length === 0) return 100;
+                return Math.floor(
+                  (completedChapters /
+                    roadmapExercises.filter(
+                      (exercise) => exercise.phase === userRoadmap.current_level
+                    ).length) *
+                    100
+                );
+              })()}
             />
           </div>
           <div className="roadmap-exercise-container rounded-xl w-5/6 bg-white p-8 mx-auto relative">
@@ -66,11 +79,6 @@ export default function RoadmapPage() {
                     roadmapExercises.filter(
                       (exercise) => exercise.part === index + 1
                     ) as RoadmapExercise[]
-                  }
-                  unlockedChapters={
-                    userRoadmap.completedRoadmapExercises.filter(
-                      (chapter) => chapter.part === index + 1
-                    ).length
                   }
                 />
               ))}

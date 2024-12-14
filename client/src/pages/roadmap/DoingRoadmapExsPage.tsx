@@ -214,7 +214,6 @@ export default function DoingRoadmapExsPage() {
         phase={roadmapExercise.phase}
         part={roadmapExercise.part}
         chapter={roadmapExercise.chapter}
-        unlockedChapters={4}
       />
       <div className="w-full p-4 flex flex-col gap-4">
         <div className="w-full flex items-center gap-4">
