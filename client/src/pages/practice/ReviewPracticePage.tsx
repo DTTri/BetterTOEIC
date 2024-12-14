@@ -1,8 +1,7 @@
-import { LeftBar, ListeningAudio } from "@/components";
+import { LeftBar, ListeningAudio, QuestionComponent } from "@/components";
 import LoadingProgress from "@/components/LoadingProgress";
 import CountingTimer from "@/components/practice/CountingTimer";
 import PracticeQuestionPallete from "@/components/practice/PracticeQuestionPallete";
-import QuestionReviewComponent from "@/components/test/QuestionReviewComponent";
 import { Question } from "@/entities";
 import CompletedPracticeTest from "@/entities/CompletedPracticeTest";
 import { practiceStore } from "@/store/practiceStore";
@@ -56,7 +55,6 @@ export default function ReviewPracticePage() {
             <h3 className="font-normal text-3xl text-[#000]">
               Câu hỏi số {curQuestionIndex + 1}
             </h3>
-            <CountingTimer />
             <Button
               style={{
                 backgroundColor: "#00C552",
@@ -69,10 +67,10 @@ export default function ReviewPracticePage() {
               variant="contained"
               color="success"
               onClick={() => {
-                nav("/practice");
+                nav("/taking-practice/" + part + "/" + id);
               }}
             >
-              Back
+              RETRY
             </Button>
           </div>
           <div className="flex items-center justify-center my-[20px]">
@@ -81,8 +79,8 @@ export default function ReviewPracticePage() {
             />
           </div>
           <div className="w-full bg-[#fff] rounded-[20px] px-8 py-7 mb-[20px]">
-            <QuestionReviewComponent
-              choice={history.choices[curQuestionIndex]}
+            <QuestionComponent
+              userChoice={history.choices[curQuestionIndex]}
               question={questions[curQuestionIndex]}
             />
           </div>
