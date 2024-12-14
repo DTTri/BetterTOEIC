@@ -3,16 +3,86 @@ import { RoadmapExercise, RoadmapHistory } from "@/entities";
 import { sCreatingPersonalRoadmap, sRoadmap } from "@/store";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
+import { useEffect, useState } from "react";
+import { roadmapService } from "@/services";
 export default function RoadmapPage() {
   const nav = useNavigate();
   const roadmapExercises: RoadmapExercise[] = sRoadmap.use((v) => v.exercises);
-
   const userRoadmap: RoadmapHistory | null = sRoadmap.use((v) => v.userRoadmap);
-
+  const [isConfirmResetRoadmapPopupOpen, setIsConfirmResetRoadmapPopupOpen] =
+    useState<boolean>(false);
+  const [progress, setProgress] = useState<number>(0);
   sRoadmap.watch((newValue) => {
     console.log("sRoadmap: " + newValue.exercises);
   }, []);
+  useEffect(() => {
+    if (userRoadmap) {
+      const completedChapters = userRoadmap.completedRoadmapExercises.filter(
+        (exercise) => exercise.phase === userRoadmap.current_level
+      ).length;
+      if (roadmapExercises.length === 0) setProgress(0);
+      else {
+        const currentProgress =
+          (completedChapters / roadmapExercises.length) * 100;
+        setProgress(currentProgress);
+        console.log("progress: " + currentProgress);
+        if (currentProgress === 100 && roadmapExercises.length > 0) {
+          const updateCurrentPhase = async () => {
+            try {
+              const res = await roadmapService.updateUserCurrentLevel(
+                userRoadmap._id
+              );
+              console.log(res);
+              if (res.EC === 0) {
+                const fetchRoadmapExercises = async () => {
+                  try {
+                    console.log("User roadmap: " + sRoadmap.value.userRoadmap);
+                    const res = await roadmapService.getRoadmapExercisesByPhase(
+                      (sRoadmap.value.userRoadmap?.current_level || 0) + 1
+                    );
+                    if (res.EC === 0) {
+                      sRoadmap.set((pre) => (pre.value.exercises = res.DT));
+                      console.log("fetch roadmap exercises", res.DT);
+                    } else {
+                      console.log(res.EM);
+                    }
+                  } catch (err) {
+                    console.log(err);
+                  }
+                };
+                fetchRoadmapExercises();
+                sRoadmap.set((pre) =>
+                  pre.value.userRoadmap
+                    ? (pre.value.userRoadmap.current_level =
+                        pre.value.userRoadmap.current_level + 1)
+                    : null
+                );
+              } else {
+                console.log(res.EM);
+              }
+            } catch (err) {
+              console.log(err);
+            }
+          };
+          updateCurrentPhase();
+        }
+      }
+    }
+  }, [userRoadmap, roadmapExercises]);
 
+  const handleResetRoadmap = async () => {
+    try {
+      const res = await roadmapService.resetUserRoadmap(userRoadmap?._id || "");
+      if (res.EC === 0) {
+        sRoadmap.set((pre) => (pre.value.userRoadmap = null));
+        nav("/creating-roadmap");
+      } else {
+        console.log(res.EM);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <>
       {!userRoadmap ? (
@@ -36,17 +106,14 @@ export default function RoadmapPage() {
           <div className="w-1/2 min-w-fit mx-auto">
             <CurrentPhaseContainer
               currentPhase={userRoadmap.current_level}
-              progress={50}
+              progress={progress}
             />
           </div>
           <div className="roadmap-exercise-container rounded-xl w-5/6 bg-white p-8 mx-auto relative">
             <Button
               variant="contained"
               color="primary"
-              onClick={() => {
-                sCreatingPersonalRoadmap.reset();
-                nav("/creating-roadmap");
-              }}
+              onClick={() => setIsConfirmResetRoadmapPopupOpen(true)}
               style={{
                 position: "absolute",
                 top: "1rem",
@@ -67,15 +134,37 @@ export default function RoadmapPage() {
                       (exercise) => exercise.part === index + 1
                     ) as RoadmapExercise[]
                   }
-                  unlockedChapters={
-                    userRoadmap.completedRoadmapExercises.filter(
-                      (chapter) => chapter.part === index + 1
-                    ).length
-                  }
                 />
               ))}
             </div>
           </div>
+          {isConfirmResetRoadmapPopupOpen && (
+            <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
+              <div className="bg-white rounded-xl p-4 w-1/3">
+                <h2 className="text-xl font-bold mb-4 text-center">
+                  Are you sure you want to change your roadmap?
+                  <br />
+                  Your progress will be lost
+                </h2>
+                <div className="flex justify-center gap-4">
+                  <Button
+                    variant="contained"
+                    color="error"
+                    onClick={() => setIsConfirmResetRoadmapPopupOpen(false)}
+                  >
+                    No
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleResetRoadmap}
+                  >
+                    Yes
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </>

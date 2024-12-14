@@ -101,6 +101,27 @@ class RoadmapService {
       return null;
     }
   }
+  async updateUserCurrentLevel(userId: string): Promise<boolean> {
+    const getUserRoadmapHistoryResult = await collections.roadmapHistories?.findOne({ _id: new ObjectId(userId) });
+    const userRoadmapHistory = getUserRoadmapHistoryResult as RoadmapHistory;
+    if (userRoadmapHistory) {
+      const result = await collections.roadmapHistories?.updateOne(
+        { _id: new ObjectId(userId) },
+        {
+          $set: {
+            current_level: userRoadmapHistory.current_level + 1,
+            updated_at: new Date().toISOString(),
+          },
+        }
+      );
+      return result ? true : false;
+    }
+    return false;
+  }
+  async deleteRoadmapHistory(userId: string): Promise<boolean> {
+    const result = await collections.roadmapHistories?.deleteOne({ _id: new ObjectId(userId) });
+    return result ? true : false;
+  }
 }
 
 const roadmapServiceInstance = new RoadmapService();

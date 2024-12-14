@@ -10,7 +10,7 @@ export default function QuestionComponent({
   question,
   ans,
   onChoose,
-  userChoice
+  userChoice,
 }: {
   question: Question;
   ans?: number[];
@@ -42,18 +42,22 @@ export default function QuestionComponent({
                 className="flex justify-start items-center gap-2"
               >
                 <input
-                type="radio"
-                name={`question-${question.question_number}`}
-                id={`optionValue-${question.question_number}-${index}`}
-                onChange={(e) => {
-                  //because array index is 0-based, but the question number 1-based, so we set question number -1
-                  onChoose && onChoose(index + 1, question.question_number - 1);
-                }}
-                className="w-[20px] h-[20px] border-solid border-[1px] border-gray-400"
-                value={index}
-                checked={(ans ?? [])[question.question_number - 1] === index + 1 || userChoice === index + 1}
-                disabled={userChoice !== undefined}
-              />
+                  type="radio"
+                  name={`question-${question.question_number}`}
+                  id={`optionValue-${question.question_number}-${index}`}
+                  onChange={(e) => {
+                    //because array index is 0-based, but the question number 1-based, so we set question number -1
+                    onChoose &&
+                      onChoose(index + 1, question.question_number - 1);
+                  }}
+                  className="w-[20px] h-[20px] border-solid border-[1px] border-gray-400"
+                  value={index}
+                  checked={
+                    (ans ?? [])[question.question_number - 1] === index + 1 ||
+                    userChoice === index + 1
+                  }
+                  disabled={userChoice !== undefined}
+                />
                 <label
                   htmlFor={`optionValue-${question.question_number}-${index}`}
                   className="text-[16px] font-medium text-wrap"
@@ -74,25 +78,27 @@ export default function QuestionComponent({
       </div>
       { userChoice !== undefined && (
         <div className="flex flex-col mt-2">
-        <Button
-          onClick={() => setShowExplanation(!showExplanation)}
-          variant="contained"
-          style={{ width: "fit-content" }}
-        >
-          {!showExplanation ? "Show Explanation" : "Hide Explanation"}
-        </Button>
-        {showExplanation && (
-          <div
-            className={`mt-2 bg-slate-500 rounded-md p-3 transition-all ease-in-out ${
-              showExplanation ? "fade-in" : ""
-            }`}
+          <Button
+            onClick={() => setShowExplanation(!showExplanation)}
+            variant="contained"
+            style={{ width: "fit-content" }}
           >
-            <p className="text-[16px] text-[#fff] font-medium">
-              {question.explanation ? question.explanation : "No given explanation"}
-            </p>
-          </div>
-        )}
-      </div>
+            {!showExplanation ? "Show Explanation" : "Hide Explanation"}
+          </Button>
+          {showExplanation && (
+            <div
+              className={`mt-2 bg-slate-500 rounded-md p-3 transition-all ease-in-out ${
+                showExplanation ? "fade-in" : ""
+              }`}
+            >
+              <p className="text-[16px] text-[#fff] font-medium">
+                {question.explanation
+                  ? question.explanation
+                  : "No given explanation"}
+              </p>
+            </div>
+          )}
+        </div>
       )}
     </div>
   );

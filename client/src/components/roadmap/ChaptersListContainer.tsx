@@ -2,31 +2,39 @@ import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import LockIcon from "@mui/icons-material/Lock";
 import { useNavigate } from "react-router-dom";
 import { sRoadmap } from "@/store";
-import { RoadmapExercise } from "@/entities";
-function NumberOfQuestions() {
+import { RoadmapExercise, RoadmapHistory } from "@/entities";
+function NumberOfQuestions({
+  numberOfQuestions,
+}: {
+  numberOfQuestions: number;
+}) {
   return (
     <div className="bg-tertiary rounded-3xl text-primary py-2 px-1 text-sm">
-      10 questions
+      {numberOfQuestions} questions
     </div>
   );
 }
 function ChapterItem({
   chapter,
-  unlockedChapters,
+  isUnlocked,
+  isDone,
   currentChapter,
+  numberOfQuestions,
   onClick,
 }: {
   chapter: number;
-  unlockedChapters: number;
+  isUnlocked: boolean;
+  isDone: boolean;
   currentChapter: number;
+  numberOfQuestions: number;
   onClick?: () => void;
 }) {
   return (
     <div
       className={`chapter-item w-full h-12 min-w-56 px-2 flex justify-between items-center rounded-3xl relative ${
-        unlockedChapters >= chapter
+        isDone
           ? "bg-primary text-white"
-          : "bg-gray-400 text-black"
+          : (isUnlocked ? "bg-tertiary" : "bg-gray-400") + " text-black"
       }
           ${
             currentChapter === chapter
@@ -34,7 +42,7 @@ function ChapterItem({
               : ""
           }
       `}
-      onClick={onClick}
+      onClick={isUnlocked ? onClick : () => {}}
     >
       {currentChapter === chapter && (
         <ArrowRightIcon
@@ -44,8 +52,8 @@ function ChapterItem({
         />
       )}
       <span className="text-lg font-semibold">Chapter {chapter}</span>
-      {unlockedChapters >= chapter ? (
-        <NumberOfQuestions />
+      {isUnlocked ? (
+        <NumberOfQuestions numberOfQuestions={numberOfQuestions} />
       ) : (
         <LockIcon fontSize="small" color="inherit" />
       )}
@@ -56,12 +64,10 @@ export default function ChaptersListContainer({
   phase,
   part,
   chapter,
-  unlockedChapters,
 }: {
   phase: number;
   part: number;
   chapter: number;
-  unlockedChapters: number;
 }) {
   console.log("ChaptersListContainer");
 
@@ -70,6 +76,16 @@ export default function ChaptersListContainer({
   const chapters: RoadmapExercise[] = sRoadmap
     .use((v) => v.exercises)
     .filter((exercise) => exercise.phase === phase && exercise.part === part);
+  const userRoadmap: RoadmapHistory | null = sRoadmap.use((v) => v.userRoadmap);
+  const chaptersLeft =
+    chapters.length -
+    (userRoadmap
+      ? userRoadmap.completedRoadmapExercises.filter((exercise) =>
+          chapters
+            .map((chapter) => chapter._id)
+            .includes(exercise.roadmapExerciseId)
+        ).length
+      : 0);
   return (
     <div className="bg-white rounded-2xl shadow-lg min-w-[220px] flex flex-col items-center gap-4 py-8 px-4">
       <div className="current-part flex justify-center items-center w-full px-4">
@@ -82,13 +98,21 @@ export default function ChaptersListContainer({
         </div>
       </div>
       <div className="chapters-container flex flex-col items-center gap-2 w-full px-4">
-        {chapters.map((chapterItem) => (
+        {chapters.map((chapterItem, index) => (
           <ChapterItem
             key={chapterItem._id}
             chapter={chapterItem.chapter}
-            unlockedChapters={unlockedChapters}
             currentChapter={chapter}
             onClick={() => nav(`/roadmap/${chapterItem._id}`)}
+            numberOfQuestions={chapterItem.questions.length}
+            isDone={
+              userRoadmap
+                ? userRoadmap.completedRoadmapExercises.some(
+                    (exercise) => exercise.roadmapExerciseId === chapterItem._id
+                  )
+                : false
+            }
+            isUnlocked={index <= chapters.length - chaptersLeft}
           />
         ))}
       </div>

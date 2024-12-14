@@ -1,6 +1,5 @@
 import { LeftBar, ListeningAudio, QuestionComponent } from "@/components";
 import LoadingProgress from "@/components/LoadingProgress";
-import CountingTimer from "@/components/practice/CountingTimer";
 import PracticeQuestionPallete from "@/components/practice/PracticeQuestionPallete";
 import { Question } from "@/entities";
 import CompletedPracticeTest from "@/entities/CompletedPracticeTest";
@@ -22,12 +21,14 @@ export default function ReviewPracticePage() {
     .use((value) => value.completedPracticeTests)
     .filter((history) => history.practiceTestId === id);
 
+
   const [questions, setQuestions] = useState<Question[]>(
     selectedPracticeTest?.questions || []
   );
   const [curQuestionIndex, setCurQuestionIndex] = useState<number>(0);
   const [history, setHistory] = useState<CompletedPracticeTest>();
   console.log("history" + practiceHistory.length);
+
 
   useEffect(() => {
     if (selectedPracticeTest) {

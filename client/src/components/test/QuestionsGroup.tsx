@@ -13,6 +13,7 @@ export default function QuestionsGroup({
   ans: number[];
   onChoose: (choice: number, question_number: number) => void;
   userChoice?: number[];
+
 }) {
   return (
     <div className="w-full flex mb-5 p-2 gap-[24px] border-b-2">

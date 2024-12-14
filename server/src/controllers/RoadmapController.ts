@@ -108,7 +108,9 @@ class RoadmapController {
         res.status(200).json({
           EM: 'Roadmap exercises fetched successfully',
           EC: 0,
-          DT: roadmapExercises.map((roadmapExercise) => ({ ...roadmapExercise, _id: roadmapExercise._id?.toString() })),
+          DT: roadmapExercises
+            .map((roadmapExercise) => ({ ...roadmapExercise, _id: roadmapExercise._id?.toString() }))
+            .sort((a, b) => a.chapter - b.chapter),
         });
       } else {
         res.status(400).json({
@@ -211,6 +213,51 @@ class RoadmapController {
       } else {
         res.status(400).json({
           EM: 'Failed to fetch roadmap history',
+          EC: 1,
+        });
+      }
+    } catch (err: any) {
+      res.status(500).json({
+        EM: err.message,
+        EC: 2,
+      });
+    }
+  }
+
+  async upgradeUserLevel(req: Request, res: Response) {
+    try {
+      const userId = req.params.userId;
+      const result = await roadmapServiceInstance.updateUserCurrentLevel(userId);
+      if (result) {
+        res.status(200).json({
+          EM: 'User level upgraded successfully',
+          EC: 0,
+        });
+      } else {
+        res.status(400).json({
+          EM: 'Failed to upgrade user level',
+          EC: 1,
+        });
+      }
+    } catch (err: any) {
+      res.status(500).json({
+        EM: err.message,
+        EC: 2,
+      });
+    }
+  }
+  async resetUserRoadmap(req: Request, res: Response) {
+    try {
+      const userId = req.params.userId;
+      const result = await roadmapServiceInstance.deleteRoadmapHistory(userId);
+      if (result) {
+        res.status(200).json({
+          EM: 'User roadmap reset successfully',
+          EC: 0,
+        });
+      } else {
+        res.status(400).json({
+          EM: 'Failed to reset user roadmap',
           EC: 1,
         });
       }

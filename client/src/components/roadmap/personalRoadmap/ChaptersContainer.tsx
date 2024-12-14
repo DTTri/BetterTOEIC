@@ -1,13 +1,16 @@
-import { RoadmapExercise } from "@/entities";
+import { RoadmapExercise, RoadmapHistory } from "@/entities";
+import { sRoadmap } from "@/store";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import { useNavigate } from "react-router-dom";
 
 function ChapterItem({
+  isDone,
   isUnlocked,
   chapter,
   numberOfQuestions,
   onClick,
 }: {
+  isDone: boolean;
   isUnlocked: boolean;
   chapter: number;
   numberOfQuestions: number;
@@ -16,11 +19,12 @@ function ChapterItem({
   return (
     <div
       className={`w-full flex items-center gap-2 px-2 py-1 border ${
-        isUnlocked
+        isDone
           ? "bg-primary border-white text-white"
-          : "bg-background border-primary text-primary"
+          : (isUnlocked ? "bg-white border-primary" : "bg-gray-400") +
+            " text-black"
       }`}
-      onClick={onClick}
+      onClick={isUnlocked ? onClick : () => {}}
     >
       <div className="icon-container w-8 h-8 flex items-center justify-center">
         <LibraryBooksIcon fontSize="small" color="inherit" />
@@ -35,13 +39,21 @@ function ChapterItem({
 
 export default function ChaptersContainer({
   part,
-  unlockedChapters,
   chapters,
 }: {
   part: number;
-  unlockedChapters: number;
   chapters: RoadmapExercise[];
 }) {
+  const userRoadmap: RoadmapHistory | null = sRoadmap.use((v) => v.userRoadmap);
+  const chaptersLeft =
+    chapters.length -
+    (userRoadmap
+      ? userRoadmap.completedRoadmapExercises.filter((exercise) =>
+          chapters
+            .map((chapter) => chapter._id)
+            .includes(exercise.roadmapExerciseId)
+        ).length
+      : 0);
   const nav = useNavigate();
   return (
     <div className="w-full bg-tertiary rounded-2xl p-4 pb-8">
@@ -50,14 +62,15 @@ export default function ChaptersContainer({
           Part {part}
         </h3>
         <p className="chapters-left text-sm text-rose-800">
-          {chapters.length - unlockedChapters} chapters left
+          {chaptersLeft} chapters left
         </p>
       </div>
       <div className="chapters-container flex flex-col items-center gap-2 px-2">
-        {chapters.map((chapter) => (
+        {chapters.map((chapter, index) => (
           <ChapterItem
             key={chapter._id}
-            isUnlocked={chapter.chapter <= unlockedChapters}
+            isDone={index < chapters.length - chaptersLeft}
+            isUnlocked={index <= chapters.length - chaptersLeft}
             chapter={chapter.chapter}
             numberOfQuestions={chapter.questions.length}
             onClick={() => nav(`/roadmap/${chapter._id}`)}

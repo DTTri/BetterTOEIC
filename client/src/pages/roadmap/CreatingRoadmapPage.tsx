@@ -202,13 +202,7 @@ export default function CreatingRoadmapPage() {
                 )}
               </>
             )}
-            <div className="buttons-container absolute bottom-2 w-full flex justify-between items-center mt-4">
-              <button
-                className="prev-slide bg-white text-black text-lg px-3 py-2 border border-secondary rounded-md"
-                onClick={handlePrevSlide}
-              >
-                Back
-              </button>
+            <div className="buttons-container absolute bottom-2 w-full flex justify-end items-center mt-4">
               {completeCreatingRoadmap && (
                 <button className="end-swiper bg-secondary text-white text-lg px-3 py-2 rounded-md">
                   <Link to="/road-map">Bắt đầu</Link>
