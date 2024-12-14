@@ -5,7 +5,6 @@ import LoadingProgress from "@/components/LoadingProgress";
 import { useEffect, useState } from "react";
 
 export default function AdminLayout() {
-  const [redirect, setRedirect] = useState(false);
   const findUser = sUser.use((state) => state.info);
   const token = localStorage.getItem("token") || sessionStorage.getItem("token");
   const curUserId = localStorage.getItem("_id") || sessionStorage.getItem("_id");
@@ -13,19 +12,7 @@ export default function AdminLayout() {
     sUser.reset();
     return <Navigate to="/login" />;
   }
-    useEffect(() => {
-      const timer = setTimeout(() => {
-        if (!findUser._id) {
-          setRedirect(true);
-        }
-      }, 3000);
   
-      return () => clearTimeout(timer);
-    }, [findUser._id]);
-  
-    if (redirect) {
-      return <Navigate to="/login" />;
-    }
   if(!findUser._id) {
     return <LoadingProgress />
   }

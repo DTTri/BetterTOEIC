@@ -11,6 +11,7 @@ import PracticeTest from "../../entities/PracticeTest";
 import PracticeTestHistory from "@/entities/PracticeHisotry";
 import CompletedPracticeTest from "@/entities/CompletedPracticeTest";
 import { practiceStore } from "@/store/practiceStore";
+import LoadingProgress from "../LoadingProgress";
 
 function PracticeTestComponent({
   title,
@@ -63,6 +64,10 @@ export default function PracticeList({
   completedTests: CompletedPracticeTest[];
 }) {
   const [isShow, setIsShow] = useState<boolean>(false);
+  if(!practiceTests || !completedTests){
+    return <LoadingProgress />
+  }
+  const tempPracticeTests = completedTests;
   return (
     <div className="w-[54%] rounded-[30px] bg-[#FFF]">
       <div
@@ -89,7 +94,7 @@ export default function PracticeList({
         </div>
         <div className="">
           <span className="font-bold text-[16px] text-[#FE5507] p-[10px] bg-[#F6F6F6] rounded-[20px]">
-            {completedTests.length}/{practiceTests.length} tests
+            {[...new Set(tempPracticeTests.map(test => test.practiceTestId))].length}/{practiceTests.length} tests
           </span>
         </div>
       </div>

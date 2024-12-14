@@ -7,10 +7,12 @@ export default function QuestionsGroup({
   questions,
   ans,
   onChoose,
+  userChoice
 }: {
   questions: Question[];
   ans: number[];
   onChoose: (choice: number, question_number: number) => void;
+  userChoice?: number[];
 }) {
   return (
     <div className="w-full flex mb-5 p-2 gap-[24px] border-b-2">
@@ -49,12 +51,22 @@ export default function QuestionsGroup({
       {/* Right section: Questions */}
       <div className="right-section w-[45%]">
         {questions.map((question, idx) => (
-          <QuestionComponent
-            ans={ans}
-            onChoose={onChoose}
-            key={idx}
-            question={question}
-          />
+          userChoice !== undefined ? (
+            <QuestionComponent
+              key={idx}
+              question={question}
+              ans={ans}
+              onChoose={onChoose}
+              userChoice={userChoice[question.question_number - 1]}
+            />
+          ) : (
+            <QuestionComponent
+              key={idx}
+              question={question}
+              ans={ans}
+              onChoose={onChoose}
+            />
+          )
         ))}
       </div>
     </div>

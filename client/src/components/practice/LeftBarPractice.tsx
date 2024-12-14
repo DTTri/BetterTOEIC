@@ -17,7 +17,7 @@ export default function LeftBar() {
   );
 
   return (
-    <div className="max-w-[300px] w-full items-center flex-col bg-[#fff] h-screen py-5">
+    <div className="max-w-[300px] w-full items-center flex-col bg-[#fff] py-5">
       <div className="flex flex-row items-center justify-evenly mb-5">
         <Link to="">
           <Button

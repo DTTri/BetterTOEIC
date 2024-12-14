@@ -1,4 +1,4 @@
-import { Header, LeftBar, ListeningAudio } from "@/components";
+import { Header, LeftBar, ListeningAudio, QuestionsGroup } from "@/components";
 import CountingTimer from "@/components/practice/CountingTimer";
 import QuestionPalette from "@/components/vocab/VocabQuestionPalette";
 import QuestionComponent from "@/components/test/QuestionComponent";
@@ -30,17 +30,34 @@ export default function TakingPracticePage() {
     const [answers, setAnswers] = useState<number[]>(
       new Array(questions.length).fill(0)
     );
-
+  //handle for part 3 4 6 7
+  const [questionGroupCount, setQuestionGroupCount] = useState<number[]>([]);
+  const [selectedGroupNumber, setSelectedGroupNumber] = useState<number>(0);
+  const [selectedQuestionGroup, setSelectedQuestionGroup] = useState<Question[]>([]);
   useEffect(() => {
       if (selectedPracticeTest) {
         setQuestions(selectedPracticeTest?.questions);
-        setSelectedQuestion(selectedPracticeTest?.questions[0]);
-      }
-    }, [selectedPracticeTest]);
-
-  console.log(selectedQuestion)
-
-  console.log(answers);
+        if(Number(part) >= 1 && Number(part) <= 2 || Number(part) == 5){
+          setSelectedQuestion(selectedPracticeTest?.questions[0]);
+        }
+        else{
+          let count: number[] = [];
+          selectedPracticeTest.questions.forEach((question, index) => {
+            if(index == 0){
+              count.push(question.question_group_number);
+            }
+            if(index > 0  && question.question_group_number != questions[index - 1]?.question_group_number){
+              count.push(question.question_group_number);
+            }
+          });
+          console.log(count);
+          setSelectedQuestionGroup(selectedPracticeTest.questions.filter(question => question.question_group_number == count[0]));
+          setSelectedGroupNumber(count[0]);
+          setQuestionGroupCount(
+            count
+          );
+        }
+    }}, [selectedPracticeTest]);
 
   const onChoose = (choice: number, question_number: number) => {
     setAnswers((prev) => {
@@ -50,9 +67,19 @@ export default function TakingPracticePage() {
   };
 
   const handleQuestionSelectedChange = (selectedQuestionNumber: number) => {
-    console.log(selectedQuestionNumber);
-    setSelectedQuestion(questions[selectedQuestionNumber]);
+    if(Number(part) == 1 || Number(part) == 2 || Number(part) == 5){
+      setSelectedQuestion(questions[selectedQuestionNumber]);
+    }
+    else{
+      console.log("quesNum" + selectedQuestionNumber);
+      setSelectedGroupNumber(selectedQuestionNumber + 1);
+      setSelectedQuestionGroup(questions.filter(question => question.question_group_number == questionGroupCount[selectedQuestionNumber]));
+    }
   };
+
+  console.log(questionGroupCount);
+  console.log(answers);
+  console.log(selectedQuestionGroup[0]?.question_group_number);
 
   const onSubmit = async () => {
     try {
@@ -60,11 +87,14 @@ export default function TakingPracticePage() {
         practiceTestId: selectedPracticeTest?._id || "",
         choices: answers,
       };
+      console.log(completedTest);
+      console.log(userId);
       const response = await practiceService.completePracticeTest(
         userId,
         completedTest
       );
       if (response.EC === 0) {
+        console.log("Submit success");
         practiceStore.set((state) => state.value.completedPracticeTests = [...state.value.completedPracticeTests, response.DT]);
         nav("/practice");
       } else {
@@ -75,7 +105,11 @@ export default function TakingPracticePage() {
     }
   };
 
-  if(!selectedQuestion) {
+  if((Number(part) == 1 || Number(part) == 2 || Number(part) == 5) && !selectedQuestion){ 
+    return <LoadingProgress />;
+  }
+
+  if((Number(part) == 3 || Number(part) == 4 || Number(part) == 6 || Number(part) == 7) && selectedQuestionGroup.length == 0){
     return <LoadingProgress />;
   }
 
@@ -86,7 +120,8 @@ export default function TakingPracticePage() {
         <div className="max-w-[1200px] p-8 w-full flex flex-col gap-2">
           <div className="information w-full flex flex-row justify-between">
             <h3 className="font-normal text-3xl text-[#000]">
-              Câu hỏi số {(selectedQuestion?.question_number || 0) + 1}
+              {(Number(part) == 1 || Number(part) == 2 || Number(part) == 5) ? `
+              Câu hỏi số ${(selectedQuestion?.question_number || 0)}` : `Nhóm câu hỏi số ${selectedGroupNumber}`}
             </h3>
             <CountingTimer key={id}/>
             <Button
@@ -110,19 +145,35 @@ export default function TakingPracticePage() {
               audioFile={selectedPracticeTest?.main_audio || ""}
             />
           </div>
-          <div className="w-full bg-[#fff] rounded-[20px] px-8 py-7 mb-[20px]">
-            <QuestionComponent
-              ans={answers}
-              onChoose={onChoose}
-              question={selectedQuestion || questions[0]}
-            />
+          <div className="w-full bg-[#fff] rounded-[20px] px-4 py-4 mb-[20px]">
+            {(Number(part) == 1 || Number(part) == 2 || Number(part) == 5) ? 
+              (<QuestionComponent
+                ans={answers}
+                key={selectedQuestion.question_number}
+                question={selectedQuestion}
+                onChoose={onChoose}
+              />) : 
+              (<QuestionsGroup
+                key={selectedQuestionGroup[0]?.question_group_number}
+                ans={answers}
+                questions={selectedQuestionGroup}
+                onChoose={onChoose}
+              />)
+            }
           </div>
-          <PracticeQuestionPallete
+          {Number(part) == 1 || Number(part) == 2 || Number(part) == 5 ?(
+            <PracticeQuestionPallete
             answers={answers}
             selectedQuestion={selectedQuestion?.question_number || 0}
             questionNumber={questions.length}
             onQuestionSelectedChange={handleQuestionSelectedChange}
-          />
+          />) : (
+            <PracticeQuestionPallete
+            answers={answers}
+            selectedQuestion={selectedGroupNumber}
+            questionNumber={questionGroupCount.length}
+            onQuestionSelectedChange={handleQuestionSelectedChange}/>
+          )}
         </div>
       </div>
     </div>

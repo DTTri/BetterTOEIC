@@ -18,26 +18,35 @@ export default function ReviewPracticePage() {
     .use((value) => value.practiceTestList)
     .find((practice) => practice._id === id);
 
-  const practiceHistory = practiceStore.use((value) => value.completedPracticeTests).find((history) => history.practiceTestId === id);
+  const practiceHistory = practiceStore
+    .use((value) => value.completedPracticeTests)
+    .filter((history) => history.practiceTestId === id);
 
-    const [questions, setQuestions] = useState<Question[]>(selectedPracticeTest?.questions || []);
-    const [curQuestionIndex, setCurQuestionIndex] = useState<number>(0);
-    const [history, setHistory] = useState<CompletedPracticeTest>();
+  const [questions, setQuestions] = useState<Question[]>(
+    selectedPracticeTest?.questions || []
+  );
+  const [curQuestionIndex, setCurQuestionIndex] = useState<number>(0);
+  const [history, setHistory] = useState<CompletedPracticeTest>();
+  console.log("history" + practiceHistory.length);
 
   useEffect(() => {
-      if (selectedPracticeTest) {
-        setQuestions(selectedPracticeTest?.questions);
-      }
-    }, [selectedPracticeTest]);
+    if (selectedPracticeTest) {
+      setQuestions(selectedPracticeTest?.questions);
+    }
+  }, [selectedPracticeTest]);
 
   useEffect(() => {
     if (practiceHistory) {
-      setHistory(practiceHistory);
+      const lastPracticeHistoryById = practiceHistory.sort(
+        (a, b) =>
+          new Date(b.attempted_at).getTime() -
+          new Date(a.attempted_at).getTime()
+      )[0];
+      setHistory(lastPracticeHistoryById);
     }
   }, [practiceHistory]);
 
-
-  if(questions.length === 0 || !history?.choices) {
+  if (questions.length === 0 || !history?.choices) {
     return <LoadingProgress />;
   }
 
