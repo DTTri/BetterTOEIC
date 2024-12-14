@@ -10,8 +10,8 @@ export default function QuestionsGroup({
   userChoice
 }: {
   questions: Question[];
-  ans: number[];
-  onChoose: (choice: number, question_number: number) => void;
+  ans?: number[];
+  onChoose?: (choice: number, question_number: number) => void;
   userChoice?: number[];
 
 }) {
@@ -56,8 +56,6 @@ export default function QuestionsGroup({
             <QuestionComponent
               key={idx}
               question={question}
-              ans={ans}
-              onChoose={onChoose}
               userChoice={userChoice[question.question_number - 1]}
             />
           ) : (

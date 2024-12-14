@@ -1,4 +1,9 @@
-import { LeftBar, ListeningAudio, QuestionComponent } from "@/components";
+import {
+  LeftBar,
+  ListeningAudio,
+  QuestionComponent,
+  QuestionsGroup,
+} from "@/components";
 import LoadingProgress from "@/components/LoadingProgress";
 import PracticeQuestionPallete from "@/components/practice/PracticeQuestionPallete";
 import { Question } from "@/entities";
@@ -21,18 +26,51 @@ export default function ReviewPracticePage() {
     .use((value) => value.completedPracticeTests)
     .filter((history) => history.practiceTestId === id);
 
+  const [curQuestionIndex, setCurQuestionIndex] = useState<number>(0);
+  const [history, setHistory] = useState<CompletedPracticeTest>();
 
   const [questions, setQuestions] = useState<Question[]>(
     selectedPracticeTest?.questions || []
   );
-  const [curQuestionIndex, setCurQuestionIndex] = useState<number>(0);
-  const [history, setHistory] = useState<CompletedPracticeTest>();
   console.log("history" + practiceHistory.length);
-
+  const [questionGroupCount, setQuestionGroupCount] = useState<number[]>([]);
+  const [selectedGroupNumber, setSelectedGroupNumber] = useState<number>(0);
+  const [selectedQuestionGroup, setSelectedQuestionGroup] = useState<
+    Question[]
+  >([]);
+  const [historyChoices, setHistoryChoices] = useState<number[]>([]);
 
   useEffect(() => {
     if (selectedPracticeTest) {
       setQuestions(selectedPracticeTest?.questions);
+      if (
+        Number(part) >= 3 ||
+        Number(part) == 4 ||
+        Number(part) == 6 ||
+        Number(part) == 7
+      ) {
+        let count: number[] = [];
+        selectedPracticeTest.questions.forEach((question, index) => {
+          if (index == 0) {
+            count.push(question.question_group_number);
+          }
+          if (
+            index > 0 &&
+            question.question_group_number !=
+              questions[index - 1]?.question_group_number
+          ) {
+            count.push(question.question_group_number);
+          }
+        });
+        console.log(count);
+        setSelectedQuestionGroup(
+          selectedPracticeTest.questions.filter(
+            (question) => question.question_group_number == count[0]
+          )
+        );
+        setSelectedGroupNumber(count[0]);
+        setQuestionGroupCount(count);
+      }
     }
   }, [selectedPracticeTest]);
 
@@ -53,7 +91,14 @@ export default function ReviewPracticePage() {
 
   const handleQuestionSelectedChange = (selectedQuestionNumber: number) => {
     console.log("selectedQuestionNumber" + selectedQuestionNumber);
-    setCurQuestionIndex(selectedQuestionNumber);
+    if(Number(part) == 1 || Number(part) == 2 || Number(part) == 5){
+      setCurQuestionIndex(selectedQuestionNumber);
+    }
+    else{
+      console.log("quesNum" + selectedQuestionNumber);
+      setSelectedGroupNumber(selectedQuestionNumber + 1);
+      setSelectedQuestionGroup(questions.filter(question => question.question_group_number == questionGroupCount[selectedQuestionNumber]));
+    }
   };
 
   return (
@@ -89,16 +134,32 @@ export default function ReviewPracticePage() {
             />
           </div>
           <div className="w-full bg-[#fff] rounded-[20px] px-8 py-7 mb-[20px]">
-            <QuestionComponent
-              userChoice={history.choices[curQuestionIndex]}
-              question={questions[curQuestionIndex]}
-            />
+            {Number(part) == 1 || Number(part) == 2 || Number(part) == 5 ? (
+              <QuestionComponent
+                question={questions[curQuestionIndex]}
+                userChoice={history.choices[curQuestionIndex]}
+              />
+            ) : (
+              <QuestionsGroup
+                key={selectedQuestionGroup[0]?.question_group_number}
+                questions={selectedQuestionGroup}
+                userChoice={history.choices}
+              />
+            )}
           </div>
-          <PracticeQuestionPallete
-            selectedQuestion={curQuestionIndex + 1}
-            questionNumber={questions.length}
-            onQuestionSelectedChange={handleQuestionSelectedChange}
-          />
+          {Number(part) == 1 || Number(part) == 2 || Number(part) == 5 ? (
+            <PracticeQuestionPallete
+              selectedQuestion={questions[curQuestionIndex].question_number}
+              questionNumber={questions.length}
+              onQuestionSelectedChange={handleQuestionSelectedChange}
+            />
+          ) : (
+            <PracticeQuestionPallete
+              selectedQuestion={selectedGroupNumber}
+              questionNumber={questionGroupCount.length}
+              onQuestionSelectedChange={handleQuestionSelectedChange}
+            />
+          )}
         </div>
       </div>
     </div>
