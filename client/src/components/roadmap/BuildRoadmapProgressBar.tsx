@@ -42,7 +42,7 @@ export default function BuildRoadmapProgressBar({
 
           return 100;
         }
-        const diff = Math.random() * 10;
+        const diff = Math.random() * 20;
         return Math.min(prevProgress + diff, 100);
       });
     }, 200);

@@ -35,6 +35,12 @@ class RoadmapService {
   async createPersonalRoadmap(data: CreatePersonalRoadmapDTO) {
     return await http.post(this.getURI("createPersonalRoadmap"), data);
   }
+  async updateUserCurrentLevel(userId: string) {
+    return await http.put(this.getURI("updateUserCurrentLevel/" + userId), {});
+  }
+  async resetUserRoadmap(userId: string) {
+    return await http.delete(this.getURI("resetUserRoadmap/" + userId));
+  }
 }
 const roadmapService = new RoadmapService();
 export default roadmapService;

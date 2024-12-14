@@ -7,10 +7,12 @@ export default function QuestionsGroup({
   questions,
   ans,
   onChoose,
+  userChoices,
 }: {
   questions: Question[];
   ans: number[];
   onChoose: (choice: number, question_number: number) => void;
+  userChoices?: number[];
 }) {
   return (
     <div className="w-full flex mb-5 p-2 gap-[24px] border-b-2">
@@ -54,6 +56,7 @@ export default function QuestionsGroup({
             onChoose={onChoose}
             key={idx}
             question={question}
+            userChoice={userChoices ? userChoices[idx] : undefined}
           />
         ))}
       </div>

@@ -24,4 +24,7 @@ roadmapRouter.post(
   roadmapMiddlewareInstance.createPersonalRoadmap,
   roadmapControllerInstance.createPersonalRoadmap
 );
+roadmapRouter.put('/updateUserCurrentLevel/:userId', roadmapControllerInstance.upgradeUserLevel);
+
+roadmapRouter.delete('/resetUserRoadmap/:userId', roadmapControllerInstance.resetUserRoadmap);
 export default roadmapRouter;

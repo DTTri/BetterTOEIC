@@ -21,7 +21,8 @@ function ChapterItem({
       className={`w-full flex items-center gap-2 px-2 py-1 border ${
         isDone
           ? "bg-primary border-white text-white"
-          : (isUnlocked ? "bg-tertiary" : "bg-gray-400") + " text-black"
+          : (isUnlocked ? "bg-white border-primary" : "bg-gray-400") +
+            " text-black"
       }`}
       onClick={isUnlocked ? onClick : () => {}}
     >

@@ -6,12 +6,13 @@ import {
   Timer,
 } from "@/components";
 import { useNavigate, useParams } from "react-router-dom";
-import { Question, RoadmapExercise } from "@/entities";
+import { Question, RoadmapExercise, RoadmapHistory } from "@/entities";
 import { useEffect, useState } from "react";
 import { roadmapService } from "@/services";
 import { CompleteRoadmapExerciseDTO } from "@/entities/dtos";
 import { Button } from "@mui/material";
-import { sUser } from "@/store";
+import { sRoadmap, sUser } from "@/store";
+import CompletedRoadmapExercise from "@/entities/CompletedRoadmapExercise";
 export default function DoingRoadmapExsPage() {
   const [currentQuestion, setCurrentQuestion] = useState(1);
   const [questionGroupLength, setQuestionGroupLength] = useState(1);
@@ -30,7 +31,11 @@ export default function DoingRoadmapExsPage() {
   const nav = useNavigate();
   const roadmapExerciseId = params.roadmapExerciseId;
   const userId = sUser.use((state) => state.info._id);
-
+  const userRoadmap: RoadmapHistory | null = sRoadmap.use((v) => v.userRoadmap);
+  const [userResult, setUserResult] = useState<CompletedRoadmapExercise>(
+    {} as CompletedRoadmapExercise
+  );
+  const [isReview, setIsReview] = useState(false);
   useEffect(() => {
     if (!roadmapExerciseId) {
       nav("/");
@@ -57,7 +62,20 @@ export default function DoingRoadmapExsPage() {
       fetchRoadmapExercise();
     }
   }, [roadmapExerciseId, nav]);
-
+  useEffect(() => {
+    if (userRoadmap) {
+      const roadmapExercise = userRoadmap.completedRoadmapExercises.find(
+        (exercise) => exercise.roadmapExerciseId === roadmapExerciseId
+      );
+      if (roadmapExercise) {
+        setUserResult(roadmapExercise);
+        setIsReview(true);
+      } else {
+        setUserResult({} as CompletedRoadmapExercise);
+        setIsReview(false);
+      }
+    }
+  }, [userRoadmap, roadmapExerciseId]);
   // Initialize question group length on first render
   useEffect(() => {
     if (!roadmapExercise) return;
@@ -100,7 +118,22 @@ export default function DoingRoadmapExsPage() {
       );
       if (response.EC === 0) {
         console.log("Submit success");
-        nav("/roadmap");
+        const fetchUserRoadmap = async () => {
+          try {
+            const res = await roadmapService.getRoadmapHistory(userId || "");
+            if (res.EC === 0) {
+              sRoadmap.set((pre) => (pre.value.userRoadmap = res.DT));
+
+              console.log("fetch user roadmap", res.DT);
+            } else {
+              console.log(res.EM);
+            }
+          } catch (err) {
+            console.log(err);
+          }
+        };
+        fetchUserRoadmap();
+        nav("/road-map");
       } else {
         console.log("Submit failed" + response.EM);
       }
@@ -217,13 +250,34 @@ export default function DoingRoadmapExsPage() {
       />
       <div className="w-full p-4 flex flex-col gap-4">
         <div className="w-full flex items-center gap-4">
-          <Timer onEnd={onSubmit} />
+          <Timer key={roadmapExerciseId} onEnd={onSubmit} />
           {roadmapExercise.part < 5 && (
-            <ListeningAudio audioFile={roadmapExercise.main_audio || ""} />
+            <ListeningAudio
+              key={roadmapExerciseId + "listeningaudio"}
+              audioFile={roadmapExercise.main_audio || ""}
+            />
           )}
-          <Button variant="contained" color="primary" onClick={onSubmit}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={onSubmit}
+            disabled={isReview}
+          >
             Submit
           </Button>
+          {/* result */}
+          {isReview && (
+            <div
+              className="correct-answers
+          bg-green rounded-xl p-4 flex items-center gap-2 font-bold 
+          "
+            >
+              <p>
+                {userResult.totalCorrectAnswers}/
+                {roadmapExercise.questions.length}
+              </p>
+            </div>
+          )}
         </div>
         <div className="questions-container w-full bg-white rounded-xl p-4 h-[70vh] overflow-y-auto overflow-x-hidden">
           {roadmapExercise.part === 3 ||
@@ -247,6 +301,7 @@ export default function DoingRoadmapExsPage() {
                       questions={questionGroup}
                       ans={answers}
                       onChoose={onChoose}
+                      userChoices={isReview ? userResult.choices : undefined}
                     />
                   );
                 }
@@ -260,6 +315,9 @@ export default function DoingRoadmapExsPage() {
                       question={question}
                       ans={answers}
                       onChoose={onChoose}
+                      userChoice={
+                        isReview ? userResult.choices[index] : undefined
+                      }
                     />
                   );
                 }

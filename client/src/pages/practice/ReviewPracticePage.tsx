@@ -1,6 +1,5 @@
 import { LeftBar, ListeningAudio, QuestionComponent } from "@/components";
 import LoadingProgress from "@/components/LoadingProgress";
-import CountingTimer from "@/components/practice/CountingTimer";
 import PracticeQuestionPallete from "@/components/practice/PracticeQuestionPallete";
 import { Question } from "@/entities";
 import CompletedPracticeTest from "@/entities/CompletedPracticeTest";
@@ -18,17 +17,21 @@ export default function ReviewPracticePage() {
     .use((value) => value.practiceTestList)
     .find((practice) => practice._id === id);
 
-  const practiceHistory = practiceStore.use((value) => value.completedPracticeTests).find((history) => history.practiceTestId === id);
+  const practiceHistory = practiceStore
+    .use((value) => value.completedPracticeTests)
+    .find((history) => history.practiceTestId === id);
 
-    const [questions, setQuestions] = useState<Question[]>(selectedPracticeTest?.questions || []);
-    const [curQuestionIndex, setCurQuestionIndex] = useState<number>(0);
-    const [history, setHistory] = useState<CompletedPracticeTest>();
+  const [questions, setQuestions] = useState<Question[]>(
+    selectedPracticeTest?.questions || []
+  );
+  const [curQuestionIndex, setCurQuestionIndex] = useState<number>(0);
+  const [history, setHistory] = useState<CompletedPracticeTest>();
 
   useEffect(() => {
-      if (selectedPracticeTest) {
-        setQuestions(selectedPracticeTest?.questions);
-      }
-    }, [selectedPracticeTest]);
+    if (selectedPracticeTest) {
+      setQuestions(selectedPracticeTest?.questions);
+    }
+  }, [selectedPracticeTest]);
 
   useEffect(() => {
     if (practiceHistory) {
@@ -36,8 +39,7 @@ export default function ReviewPracticePage() {
     }
   }, [practiceHistory]);
 
-
-  if(questions.length === 0 || !history?.choices) {
+  if (questions.length === 0 || !history?.choices) {
     return <LoadingProgress />;
   }
 
