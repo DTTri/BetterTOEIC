@@ -14,7 +14,7 @@ export default function ForumPage() {
   const [posts, setPosts] = useState<Post[]>(forumStore);
 
   useEffect(() => {
-    if(forumStore.length > 0) {
+    if (forumStore.length > 0) {
       setPosts(forumStore);
     }
   }, [forumStore]);
@@ -24,38 +24,46 @@ export default function ForumPage() {
   }
 
   const searchPost = (search: string) => {
-    if(search === '' ){
+    console.log(search);
+    if (search === "") {
       setPosts(forumStore);
     }
-    setPosts(posts.filter((post) => post.content.includes(search)));
-  }
+    setPosts(forumStore.filter((post) => post.content.includes(search)));
+  };
 
   const filterPost = (baseOn: string, arrange: string) => {
-    if(arrange === 'up'){
-      if(baseOn === 'totalLike' || baseOn === 'comments') {
-        setPosts(posts.sort((a, b) => a[baseOn].length - b[baseOn].length));
-      }
-      else{
-        setPosts(posts.sort((a, b) => new Date(a['created_at']).getTime() - new Date(b['created_at']).getTime()));
+    console.log(baseOn, arrange);
+    let sortedPosts = [...forumStore]; // Create a new array
+
+    if (arrange === "up") {
+      if (baseOn === "totalLike" || baseOn === "comments") {
+        sortedPosts.sort((a, b) => a[baseOn].length - b[baseOn].length);
+      } else {
+        sortedPosts.sort(
+          (a, b) =>
+            new Date(a["created_at"]).getTime() - new Date(b["created_at"]).getTime()
+        );
       }
     } else {
-      if(baseOn === 'totalLike' || baseOn === 'comments') {
-        setPosts(posts.sort((a, b) => b[baseOn].length - a[baseOn].length));
-      }
-      else{
-        setPosts(posts.sort((a, b) => new Date(b['created_at']).getTime() - new Date(a['created_at']).getTime()));
+      if (baseOn === "totalLike" || baseOn === "comments") {
+        sortedPosts.sort((a, b) => b[baseOn].length - a[baseOn].length);
+      } else {
+        sortedPosts.sort(
+          (a, b) =>
+            new Date(b["created_at"]).getTime() - new Date(a["created_at"]).getTime()
+        );
       }
     }
-  }
-
+    setPosts(sortedPosts);
+  };
 
   return (
     <div className="min-h-screen h-full flex flex-row w-full">
-      <PostSearchBar  filterPost={filterPost} searchPost={searchPost}/>
+      <PostSearchBar filterPost={filterPost} searchPost={searchPost} />
       <div className="content-post flex flex-col py-10 px-9 w-[70%] gap-6">
         <PostSharing />
         {posts.map((post) => (
-            <PostComponent userInfo={user._id} key={post._id} post={post} />
+          <PostComponent userInfo={user._id} key={post._id} post={post} />
         ))}
       </div>
       <div className="py-10 px-5 pl-1 gap-7 w-[30%]">
