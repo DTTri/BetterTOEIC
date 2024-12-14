@@ -1,29 +1,26 @@
-import Question from "@/entities/Question";
-import { testStore } from "@/store/testStore";
+import QuestionReviewComponent from "@/components/test/QuestionReviewComponent";
 import { sUser } from "@/store";
+import { testStore } from "@/store/testStore";
 import { Button } from "@mui/material";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import ListeningAudio from "../../components/test/ListeningAudio";
-import QuestionComponent from "../../components/test/QuestionComponent";
-import QuestionsGroup from "../../components/test/QuestionsGroup";
 import QuestionsListContainer from "../../components/test/QuestionsListContainer";
-import Timer from "../../components/test/Timer";
-import { testService } from "@/services";
-import CompleteTestDTO from "@/entities/DTOS/CompleteTestDTO";
-import QuestionReviewComponent from "@/components/test/QuestionReviewComponent";
+import { QuestionComponent } from "@/components";
+import LoadingProgress from "@/components/LoadingProgress";
 
 export default function ReviewTestPage() {
-  const { id } = useParams();
+  const { id, attemp } = useParams();
+  const nav = useNavigate();
+  const [currentPart, setCurrentPart] = useState(1);
   const selectedTest = testStore
     .use((pre) => pre.testList)
     .find((test) => test._id === id);
-  const userId = sUser.use((state) => state.info._id);
 
-  const testHistory = testStore.use((state) => state.testHistory).find((test) => test.testId === id);
+  const testHistory = testStore.use((state) => state.testHistory).find((test) => test.testId === id && test.attempted_at === attemp);
+  if(!testHistory){
+    return <LoadingProgress />
+  }
 
-  const nav = useNavigate();
-  const [currentPart, setCurrentPart] = useState(1);
 
   const onMoveToChosenQuestion = (question_number: number) => {
     setCurrentPart(selectedTest?.questions[question_number].part || 1);
@@ -70,9 +67,9 @@ export default function ReviewTestPage() {
                 selectedTest?.questions.map((question, index) => {
                     if (question.part === currentPart) {
                         return (
-                            <QuestionReviewComponent
+                            <QuestionComponent
                                 key={index}
-                                choice={testHistory?.choices[index]}
+                                userChoice={testHistory?.choices[index]}
                                 question={question}
                             />
                         );

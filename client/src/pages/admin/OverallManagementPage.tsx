@@ -5,6 +5,7 @@ import { LineChart } from "@mui/x-charts/LineChart";
 import { PieChart } from "@mui/x-charts/PieChart";
 
 export default function OverallManagementPage() {
+  console.log("OverallManagementPage");
   const users = sUser.use((v) => v.users);
   const totalUsers = users.length;
   const getNewUsersPerMonth = (fromDate: string, toDate: string) => {

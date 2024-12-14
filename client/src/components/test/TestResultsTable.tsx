@@ -67,7 +67,7 @@ export default function TestResultsTable( { testHistoryById } : {  testHistoryBy
                 {getTestScore(item.correctAnswersPerPart)}
               </td>
               <td className="py-3 px-6 text-center border border-white">
-                <button onClick={() => nav(`/review-test/${id}`)}>
+                <button onClick={() => nav(`/review-test/${id}/${item.attempted_at}`)}>
                   <RemoveRedEyeIcon color="primary" />
                 </button>
               </td>

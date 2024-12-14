@@ -39,21 +39,28 @@ export default function () {
   switch (errorType) {
     case '404':
       errorTitle = '404';
-      erroMessage = 'Xin lỗi, trang bạn đang tìm không tồn tại';
-      errorDescription = 'Hãy kiểm tra lại URL hoặc quay về trang chủ để tiếp tục';
+      erroMessage = 'Sorry, the page you are looking for does not exist';
+      errorDescription = 'Please check the URL or go back to the homepage to continue';
       break;
     case '500':
       errorTitle = '500';
-      erroMessage = 'Đã xảy ra lỗi từ phía máy chủ';
-      errorDescription = 'Chúng tôi đang khắc phục sự cố này. Vui lòng thử lại sau';
+      erroMessage = 'A server error has occurred';
+      errorDescription = 'We are working to fix this issue. Please try again later';
       break;
     case 'network':
-      erroMessage = 'Không thể kết nối mạng';
-      errorDescription = 'Hãy kiểm tra lại kết nối internet của bạn và thử tải lại trang.';
+      errorTitle = 'Network Error';
+      erroMessage = 'Unable to connect to the network';
+      errorDescription = 'Please check your internet connection and try reloading the page';
+      break;
+    case 'not-authenticated':
+      errorTitle = 'Access Denied';
+      erroMessage = 'You do not have the necessary permissions to access this page';
+      errorDescription = 'Please contact the administrator if you believe this is a mistake';
       break;
     default:
-      erroMessage = 'Xin lỗi, đang có sự cố xảy ra';
-      errorDescription = 'Hãy kiểm tra lại URL hoặc quay về trang chủ để tiếp tục';
+      errorTitle = 'Unknown Error';
+      erroMessage = 'Sorry, an unexpected error has occurred';
+      errorDescription = 'Please check the URL or go back to the homepage to continue';
   }
   
 
@@ -68,7 +75,7 @@ export default function () {
         <div className="image max-w-[570px] max-h-[400px] mb-9">
           <img className='w-full h-full object-cover object-center' src={imgError} alt=""/>
         </div>
-        <Button variant='contained' color='primary' href='/login'>Quay về trang chủ</Button>
+        <Button variant='contained' color='primary' href='/'>Back to home</Button>
       </div>
     </div>
   )

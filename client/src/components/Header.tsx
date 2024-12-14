@@ -13,19 +13,24 @@ import {
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { sUser } from '@/store';
 import { User } from '@/entities';
+import LoadingProgress from './LoadingProgress';
 export default function Header() {
   const [selectedItem, setSelectedItem] = useState('');
   const nav = useNavigate();
   const location = useLocation();
 
-  const user = sUser.use(cur => cur.info);
-  const [userInfo, setUserInfo] = useState<User>(user);
+  const userInfo = sUser.use(cur => cur.info);
+  // const [userInfo, setUserInfo] = useState<User>(user);
   
-  useEffect(() => {
-    if(user._id !== '') {
-      setUserInfo(user);
-    }
-  }, [user._id]);
+  // useEffect(() => {
+  //   if(user._id !== '') {
+  //     setUserInfo(user);
+  //   }
+  // }, [user._id]);
+
+  if(!userInfo) {
+    return <LoadingProgress />;
+  }
 
   console.log("userInfo:", userInfo); // Add this line to log userInfo
   

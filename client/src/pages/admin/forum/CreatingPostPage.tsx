@@ -80,12 +80,7 @@ export default function CreatingPostPage() {
       const response = await forumService.createPost(newPost);
       if (response.EC === 0) {
         sForum.set(pre => pre.value.posts.push(response.DT));
-        if(user.isAdmin) {
-          nav("/admin/forum");
-        }
-        else {
-          nav("/forum");
-        }
+        nav(-1);
       } else {
         console.error("Failed to add product:", response.EM);
       }

@@ -138,7 +138,7 @@ export default function TakingTestPage() {
             {/* Map questions until part 2 */}
             {singleQuestionParts?.map((question, index) => {
               return (
-                question.part === currentPart && (
+                question.part === currentPart && (  
                   <QuestionComponent
                     ans={answers}
                     onChoose={onChoose}
