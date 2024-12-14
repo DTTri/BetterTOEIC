@@ -64,7 +64,6 @@ export default function QuestionReviewComponent({
           })}
         </div>
       </div>
-      {question.explanation && (
         <div className="flex flex-col">
           <Button
             onClick={() => setShowExplanation(!showExplanation)}
@@ -80,12 +79,11 @@ export default function QuestionReviewComponent({
               }`}
             >
               <p className="text-[16px] text-[#fff] font-medium">
-                {question.explanation}
+                {question.explanation || "No explanation"}
               </p>
             </div>
           )}
         </div>
-      )}
     </div>
   );
 }
