@@ -36,16 +36,10 @@ export default function LoginForm() {
           sessionStorage.setItem('token', response.DT.accessToken);
           sessionStorage.setItem('_id', response.DT._id);
         }
-        sUser.set((prev) => (prev.value.info = response.DT));
-        console.log(response.DT);
-        if(response.DT._id && response.DT._id !== '') {
-          sUser.value.users.forEach((user: any) => {
-            if (user._id === response.DT._id) {
-              sUser.set((prev) => (prev.value.info = user));
-            }
-          });
-        }
         nav('/');
+        sUser.set((prev) => {
+          return prev.value.info = response.DT;
+        });
       }
       else{
         console.log("Fail to login " + response.EM);

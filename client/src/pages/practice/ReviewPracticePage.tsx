@@ -38,7 +38,7 @@ export default function ReviewPracticePage() {
   }, [practiceHistory]);
 
 
-  if(!questions || !history) {
+  if(questions.length === 0 || !history?.choices) {
     return <LoadingProgress />;
   }
 

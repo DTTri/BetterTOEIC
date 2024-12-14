@@ -30,7 +30,7 @@ export default function PostDetailPage() {
       setPost(postLists.find((post) => post._id === id) || postLists[0]);
       setComments(postLists.find((post) => post._id === id)?.comments || []);
     }
-  }, [postLists]);
+  }, [postLists, id]);
 
   if (!post || !user) {
     return <LoadingProgress />;
@@ -61,10 +61,10 @@ export default function PostDetailPage() {
     try {
       const response = await forumService.deletePost(post._id);
       if (response.EC === 0) {
+        nav("/forum");
         sForum.set((prev) => {
           return prev.value.posts.filter((post) => post._id !== post._id);
         });
-        nav("/forum");
       }
     } catch (error) {
       console.log("Fail to delete post");
@@ -177,7 +177,7 @@ export default function PostDetailPage() {
         ))}
       </div>
       <div className="py-10 px-5 pl-1 gap-7 w-[30%]">
-        <MustRead />
+        <MustRead postLists={postLists}/>
       </div>
     </div>
   );

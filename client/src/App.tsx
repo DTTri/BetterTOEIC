@@ -355,7 +355,7 @@ function App() {
         }
       />
       <Route
-        path="/review-test/:id"
+        path="/review-test/:id/:attemp"
         element={
           <UserLayout haveFooter={false}>
             <ReviewTestPage />

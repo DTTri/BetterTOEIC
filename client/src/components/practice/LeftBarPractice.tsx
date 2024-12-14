@@ -8,12 +8,12 @@ import { Link, useParams } from "react-router-dom";
 //should be edited when call api from back-end
 
 export default function LeftBar() {
-  const { part } = useParams();
+  const { part, id } = useParams();
   const practiceTests = practiceStore.use((s) => s.practiceTestList).filter((practice) => practice.part == Number.parseInt(part || '1'));
   const completedPracticeTests = practiceStore.use((s) => s.completedPracticeTests).filter((practice) => practice.part == Number.parseInt(part || '1'));
   const [choiced, setChoiced] = useState<String>("practices");
   const [selectedTest, setSelectedTest] = useState<string>(
-    practiceTests[0]._id
+    id?.toString() || practiceTests[0]._id
   );
 
   return (

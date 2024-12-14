@@ -67,7 +67,7 @@ export default function ForumPage() {
         ))}
       </div>
       <div className="py-10 px-5 pl-1 gap-7 w-[30%]">
-        <MustRead />
+        <MustRead postLists={forumStore}/>
       </div>
     </div>
   );

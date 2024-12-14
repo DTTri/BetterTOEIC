@@ -2,16 +2,22 @@
 
 import Question from "@/entities/Question";
 import { useState } from "react";
+import DoneIcon from "@mui/icons-material/Done";
+import CloseIcon from "@mui/icons-material/Close";
+import { Button } from "@mui/material";
 
 export default function QuestionComponent({
   question,
   ans,
   onChoose,
+  userChoice
 }: {
   question: Question;
-  ans: number[];
-  onChoose: (choice: number, question_number: number) => void;
+  ans?: number[];
+  onChoose?: (choice: number, question_number: number) => void;
+  userChoice?: number;
 }) {
+  const [showExplanation, setShowExplanation] = useState(false);
   //{strImg = '', questionText, questionNum, options} : {strImg?: string, questionText:string, questionNum: number, options: string[]}
   return (
     <div className="mb-4">
@@ -29,31 +35,65 @@ export default function QuestionComponent({
           </div>
         )}
         <div className="flex flex-col gap-2">
-          {question.choices.map((optionValue, index) => (
-            <div key={index} className="flex justify-start items-center gap-2">
-              <input
+          {question.choices.map((optionValue, index) => {
+            return (
+              <div
+                key={index}
+                className="flex justify-start items-center gap-2"
+              >
+                <input
                 type="radio"
                 name={`question-${question.question_number}`}
                 id={`optionValue-${question.question_number}-${index}`}
                 onChange={(e) => {
                   //because array index is 0-based, but the question number 1-based, so we set question number -1
-                  onChoose(index + 1, question.question_number -1);
+                  onChoose && onChoose(index + 1, question.question_number - 1);
                 }}
                 className="w-[20px] h-[20px] border-solid border-[1px] border-gray-400"
                 value={index}
-                checked={ans[question.question_number - 1] === index + 1}
+                checked={(ans ?? [])[question.question_number - 1] === index + 1 || userChoice === index + 1}
+                disabled={userChoice !== undefined}
               />
-              <label
-                htmlFor={`optionValue-${question.question_number}-${index}`}
-                className="text-[16px] font-medium text-wrap"
-              >
-                ({String.fromCharCode(65 + index)}) {optionValue && ":"}{" "}
-                {optionValue}
-              </label>
-            </div>
-          ))}
+                <label
+                  htmlFor={`optionValue-${question.question_number}-${index}`}
+                  className="text-[16px] font-medium text-wrap"
+                >
+                  ({String.fromCharCode(65 + index)}) {optionValue && ":"}{" "}
+                  {optionValue}
+                </label>
+                {userChoice && index + 1 === userChoice && userChoice !== question.correct_choice && (
+                  <CloseIcon color="error" />
+                )}
+                {userChoice && index + 1 === question.correct_choice && (
+                  <DoneIcon className="text-green-500" />
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
+      { userChoice && (
+        <div className="flex flex-col mt-2">
+        <Button
+          onClick={() => setShowExplanation(!showExplanation)}
+          variant="contained"
+          style={{ width: "fit-content" }}
+        >
+          {!showExplanation ? "Show Explanation" : "Hide Explanation"}
+        </Button>
+        {showExplanation && (
+          <div
+            className={`mt-2 bg-slate-500 rounded-md p-3 transition-all ease-in-out ${
+              showExplanation ? "fade-in" : ""
+            }`}
+          >
+            <p className="text-[16px] text-[#fff] font-medium">
+              {question.explanation ? question.explanation : "No given explanation"}
+            </p>
+          </div>
+        )}
+      </div>
+      )}
     </div>
   );
 }

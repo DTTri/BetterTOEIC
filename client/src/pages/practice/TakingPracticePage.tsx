@@ -88,7 +88,7 @@ export default function TakingPracticePage() {
             <h3 className="font-normal text-3xl text-[#000]">
               Câu hỏi số {(selectedQuestion?.question_number || 0) + 1}
             </h3>
-            <CountingTimer />
+            <CountingTimer key={id}/>
             <Button
               style={{
                 backgroundColor: "#00C552",
