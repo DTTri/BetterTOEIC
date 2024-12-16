@@ -1,7 +1,8 @@
+import { API_URL } from "@/utils/config";
 class Http {
   baseUrl: string;
   constructor() {
-    this.baseUrl = "http://localhost:8000/api";
+    this.baseUrl = API_URL;
   }
   private getURL(url: string) {
     return `${this.baseUrl}/${url}`;
