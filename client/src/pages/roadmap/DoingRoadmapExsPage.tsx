@@ -301,7 +301,7 @@ export default function DoingRoadmapExsPage() {
                       questions={questionGroup}
                       ans={answers}
                       onChoose={onChoose}
-                      userChoices={isReview ? userResult.choices : undefined}
+                      userChoice={isReview ? userResult.choices : undefined}
                     />
                   );
                 }

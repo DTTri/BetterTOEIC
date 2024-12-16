@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Question from "@/entities/Question";
 import QuestionComponent from "./QuestionComponent";
 
@@ -7,13 +6,12 @@ export default function QuestionsGroup({
   questions,
   ans,
   onChoose,
-  userChoice
+  userChoice,
 }: {
   questions: Question[];
   ans?: number[];
   onChoose?: (choice: number, question_number: number) => void;
   userChoice?: number[];
-
 }) {
   return (
     <div className="w-full flex mb-5 p-2 gap-[24px] border-b-2">
@@ -51,7 +49,7 @@ export default function QuestionsGroup({
 
       {/* Right section: Questions */}
       <div className="right-section w-[45%]">
-        {questions.map((question, idx) => (
+        {questions.map((question, idx) =>
           userChoice !== undefined ? (
             <QuestionComponent
               key={idx}
@@ -66,7 +64,7 @@ export default function QuestionsGroup({
               onChoose={onChoose}
             />
           )
-        ))}
+        )}
       </div>
     </div>
   );
