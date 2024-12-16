@@ -117,12 +117,12 @@ export default function CreatingRoadmapPage() {
                 {/* Thiết lập trình độ */}
                 Set level
               </button>
-              {/* <button
+              <button
                 className="taking-test bg-secondary text-white text-lg px-3 py-2 rounded-md"
                 onClick={handleNextSlide}
               >
-                Làm bài thi thử
-              </button> */}
+                DO TEST EVALUATION
+              </button> 
             </div>
           </SwiperSlide>
           <SwiperSlide className="step-1.2 flex flex-col gap-4">

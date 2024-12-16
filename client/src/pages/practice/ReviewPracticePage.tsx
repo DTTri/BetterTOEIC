@@ -81,6 +81,7 @@ export default function ReviewPracticePage() {
           new Date(b.attempted_at).getTime() -
           new Date(a.attempted_at).getTime()
       )[0];
+      console.log("lastPracHis" + lastPracticeHistoryById);
       setHistory(lastPracticeHistoryById);
     }
   }, [practiceHistory]);
@@ -105,7 +106,7 @@ export default function ReviewPracticePage() {
     <div className="">
       <div className="content flex flex-row items-stretch gap-2 overflow-hidden">
         <LeftBar />
-        <div className="max-w-[1200px] p-8 w-full flex flex-col gap-2">
+        <div className="max-w-[1200px] p-8 w-full min-h-screen flex flex-col gap-2">
           <div className="information w-full flex flex-row justify-between">
             <h3 className="font-normal text-3xl text-[#000]">
               Câu hỏi số {curQuestionIndex + 1}

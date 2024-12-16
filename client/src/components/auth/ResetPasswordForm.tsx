@@ -10,6 +10,7 @@ export default function RessetPasswordForm() {
   const [showPassword, setShowPassword] = React.useState(false);
   const [retypePassword, setRetypePassword] = React.useState('');
   const [showRetypePassword, setShowRetypePassword] = React.useState(false);
+  const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$/;
 
   const { token } = useParams();
   const nav = useNavigate();
@@ -17,6 +18,10 @@ export default function RessetPasswordForm() {
   const handleResetPassword = async () => {
     if(password === '' || retypePassword === '') {
       alert('Please fill in all fields');
+      return;
+    }
+    if(!password.match(passwordRegex)) {
+      alert('Password must contain at least 12 characters, 1 uppercase letter, 1 number and 1 special character');
       return;
     }
     if(password !== retypePassword) {

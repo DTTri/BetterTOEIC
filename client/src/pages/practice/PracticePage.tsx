@@ -19,6 +19,7 @@ export default function PracticePage() {
   const PracticeHistoryPart6  = practiceStore.use((value) => value.completedPracticeTests).filter((completedPracticeTest) => completedPracticeTest.part === 6);
   const PracticeHistoryPart7  = practiceStore.use((value) => value.completedPracticeTests).filter((completedPracticeTest) => completedPracticeTest.part === 7);
 
+  console.log(PracticeHistoryPart1);
   return (
     <div>
       <div className="content">

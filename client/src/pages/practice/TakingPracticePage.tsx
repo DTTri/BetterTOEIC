@@ -117,7 +117,7 @@ export default function TakingPracticePage() {
     <div className="">
       <div className="content flex flex-row items-stretch gap-2 overflow-hidden">
         <LeftBar />
-        <div className="max-w-[1200px] p-8 w-full flex flex-col gap-2">
+        <div className="max-w-[1200px] p-6 w-full min-h-screen flex flex-col gap-2">
           <div className="information w-full flex flex-row justify-between">
             <h3 className="font-normal text-3xl text-[#000]">
               {(Number(part) == 1 || Number(part) == 2 || Number(part) == 5) ? `
@@ -145,7 +145,7 @@ export default function TakingPracticePage() {
               audioFile={selectedPracticeTest?.main_audio || ""}
             />
           </div>
-          <div className="w-full bg-[#fff] rounded-[20px] px-4 py-4 mb-[20px]">
+          <div className="w-full bg-[#fff] rounded-[20px] px-7 py-6 mb-[16px]">
             {(Number(part) == 1 || Number(part) == 2 || Number(part) == 5) ? 
               (<QuestionComponent
                 ans={answers}

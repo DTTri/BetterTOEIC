@@ -27,7 +27,7 @@ export default function VocabLearingPage() {
       setSelectedVocab(vocabs[0]);
       setVocabs(vocabTopic?.vocabs);
     }
-  }, [vocabTopic]);
+  }, [vocabTopic, id]);
 
   useEffect(() => {
     if (vocabHistory) {
@@ -36,7 +36,7 @@ export default function VocabLearingPage() {
           ?.completedVocabs || []
       );
     }
-  }, [vocabHistory]);
+  }, [vocabHistory, id]);
 
   console.log(vocabHistory);
   const handleOnQuestionNumberChange = (questionNumber: number) => {
@@ -52,6 +52,7 @@ export default function VocabLearingPage() {
       });
       if (response.EC === 0) {
         setCompletedVocabs([...completedVocabs, vocabs[index]._id]);
+        sVocab.set(prev => prev.value.vocabHistory = prev.value.vocabHistory.map(history => history.topicId === id ? {...history, completedVocabs: [...history.completedVocabs, vocabs[index]._id]} : history));
         console.log("Change remembered status successfully");
       } else {
         console.log("Error when changing remembered status", response.EM);

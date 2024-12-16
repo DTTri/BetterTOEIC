@@ -62,8 +62,9 @@ export default function TakingTestPage() {
       };
       const response = await testService.completeTest(userId, completedTest);
       if (response.EC === 0) {
-        console.log("Submit success");
-        nav("/test/:" + selectedTest?._id);
+        console.log(response.DT);
+        nav("/test/" + selectedTest?._id);
+        testStore.set(prev => prev.value.testHistory.push(response.DT));
       } else {
         console.log("Submit failed" + response.EM);
       }

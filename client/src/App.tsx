@@ -151,6 +151,7 @@ function App() {
         );
         console.log(response);
         if (response.EC === 0) {
+          console.log("history" + response.DT.length);
           practiceStore.set(
             (prev) => (prev.value.completedPracticeTests = response.DT)
           );

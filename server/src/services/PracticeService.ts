@@ -123,7 +123,7 @@ class PracticeService {
         { _id: new ObjectId(userId) },
         {
           $set: {
-            completedTests: userPracticeTestHistory.completedPracticeTests,
+            completedPracticeTests: userPracticeTestHistory.completedPracticeTests,
             updated_at: new Date().toISOString(),
           },
         }

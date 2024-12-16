@@ -16,6 +16,7 @@ export default function RegisterForm() {
   const [isRegisterSuccess, setIsRegisterSuccess] = React.useState(false);
   const [show, setShow] = React.useState(false);
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$/;
 
   const handleRegister = async () => {
     if(email === '' || password === '' || name === '' || retypePassword === '') {
@@ -24,6 +25,10 @@ export default function RegisterForm() {
     }
     if(!email.match(emailRegex)) {
       alert('Please enter a valid email');
+      return;
+    }
+    if(!password.match(passwordRegex)) {
+      alert('Password must contain at least 12 characters, 1 uppercase letter, 1 number and 1 special character');
       return;
     }
     if(password !== retypePassword) {

@@ -1,4 +1,5 @@
 import { TestResultsTable } from "@/components";
+import LoadingProgress from "@/components/LoadingProgress";
 import { testService } from "@/services";
 import { sUser } from "@/store";
 import { testStore } from "@/store/testStore";
@@ -19,6 +20,8 @@ export default function TestDetailsPage() {
   const testHistoryById = testStore.use((pre) => pre.testHistory)
   ?.filter((test) => test.testId === id);
   
+  console.log(testHistoryById);
+  console.log(selectedTest);
   const testsSaved = testStore.use((pre) => pre.testsSaved);
   const [isSaved, setIsSaved] = useState<boolean>(false);
 
