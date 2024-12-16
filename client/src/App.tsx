@@ -356,6 +356,14 @@ function App() {
         }
       />
       <Route
+        path="/taking-test/:id/evaluation"
+        element={
+          <UserLayout haveFooter={false}>
+            <TakingTestPage isEvaluation={true} />
+          </UserLayout>
+        }
+      />
+      <Route
         path="/review-test/:id/:attemp"
         element={
           <UserLayout haveFooter={false}>

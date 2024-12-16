@@ -7,6 +7,7 @@ const sRoadmap = signify({
 export const sCreatingPersonalRoadmap = signify({
   startLevel: 1,
   targetLevel: 5,
+  evaluationTestScore: -1,
 });
 
 export default sRoadmap;

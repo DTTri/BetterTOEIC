@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import SwiperCore from "swiper";
@@ -16,11 +16,15 @@ import "swiper/css/navigation";
 import { sCreatingPersonalRoadmap, sRoadmap, sUser } from "@/store";
 import { roadmapService } from "@/services";
 import { RoadmapExercise, RoadmapHistory } from "@/entities";
+import { testStore } from "@/store/testStore";
 export default function CreatingRoadmapPage() {
   const [currentStep, setCurrentStep] = useState(0);
   const [completeCreatingRoadmap, setCompleteCreatingRoadmap] = useState(false);
   const [swiperInstance, setSwiperInstance] = useState<SwiperCore | null>(null);
-
+  const nav = useNavigate();
+  const evaluationTestScore = sCreatingPersonalRoadmap.use(
+    (v) => v.evaluationTestScore
+  );
   sCreatingPersonalRoadmap.watch((newValue) => {
     console.log("sCreatingPersonalRoadmap: " + newValue);
     if (newValue.targetLevel <= newValue.startLevel) {
@@ -28,6 +32,11 @@ export default function CreatingRoadmapPage() {
       newValue.targetLevel = newValue.startLevel + 1;
     }
   });
+  useEffect(() => {
+    if (sCreatingPersonalRoadmap.value.evaluationTestScore !== -1) {
+      swiperInstance?.slideTo(2);
+    }
+  }, [evaluationTestScore, swiperInstance]);
 
   const handleNextSlide = () => {
     if (swiperInstance) {
@@ -85,6 +94,14 @@ export default function CreatingRoadmapPage() {
     }
   };
 
+  const handleDoTestEvaluation = () => {
+    const tests = testStore.value.testList;
+    // random get a mini test
+    const randomIndex = Math.floor(Math.random() * tests.length);
+    const randomMiniTest = tests[randomIndex];
+    nav(`/taking-test/${randomMiniTest._id}/evaluation`);
+  };
+
   return (
     <div className="bg-background flex flex-col gap-4 items-center py-4 px-12 w-full h-screen">
       <Steps currentStep={currentStep} />
@@ -119,10 +136,11 @@ export default function CreatingRoadmapPage() {
               </button>
               <button
                 className="taking-test bg-secondary text-white text-lg px-3 py-2 rounded-md"
-                onClick={handleNextSlide}
+                onClick={handleDoTestEvaluation}
               >
-                DO TEST EVALUATION
-              </button> 
+                {/* Làm bài kiểm tra */}
+                Do test
+              </button>
             </div>
           </SwiperSlide>
           <SwiperSlide className="step-1.2 flex flex-col gap-4">
@@ -205,7 +223,7 @@ export default function CreatingRoadmapPage() {
             <div className="buttons-container absolute bottom-2 w-full flex justify-end items-center mt-4">
               {completeCreatingRoadmap && (
                 <button className="end-swiper bg-secondary text-white text-lg px-3 py-2 rounded-md">
-                  <Link to="/road-map">Bắt đầu</Link>
+                  <Link to="/road-map">Start</Link>
                 </button>
               )}
             </div>
