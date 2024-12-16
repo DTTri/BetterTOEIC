@@ -3,6 +3,8 @@ import LinearProgress, {
 } from "@mui/material/LinearProgress";
 import { styled } from "@mui/material/styles";
 import { sCreatingPersonalRoadmap } from "@/store";
+import SchoolIcon from "@mui/icons-material/School";
+import TrackChangesIcon from "@mui/icons-material/TrackChanges";
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 10,
   borderRadius: 5,
@@ -40,8 +42,12 @@ export default function LevelChart({
                   })
               : undefined
           }
-          className="w-10 h-20 shadow-inner bg-primary"
-        ></div>
+          className="w-10 h-20 shadow-inner bg-primary relative flex justify-center"
+        >
+          {currentLevel.startLevel === 1 && (
+            <SchoolIcon className="absolute -top-6" />
+          )}
+        </div>
         <div
           onClick={() => {
             sCreatingPersonalRoadmap.set((pre) =>
@@ -50,7 +56,7 @@ export default function LevelChart({
                 : (pre.value.targetLevel = 2)
             );
           }}
-          className={`w-10 h-32 shadow-inner shadow-gray-600 ${
+          className={`w-10 h-32 shadow-inner shadow-gray-600 relative flex justify-center ${
             (
               isStartChart
                 ? currentLevel.startLevel > 1
@@ -59,7 +65,14 @@ export default function LevelChart({
               ? "bg-primary"
               : ""
           }`}
-        ></div>
+        >
+          {currentLevel.startLevel === 2 && (
+            <SchoolIcon className="absolute -top-6" />
+          )}
+          {currentLevel.targetLevel === 2 && (
+            <TrackChangesIcon className="absolute -top-6" />
+          )}
+        </div>
         <div
           onClick={() => {
             sCreatingPersonalRoadmap.set((pre) =>
@@ -68,7 +81,7 @@ export default function LevelChart({
                 : (pre.value.targetLevel = 3)
             );
           }}
-          className={`w-10 h-40 shadow-inner shadow-gray-600 ${
+          className={`w-10 h-40 shadow-inner shadow-gray-600 relative flex justify-center ${
             (
               isStartChart
                 ? currentLevel.startLevel > 2
@@ -77,7 +90,14 @@ export default function LevelChart({
               ? "bg-primary"
               : ""
           }`}
-        ></div>
+        >
+          {currentLevel.startLevel === 3 && (
+            <SchoolIcon className="absolute -top-6" />
+          )}
+          {currentLevel.targetLevel === 3 && (
+            <TrackChangesIcon className="absolute -top-6" />
+          )}
+        </div>
         <div
           onClick={() => {
             sCreatingPersonalRoadmap.set((pre) =>
@@ -86,7 +106,7 @@ export default function LevelChart({
                 : (pre.value.targetLevel = 4)
             );
           }}
-          className={`w-10 h-52 shadow-inner shadow-gray-600 ${
+          className={`w-10 h-52 shadow-inner shadow-gray-600 relative flex justify-center ${
             (
               isStartChart
                 ? currentLevel.startLevel > 3
@@ -95,14 +115,21 @@ export default function LevelChart({
               ? "bg-primary"
               : ""
           }`}
-        ></div>
+        >
+          {currentLevel.startLevel === 4 && (
+            <SchoolIcon className="absolute -top-6" />
+          )}
+          {currentLevel.targetLevel === 4 && (
+            <TrackChangesIcon className="absolute -top-6" />
+          )}
+        </div>
         <div
           onClick={() => {
             sCreatingPersonalRoadmap.set((pre) => {
               if (!isStartChart) pre.value.targetLevel = 5;
             });
           }}
-          className={`w-10 h-60 shadow-inner shadow-gray-600 ${
+          className={`w-10 h-60 shadow-inner shadow-gray-600 relative flex justify-center ${
             (
               isStartChart
                 ? currentLevel.startLevel > 4
@@ -111,7 +138,11 @@ export default function LevelChart({
               ? "bg-primary"
               : ""
           }`}
-        ></div>
+        >
+          {currentLevel.targetLevel === 5 && (
+            <TrackChangesIcon className="absolute -top-6" />
+          )}
+        </div>
       </div>
       <div className="progress-bar-container w-full px-4">
         <BorderLinearProgress

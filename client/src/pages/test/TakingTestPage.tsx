@@ -1,6 +1,6 @@
 import Question from "@/entities/Question";
 import { testStore } from "@/store/testStore";
-import { sUser } from "@/store";
+import { sCreatingPersonalRoadmap, sUser } from "@/store";
 import { Button } from "@mui/material";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -10,9 +10,12 @@ import QuestionsGroup from "../../components/test/QuestionsGroup";
 import QuestionsListContainer from "../../components/test/QuestionsListContainer";
 import Timer from "../../components/test/Timer";
 import { testService } from "@/services";
-import CompleteTestDTO from "@/entities/DTOS/CompleteTestDTO";
 
-export default function TakingTestPage() {
+import ClassifyTestScore from "@/utils/ClassifyTestScore";
+import getTestScore from "@/utils/CalculateTestScore";
+import CompleteTestDTO from "@/entities/dtos/CompleteTestDTO";
+
+export default function TakingTestPage({ isEvaluation = false }) {
   const { id } = useParams();
   const selectedTest = testStore
     .use((pre) => pre.testList)
@@ -32,22 +35,19 @@ export default function TakingTestPage() {
   };
 
   const countCorrectAnswerPerPart = () => {
-    let correctAnswerPerPart: number[] = Array(7).fill(0);
+    const correctAnswerPerPart: number[] = Array(7).fill(0);
     for (let i = 1; i <= 7; i++) {
       let correctAnswer = 0;
       selectedTest?.questions.forEach((question, index) => {
         if (question.part === i) {
-          if (
-            question.correct_choice === answers[index]
-          ) {
-            console.log(question.correct_choice)
-            console.log(answers[index])
+          if (question.correct_choice === answers[index]) {
+            console.log(question.correct_choice);
+            console.log(answers[index]);
             correctAnswer++;
           }
         }
       });
-      console.log(correctAnswer);
-      correctAnswerPerPart.push(correctAnswer);
+      correctAnswerPerPart[i - 1] = correctAnswer;
     }
     return correctAnswerPerPart;
   };
@@ -62,9 +62,22 @@ export default function TakingTestPage() {
       };
       const response = await testService.completeTest(userId, completedTest);
       if (response.EC === 0) {
-        console.log(response.DT);
-        nav("/test/" + selectedTest?._id);
-        testStore.set(prev => prev.value.testHistory.push(response.DT));
+        console.log("Success: " + response.DT);
+        if (isEvaluation) {
+          // user is taking the test for evaluation (creating roadmap)
+          // Logic for updating user level based on test result
+
+          const testScore = getTestScore(correctAnswersPerPart);
+          console.log(testScore);
+          sCreatingPersonalRoadmap.set((prev) => {
+            prev.value.startLevel = ClassifyTestScore(testScore);
+            prev.value.evaluationTestScore = testScore;
+          });
+          nav("/creating-roadmap");
+        } else {
+          testStore.set((prev) => prev.value.testHistory.push(response.DT));
+          nav("/test/" + selectedTest?._id);
+        }
       } else {
         console.log("Submit failed" + response.EM);
       }
@@ -139,7 +152,7 @@ export default function TakingTestPage() {
             {/* Map questions until part 2 */}
             {singleQuestionParts?.map((question, index) => {
               return (
-                question.part === currentPart && (  
+                question.part === currentPart && (
                   <QuestionComponent
                     ans={answers}
                     onChoose={onChoose}

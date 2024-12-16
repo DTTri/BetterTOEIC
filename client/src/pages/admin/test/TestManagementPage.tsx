@@ -1,4 +1,3 @@
-import { testList } from "@/data";
 import {
   DataGrid,
   GridActionsCellItem,
@@ -10,6 +9,7 @@ import { adminTableTheme } from "@/context";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { useNavigate } from "react-router-dom";
 import { testStore } from "@/store/testStore";
+import { testService } from "@/services";
 export default function TestManagementPage() {
   const nav = useNavigate();
   const columns: GridColDef[] = [
@@ -65,8 +65,24 @@ export default function TestManagementPage() {
           icon={<DeleteForeverIcon />}
           label="Delete"
           onClick={() => {
-            console.log("Deleted: ", params.row);
-            // Add delete logic here
+            const deleteTest = async () => {
+              try {
+                const res = await testService.deleteTest(params.row._id);
+                if (res.EC === 0) {
+                  console.log("Delete test success: ", res.DT);
+                  testStore.set((pre) => {
+                    pre.value.testList = pre.value.testList.filter(
+                      (test) => test._id !== params.row._id
+                    );
+                  });
+                } else {
+                  console.log("Delete test failed: ", res.EM);
+                }
+              } catch (err) {
+                console.log(err);
+              }
+            };
+            deleteTest();
           }}
         />,
       ],
