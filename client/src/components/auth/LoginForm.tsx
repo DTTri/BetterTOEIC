@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react'
-import { Button, Checkbox, FormControl, FormControlLabel, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from '@mui/material';
-import { Link, useNavigate } from 'react-router-dom';
 import google_icon from '@/assets/google_icon.svg';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
 import authService from '@/services/authService';
 import { sUser } from '@/store';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from '@mui/material';
+import React, { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function LoginForm() {
   const [email, setEmail] = React.useState('');

@@ -1,11 +1,8 @@
-import { Avatar } from "@mui/material";
-import React, { useState } from "react";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import CommentIcon from "@mui/icons-material/Comment";
 import { Post } from "@/entities";
+import CommentIcon from "@mui/icons-material/Comment";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { Avatar } from "@mui/material";
 import { Link } from "react-router-dom";
-import LoadingProgress from "../LoadingProgress";
 
 
 export default function PostComponent({ userInfo, post }: { userInfo: string, post: Post }) {

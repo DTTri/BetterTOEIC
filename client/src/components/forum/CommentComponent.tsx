@@ -1,9 +1,8 @@
-import { Avatar } from "@mui/material";
-import React, { useState } from "react";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import CommentIcon from "@mui/icons-material/Comment";
 import { Comment } from "@/entities";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { Avatar } from "@mui/material";
+import { useState } from "react";
 
 function CommentOptions({
   onDelete,

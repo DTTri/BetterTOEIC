@@ -1,16 +1,14 @@
 import CommentComp from "@/components/forum/CommentComponent";
 import CommentCreating from "@/components/forum/CommentCreating";
 import MustRead from "@/components/forum/MustRead";
-import PostComponent from "@/components/forum/PostComponent";
 import PostDetail from "@/components/forum/PostDetail";
-import PostSearchBar from "@/components/forum/PostSearchBar";
 import LoadingProgress from "@/components/LoadingProgress";
 import { Comment, Post } from "@/entities";
 import CreateCommentDTO from "@/entities/DTOS/CreateCommentDTO";
 import { forumService } from "@/services";
 import { sUser } from "@/store";
 import sForum from "@/store/forumStore";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function PostDetailPage() {
@@ -166,7 +164,7 @@ export default function PostDetailPage() {
           post={post}
         />
         <CommentCreating onCommentCreated={handleOnComment} />
-        {comments.map((comment, index) => (
+        {comments.map((comment, _index) => (
           <CommentComp
             userId={user._id}
             onDelete={handleDeleteComment}

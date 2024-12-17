@@ -1,8 +1,6 @@
-import React from 'react'
-import imgError from "../../assets/Site_constructor.png"
-import { useLocation } from 'react-router-dom'
 import { Button } from '@mui/material';
-import { Footer, Header } from '@/components';
+import { useLocation } from 'react-router-dom';
+import imgError from "../../assets/Site_constructor.png";
 
 /*
 HOW TO USE ERROR PAGE:

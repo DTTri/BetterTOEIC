@@ -1,6 +1,6 @@
 import PasswordChangePopup from "@/components/personal/PasswordChangePopup";
 import { Avatar, Button, TextField } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import http from "@/services/http";
 import { userService } from "@/services";
 import { sUser } from "@/store";

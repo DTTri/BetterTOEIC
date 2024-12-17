@@ -40,7 +40,7 @@ export default function ForumManagementPage() {
       flex: 2,
       align: "center",
       headerAlign: "center",
-      valueGetter: (value, row) => {
+      valueGetter: (_value, row) => {
         return row.creator.username;
       },
     },
@@ -65,7 +65,7 @@ export default function ForumManagementPage() {
       align: "center",
       headerAlign: "center",
       flex: 1,
-      valueGetter: (value, row) => {
+      valueGetter: (_value, row) => {
         return row.comments.length;
       },
     },

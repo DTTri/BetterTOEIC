@@ -1,6 +1,4 @@
-import React from 'react'
 import RegisterForm from '@/components/auth/RegisterForm'
-import { Footer, Header } from '@/components'
 
 export default function LoginPage() {
   return (

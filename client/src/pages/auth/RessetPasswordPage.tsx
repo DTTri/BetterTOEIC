@@ -1,6 +1,4 @@
-import { Footer, Header } from '@/components'
 import RessetPasswordForm from '@/components/auth/ResetPasswordForm'
-import React from 'react'
 
 export default function RessetPasswordPage() {
   return (

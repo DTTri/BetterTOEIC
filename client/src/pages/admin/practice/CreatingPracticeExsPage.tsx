@@ -1,6 +1,6 @@
 import { CreatingQuestionGroup } from "@/components";
 import { Question } from "@/entities";
-import CreatePracticeTestDTO from "@/entities/dtos/CreatePracticeTestDTO";
+import CreatePracticeTestDTO from "@/entities/DTOS/CreatePracticeTestDTO";
 import http from "@/services/http";
 import practiceService from "@/services/practiceService";
 import { sNewTest } from "@/store";

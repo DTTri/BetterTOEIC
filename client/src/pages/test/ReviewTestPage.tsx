@@ -1,4 +1,3 @@
-import { sUser } from "@/store";
 import { testStore } from "@/store/testStore";
 import { Button } from "@mui/material";
 import { useState } from "react";

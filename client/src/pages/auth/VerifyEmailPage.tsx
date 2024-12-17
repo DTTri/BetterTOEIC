@@ -1,15 +1,14 @@
+import successImg from '@/assets/SuccessConstructor.png';
 import LoadingProgress from '@/components/LoadingProgress';
 import authService from '@/services/authService';
-import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import successImg from '@/assets/SuccessConstructor.png'
-import imgError from "../../assets/Site_constructor.png"
 import { Button } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import imgError from "../../assets/Site_constructor.png";
 
 export default function VerifyEmailPage() {
   const { token } = useParams();
   const [isVerifySuccess, setIsVerifySuccess] = useState(false);
-  const nav = useNavigate();
   const handleVerifyEmail = async () => {
     try {
       const response = await authService.verifyEmail({token});

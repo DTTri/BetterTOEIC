@@ -15,9 +15,6 @@ export default function LeftBarVocab({
   const vocabHistory = sVocab
     .use((state) => state.vocabHistory)
     .find((vocabhistory) => vocabhistory.topicId === id);
-  const vocabTopic = sVocab
-    .use((state) => state.vocabTopics)
-    .find((topic) => topic._id === id);
   useEffect(() => {}, [id]);
   return (
     <div className="max-w-[300px] w-full items-center flex-col bg-[#fff] h-full overflow-y-auto py-5">

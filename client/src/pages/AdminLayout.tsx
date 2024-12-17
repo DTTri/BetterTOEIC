@@ -1,8 +1,7 @@
-import { sUser } from "@/store";
-import SideBar from "../components/admin/SideBar";
-import { Navigate, Outlet } from "react-router-dom";
 import LoadingProgress from "@/components/LoadingProgress";
-import { useEffect, useState } from "react";
+import { sUser } from "@/store";
+import { Navigate, Outlet } from "react-router-dom";
+import SideBar from "../components/admin/SideBar";
 
 export default function AdminLayout() {
   const findUser = sUser.use((state) => state.info);

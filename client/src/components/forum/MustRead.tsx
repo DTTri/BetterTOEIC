@@ -1,8 +1,7 @@
-import React from "react";
-import StarBorderIcon from "@mui/icons-material/StarBorder";
-import LinkIcon from "@mui/icons-material/Link";
-import { Link } from "react-router-dom";
 import { Post } from "@/entities";
+import LinkIcon from "@mui/icons-material/Link";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
+import { Link } from "react-router-dom";
 import LoadingProgress from "../LoadingProgress";
 
 export default function MustRead({ postLists }: { postLists: Post[] }) {

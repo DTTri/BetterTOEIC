@@ -1,4 +1,3 @@
-import { User } from "@/entities";
 import { sUser } from "@/store";
 import sForum from "@/store/forumStore";
 import { LineChart } from "@mui/x-charts/LineChart";

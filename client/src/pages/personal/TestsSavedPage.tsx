@@ -1,4 +1,4 @@
-import { Header, SearchBar, TestCard } from "@/components";
+import { SearchBar, TestCard } from "@/components";
 import LeftBarPersonal from "@/components/personal/LeftBarPersonal";
 import { Test } from "@/entities";
 import { testStore } from "@/store/testStore";

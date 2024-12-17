@@ -1,6 +1,7 @@
-import { Header, LeftBar, ListeningAudio, QuestionsGroup } from "@/components";
+import { LeftBar, ListeningAudio, QuestionsGroup } from "@/components";
+import LoadingProgress from "@/components/LoadingProgress";
 import CountingTimer from "@/components/practice/CountingTimer";
-import QuestionPalette from "@/components/vocab/VocabQuestionPalette";
+import PracticeQuestionPallete from "@/components/practice/PracticeQuestionPallete";
 import QuestionComponent from "@/components/test/QuestionComponent";
 import { Question } from "@/entities";
 import CompletePracticeTestDTO from "@/entities/DTOS/CompletePracticeTestDTO";
@@ -10,8 +11,6 @@ import { practiceStore } from "@/store/practiceStore";
 import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import PracticeQuestionPallete from "@/components/practice/PracticeQuestionPallete";
-import LoadingProgress from "@/components/LoadingProgress";
 
 //Testing for part 1
 //If having api, api should return the list of questions for each part (vd: https://bettertoeic.com/api/practice/part1/test1)

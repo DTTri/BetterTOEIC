@@ -1,5 +1,4 @@
 import { TestResultsTable } from "@/components";
-import LoadingProgress from "@/components/LoadingProgress";
 import { testService } from "@/services";
 import { sUser } from "@/store";
 import { testStore } from "@/store/testStore";

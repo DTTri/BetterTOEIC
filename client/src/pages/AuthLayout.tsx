@@ -1,8 +1,6 @@
-import { Footer, Header } from '@/components'
-import React from 'react'
-import { Navigate, Outlet } from 'react-router-dom'
+import { Footer, Header } from '@/components';
+import { Outlet } from 'react-router-dom';
 
-import { ReactNode } from 'react';
 
 export default function AuthLayout() {
   return (

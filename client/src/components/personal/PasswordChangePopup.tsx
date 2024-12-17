@@ -1,5 +1,7 @@
-import { User } from "@/entities";
+import { userService } from "@/services";
+import { sUser } from "@/store";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Button,
   FormControl,
@@ -9,9 +11,6 @@ import {
   OutlinedInput,
 } from "@mui/material";
 import React from "react";
-import CloseIcon from "@mui/icons-material/Close";
-import { userService } from "@/services";
-import { sUser } from "@/store";
 
 export default function PasswordChangePopup({
   onClose,

@@ -1,6 +1,5 @@
-import React from 'react'
-import { useState, useEffect } from 'react'
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
+import { useEffect, useState } from 'react';
 
 export default function CountingTimer() {
     const [seconds, setSeconds] = useState(0);

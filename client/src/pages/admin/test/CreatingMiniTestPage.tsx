@@ -73,6 +73,7 @@ export default function CreatingMiniTestPage() {
       <div className="part-1 flex flex-col gap-2">
         <p className="text-2xl font-bold">Part 1</p>
         <CreatingQuestionGroup
+          onQuestionsCreated={() => {}}
           part={1}
           questionNumberFrom={1}
           onNewQuestionCreated={() => {
@@ -88,6 +89,7 @@ export default function CreatingMiniTestPage() {
       <div className="part-2 flex flex-col gap-2">
         <p className="text-2xl font-bold">Part 2</p>
         <CreatingQuestionGroup
+          onQuestionsCreated={() => {}}
           part={2}
           questionNumberFrom={numberOfQuestionsPart1 + 1}
           onNewQuestionCreated={() => {
@@ -107,6 +109,7 @@ export default function CreatingMiniTestPage() {
           >
             <div className="w-5/6">
               <CreatingQuestionGroup
+                onQuestionsCreated={() => {}}
                 part={3}
                 questionNumberFrom={
                   numberOfQuestionsPart1 +
@@ -181,6 +184,7 @@ export default function CreatingMiniTestPage() {
           >
             <div className="w-5/6">
               <CreatingQuestionGroup
+                onQuestionsCreated={() => {}}
                 key={questionGroup.id}
                 part={4}
                 questionNumberFrom={
@@ -254,6 +258,7 @@ export default function CreatingMiniTestPage() {
       <div className="part-5 flex flex-col gap-2">
         <p className="text-2xl font-bold">Part 5</p>
         <CreatingQuestionGroup
+          onQuestionsCreated={() => {}}
           part={5}
           questionNumberFrom={
             numberOfQuestionsPart1 +
@@ -285,6 +290,7 @@ export default function CreatingMiniTestPage() {
           >
             <div className="w-5/6">
               <CreatingQuestionGroup
+                onQuestionsCreated={() => {}}
                 key={questionGroup.id}
                 part={6}
                 questionNumberFrom={
@@ -369,6 +375,7 @@ export default function CreatingMiniTestPage() {
           >
             <div className="w-5/6">
               <CreatingQuestionGroup
+                onQuestionsCreated={() => {}}
                 key={questionGroup.id}
                 part={7}
                 questionNumberFrom={

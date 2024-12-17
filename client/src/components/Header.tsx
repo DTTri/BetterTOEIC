@@ -1,18 +1,16 @@
-import { useEffect, useState } from 'react';
-import Logo from '../assets/Logo_BetterTOEIC.png';
-import Noti from '../assets/Noti_icon.svg';
-import { Button } from '@mui/material';
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItemWithText,
-  SelectLabel,
-  SelectTrigger,
-} from "@/components/ui/select"
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+  SelectTrigger
+} from "@/components/ui/select";
 import { sUser } from '@/store';
-import { User } from '@/entities';
+import { Button } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import Logo from '../assets/Logo_BetterTOEIC.png';
+import Noti from '../assets/Noti_icon.svg';
 import LoadingProgress from './LoadingProgress';
 export default function Header() {
   const [selectedItem, setSelectedItem] = useState('');

@@ -1,5 +1,3 @@
-import { on } from "events";
-import { useState } from "react";
 
 const QuestionsListContainer = ( { ans, onMoveToChosenQuestion } : { ans?: number[], onMoveToChosenQuestion: (question_number: number) => void }) => {
   const numberOfQuestionsPerPart = [6, 24, 38, 30, 30, 30, 30];

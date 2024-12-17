@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
 
 export default function Timer({ onEnd }: { onEnd: () => void  }) {

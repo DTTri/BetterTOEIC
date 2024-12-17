@@ -1,7 +1,7 @@
-import { Button } from "@mui/material";
-import { useEffect, useState } from "react";
 import { Question } from "@/entities";
 import { sNewTest } from "@/store";
+import { Button } from "@mui/material";
+import { useEffect, useState } from "react";
 
 export default function CreatingQuestion({
   part,
@@ -23,7 +23,7 @@ export default function CreatingQuestion({
   const [text, setText] = useState("");
   const [choices, setChoices] = useState<string[]>([]);
   const [explanation, setExplanation] = useState("");
-  const [image, setImage] = useState<string | null>(null); // for part 1
+  const [_image, setImage] = useState<string | null>(null); // for part 1
   const handleMarkCorrect = (option: number) => {
     setCorrectOption(option);
   };

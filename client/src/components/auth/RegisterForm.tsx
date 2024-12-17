@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react'
-import { Button, Checkbox, FormControl, FormControlLabel, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from '@mui/material';
-import { Link } from 'react-router-dom';
 import google_icon from '@/assets/google_icon.svg';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
 import authService from '@/services/authService';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from '@mui/material';
+import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 
 export default function RegisterForm() {

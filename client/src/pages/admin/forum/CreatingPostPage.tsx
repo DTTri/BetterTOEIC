@@ -14,7 +14,7 @@ export default function CreatingPostPage() {
   const [user, setUser] = useState(SUser);
   const nav = useNavigate();
   const content = useRef<string>("");
-  const [images, setImages] = useState<string[]>([]);
+  const [images] = useState<string[]>([]);
   const dropzoneRef = useRef<any>(null);
 
   useEffect(() => {

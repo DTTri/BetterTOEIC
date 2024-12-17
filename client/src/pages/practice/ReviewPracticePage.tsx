@@ -38,7 +38,6 @@ export default function ReviewPracticePage() {
   const [selectedQuestionGroup, setSelectedQuestionGroup] = useState<
     Question[]
   >([]);
-  const [historyChoices, setHistoryChoices] = useState<number[]>([]);
 
   useEffect(() => {
     if (selectedPracticeTest) {

@@ -1,14 +1,13 @@
-import { Avatar } from "@mui/material";
-import { useEffect, useState } from "react";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import CommentIcon from "@mui/icons-material/Comment";
-import ImageModal from "./ImageModal";
 import { Post } from "@/entities";
-import { useParams } from "react-router-dom";
 import { sUser } from "@/store";
+import CommentIcon from "@mui/icons-material/Comment";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { Avatar } from "@mui/material";
+import { useState } from "react";
+import { useParams } from "react-router-dom";
 import LoadingProgress from "../LoadingProgress";
-import { Item } from "@radix-ui/react-select";
+import ImageModal from "./ImageModal";
 
 function PostOptions(
     { onDelete, onEdit } : { 
@@ -36,7 +35,6 @@ export default function PostDetail( { post
     onLike: (isLiked: boolean) => void,
     onDelete: () => void
   }) {
-  const { id } = useParams();
 //   const postLists = sForum.use((cur) => cur.posts);
 //   const [post, setPost] = useState<Post>();
   const userId = sUser.use((cur) => cur.info._id);

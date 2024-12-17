@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import testService from "@/services/testService";
 import { Question } from "@/entities";
-import CreateTestDTO from "@/entities/dtos/CreateTestDTO";
+import CreateTestDTO from "@/entities/DTOS/CreateTestDTO";
 import { sNewTest } from "@/store";
 import { useNavigate } from "react-router-dom";
 import http from "@/services/http";

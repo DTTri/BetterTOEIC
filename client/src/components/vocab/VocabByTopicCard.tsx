@@ -1,8 +1,6 @@
-import { CircularProgress } from "@mui/material";
-import React from "react";
-import DoneIcon from "@mui/icons-material/Done";
 import VocabByTopic from "@/entities/VocabByTopic";
 import { sVocab } from "@/store";
+import DoneIcon from "@mui/icons-material/Done";
 
 export default function VocabByTopicCard({vocabByTopic, onCardClick} : {vocabByTopic: VocabByTopic, onCardClick: (id: string) => void}) {
   const isLearned = sVocab.use((cur) => cur.vocabHistory)

@@ -1,6 +1,4 @@
-import React from 'react'
 import LoginForm from '@/components/auth/LoginForm'
-import { Footer, Header } from '@/components'
 
 export default function LoginPage() {
   return (

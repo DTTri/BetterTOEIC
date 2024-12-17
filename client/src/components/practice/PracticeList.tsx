@@ -1,16 +1,11 @@
-import React from "react";
-import { useState } from "react";
-import ArrowCircleDownIcon from "@mui/icons-material/ArrowCircleDown";
-import DoneIcon from "@mui/icons-material/Done";
-import Practice from "../../entities/PracticeTest";
-import book from "../../assets/book.svg";
-import arrow_right from "../../assets/arrow_right.svg";
-import arrow_down from "../../assets/arrow_down.svg";
-import { useNavigate } from "react-router-dom";
-import PracticeTest from "../../entities/PracticeTest";
-import PracticeTestHistory from "@/entities/PracticeHisotry";
 import CompletedPracticeTest from "@/entities/CompletedPracticeTest";
-import { practiceStore } from "@/store/practiceStore";
+import DoneIcon from "@mui/icons-material/Done";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import arrow_down from "../../assets/arrow_down.svg";
+import arrow_right from "../../assets/arrow_right.svg";
+import book from "../../assets/book.svg";
+import PracticeTest from "../../entities/PracticeTest";
 import LoadingProgress from "../LoadingProgress";
 
 function PracticeTestComponent({

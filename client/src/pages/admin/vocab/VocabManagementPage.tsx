@@ -40,7 +40,7 @@ export default function VocabManagementPage() {
       flex: 0.5,
       align: "center",
       headerAlign: "center",
-      valueGetter: (value, row) => {
+      valueGetter: (_value, row) => {
         return row.vocabs.length;
       },
     },
@@ -50,7 +50,7 @@ export default function VocabManagementPage() {
       flex: 1,
       align: "center",
       headerAlign: "center",
-      valueFormatter: (params, row) => {
+      valueFormatter: (_params, row) => {
         return new Date(row.created_at).toLocaleString();
       },
     },
@@ -60,7 +60,7 @@ export default function VocabManagementPage() {
       flex: 1,
       align: "center",
       headerAlign: "center",
-      valueFormatter: (params, row) => {
+      valueFormatter: (_params, row) => {
         return new Date(row.updated_at).toLocaleString();
       },
     },

@@ -45,7 +45,7 @@ export default function QuestionComponent({
                   type="radio"
                   name={`question-${question.question_number}`}
                   id={`optionValue-${question.question_number}-${index}`}
-                  onChange={(e) => {
+                  onChange={() => {
                     //because array index is 0-based, but the question number 1-based, so we set question number -1
                     onChoose &&
                       onChoose(index + 1, question.question_number - 1);

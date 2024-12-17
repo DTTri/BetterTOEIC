@@ -1,4 +1,3 @@
-import Practice from "@/entities/PracticeTest";
 import { practiceStore } from "@/store/practiceStore";
 import DoneIcon from "@mui/icons-material/Done";
 import { Button } from "@mui/material";

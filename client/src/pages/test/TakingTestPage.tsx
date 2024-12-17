@@ -13,7 +13,7 @@ import { testService } from "@/services";
 
 import ClassifyTestScore from "@/utils/ClassifyTestScore";
 import getTestScore from "@/utils/CalculateTestScore";
-import CompleteTestDTO from "@/entities/dtos/CompleteTestDTO";
+import CompleteTestDTO from "@/entities/DTOS/CompleteTestDTO";
 
 export default function TakingTestPage({ isEvaluation = false }) {
   const { id } = useParams();

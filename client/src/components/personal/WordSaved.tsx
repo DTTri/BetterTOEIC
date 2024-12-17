@@ -1,5 +1,4 @@
-import { SavedVocab, Vocab } from "@/entities";
-import React from "react";
+import { SavedVocab } from "@/entities";
 
 export default function WordSaved({ vocab }: { vocab: SavedVocab }) {
   return (

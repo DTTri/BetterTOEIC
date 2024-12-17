@@ -1,11 +1,9 @@
 import { Footer, Header } from "@/components";
-import React, { useEffect, useState } from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
-import { ReactNode } from "react";
-import { userService } from "@/services";
-import { sUser } from "@/store";
 import LoadingProgress from "@/components/LoadingProgress";
+import { sUser } from "@/store";
+import { ReactNode } from "react";
 
 export default function UserLayout({
   children,
