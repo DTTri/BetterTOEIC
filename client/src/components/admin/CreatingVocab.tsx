@@ -2,7 +2,6 @@ import { Button, IconButton, MenuItem, Select } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useRef, useState } from "react";
 import CreateVocabDTO from "@/entities/DTOS/CreateVocabDTO";
-import Dropzone, { IFileWithMeta, StatusValue } from "react-dropzone-uploader";
 export default function CreatingVocab({
   vocabId,
   vocabNumber,
@@ -17,8 +16,6 @@ export default function CreatingVocab({
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [audioFile, setAudioFile] = useState<File | null>(null);
-  const dropzoneImageRef = useRef<any>(null);
-  const dropzoneAudioRef = useRef<any>(null);
   const inpRef = useRef<{ [key: string]: any }>({});
 
   const handleOnSave = () => {
@@ -42,20 +39,6 @@ export default function CreatingVocab({
     );
   };
 
-  const handleChangeStatus = (
-    file: IFileWithMeta,
-    status: StatusValue,
-    type: "image" | "audio"
-  ) => {
-    console.log(status, file.file.name);
-    if (status === "done") {
-      if (type === "image") {
-        setImageFile(file.file);
-      } else if (type === "audio") {
-        setAudioFile(file.file);
-      }
-    }
-  };
   return (
     <div className="w-full flex gap-2 items-start">
       <div className="w-12 h-10 flex items-center justify-center rounded-full border border-gray-600">
@@ -83,45 +66,32 @@ export default function CreatingVocab({
           <MenuItem value="pronoun">Pronoun</MenuItem>
         </Select>
         <div className="w-1/2 flex flex-row gap-2 items-center">
-          <label className="font-bold ">Image: </label>
-          <Dropzone
+          <label className="font-bold">Image: </label>
+          <input
+            type="file"
             disabled={isSaved}
-            ref={dropzoneImageRef}
-            onChangeStatus={(fileWithMeta, status) =>
-              handleChangeStatus(fileWithMeta, status, "image")
-            }
-            maxFiles={1}
-            multiple={true}
-            inputContent="Drop files here or click to browse"
             accept="image/*"
-            submitButtonDisabled={false}
-            canRemove={true}
-            classNames={{
-              dropzone: `h-[80px] bg-gray-100 text-[20px] text-gray-500 flex items-center justify-center text-center border-2 border-dashed border-gray-300 rounded-md`,
-              submitButton: "hidden",
-              previewImage: "w-[100px] h-[80px] rounded-md flex items-center justify-center",
-              submitButtonContainer: "hidden",
-              inputLabel: "text-blue-500 text-[14px] hover:text-blue-700 cursor-pointer mr-2",
-            }}/>
+            onChange={(e) => {
+              if (e.target.files && e.target.files[0]) {
+                setImageFile(e.target.files[0]);
+              }
+            }}
+            className="bg-gray-200 p-2 border-none rounded-lg text-base text-black"
+          />
         </div>
         <div className="w-[45%] flex flex-row gap-2 items-center">
           <label className="font-bold">Audio: </label>
-          <Dropzone
+          <input
+            type="file"
             disabled={isSaved}
-            ref={dropzoneAudioRef}
-            onChangeStatus={(fileWithMeta, status) =>
-              handleChangeStatus(fileWithMeta, status, "audio")
-            }
-            maxFiles={1}
-            multiple={true}
-            inputContent="Drop files here or click to browse"
             accept="audio/*"
-            classNames={{
-              dropzone: `h-[80px] bg-gray-100 text-[20px] text-gray-500 flex items-center justify-center text-center border-2 border-dashed border-gray-300 rounded-md`,
-              submitButton: "hidden",
-              submitButtonContainer: "hidden",
-              inputLabel: "text-blue-500 text-[14px] hover:text-blue-700 cursor-pointer mr-2",
-            }}/>
+            onChange={(e) => {
+              if (e.target.files && e.target.files[0]) {
+                setAudioFile(e.target.files[0]);
+              }
+            }}
+            className="bg-gray-200 p-2 border-none rounded-lg text-base text-black"
+          />
         </div>
         <input
           type="text"

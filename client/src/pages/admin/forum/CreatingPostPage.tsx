@@ -6,7 +6,6 @@ import { sUser } from "@/store";
 import sForum from "@/store/forumStore";
 import { Button } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
-import Dropzone, { IFileWithMeta, StatusValue } from "react-dropzone-uploader";
 import { useNavigate } from "react-router-dom";
 
 export default function CreatingPostPage() {
@@ -14,8 +13,7 @@ export default function CreatingPostPage() {
   const [user, setUser] = useState(SUser);
   const nav = useNavigate();
   const content = useRef<string>("");
-  const [images] = useState<string[]>([]);
-  const dropzoneRef = useRef<any>(null);
+  const [imgFile, setImgFile] = useState<File[] | null>(null);
 
   useEffect(() => {
     setUser(SUser);
@@ -24,38 +22,35 @@ export default function CreatingPostPage() {
   if (!user) {
     return <LoadingProgress />;
   }
-  
-  const handleChangeStatus = (
-    { meta }: { meta: { name: string } },
-    status: StatusValue
-  ) => {
-    console.log(status, meta);
-  };
 
-  const handleSubmit = async (files: IFileWithMeta[]) => {
+  const uploadFile = async (file: File) => {
+    const response = await http.get(`file/presigned-url?fileName=${file.name}&contentType=${file.type}`);
+    console.log(response);
+    
+    const result = await fetch(response.presignedUrl, {
+      method: "PUT",
+      headers: {
+        "Content-Type": file.type,
+      },
+      body: file,
+    });
+    if (!result.ok) {
+      throw new Error("Failed to upload file to S3");
+    }
+    console.log(result);
+
+    return "https://seuit-qlnt.s3.amazonaws.com/" + response.key;
+  }
+
+  const handleSubmit = async (files: File[]) => {
     try {
-      const uploadPromises = files.map(async (fileWithMeta) => {
-        const file = fileWithMeta.file;
-        const response = await http.get(
-          `file/presigned-url?fileName=${file.name}&contentType=${file.type}`
-        );
-        console.log(response);
-
-        // PUT request: upload file to S3
-        const result = await fetch(response.presignedUrl, {
-          method: "PUT",
-          headers: {
-            "Content-Type": file.type,
-          },
-          body: file,
-        });
-        if (!result.ok) {
-          throw new Error("Failed to upload image to S3");
-        }
-        console.log(result);
-        images.push("https://seuit-qlnt.s3.amazonaws.com/" + response.key);
+      let images: string[] = [];
+      const uploadPromises = files.map(async (file) => {
+        return await uploadFile(file);
       });
-      await Promise.all(uploadPromises);
+      if(uploadPromises.length > 0) {
+        images = await Promise.all(uploadPromises);
+      }
       console.log("Images uploaded:", images);
       return images;
     } catch (error) {
@@ -63,23 +58,29 @@ export default function CreatingPostPage() {
       return null;
     }
   };
-  console.log("image console" + images);
 
-  const handleCreatePost = async () => {
-    console.log("iamge in function" + images)
+  const handleCreateButtonClick = async () => {
+    if(!content.current) {
+      alert("Please enter content");
+      return;
+    }
+    let images: string[] | null = null;
+    if(imgFile && imgFile.length > 0) {
+      images = await handleSubmit(imgFile || []);
+    }
     const newPost: CreatePostDTO = {
       content: content.current,
-      contentImage: images,
+      contentImage: images || [],
       creator: {
         _id: user._id,
         username: user.name,
-        avatar: user.avatar
-      }
+        avatar: user.avatar,
+      },
     };
     try {
       const response = await forumService.createPost(newPost);
       if (response.EC === 0) {
-        sForum.set(pre => pre.value.posts.push(response.DT));
+        sForum.set((pre) => pre.value.posts.push(response.DT));
         nav(-1);
       } else {
         console.error("Failed to add product:", response.EM);
@@ -88,20 +89,6 @@ export default function CreatingPostPage() {
       console.error("Error adding product:", error);
     }
   };
-
-  const handleCreateButtonClick = async () => {
-    if (dropzoneRef.current && dropzoneRef.current.files.length > 0) {
-      const uploadSuccess = await handleSubmit(dropzoneRef.current.files);
-      if (uploadSuccess !== null && uploadSuccess.length > 0) {
-        handleCreatePost();
-      }
-    } else {
-      handleCreatePost();
-    }
-  };
-
-
-  console.log(images);
 
   return (
     <div className="w-full min-h-screen rounded-xl bg-white text-black flex flex-col gap-4 p-4">
@@ -116,25 +103,19 @@ export default function CreatingPostPage() {
           onChange={(e) => (content.current = e.target.value)}
         />
       </div>
-        <div className="image-container flex flex-col justify-center items-center gap-4 overflow-auto max-h-96">
-          <Dropzone
-            ref={dropzoneRef}
-            onChangeStatus={handleChangeStatus}
-            maxFiles={5}
-            multiple={true}
-            inputContent="Drop files here or click to browse"
-            accept="image/*"
-            submitButtonDisabled={false}
-            canRemove={true}
-            classNames={{
-              dropzone: `w-full h-[150px] bg-gray-100 text-[20px] text-gray-500 flex items-center justify-center text-center border-2 border-dashed border-gray-300 rounded-md`,
-              submitButton: "hidden",
-              previewImage: "w-full rounded-md flex items-center justify-center",
-              submitButtonContainer: "hidden",
-              inputLabel: "text-blue-500 hover:text-blue-700 cursor-pointer",
-            }}
-          />
-        </div>
+      <div className="image-container flex flex-col justify-center items-center gap-4 overflow-auto max-h-96">
+        <input
+          type="file"
+          multiple
+          accept="image/*"
+          onChange={(e) => {
+            if (e.target.files) {
+              setImgFile(Array.from(e.target.files));
+            }
+          }}
+          className="w-full h-[150px] bg-gray-100 text-[20px] text-gray-500 flex items-center justify-center text-center border-2 border-dashed border-gray-300 rounded-md"
+        />
+      </div>
       <div className="w-full flex justify-end gap-2 items-center">
         <Button
           variant="contained"
@@ -145,7 +126,11 @@ export default function CreatingPostPage() {
         >
           Refresh
         </Button>
-        <Button onClick={handleCreateButtonClick} variant="contained" style={{ backgroundColor: "#00205C" }}>
+        <Button
+          onClick={handleCreateButtonClick}
+          variant="contained"
+          style={{ backgroundColor: "#00205C" }}
+        >
           Create
         </Button>
       </div>
