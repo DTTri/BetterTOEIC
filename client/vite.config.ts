@@ -16,5 +16,8 @@ export default defineConfig({
         warn(warning);
       },
     },
+  },
+  esbuild: {
+    exclude: /node_modules/,
   }
 });
