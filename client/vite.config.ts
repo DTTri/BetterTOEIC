@@ -9,4 +9,12 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      onwarn(warning, warn) {
+        if (warning.code === 'UNUSED_EXTERNAL_IMPORT') return; // Bỏ qua cảnh báo unused import
+        warn(warning);
+      },
+    },
+  }
 });
