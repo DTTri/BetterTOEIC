@@ -1,6 +1,5 @@
 import { CreatingQuestionGroup } from "@/components";
 import { Question } from "@/entities";
-import { CreateRoadmapExerciseDTO } from "@/entities/dtos";
 import { roadmapService } from "@/services";
 import http from "@/services/http";
 import { sNewTest } from "@/store";
@@ -81,7 +80,7 @@ export default function CreatingRoadmapExsPage() {
     const mainAudioUrl =
       part < 5 && mainAudio ? await uploadFile(mainAudio) : "";
     try {
-      const newRoadmapEx: CreateRoadmapExerciseDTO = {
+      const newRoadmapEx = {
         phase,
         part,
         chapter,

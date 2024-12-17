@@ -1,6 +1,6 @@
 import { ChaptersContainer, CurrentPhaseContainer } from "@/components";
 import { RoadmapExercise, RoadmapHistory } from "@/entities";
-import { sCreatingPersonalRoadmap, sRoadmap } from "@/store";
+import { sRoadmap } from "@/store";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
