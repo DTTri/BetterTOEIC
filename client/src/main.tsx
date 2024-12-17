@@ -6,7 +6,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 
 createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
-    <SpeedInsights />
     <App />
+    <SpeedInsights />
   </BrowserRouter>
 );
