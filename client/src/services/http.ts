@@ -1,8 +1,7 @@
-import { API_URL } from "@/utils/config";
 class Http {
   baseUrl: string;
   constructor() {
-    this.baseUrl = API_URL;
+    this.baseUrl = "https://bettertoeic-nodejsserver.onrender.com/api";
   }
   private getURL(url: string) {
     return `${this.baseUrl}/${url}`;
