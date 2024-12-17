@@ -9,7 +9,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Question, RoadmapExercise, RoadmapHistory } from "@/entities";
 import { useEffect, useState } from "react";
 import { roadmapService } from "@/services";
-import CompleteRoadmapExerciseDTO from "@/entities/DTOS/CompleteRoadmapExerciseDTO";
 import { Button } from "@mui/material";
 import { sRoadmap, sUser } from "@/store";
 import CompletedRoadmapExercise from "@/entities/CompletedRoadmapExercise";
@@ -107,7 +106,7 @@ export default function DoingRoadmapExsPage() {
 
   const onSubmit = async () => {
     try {
-      const completedRoadmapExercise: CompleteRoadmapExerciseDTO = {
+      const completedRoadmapExercise = {
         roadmapExerciseId: roadmapExercise._id,
         choices: answers,
       };
