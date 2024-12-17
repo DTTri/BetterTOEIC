@@ -18,7 +18,7 @@ export default function PracticeQuestionPallete({
       </h3>
 
       <div className="flex flex-row gap-2 scroll-m-2 overflow-auto">
-        {Array.from(Array(questionNumber).keys()).map((question, index) => (
+        {Array.from(Array(questionNumber).keys()).map((_question, index) => (
           <div
             className="min-w-[32px] min-h-[32px] flex items-center justify-center text-sm bg-[#F6F6F6] rounded-[10px] text-center hover:bg-slate-300 cursor-pointer"
             onClick={() => onQuestionSelectedChange(index)}

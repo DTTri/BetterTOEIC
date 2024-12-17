@@ -5,7 +5,6 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Avatar } from "@mui/material";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
 import LoadingProgress from "../LoadingProgress";
 import ImageModal from "./ImageModal";
 

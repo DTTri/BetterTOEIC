@@ -1,4 +1,3 @@
-import { Post } from "@/entities";
 import SearchIcon from "@mui/icons-material/Search";
 import { FormControl, MenuItem, Select } from "@mui/material";
 import { useRef, useState } from "react";

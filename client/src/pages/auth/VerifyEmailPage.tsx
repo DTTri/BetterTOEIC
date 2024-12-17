@@ -3,7 +3,7 @@ import LoadingProgress from '@/components/LoadingProgress';
 import authService from '@/services/authService';
 import { Button } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import imgError from "../../assets/Site_constructor.png";
 
 export default function VerifyEmailPage() {
