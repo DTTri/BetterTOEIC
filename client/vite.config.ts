@@ -11,10 +11,12 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
-      onwarn(warning, warn) {
-        if (warning.code === 'UNUSED_EXTERNAL_IMPORT') return; // Bỏ qua cảnh báo unused import
-        warn(warning);
-      },
+      external: [
+        'react-dropzone-uploader' // Thêm thư viện gây lỗi vào đây
+      ],
+    },
+    commonjsOptions: {
+      ignoreTryCatch: false, // Bỏ qua một số kiểm tra
     },
   },
   esbuild: {
