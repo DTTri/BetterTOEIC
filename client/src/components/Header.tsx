@@ -48,6 +48,9 @@ export default function Header() {
       sUser.reset();
       nav('/login');
     }
+    else if(e === 'admin') {
+      nav('/admin');
+    }
     else if(e === 'user-info') {
       nav('/user-info');
     }
@@ -88,11 +91,12 @@ export default function Header() {
                     <img src={userInfo.avatar} alt="" className="max-h-10 max-w-10 aspect-square w-full h-full inline-block rounded-full object-fill" />
                     <div className="flex flex-col">
                       <span className='text-[16px] font-semibold '>{userInfo.name.split(' ')[0]}</span>
-                      <span className='text-[12px] font-normal '>{userInfo.isAdmin == true ? 'User' : 'Admin'}</span>
+                      <span className='text-[12px] font-normal '>{userInfo.isAdmin == true ? 'Admin' : 'User'}</span>
                     </div>
                 </SelectTrigger>
                 <SelectContent className='bg-background'>
                   <SelectGroup>
+                    {userInfo.isAdmin && <SelectItemWithText value='admin'>Admin Dashboard</SelectItemWithText>}
                     <SelectItemWithText value='report'>User report</SelectItemWithText>
                     <SelectItemWithText value='user-info'>User-info</SelectItemWithText>
                     <SelectItemWithText  value='test-saved'>Test saved list</SelectItemWithText>
