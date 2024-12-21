@@ -12,7 +12,8 @@ export default function getTestScore(correctAnswersPerPart: number[]) {
     )
   ) {
     throw new Error(
-      "Each part's correct answer count must be within the valid range."
+      "Each part's correct answer count must be within the valid range, " +
+        correctAnswersPerPart
     );
   }
 

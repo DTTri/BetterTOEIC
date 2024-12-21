@@ -58,7 +58,7 @@ export default function CurrentPhaseContainer({
     <div className="w-full bg-white rounded-xl px-8 py-4 flex items-center justify-center">
       <div className="start-level flex flex-col items-center gap-1">
         <FmdGoodIcon fontSize="medium" />
-        <div className="px-2 py-1 bg-white border border-secondary rounded-xl min-w-28">
+        <div className="px-2 py-1 bg-white border border-primary rounded-xl min-w-28">
           <p className="text-black font-bold text-xl w-full text-center">
             {start}
           </p>
@@ -71,7 +71,7 @@ export default function CurrentPhaseContainer({
       />
       <div className="end-level flex flex-col items-center gap-1">
         <ModeStandbyIcon fontSize="medium" />
-        <div className="px-2 py-1 bg-secondary rounded-xl min-w-28">
+        <div className="px-2 py-1 bg-primary rounded-xl min-w-28">
           <p className="text-white font-bold text-xl w-full text-center">
             {end}
           </p>

@@ -17,6 +17,8 @@ import { sCreatingPersonalRoadmap, sRoadmap, sUser } from "@/store";
 import { roadmapService } from "@/services";
 import { RoadmapExercise, RoadmapHistory } from "@/entities";
 import { testStore } from "@/store/testStore";
+import { Button } from "@mui/material";
+import theme from "@/theme";
 export default function CreatingRoadmapPage() {
   const [currentStep, setCurrentStep] = useState(0);
   const [completeCreatingRoadmap, setCompleteCreatingRoadmap] = useState(false);
@@ -127,20 +129,33 @@ export default function CreatingRoadmapPage() {
               level!
             </p>
             <div className="buttons-container flex gap-4 mt-4">
-              <button
-                className="manual bg-white text-black text-lg px-3 py-2 border border-secondary rounded-md"
+              <Button
+                style={{
+                  border: `1px solid ${theme.palette.primary.main}`,
+                  color: "black",
+                  textTransform: "none",
+                  fontSize: "18px",
+                  width: "115px",
+                }}
                 onClick={() => handleSlideTo(1)}
+                variant="outlined"
               >
-                {/* Thiết lập trình độ */}
-                Set level
-              </button>
-              <button
-                className="taking-test bg-secondary text-white text-lg px-3 py-2 rounded-md"
+                Set Level
+              </Button>
+
+              <Button
+                style={{
+                  backgroundColor: theme.palette.primary.main,
+                  color: "white",
+                  textTransform: "none",
+                  fontSize: "18px",
+                  width: "115px",
+                }}
                 onClick={handleDoTestEvaluation}
+                variant="contained"
               >
-                {/* Làm bài kiểm tra */}
-                Do test
-              </button>
+                Test Now
+              </Button>
             </div>
           </SwiperSlide>
           <SwiperSlide className="step-1.2 flex flex-col gap-4">
@@ -155,18 +170,32 @@ export default function CreatingRoadmapPage() {
               <LevelExplain isStartLevel={true} />
             </div>
             <div className="buttons-container absolute bottom-2 w-full flex justify-between items-center">
-              <button
+              {/* <button
                 className="prev-slide bg-white text-black text-lg px-3 py-2 border border-secondary rounded-md"
                 onClick={handlePrevSlide}
               >
                 Back
-              </button>
-              <button
-                className="next-slide bg-secondary text-white text-lg px-3 py-2 rounded-md"
+              </button> */}
+              <Button
+                style={{
+                  textTransform: "none",
+                  border: `1px solid ${theme.palette.primary.main}`,
+                  color: "black",
+                }}
+                onClick={handlePrevSlide}
+                variant="outlined"
+              >
+                Back
+              </Button>
+              <Button
+                style={{
+                  textTransform: "none",
+                }}
                 onClick={handleNextSlide}
+                variant="contained"
               >
                 Next
-              </button>
+              </Button>
             </div>
           </SwiperSlide>
           <SwiperSlide className="step-2 flex flex-col gap-4">
@@ -181,21 +210,29 @@ export default function CreatingRoadmapPage() {
               <LevelExplain isStartLevel={false} />
             </div>
             <div className="buttons-container absolute bottom-2 w-full flex justify-between items-center mt-4">
-              <button
-                className="prev-slide bg-white text-black text-lg px-3 py-2 border border-secondary rounded-md"
+              <Button
+                style={{
+                  textTransform: "none",
+                  border: `1px solid ${theme.palette.primary.main}`,
+                  color: "black",
+                }}
                 onClick={handlePrevSlide}
+                variant="outlined"
               >
                 Back
-              </button>
-              <button
-                className="next-slide bg-secondary text-white text-lg px-3 py-2 rounded-md"
+              </Button>
+              <Button
+                style={{
+                  textTransform: "none",
+                }}
                 onClick={() => {
                   handleCreatingRoadmap();
                   handleNextSlide();
                 }}
+                variant="contained"
               >
-                Create roadmap
-              </button>
+                Next
+              </Button>
             </div>
           </SwiperSlide>
           <SwiperSlide className="step-3 flex flex-col gap-8">
@@ -222,9 +259,9 @@ export default function CreatingRoadmapPage() {
             )}
             <div className="buttons-container absolute bottom-2 w-full flex justify-end items-center mt-4">
               {completeCreatingRoadmap && (
-                <button className="end-swiper bg-secondary text-white text-lg px-3 py-2 rounded-md">
-                  <Link to="/road-map">Start</Link>
-                </button>
+                <Button onClick={() => nav("/road-map")} variant="contained">
+                  Start
+                </Button>
               )}
             </div>
           </SwiperSlide>

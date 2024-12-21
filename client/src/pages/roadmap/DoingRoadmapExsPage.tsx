@@ -168,9 +168,9 @@ export default function DoingRoadmapExsPage() {
             .every((q) => answers[q.question_number - 1] !== 0);
           buttons.push(
             <button
-              className={`question-item rounded-lg w-8 h-8 ${
+              className={`question-item rounded-lg w-12 h-8 ${
                 isCurrentGroup
-                  ? "bg-blue-400 text-white"
+                  ? "bg-secondary text-black"
                   : isGroupAnswered
                   ? "bg-primary text-white"
                   : "bg-gray-400 text-black"
@@ -196,9 +196,9 @@ export default function DoingRoadmapExsPage() {
           .every((q) => answers[q.question_number - 1] !== 0);
         buttons.push(
           <button
-            className={`question-item rounded-lg w-8 h-8 ${
+            className={`question-item rounded-lg w-12 h-8 ${
               isCurrentGroup
-                ? "bg-blue-400 text-white"
+                ? "bg-secondary text-black"
                 : isGroupAnswered
                 ? "bg-primary text-white"
                 : "bg-gray-400 text-black"
@@ -224,7 +224,7 @@ export default function DoingRoadmapExsPage() {
             <button
               className={`question-item rounded-lg w-8 h-8 ${
                 isCurrentQuestion
-                  ? "bg-blue-400 text-white"
+                  ? "bg-secondary text-black"
                   : isQuestionAnswered
                   ? "bg-primary text-white"
                   : "bg-gray-400 text-black"

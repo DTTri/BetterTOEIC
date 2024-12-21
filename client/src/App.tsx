@@ -52,6 +52,8 @@ import sForum from "./store/forumStore";
 import ReviewTestPage from "./pages/test/ReviewTestPage";
 import ReviewPracticePage from "./pages/practice/ReviewPracticePage";
 import { User } from "./entities";
+import { ThemeProvider } from "@mui/material";
+import theme from "./theme";
 
 function App() {
   const curUser = localStorage.getItem("_id") || sessionStorage.getItem("_id");
@@ -303,205 +305,210 @@ function App() {
   }, []);
 
   return (
-    <Routes>
-      <Route path="/admin" element={<AdminLayout />}>
-        <Route path="overall" element={<OverallManagementPage />} />
-        <Route path="test" element={<TestManagementPage />} />
-        <Route path="practice" element={<PracticeManagementPage />} />
-        <Route path="roadmap" element={<RoadmapManagementPage />} />
-        <Route path="forum" element={<ForumManagementPage />} />
-        <Route path="user" element={<UserManagementPage />} />
-        <Route path="vocab" element={<VocabManagementPage />} />
-        <Route path="test/creatingTest" element={<CreatingTestPage />} />
+    <ThemeProvider theme={theme}>
+      <Routes>
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route path="overall" element={<OverallManagementPage />} />
+          <Route path="test" element={<TestManagementPage />} />
+          <Route path="practice" element={<PracticeManagementPage />} />
+          <Route path="roadmap" element={<RoadmapManagementPage />} />
+          <Route path="forum" element={<ForumManagementPage />} />
+          <Route path="user" element={<UserManagementPage />} />
+          <Route path="vocab" element={<VocabManagementPage />} />
+          <Route path="test/creatingTest" element={<CreatingTestPage />} />
+          <Route
+            path="test/creatingMiniTest"
+            element={<CreatingMiniTestPage />}
+          />
+          <Route
+            path="practice/creatingPracticeEx"
+            element={<CreatingPracticeExsPage />}
+          />
+          <Route
+            path="practice/creatingPracticeLesson"
+            element={<CreatingPracticeLessonsPage />}
+          />
+          <Route
+            path="roadmap/creatingRoadmapEx"
+            element={<CreatingRoadmapExsPage />}
+          />
+          <Route path="forum/creatingPost" element={<CreatingPostPage />} />
+          <Route path="vocab/creatingVocab" element={<CreatingVocabsPage />} />
+        </Route>
         <Route
-          path="test/creatingMiniTest"
-          element={<CreatingMiniTestPage />}
+          path="/"
+          element={
+            <UserLayout>
+              <TestsPage />
+            </UserLayout>
+          }
         />
         <Route
-          path="practice/creatingPracticeEx"
-          element={<CreatingPracticeExsPage />}
+          path="/test/:id"
+          element={
+            <UserLayout>
+              <TestDetailsPage />
+            </UserLayout>
+          }
         />
         <Route
-          path="practice/creatingPracticeLesson"
-          element={<CreatingPracticeLessonsPage />}
+          path="/taking-test/:id"
+          element={
+            <UserLayout haveFooter={false}>
+              <TakingTestPage />
+            </UserLayout>
+          }
         />
         <Route
-          path="roadmap/creatingRoadmapEx"
-          element={<CreatingRoadmapExsPage />}
+          path="/taking-test/:id/evaluation"
+          element={
+            <UserLayout haveFooter={false}>
+              <TakingTestPage isEvaluation={true} />
+            </UserLayout>
+          }
         />
-        <Route path="forum/creatingPost" element={<CreatingPostPage />} />
-        <Route path="vocab/creatingVocab" element={<CreatingVocabsPage />} />
-      </Route>
-      <Route
-        path="/test"
-        element={
-          <UserLayout>
-            <TestsPage />
-          </UserLayout>
-        }
-      />
-      <Route
-        path="/test/:id"
-        element={
-          <UserLayout>
-            <TestDetailsPage />
-          </UserLayout>
-        }
-      />
-      <Route
-        path="/taking-test/:id"
-        element={
-          <UserLayout haveFooter={false}>
-            <TakingTestPage />
-          </UserLayout>
-        }
-      />
-      <Route
-        path="/taking-test/:id/evaluation"
-        element={
-          <UserLayout haveFooter={false}>
-            <TakingTestPage isEvaluation={true} />
-          </UserLayout>
-        }
-      />
-      <Route
-        path="/review-test/:id/:attemp"
-        element={
-          <UserLayout haveFooter={false}>
-            <ReviewTestPage />
-          </UserLayout>
-        }
-      />
-      <Route
-        path="/road-map"
-        element={
-          <UserLayout haveFooter={false}>
-            <RoadmapPage />
-          </UserLayout>
-        }
-      />
-      <Route
-        path="/practice"
-        element={
-          <UserLayout>
-            <PracticePage />
-          </UserLayout>
-        }
-      />
-      <Route
-        path="/taking-practice/:part/:id"
-        element={
-          <UserLayout haveFooter={false}>
-            <TakingPracticePage />
-          </UserLayout>
-        }
-      />
-      <Route
-        path="/review-practice/:part/:id"
-        element={
-          <UserLayout haveFooter={false}>
-            <ReviewPracticePage />
-          </UserLayout>
-        }
-      />
-      <Route
-        path="/creating-roadmap"
-        element={
-          <UserLayout haveFooter={false}>
-            <CreatingRoadmapPage />
-          </UserLayout>
-        }
-      />
-      <Route
-        path="/vocab-gallery"
-        element={
-          <UserLayout>
-            <VocabCardGallery />
-          </UserLayout>
-        }
-      />
-      <Route
-        path="/vocab-learning/:id"
-        element={
-          <UserLayout haveFooter={false}>
-            <VocabLearingPage />
-          </UserLayout>
-        }
-      />
-      <Route
-        path="/roadmap/:roadmapExerciseId"
-        element={
-          <UserLayout haveFooter={false}>
-            <DoingRoadmapExsPage />
-          </UserLayout>
-        }
-      />
-      <Route
-        path="/forum"
-        element={
-          <UserLayout haveFooter={false}>
-            <ForumPage />
-          </UserLayout>
-        }
-      />
-      <Route
-        path="/forum/create-post"
-        element={
-          <UserLayout haveFooter={false}>
-            <CreatingPostPage />
-          </UserLayout>
-        }
-      />
-      <Route
-        path="/post-detail/:id"
-        element={
-          <UserLayout haveFooter={false}>
-            <PostDetailPage />
-          </UserLayout>
-        }
-      />
-      <Route
-        path="/user-info"
-        element={
-          <UserLayout>
-            <PersonalImformationPage />
-          </UserLayout>
-        }
-      />
-      <Route
-        path="/word-saved"
-        element={
-          <UserLayout haveFooter={false}>
-            <WordSavedPage />
-          </UserLayout>
-        }
-      />
-      <Route
-        path="/test-saved"
-        element={
-          <UserLayout haveFooter={false}>
-            <TestsSavedPage />
-          </UserLayout>
-        }
-      />
-      <Route
-        path="/user-report"
-        element={
-          <UserLayout haveFooter={false}>
-            <ReportUserPage />
-          </UserLayout>
-        }
-      />
-      <Route path="" element={<AuthLayout></AuthLayout>}>
-        <Route path="*" element={<ErrorPage />} />
-        <Route path="/error" element={<ErrorPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-        <Route path="/reset-password/:token" element={<RessetPasswordPage />} />
-        <Route path="/verifyEmail/:token" element={<VerifyEmailPage />} />
-      </Route>
-    </Routes>
+        <Route
+          path="/review-test/:id/:attemp"
+          element={
+            <UserLayout haveFooter={false}>
+              <ReviewTestPage />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/road-map"
+          element={
+            <UserLayout haveFooter={false}>
+              <RoadmapPage />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/practice"
+          element={
+            <UserLayout>
+              <PracticePage />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/taking-practice/:part/:id"
+          element={
+            <UserLayout haveFooter={false}>
+              <TakingPracticePage />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/review-practice/:part/:id"
+          element={
+            <UserLayout haveFooter={false}>
+              <ReviewPracticePage />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/creating-roadmap"
+          element={
+            <UserLayout haveFooter={false}>
+              <CreatingRoadmapPage />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/vocab-gallery"
+          element={
+            <UserLayout>
+              <VocabCardGallery />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/vocab-learning/:id"
+          element={
+            <UserLayout haveFooter={false}>
+              <VocabLearingPage />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/roadmap/:roadmapExerciseId"
+          element={
+            <UserLayout haveFooter={false}>
+              <DoingRoadmapExsPage />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/forum"
+          element={
+            <UserLayout haveFooter={false}>
+              <ForumPage />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/forum/create-post"
+          element={
+            <UserLayout haveFooter={false}>
+              <CreatingPostPage />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/post-detail/:id"
+          element={
+            <UserLayout haveFooter={false}>
+              <PostDetailPage />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/user-info"
+          element={
+            <UserLayout>
+              <PersonalImformationPage />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/word-saved"
+          element={
+            <UserLayout haveFooter={false}>
+              <WordSavedPage />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/test-saved"
+          element={
+            <UserLayout haveFooter={false}>
+              <TestsSavedPage />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/user-report"
+          element={
+            <UserLayout haveFooter={false}>
+              <ReportUserPage />
+            </UserLayout>
+          }
+        />
+        <Route path="" element={<AuthLayout></AuthLayout>}>
+          <Route path="*" element={<ErrorPage />} />
+          <Route path="/error" element={<ErrorPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route
+            path="/reset-password/:token"
+            element={<RessetPasswordPage />}
+          />
+          <Route path="/verifyEmail/:token" element={<VerifyEmailPage />} />
+        </Route>
+      </Routes>
+    </ThemeProvider>
   );
 }
 
