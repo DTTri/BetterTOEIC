@@ -22,20 +22,31 @@ class ForumService {
   async deletePost(id: string) {
     return await http.delete(this.getURI(`deletePost/${id}`));
   }
-  async likePost(id: string, likeDTO: { isLike: boolean, userId: string }) {
+  async likePost(id: string, likeDTO: { isLike: boolean; userId: string }) {
     return await http.put(this.getURI(`likePost/${id}`), { ...likeDTO });
   }
   async createComment(postId: string, data: CreateCommentDTO) {
     return await http.post(this.getURI(`createComment/${postId}`), data);
   }
   async updateComment(postId: string, commentId: string, data: Comment) {
-    return await http.put(this.getURI(`updateComment/${postId}/${commentId}`), data);
+    return await http.put(
+      this.getURI(`updateComment/${postId}/${commentId}`),
+      data
+    );
   }
   async deleteComment(postId: string, commentId: string) {
-    return await http.delete(this.getURI(`deleteComment/${postId}/${commentId}`));
+    return await http.delete(
+      this.getURI(`deleteComment/${postId}/${commentId}`)
+    );
   }
-  async likeComment(postId: string, commentId: string, likeDTO: { isLike: boolean, userId: string }) {
-    return await http.put(this.getURI(`likeComment/${postId}/${commentId}`), {...likeDTO});
+  async likeComment(
+    postId: string,
+    commentId: string,
+    likeDTO: { isLike: boolean; userId: string }
+  ) {
+    return await http.put(this.getURI(`likeComment/${postId}/${commentId}`), {
+      ...likeDTO,
+    });
   }
 }
 export default new ForumService();

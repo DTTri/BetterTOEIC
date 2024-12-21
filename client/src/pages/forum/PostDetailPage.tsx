@@ -82,9 +82,7 @@ export default function PostDetailPage() {
               ? {
                   ...post,
                   comments: post.comments.map((comment) =>
-                    comment._id === commentId
-                      ? response.DT
-                      : comment
+                    comment._id === commentId ? response.DT : comment
                   ),
                 }
               : post
@@ -92,9 +90,7 @@ export default function PostDetailPage() {
         });
         setComments(
           comments.map((comment) =>
-            comment._id === commentId
-              ? response.DT
-              : comment
+            comment._id === commentId ? response.DT : comment
           )
         );
       }
@@ -175,7 +171,7 @@ export default function PostDetailPage() {
         ))}
       </div>
       <div className="py-10 px-5 pl-1 gap-7 w-[30%]">
-        <MustRead postLists={postLists}/>
+        <MustRead postLists={postLists} />
       </div>
     </div>
   );
