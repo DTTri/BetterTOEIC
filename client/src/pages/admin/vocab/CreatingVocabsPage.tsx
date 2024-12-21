@@ -4,10 +4,21 @@ import CreateVocabDTO from "@/entities/DTOS/CreateVocabDTO";
 import http from "@/services/http";
 import vocabService from "@/services/vocabService";
 import { Button } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 export default function CreatingVocabsPage() {
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
   const [topicName, setTopicName] = useState<string>("");
   const nav = useNavigate();
   const [topicAvt, setTopicAvt] = useState<File | null>(null);

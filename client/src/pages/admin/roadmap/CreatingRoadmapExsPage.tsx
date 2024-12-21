@@ -8,6 +8,17 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 export default function CreatingRoadmapExsPage() {
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
   const nav = useNavigate();
   const [phase, setPhase] = useState<number>(1);
   const [part, setPart] = useState<number>(1);

@@ -11,6 +11,19 @@ import http from "@/services/http";
 
 export default function CreatingTestPage() {
   const nav = useNavigate();
+
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
+
   const [numberOfQuestionsPart1, setNumberOfQuestionsPart1] = useState(1);
   const [numberOfQuestionsPart2, setNumberOfQuestionsPart2] = useState(1);
   const [questionGroupsPart3, setQuestionGroupsPart3] = useState<

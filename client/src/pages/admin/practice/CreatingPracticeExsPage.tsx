@@ -9,6 +9,17 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 export default function CreatingPracticeExsPage() {
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
   const nav = useNavigate();
   const [part, setPart] = useState<number>(1);
   const [mainAudio, setMainAudio] = useState<File | null>(null);
