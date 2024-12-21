@@ -282,6 +282,7 @@ function App() {
     const fetchData = async () => {
       await fetchAllUsers();
       await fetchUserRoadmap();
+
       await Promise.all([
         fetchUsersPerBand(),
         fetchTests(),

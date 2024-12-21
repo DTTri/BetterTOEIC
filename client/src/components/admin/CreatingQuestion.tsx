@@ -14,7 +14,7 @@ export default function CreatingQuestion({
   part: number;
   questionNumber: number;
   questionGroupNumber?: number;
-  images?: string[];
+  images?: File[];
   paragraphs?: string[];
   onQuestionCreated: (question: Question) => void;
 }) {
@@ -23,7 +23,7 @@ export default function CreatingQuestion({
   const [text, setText] = useState("");
   const [choices, setChoices] = useState<string[]>([]);
   const [explanation, setExplanation] = useState("");
-  const [_image, setImage] = useState<string | null>(null); // for part 1
+  const [image, setImage] = useState<File | null>(null); // for part 1
   const handleMarkCorrect = (option: number) => {
     setCorrectOption(option);
   };
@@ -41,7 +41,7 @@ export default function CreatingQuestion({
     if (!isEditing) {
       const newQuestion: Question = {
         text,
-        images,
+        imageFiles: part === 1 ? (image ? [image] : undefined) : images,
         passages: paragraphs,
         choices,
         correct_choice: correctOption,
@@ -67,9 +67,9 @@ export default function CreatingQuestion({
             type="file"
             accept="image/*"
             onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) {
-                setImage(URL.createObjectURL(file));
+              if (e.target.files) {
+                const file = e.target.files[0];
+                setImage(file);
               }
             }}
             multiple={false}

@@ -77,10 +77,36 @@ export default function CreatingPracticeExsPage() {
     }
     const mainAudioUrl =
       part < 5 && mainAudio ? await uploadFile(mainAudio) : "";
+    if (part < 5 && mainAudioUrl === "") {
+      alert("Failed to upload main audio");
+      return;
+    }
+    const uploadedQuestionPromises = questions.map(async (question) => {
+      let imageUrls: string[] = [];
+      if (question.imageFiles) {
+        imageUrls = await Promise.all(
+          question.imageFiles.map(async (image) => await uploadFile(image))
+        );
+        imageUrls.forEach((imageUrl) => {
+          if (imageUrl === "") {
+            return null;
+          }
+        });
+        question.images = imageUrls;
+      }
+      return question;
+    });
+    const uploadedQuestions = await Promise.all(uploadedQuestionPromises);
+    uploadedQuestions.forEach((uploadedQuestion) => {
+      if (uploadedQuestion === null) {
+        alert("Failed to upload image");
+        return;
+      }
+    });
     try {
       const newPracticeTest: CreatePracticeTestDTO = {
         part: part,
-        questions: questions,
+        questions: uploadedQuestions,
         created_by: "admin",
         main_audio: mainAudioUrl,
       };
@@ -89,9 +115,11 @@ export default function CreatingPracticeExsPage() {
       console.log(res);
       if (res.EC === 0) {
         nav("/admin/practice");
+      } else {
+        alert(res.EM);
       }
     } catch (err) {
-      console.log(err);
+      alert("Failed to create practice test " + err);
     }
   };
   return (

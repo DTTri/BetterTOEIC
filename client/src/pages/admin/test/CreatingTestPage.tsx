@@ -127,11 +127,39 @@ export default function CreatingTestPage() {
       alert("Please fill all fields");
       return;
     }
+
+    if (!isMiniTest && questions.length < 200) {
+      alert("The full test must have 200 questions");
+      return;
+    }
     const mainAudioUrl = await uploadFile(mainAudio);
     if (!mainAudioUrl) {
       alert("Failed to upload main audio");
       return;
     }
+    const uploadedQuestionPromises = questions.map(async (question) => {
+      let imageUrls: string[] = [];
+      if (question.imageFiles) {
+        imageUrls = await Promise.all(
+          question.imageFiles.map(async (image) => await uploadFile(image))
+        );
+        imageUrls.forEach((imageUrl) => {
+          if (imageUrl === "") {
+            return null;
+          }
+        });
+        question.images = imageUrls;
+      }
+      return question;
+    });
+    const uploadedQuestions = await Promise.all(uploadedQuestionPromises);
+    uploadedQuestions.forEach((uploadedQuestion) => {
+      if (uploadedQuestion === null) {
+        alert("Failed to upload image");
+        return;
+      }
+    });
+
     const newTest: CreateTestDTO = {
       title,
       description,
@@ -139,7 +167,7 @@ export default function CreatingTestPage() {
       isMiniTest,
       created_by: createdBy,
       difficulty: difficulty,
-      questions,
+      questions: uploadedQuestions,
     };
     createTest(newTest);
   };
@@ -150,22 +178,9 @@ export default function CreatingTestPage() {
       const response = await testService.createTest(newTest);
       if (response.EC === 0) {
         alert("Test created successfully");
-        nav("/admin/tests");
+        nav("/admin/test");
       } else {
         alert("Failed to create test: " + response.EM);
-        setQuestions(
-          Array.from({ length: 200 }, (_, i) => ({
-            text: "",
-            images: [],
-            passages: [],
-            choices: [],
-            correct_choice: 1,
-            explanation: "",
-            part: i + 1,
-            question_number: i + 1,
-            question_group_number: 0,
-          }))
-        );
       }
     } catch (error) {
       console.error("Error creating test:", error);
@@ -181,6 +196,7 @@ export default function CreatingTestPage() {
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          disabled={isAllBlocked}
         />
       </div>
       <div className="flex gap-2 items-center">
@@ -188,6 +204,7 @@ export default function CreatingTestPage() {
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
+          disabled={isAllBlocked}
         />
       </div>
       <div className="flex gap-2 items-center">
@@ -196,6 +213,7 @@ export default function CreatingTestPage() {
           type="text"
           value={createdBy}
           onChange={(e) => setCreatedBy(e.target.value)}
+          disabled={isAllBlocked}
         />
       </div>
       <div className="flex gap-2 items-center">
@@ -204,6 +222,7 @@ export default function CreatingTestPage() {
           type="text"
           value={difficulty}
           onChange={(e) => setDifficulty(e.target.value)}
+          disabled={isAllBlocked}
         />
       </div>
       <div className="flex gap-2 items-center">
@@ -212,6 +231,7 @@ export default function CreatingTestPage() {
           type="checkbox"
           checked={isMiniTest}
           onChange={(e) => setIsMiniTest(e.target.checked)}
+          disabled={isAllBlocked}
         />
       </div>
       <div className="audio flex gap-2 items-center">
@@ -225,6 +245,7 @@ export default function CreatingTestPage() {
               setMainAudio(e.target.files[0]);
             }
           }}
+          disabled={isAllBlocked}
         />
       </div>
       <div className="part-1 flex flex-col gap-2">

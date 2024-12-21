@@ -21,7 +21,7 @@ export default function CreatingQuestionGroup({
   const [questions, setQuestions] = useState<{ id: string; number: number }[]>([
     { id: uuidv4(), number: questionNumberFrom },
   ]);
-  const [images, setImages] = useState<string[]>([]);
+  const [images, setImages] = useState<File[]>([]);
   const [paragraphs, setParagraphs] = useState<string[]>([]);
   const [createdQuestions, setCreatedQuestions] = useState<Question[]>([]);
   const [isChanged, setIsChanged] = useState(false);
@@ -75,12 +75,8 @@ export default function CreatingQuestionGroup({
           accept="image/*"
           multiple
           onChange={(e) => {
-            const files = e.target.files;
-            if (files) {
-              const urls = Array.from(files).map((file) =>
-                URL.createObjectURL(file)
-              );
-              setImages(urls);
+            if (e.target.files) {
+              setImages(Array.from(e.target.files));
             }
           }}
         />

@@ -79,12 +79,38 @@ export default function CreatingRoadmapExsPage() {
     }
     const mainAudioUrl =
       part < 5 && mainAudio ? await uploadFile(mainAudio) : "";
+    if (part < 5 && mainAudioUrl === "") {
+      alert("Failed to upload main audio");
+      return;
+    }
+    const uploadedQuestionPromises = questions.map(async (question) => {
+      let imageUrls: string[] = [];
+      if (question.imageFiles) {
+        imageUrls = await Promise.all(
+          question.imageFiles.map(async (image) => await uploadFile(image))
+        );
+        imageUrls.forEach((imageUrl) => {
+          if (imageUrl === "") {
+            return null;
+          }
+        });
+        question.images = imageUrls;
+      }
+      return question;
+    });
+    const uploadedQuestions = await Promise.all(uploadedQuestionPromises);
+    uploadedQuestions.forEach((uploadedQuestion) => {
+      if (uploadedQuestion === null) {
+        alert("Failed to upload image");
+        return;
+      }
+    });
     try {
       const newRoadmapEx = {
         phase,
         part,
         chapter,
-        questions,
+        questions: uploadedQuestions,
         created_by: "admin",
         main_audio: mainAudioUrl,
       };
