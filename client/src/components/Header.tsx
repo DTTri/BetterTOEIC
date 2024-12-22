@@ -18,6 +18,18 @@ export default function Header() {
   const location = useLocation();
 
   const userInfo = sUser.use((cur) => cur.info);
+  useEffect(() => {
+    const headerPaths = [
+      "/log-out",
+      "/user-info",
+      "/user-report",
+      "/test-saved",
+      "/word-saved",
+    ];
+    if (!headerPaths.includes(location.pathname)) {
+      setSelectedItem("");
+    }
+  }, [location.pathname]);
   // const [userInfo, setUserInfo] = useState<User>(user);
 
   // useEffect(() => {
@@ -31,19 +43,6 @@ export default function Header() {
   }
 
   console.log("userInfo:", userInfo); // Add this line to log userInfo
-
-  useEffect(() => {
-    const headerPaths = [
-      "/log-out",
-      "/user-info",
-      "/user-report",
-      "/test-saved",
-      "/word-saved",
-    ];
-    if (!headerPaths.includes(location.pathname)) {
-      setSelectedItem("");
-    }
-  }, [location.pathname]);
 
   const handleItemChange = (e: string) => {
     setSelectedItem(e);
@@ -69,11 +68,11 @@ export default function Header() {
 
   return (
     <>
-      <header className=" bg-[#ffffff] w-full px-9 py-5 flex justify-center">
+      <header className=" bg-[#ffffff] w-full px-9 py-2 flex justify-center">
         <div className="max-w-[1440px] w-full flex flex-row justify-between  items-center">
           <Link to="/">
             <img
-              className="flex justify-center max-w-full object-cover object-center ml-4"
+              className="flex justify-center max-w-full w-[128px] object-cover object-center ml-4"
               src={Logo}
               alt="BetterTOEIC"
             />

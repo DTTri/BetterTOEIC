@@ -108,26 +108,30 @@ export default function RoadmapManagementPage() {
   });
 
   return (
-    <div className="w-full h-screen p-4 rounded-xl flex flex-col gap-2 max-h-screen overflow-hidden bg-background">
-      <h2 className="text-2xl font-bold text-black">Chapters List</h2>
+    <div className="w-full h-full p-4 rounded-xl flex flex-col gap-2 max-h-screen overflow-hidden bg-background">
+      <h2 className="text-2xl font-bold text-black">Roadmap Chapters List</h2>
       <div className="table-container w-full h-full">
         <ThemeProvider theme={adminTableTheme}>
           <DataGrid
             style={{
               borderRadius: "20px",
               backgroundColor: "white",
+              height: "100%",
             }}
             rows={rows}
             columns={columns}
+            rowHeight={50}
             getRowId={(row) => row._id} // Specify custom id for each row
             initialState={{
               pagination: {
                 paginationModel: {
-                  pageSize: 9,
+                  pageSize: 7,
                 },
               },
             }}
-            pageSizeOptions={[5]}
+            pageSizeOptions={
+              rows.length < 7 ? [7, rows.length] : [7, rows.length + 1]
+            }
             slots={{ toolbar: GridToolbar }}
             rowSelection={false}
           />

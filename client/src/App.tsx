@@ -308,7 +308,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <Routes>
         <Route path="/admin" element={<AdminLayout />}>
-          <Route path="overall" element={<OverallManagementPage />} />
+          <Route path="" element={<OverallManagementPage />} />
           <Route path="test" element={<TestManagementPage />} />
           <Route path="practice" element={<PracticeManagementPage />} />
           <Route path="roadmap" element={<RoadmapManagementPage />} />

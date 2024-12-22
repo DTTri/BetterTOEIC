@@ -116,7 +116,7 @@ export default function ForumManagementPage() {
 
   // Map the posts array to rows
   return (
-    <div className="w-full h-screen p-4 flex flex-col gap-2 max-h-screen overflow-hidden bg-background">
+    <div className="w-full h-full p-4 flex flex-col gap-2 max-h-screen overflow-hidden bg-background">
       <h2 className="text-2xl font-bold text-black">Posts List</h2>
       <div className="table-container w-full h-full">
         <ThemeProvider theme={adminTableTheme}>
@@ -124,18 +124,24 @@ export default function ForumManagementPage() {
             style={{
               borderRadius: "20px",
               backgroundColor: "white",
+              height: "100%",
             }}
-            rows={posts}
+            rows={forumStore}
             columns={columns}
+            rowHeight={50}
             getRowId={(row) => row._id} // Specify custom id for each row
             initialState={{
               pagination: {
                 paginationModel: {
-                  pageSize: 8,
+                  pageSize: 6,
                 },
               },
             }}
-            pageSizeOptions={[5]}
+            pageSizeOptions={
+              forumStore.length < 6
+                ? [6, forumStore.length]
+                : [6, forumStore.length + 1]
+            }
             slots={{ toolbar: GridToolbar }}
             rowSelection={false}
           />

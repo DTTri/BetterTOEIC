@@ -55,6 +55,23 @@ export default function TestManagementPage() {
       flex: 0.8,
       align: "center",
       headerAlign: "center",
+      renderCell: (params) => {
+        return (
+          <div className="flex justify-center items-center h-full">
+            <div
+              className={`w-16 h-6 flex items-center justify-center ${
+                params.value === "easy"
+                  ? "bg-green-500"
+                  : params.value === "medium"
+                  ? "bg-yellow-500"
+                  : "bg-red-500"
+              } rounded-full`}
+            >
+              {params.value}
+            </div>
+          </div>
+        );
+      },
     },
     {
       field: "delete",
@@ -91,7 +108,7 @@ export default function TestManagementPage() {
 
   const rows = testStore.use((v) => v.testList);
   return (
-    <div className="w-full h-screen rounded-xl p-4 flex flex-col gap-2 max-h-screen overflow-hidden bg-background">
+    <div className="w-full h-full rounded-xl p-4 flex flex-col gap-2 max-h-screen overflow-hidden bg-background">
       <h2 className="text-2xl font-bold text-black">Tests List</h2>
       <div className="table-container w-full h-full">
         <ThemeProvider theme={adminTableTheme}>
@@ -99,18 +116,22 @@ export default function TestManagementPage() {
             style={{
               borderRadius: "20px",
               backgroundColor: "white",
+              height: "100%",
             }}
             rows={rows}
             columns={columns}
+            rowHeight={50}
             getRowId={(row) => row._id} // Specify custom id for each row
             initialState={{
               pagination: {
                 paginationModel: {
-                  pageSize: 8,
+                  pageSize: 6,
                 },
               },
             }}
-            pageSizeOptions={[5]}
+            pageSizeOptions={
+              rows.length < 6 ? [6, rows.length] : [6, rows.length + 1]
+            }
             slots={{ toolbar: GridToolbar }}
             rowSelection={false}
           />
