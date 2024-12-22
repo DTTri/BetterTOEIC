@@ -19,6 +19,7 @@ import { RoadmapExercise, RoadmapHistory } from "@/entities";
 import { testStore } from "@/store/testStore";
 import { Button } from "@mui/material";
 import theme from "@/theme";
+import { toast } from "react-toastify";
 
 export default function CreatingRoadmapPage() {
   const [currentStep, setCurrentStep] = useState(0);
@@ -31,7 +32,7 @@ export default function CreatingRoadmapPage() {
   sCreatingPersonalRoadmap.watch((newValue) => {
     console.log("sCreatingPersonalRoadmap: " + newValue);
     if (newValue.targetLevel <= newValue.startLevel) {
-      alert("Mục tiêu không thể thấp hơn trình độ hiện tại");
+      toast("Target level must be higher than start level", { type: "error" });
       newValue.targetLevel = newValue.startLevel + 1;
     }
   });
@@ -70,7 +71,7 @@ export default function CreatingRoadmapPage() {
         current_level: sCreatingPersonalRoadmap.value.startLevel,
       });
       if (res.EC === 0) {
-        console.log("Create roadmap success: " + res.DT);
+        toast("Create roadmap successfully", { type: "success" });
         sRoadmap.set(
           (pre) => (pre.value.userRoadmap = res.DT as RoadmapHistory)
         );
@@ -87,13 +88,13 @@ export default function CreatingRoadmapPage() {
             fetchRoadmapExercisesResponse.DT
           );
         } else {
-          console.log(fetchRoadmapExercisesResponse.EM);
+          toast("Something went wrong", { type: "error" });
         }
       } else {
-        console.log("Fetch failed: " + res.EM);
+        toast("Create roadmap failed", { type: "error" });
       }
     } catch (err) {
-      console.log(err);
+      toast("Create roadmap failed: " + err, { type: "error" });
     }
   };
 

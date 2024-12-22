@@ -12,6 +12,8 @@ import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import { testStore } from "@/store/testStore";
 import theme from "@/theme";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import { toast } from "react-toastify";
+import { error } from "console";
 export default function CreatingTestPage() {
   const nav = useNavigate();
 
@@ -110,12 +112,17 @@ export default function CreatingTestPage() {
       });
       console.log(result);
       if (!result.ok) {
-        console.log("Failed to upload file to S3");
+        toast("Failed to upload file", {
+          type: "error",
+        });
+
         return "";
       }
       return "https://seuit-qlnt.s3.amazonaws.com/" + response.key;
     } catch (error) {
-      console.error("Error uploading file:", error);
+      toast("Failed to upload file: " + error, {
+        type: "error",
+      });
       return "";
     }
   };
@@ -153,17 +160,22 @@ export default function CreatingTestPage() {
         questions.length
     );
     if (!title || !description || !difficulty || !mainAudio) {
-      alert("Please fill all fields");
+      toast("Please fill all fields", {
+        type: "error",
+      });
+
       return;
     }
 
     if (testType === "full" && questions.length < 200) {
-      alert("The full test must have 200 questions");
+      toast("Full test must have 200 questions", {
+        type: "error",
+      });
+
       return;
     }
     const mainAudioUrl = await uploadFile(mainAudio);
     if (!mainAudioUrl) {
-      alert("Failed to upload main audio");
       return;
     }
     const uploadedQuestionPromises = questions.map(async (question) => {
@@ -184,7 +196,6 @@ export default function CreatingTestPage() {
     const uploadedQuestions = await Promise.all(uploadedQuestionPromises);
     uploadedQuestions.forEach((uploadedQuestion) => {
       if (uploadedQuestion === null) {
-        alert("Failed to upload image");
         return;
       }
     });
@@ -206,15 +217,20 @@ export default function CreatingTestPage() {
       console.log("Creating test:", newTest);
       const response = await testService.createTest(newTest);
       if (response.EC === 0) {
-        alert("Test created successfully");
+        toast("Test created successfully", {
+          type: "success",
+        });
         testStore.set((prev) => prev.value.testList.push(response.DT));
         nav("/admin/test");
       } else {
-        alert("Failed to create test: " + response.EM);
+        toast("Failed to create test: " + response.EM, {
+          type: "error",
+        });
       }
     } catch (error) {
-      console.error("Error creating test:", error);
-      alert("An error occurred while creating the test");
+      toast("Failed to create test: " + error, {
+        type: "error",
+      });
     }
   };
   const handleFileInputClick = () => {

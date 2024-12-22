@@ -10,6 +10,7 @@ import { v4 as uuidv4 } from "uuid";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import theme from "@/theme";
+import { toast } from "react-toastify";
 export default function CreatingRoadmapExsPage() {
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
@@ -77,24 +78,31 @@ export default function CreatingRoadmapExsPage() {
       });
       console.log(result);
       if (!result.ok) {
-        console.log("Failed to upload file to S3");
+        toast("Failed to upload file", {
+          type: "error",
+        });
+
         return "";
       }
       return "https://seuit-qlnt.s3.amazonaws.com/" + response.key;
     } catch (error) {
-      console.error("Error uploading file:", error);
+      toast("Failed to upload file: " + error, {
+        type: "error",
+      });
       return "";
     }
   };
   const handleCreateRoadmapEx = async () => {
     if (part < 5 && !mainAudio) {
-      alert("Please upload main audio");
+      toast("Please upload main audio", {
+        type: "error",
+      });
+
       return;
     }
     const mainAudioUrl =
       part < 5 && mainAudio ? await uploadFile(mainAudio) : "";
     if (part < 5 && mainAudioUrl === "") {
-      alert("Failed to upload main audio");
       return;
     }
     const uploadedQuestionPromises = questions.map(async (question) => {
@@ -115,7 +123,6 @@ export default function CreatingRoadmapExsPage() {
     const uploadedQuestions = await Promise.all(uploadedQuestionPromises);
     uploadedQuestions.forEach((uploadedQuestion) => {
       if (uploadedQuestion === null) {
-        alert("Failed to upload image");
         return;
       }
     });
@@ -132,10 +139,19 @@ export default function CreatingRoadmapExsPage() {
       const res = await roadmapService.createRoadmapExercise(newRoadmapEx);
       console.log(res);
       if (res.EC === 0) {
+        toast("Create roadmap exercise successfully", {
+          type: "success",
+        });
         nav("/admin/roadmap");
+      } else {
+        toast("Create roadmap exercise failed", {
+          type: "error",
+        });
       }
     } catch (err) {
-      console.log(err);
+      toast("Create roadmap exercise failed: " + err, {
+        type: "error",
+      });
     }
   };
   const handleFileInputClick = () => {

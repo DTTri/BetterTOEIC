@@ -12,6 +12,7 @@ import {
   OutlinedInput,
 } from "@mui/material";
 import React from "react";
+import { toast } from "react-toastify";
 
 export default function PasswordChangePopup({
   onClose,
@@ -27,15 +28,17 @@ export default function PasswordChangePopup({
 
   const handleChangePassword = async () => {
     if (!oldPassword || !password || !retypePassword) {
-      alert("Vui lòng nhập đầy đủ thông tin");
+      toast("Please fill all fields", { type: "error" });
       return;
     }
     if (password !== retypePassword) {
-      alert("Mật khẩu không khớp");
+      toast("Retype password does not match", { type: "error" });
       return;
     }
     if (password === oldPassword) {
-      alert("Mật khẩu mới không được trùng với mật khẩu cũ");
+      toast("New password must be different from old password", {
+        type: "error",
+      });
       return;
     }
     try {
@@ -45,12 +48,12 @@ export default function PasswordChangePopup({
       });
       console.log(res);
       if (res.EC === 0) {
-        alert("Đổi mật khẩu thành công");
+        toast("Reset password succcessfully", { type: "success" });
         onClose();
       }
     } catch (err) {
       console.log(err);
-      alert("Đổi mật khẩu thất bại");
+      toast("Reset password failed", { type: "error" });
     }
   };
 

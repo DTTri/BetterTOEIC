@@ -5,6 +5,7 @@ import http from "@/services/http";
 import { userService } from "@/services";
 import { sUser } from "@/store";
 import theme from "@/theme";
+import { toast } from "react-toastify";
 
 export default function PersonalImformationPage() {
   const currentUser = sUser.use((v) => v.info);
@@ -37,14 +38,14 @@ export default function PersonalImformationPage() {
         body: file,
       });
       if (!result.ok) {
-        throw new Error("Failed to upload image to S3");
+        toast("Upload image failed", { type: "error" });
       }
       console.log(result);
       setAvatarUrl("https://seuit-qlnt.s3.amazonaws.com/" + response.key);
       key = response.key;
       return file;
     } catch (error) {
-      console.error("Error uploading image:", error);
+      toast("Upload image failed: " + error, { type: "error" });
       return null;
     }
   };
@@ -59,12 +60,12 @@ export default function PersonalImformationPage() {
       console.log(response);
 
       if (response.EC === 0) {
-        console.log("Update success");
+        toast("Update successfully", { type: "success" });
       } else {
-        console.log("Update failed");
+        toast("Update failed", { type: "error" });
       }
     } catch (error) {
-      console.error("Error updating user info:", error);
+      toast("Update failed: " + error, { type: "error" });
     }
   };
 
