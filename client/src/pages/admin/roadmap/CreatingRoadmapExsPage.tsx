@@ -7,6 +7,9 @@ import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import theme from "@/theme";
 export default function CreatingRoadmapExsPage() {
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
@@ -135,14 +138,16 @@ export default function CreatingRoadmapExsPage() {
       console.log(err);
     }
   };
-
+  const handleFileInputClick = () => {
+    document.getElementById("file-input")?.click();
+  };
   return (
     <div className="w-full min-h-screen rounded-xl bg-white text-black flex flex-col gap-4 p-4">
       <div className="selects-container flex gap-4 items-center">
         <div className="flex gap-2 items-center">
           <p className="text-3xl font-bold">Phase:</p>
           <select
-            className="p-2"
+            className="bg-gray-50 border border-black rounded-sm shadow-sm p-2 w-16 focus:outline-none focus:ring-1 focus:ring-black focus:border-transparent"
             value={phase}
             onChange={(e) => {
               setPhase(parseInt(e.target.value));
@@ -158,7 +163,7 @@ export default function CreatingRoadmapExsPage() {
         <div className="flex gap-2 items-center">
           <p className="text-3xl font-bold">Part:</p>
           <select
-            className="p-2"
+            className="bg-gray-50 border border-black rounded-sm shadow-sm p-2 w-16 focus:outline-none focus:ring-1 focus:ring-black focus:border-transparent"
             value={part}
             onChange={(e) => {
               setPart(parseInt(e.target.value));
@@ -184,6 +189,8 @@ export default function CreatingRoadmapExsPage() {
               setChapter(parseInt(e.target.value));
             }}
             min={1}
+            className="border-2 border-black rounded-sm shadow-md p-2 w-16
+          focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
           />
         </div>
       </div>
@@ -191,23 +198,38 @@ export default function CreatingRoadmapExsPage() {
         <div className="audio flex gap-2 items-center">
           <p className="text-2xl font-bold">Listening Audio:</p>
           <input
+            id="file-input"
             type="file"
             accept="audio/*"
             multiple={false}
-            disabled={isAllBlocked}
             onChange={(e) => {
               if (e.target.files) {
                 setMainAudio(e.target.files[0]);
               }
             }}
+            style={{ display: "none" }}
+            disabled={isAllBlocked}
           />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleFileInputClick}
+            disabled={isAllBlocked}
+            startIcon={<AddPhotoAlternateIcon />}
+            style={{
+              backgroundColor: theme.palette.primary.main,
+            }}
+          >
+            Add audio file
+          </Button>
+          <p>{mainAudio?.name}</p>
         </div>
       )}
 
       <div className="flex flex-col gap-2">
         {questionGroups.map((questionGroup, index) => (
           <div
-            className="flex justify-between items-start"
+            className="flex justify-start items-start border-b-2 border-gray-300"
             key={questionGroup.id}
           >
             <div className="w-5/6">
@@ -252,32 +274,44 @@ export default function CreatingRoadmapExsPage() {
                   deleteQuestionGroup(questionGroup.id);
                 }}
                 style={{
-                  backgroundColor: "#F44336",
+                  backgroundColor: theme.palette.error.main,
                   width: "fit-content",
                   fontSize: "0.8rem",
+                  textTransform: "none",
                 }}
+                disabled={isAllBlocked}
               >
-                Delete question group
+                Delete Group
               </Button>
             )}
           </div>
         ))}
         {(part === 3 || part === 4 || part === 6 || part === 7) && (
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              setQuestionGroups([
-                ...questionGroups,
-                {
-                  id: uuidv4(),
-                  number: 1,
-                },
-              ]);
-            }}
-          >
-            Add question group
-          </Button>
+          <div className="flex justify-center">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                setQuestionGroups([
+                  ...questionGroups,
+                  {
+                    id: uuidv4(),
+                    number: 1,
+                  },
+                ]);
+              }}
+              style={{
+                backgroundColor: theme.palette.secondary.main,
+                color: "black",
+                textTransform: "none",
+                width: "fit-content",
+              }}
+              endIcon={<ArrowDownwardIcon />}
+              disabled={isAllBlocked}
+            >
+              Add question group
+            </Button>
+          </div>
         )}
       </div>
       <div className="buttons-container flex gap-4 justify-end">
@@ -286,14 +320,13 @@ export default function CreatingRoadmapExsPage() {
           color="secondary"
           onClick={handleChangeBlockStatus}
         >
-          {isAllBlocked ? "Unblock" : "Block"}
+          {isAllBlocked ? "Unsave" : "Save all"}
         </Button>
         <Button
           variant="contained"
           color="primary"
           style={{
             width: "fit-content",
-            margin: "auto",
           }}
           onClick={handleCreateRoadmapEx}
           disabled={!isAllBlocked}

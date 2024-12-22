@@ -26,9 +26,9 @@ export default function AdminLayout() {
     return <Navigate to="/error" state={{ errorType: "not-authenticated" }} />;
   }
   return (
-    <div className="max-h-screen h-screen w-full overflow-y-auto flex flex-col bg-background">
+    <div className="min-h-screen w-full overflow-y-auto flex flex-col bg-background">
       <Header />
-      <div className="flex h-full max-h-full">
+      <div className="flex flex-1">
         <SideBar />
         <Outlet />
       </div>

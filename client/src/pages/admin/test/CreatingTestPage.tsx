@@ -5,10 +5,13 @@ import { v4 as uuidv4 } from "uuid";
 import testService from "@/services/testService";
 import { Question } from "@/entities";
 import CreateTestDTO from "@/entities/DTOS/CreateTestDTO";
-import { sNewTest } from "@/store";
+import { sNewTest, sUser } from "@/store";
 import { useNavigate } from "react-router-dom";
 import http from "@/services/http";
-
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import { testStore } from "@/store/testStore";
+import theme from "@/theme";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 export default function CreatingTestPage() {
   const nav = useNavigate();
 
@@ -85,12 +88,11 @@ export default function CreatingTestPage() {
     }
   };
 
-  const [isMiniTest, setIsMiniTest] = useState(false);
+  const [testType, setTestType] = useState("full");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [createdBy, setCreatedBy] = useState("");
   const [mainAudio, setMainAudio] = useState<File | null>(null);
-  const [difficulty, setDifficulty] = useState("");
+  const [difficulty, setDifficulty] = useState("easy");
   const [questions, setQuestions] = useState<Question[]>([]);
   const uploadFile = async (file: File) => {
     try {
@@ -136,12 +138,26 @@ export default function CreatingTestPage() {
     sNewTest.set((v) => (v.value.isSaved = !v.value.isSaved));
   };
   const handleCreateTest = async () => {
-    if (!title || !description || !createdBy || !difficulty || !mainAudio) {
+    console.log(
+      "Creating test: " +
+        title +
+        " - " +
+        description +
+        " - " +
+        difficulty +
+        " - " +
+        mainAudio +
+        " - " +
+        testType +
+        " - " +
+        questions.length
+    );
+    if (!title || !description || !difficulty || !mainAudio) {
       alert("Please fill all fields");
       return;
     }
 
-    if (!isMiniTest && questions.length < 200) {
+    if (testType === "full" && questions.length < 200) {
       alert("The full test must have 200 questions");
       return;
     }
@@ -177,8 +193,8 @@ export default function CreatingTestPage() {
       title,
       description,
       main_audio: mainAudioUrl,
-      isMiniTest,
-      created_by: createdBy,
+      isMiniTest: testType === "mini",
+      created_by: sUser.value.info.name,
       difficulty: difficulty,
       questions: uploadedQuestions,
     };
@@ -191,6 +207,7 @@ export default function CreatingTestPage() {
       const response = await testService.createTest(newTest);
       if (response.EC === 0) {
         alert("Test created successfully");
+        testStore.set((prev) => prev.value.testList.push(response.DT));
         nav("/admin/test");
       } else {
         alert("Failed to create test: " + response.EM);
@@ -200,56 +217,72 @@ export default function CreatingTestPage() {
       alert("An error occurred while creating the test");
     }
   };
+  const handleFileInputClick = () => {
+    document.getElementById("file-input")?.click();
+  };
 
   return (
-    <div className="w-full min-h-screen rounded-xl bg-white text-black flex flex-col gap-4 p-4">
-      <div className="flex gap-2 items-center">
-        <p className="text-2xl font-bold">Title:</p>
+    <div className="w-full h-full my-4 mr-4 rounded-xl bg-white text-black flex flex-col gap-4 p-6">
+      <h2 className="text-3xl font-bold">NEW TEST</h2>
+      <hr />
+      <div className="w-1/2 items-start flex justify-start gap-4">
+        <p className="text-2xl font-semibold basis-1/3">Title:</p>
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           disabled={isAllBlocked}
+          placeholder="Typing the title"
+          className="border-2 border-black rounded-sm shadow-md p-2 flex-1
+          focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent
+          "
         />
       </div>
-      <div className="flex gap-2 items-center">
-        <p className="text-2xl font-bold">Description:</p>
+      <div className="w-1/2 items-start flex justify-start gap-4">
+        <p className="text-2xl font-semibold basis-1/3">Description:</p>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           disabled={isAllBlocked}
+          placeholder="Typing the description"
+          className="border-2 border-black rounded-sm shadow-md p-2 flex-1 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
         />
       </div>
-      <div className="flex gap-2 items-center">
-        <p className="text-2xl font-bold">Created by:</p>
-        <input
-          type="text"
-          value={createdBy}
-          onChange={(e) => setCreatedBy(e.target.value)}
-          disabled={isAllBlocked}
-        />
-      </div>
-      <div className="flex gap-2 items-center">
-        <p className="text-2xl font-bold">Difficulty:</p>
-        <input
+      <div className="w-1/2 items-start flex justify-start gap-4">
+        <p className="text-2xl font-semibold basis-1/3">Difficulty:</p>
+        {/* <input
           type="text"
           value={difficulty}
           onChange={(e) => setDifficulty(e.target.value)}
           disabled={isAllBlocked}
-        />
-      </div>
-      <div className="flex gap-2 items-center">
-        <p className="text-2xl font-bold">Is mini test:</p>
-        <input
-          type="checkbox"
-          checked={isMiniTest}
-          onChange={(e) => setIsMiniTest(e.target.checked)}
+        /> */}
+        <select
+          onChange={(e) => setDifficulty(e.target.value)}
           disabled={isAllBlocked}
-        />
+          value={difficulty}
+          className="bg-gray-50 border border-black rounded-sm shadow-sm p-2 basis-1/3 focus:outline-none focus:ring-1 focus:ring-black focus:border-transparent"
+        >
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+        </select>
       </div>
-      <div className="audio flex gap-2 items-center">
-        <p className="text-2xl font-bold">Listening Audio:</p>
+      <div className="w-1/2 items-start flex justify-start gap-4">
+        <p className="text-2xl font-semibold basis-1/3">Type:</p>
+        <select
+          onChange={(e) => setTestType(e.target.value)}
+          disabled={isAllBlocked}
+          className="bg-gray-50 border border-black rounded-sm shadow-sm p-2 basis-1/3 focus:outline-none focus:ring-1 focus:ring-black focus:border-transparent"
+          value={testType}
+        >
+          <option value="full">Full Test</option>
+          <option value="mini">Mini Test</option>
+        </select>
+      </div>
+      <div className="audio w-1/2 items-start flex justify-start gap-4 mb-4">
+        <p className="text-2xl font-semibold basis-1/3">Listening Audio:</p>
         <input
+          id="file-input"
           type="file"
           accept="audio/*"
           multiple={false}
@@ -258,11 +291,25 @@ export default function CreatingTestPage() {
               setMainAudio(e.target.files[0]);
             }
           }}
+          style={{ display: "none" }}
           disabled={isAllBlocked}
         />
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleFileInputClick}
+          disabled={isAllBlocked}
+          startIcon={<AddPhotoAlternateIcon />}
+          style={{
+            backgroundColor: theme.palette.primary.main,
+          }}
+        >
+          Add audio file
+        </Button>
+        <p>{mainAudio?.name}</p>
       </div>
       <div className="part-1 flex flex-col gap-2">
-        <p className="text-2xl font-bold">Part 1</p>
+        <p className="text-2xl font-semibold">Part 1</p>
         <CreatingQuestionGroup
           part={1}
           questionNumberFrom={1}
@@ -278,7 +325,7 @@ export default function CreatingTestPage() {
         />
       </div>
       <div className="part-2 flex flex-col gap-2">
-        <p className="text-2xl font-bold">Part 2</p>
+        <p className="text-2xl font-semibold">Part 2</p>
         <CreatingQuestionGroup
           part={2}
           questionNumberFrom={numberOfQuestionsPart1 + 1}
@@ -292,10 +339,10 @@ export default function CreatingTestPage() {
         />
       </div>
       <div className="part-3 flex flex-col gap-2">
-        <p className="text-2xl font-bold">Part 3</p>
+        <p className="text-2xl font-semibold">Part 3</p>
         {questionGroupsPart3.map((questionGroup, index) => (
           <div
-            className="flex justify-between items-start"
+            className="flex justify-start items-start border-b-2 border-gray-300"
             key={questionGroup.id}
           >
             <div className="w-5/6">
@@ -344,35 +391,44 @@ export default function CreatingTestPage() {
                 backgroundColor: "#F44336",
                 width: "fit-content",
                 fontSize: "0.8rem",
+                textTransform: "none",
               }}
               disabled={isAllBlocked}
             >
-              Delete question group
+              Delete Group
             </Button>
           </div>
         ))}
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => {
-            setQuestionGroupsPart3([
-              ...questionGroupsPart3,
-              {
-                id: uuidv4(),
-                number: 1,
-              },
-            ]);
-          }}
-          disabled={isAllBlocked}
-        >
-          Add question group
-        </Button>
+        <div className="flex justify-center">
+          <Button
+            variant="contained"
+            onClick={() => {
+              setQuestionGroupsPart3([
+                ...questionGroupsPart3,
+                {
+                  id: uuidv4(),
+                  number: 1,
+                },
+              ]);
+            }}
+            disabled={isAllBlocked}
+            style={{
+              backgroundColor: theme.palette.secondary.main,
+              color: "black",
+              textTransform: "none",
+              width: "fit-content",
+            }}
+            endIcon={<ArrowDownwardIcon />}
+          >
+            Add Question Group
+          </Button>
+        </div>
       </div>
       <div className="part-4 flex flex-col gap-2">
-        <p className="text-2xl font-bold">Part 4</p>
+        <p className="text-2xl font-semibold">Part 4</p>
         {questionGroupsPart4.map((questionGroup, index) => (
           <div
-            className="flex justify-between items-start"
+            className="flex justify-start items-start border-b-2 border-gray-300"
             key={questionGroup.id}
           >
             <div className="w-5/6">
@@ -426,32 +482,42 @@ export default function CreatingTestPage() {
                 backgroundColor: "#F44336",
                 width: "fit-content",
                 fontSize: "0.8rem",
+                textTransform: "none",
               }}
               disabled={isAllBlocked}
             >
-              Delete question group
+              Delete Group
             </Button>
           </div>
         ))}
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => {
-            setQuestionGroupsPart4([
-              ...questionGroupsPart4,
-              {
-                id: uuidv4(),
-                number: 1,
-              },
-            ]);
-          }}
-          disabled={isAllBlocked}
-        >
-          Add question group
-        </Button>
+        <div className="flex justify-center">
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              setQuestionGroupsPart4([
+                ...questionGroupsPart4,
+                {
+                  id: uuidv4(),
+                  number: 1,
+                },
+              ]);
+            }}
+            disabled={isAllBlocked}
+            style={{
+              backgroundColor: theme.palette.secondary.main,
+              color: "black",
+              textTransform: "none",
+              width: "fit-content",
+            }}
+            endIcon={<ArrowDownwardIcon />}
+          >
+            Add Question Group
+          </Button>
+        </div>
       </div>
       <div className="part-5 flex flex-col gap-2">
-        <p className="text-2xl font-bold">Part 5</p>
+        <p className="text-2xl font-semibold">Part 5</p>
         <CreatingQuestionGroup
           part={5}
           questionNumberFrom={
@@ -477,10 +543,10 @@ export default function CreatingTestPage() {
         />
       </div>
       <div className="part-6 flex flex-col gap-2">
-        <p className="text-2xl font-bold">Part 6</p>
+        <p className="text-2xl font-semibold">Part 6</p>
         {questionGroupsPart6.map((questionGroup, index) => (
           <div
-            className="flex justify-between items-start"
+            className="flex justify-start items-start border-b-2 border-gray-300"
             key={questionGroup.id}
           >
             <div className="w-5/6">
@@ -539,35 +605,45 @@ export default function CreatingTestPage() {
                 backgroundColor: "#F44336",
                 width: "fit-content",
                 fontSize: "0.8rem",
+                textTransform: "none",
               }}
               disabled={isAllBlocked}
             >
-              Delete question group
+              Delete Group
             </Button>
           </div>
         ))}
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => {
-            setQuestionGroupsPart6([
-              ...questionGroupsPart6,
-              {
-                id: uuidv4(),
-                number: 1,
-              },
-            ]);
-          }}
-          disabled={isAllBlocked}
-        >
-          Add question group
-        </Button>
+        <div className="flex justify-center">
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              setQuestionGroupsPart6([
+                ...questionGroupsPart6,
+                {
+                  id: uuidv4(),
+                  number: 1,
+                },
+              ]);
+            }}
+            disabled={isAllBlocked}
+            style={{
+              backgroundColor: theme.palette.secondary.main,
+              color: "black",
+              textTransform: "none",
+              width: "fit-content",
+            }}
+            endIcon={<ArrowDownwardIcon />}
+          >
+            Add Question Group
+          </Button>
+        </div>
       </div>
       <div className="part-7 flex flex-col gap-2">
-        <p className="text-2xl font-bold">Part 7</p>
+        <p className="text-2xl font-semibold">Part 7</p>
         {questionGroupsPart7.map((questionGroup, index) => (
           <div
-            className="flex justify-between items-start"
+            className="flex justify-start items-start border-b-2 border-gray-300"
             key={questionGroup.id}
           >
             <div className="w-5/6">
@@ -630,44 +706,53 @@ export default function CreatingTestPage() {
                 backgroundColor: "#F44336",
                 width: "fit-content",
                 fontSize: "0.8rem",
+                textTransform: "none",
               }}
               disabled={isAllBlocked}
             >
-              Delete question group
+              Delete Group
             </Button>
           </div>
         ))}
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => {
-            setQuestionGroupsPart7([
-              ...questionGroupsPart7,
-              {
-                id: uuidv4(),
-                number: 1,
-              },
-            ]);
-          }}
-          disabled={isAllBlocked}
-        >
-          Add question group
-        </Button>
+        <div className="flex justify-center">
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              setQuestionGroupsPart7([
+                ...questionGroupsPart7,
+                {
+                  id: uuidv4(),
+                  number: 1,
+                },
+              ]);
+            }}
+            disabled={isAllBlocked}
+            style={{
+              backgroundColor: theme.palette.secondary.main,
+              color: "black",
+              textTransform: "none",
+              width: "fit-content",
+            }}
+            endIcon={<ArrowDownwardIcon />}
+          >
+            Add Question Group
+          </Button>
+        </div>
       </div>
-      <div className="buttons-container flex justify-center">
+      <div className="buttons-container flex justify-end gap-4">
         <Button
           variant="contained"
           color="secondary"
           onClick={handleChangeBlockStatus}
         >
-          {isAllBlocked ? "Unblock" : "Block"}
+          {isAllBlocked ? "Unsave" : "Save all"}
         </Button>
         <Button
           variant="contained"
           color="primary"
           style={{
             width: "fit-content",
-            margin: "auto",
           }}
           onClick={handleCreateTest}
           disabled={!isAllBlocked}

@@ -137,14 +137,17 @@ export default function RoadmapManagementPage() {
           />
         </ThemeProvider>
       </div>
-      <Button
-        variant="contained"
-        onClick={() => {
-          nav("/admin/roadmap/creatingRoadmapEx");
-        }}
-      >
-        Create Chapter
-      </Button>
+
+      <div className="buttons flex gap-2 justify-end">
+        <Button
+          variant="contained"
+          onClick={() => {
+            nav("/admin/roadmap/creatingRoadmapEx");
+          }}
+        >
+          Create Chapter
+        </Button>
+      </div>
     </div>
   );
 }

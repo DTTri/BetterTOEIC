@@ -47,7 +47,11 @@ const menuItems = [
 export default function SideBar() {
   const nav = useNavigate();
   return (
-    <div className="sidebar w-[200px] h-full bg-white">
+    <div
+      className="sidebar w-[200px] bg-white
+    shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out mr-4
+    "
+    >
       <div className="menu-item-list w-full flex flex-col items-start">
         {menuItems.map((item) => (
           <Button
