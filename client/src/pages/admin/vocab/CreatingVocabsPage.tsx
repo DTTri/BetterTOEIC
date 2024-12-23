@@ -6,6 +6,7 @@ import vocabService from "@/services/vocabService";
 import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 export default function CreatingVocabsPage() {
   useEffect(() => {
@@ -60,7 +61,7 @@ export default function CreatingVocabsPage() {
       body: file,
     });
     if (!result.ok) {
-      throw new Error("Failed to upload file to S3");
+      toast("Failed to upload file", { type: "error" });
     }
     console.log(result);
 
@@ -110,11 +111,12 @@ export default function CreatingVocabsPage() {
     try {
       const responseTopic = await vocabService.createVocabTopic(topicData);
       if (responseTopic.EC === 0) {
+        toast("Create topic successfully", { type: "success" });
         setIsWaiting(false);
         nav("/admin/vocab");
       }
     } catch (error) {
-      console.error("Failed to create topic", error);
+      toast("Failed to create topic: " + error, { type: "error" });
     }
   };
   if (isWaiting) {

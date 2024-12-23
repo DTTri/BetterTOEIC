@@ -7,6 +7,7 @@ import sForum from "@/store/forumStore";
 import { Button } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function CreatingPostPage() {
   useEffect(() => {
@@ -48,7 +49,7 @@ export default function CreatingPostPage() {
       body: file,
     });
     if (!result.ok) {
-      throw new Error("Failed to upload file to S3");
+      throw new Error("Failed to upload image");
     }
     console.log(result);
 
@@ -67,14 +68,14 @@ export default function CreatingPostPage() {
       console.log("Images uploaded:", images);
       return images;
     } catch (error) {
-      console.error("Error uploading images:", error);
+      toast("Failed to upload images: " + error, { type: "error" });
       return null;
     }
   };
 
   const handleCreateButtonClick = async () => {
     if (!content.current) {
-      alert("Please enter content");
+      toast("Content cannot be empty", { type: "error" });
       return;
     }
     let images: string[] | null = null;
@@ -93,13 +94,14 @@ export default function CreatingPostPage() {
     try {
       const response = await forumService.createPost(newPost);
       if (response.EC === 0) {
+        toast("Post created successfully", { type: "success" });
         sForum.set((pre) => pre.value.posts.push(response.DT));
         nav(-1);
       } else {
-        console.error("Failed to add product:", response.EM);
+        toast("Failed to create post: " + response.EM, { type: "error" });
       }
     } catch (error) {
-      console.error("Error adding product:", error);
+      toast("Failed to create post: " + error, { type: "error" });
     }
   };
 
@@ -122,22 +124,22 @@ export default function CreatingPostPage() {
           multiple
           accept="image/*"
           onChange={(e) => {
-        if (e.target.files) {
-          setImgFile(Array.from(e.target.files));
-        }
+            if (e.target.files) {
+              setImgFile(Array.from(e.target.files));
+            }
           }}
           className=" bg-gray-100 text-[16px] text-gray-500 flex items-center justify-center text-center border-2 border-dashed border-gray-300 rounded-md"
         />
         <div className="bg-gray-100 text-[16px] text-gray-500 w-full p-2 preview-container flex flex-wrap items-center gap-4">
           {imgFile &&
             imgFile.map((file, index) => (
-          <img
-            key={index}
-            src={URL.createObjectURL(file)}
-            alt={`preview-${index}`}
-            className="w-32 h-32 object-cover rounded-md"
-          />
-        ))}
+              <img
+                key={index}
+                src={URL.createObjectURL(file)}
+                alt={`preview-${index}`}
+                className="w-32 h-32 object-cover rounded-md"
+              />
+            ))}
         </div>
       </div>
       <div className="w-full flex justify-end gap-2 items-center">
