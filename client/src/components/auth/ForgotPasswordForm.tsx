@@ -3,6 +3,7 @@ import { Button, TextField } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import authService from '@/services/authService';
+import { toast } from "react-toastify";
 
 
 export default function ForgotPasswordForm() {
@@ -18,19 +19,20 @@ export default function ForgotPasswordForm() {
 
   const handleForgotPassword = async () => {
     if(email === '') {
-      alert('Please fill in all fields');
+      toast.error('Please fill in all fields');
       return;
     }
     if(!email.match(emailRegex)) {
-      alert('Please enter a valid email');
+      toast.error('Please enter a valid email');
       return;
     }
     try {
       const response = await authService.forgotPassword({email});
       if(response.EC === 0) {
-        setIssuccess(true);
+        toast.success('Verification link has been sent to your email');
       }
     } catch (error) {
+      toast.error("Fail to forgotpassword");
       console.log("Fail to forgotpassword " + error);
     }    
   }

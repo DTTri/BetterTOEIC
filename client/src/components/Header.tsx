@@ -12,6 +12,8 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Logo from '../assets/Logo_BetterTOEIC.svg';
 // import Noti from '../assets/Noti_icon.svg';
 import LoadingProgress from './LoadingProgress';
+import * as motion from "motion/react-client";
+
 export default function Header() {
   const [selectedItem, setSelectedItem] = useState("");
   const nav = useNavigate();
@@ -68,7 +70,7 @@ export default function Header() {
 
   return (
     <>
-      <header className=" bg-[#ffffff] w-full px-9 py-2 flex justify-center">
+      <header className=" bg-[#ffffff] w-full px-9 py-3 flex justify-center">
         <div className="max-w-[1440px] w-full flex flex-row justify-between  items-center">
           <Link to="/">
             <img
@@ -100,6 +102,8 @@ export default function Header() {
                     </div>
                 </SelectTrigger>
                 <SelectContent className="bg-background">
+                  <motion.div initial={{ opacity: 0, translateY: -30 }} animate={{ opacity: 1, translateY: 0 }} transition={{ duration: 0.15, scale: { type: "spring"}, opacity: { ease: "linear" } }}>
+
                   <SelectGroup>
                     {userInfo.isAdmin && (
                       <SelectItemWithText value="admin">
@@ -122,6 +126,7 @@ export default function Header() {
                       Log out
                     </SelectItemWithText>
                   </SelectGroup>
+                  </motion.div>
                 </SelectContent>
               </Select>
             )}

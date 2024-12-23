@@ -4,6 +4,8 @@ import { Test } from "@/entities";
 import { testStore } from "@/store/testStore";
 import { Tab, Tabs } from "@mui/material";
 import { useState } from "react";
+import * as motion from "motion/react-client";
+
 
 export default function TestsPage() {
   const testList: Test[] = testStore.use((pre) => pre.testList);
@@ -40,7 +42,8 @@ export default function TestsPage() {
   };
 
   return (
-    <div className="bg-background flex flex-col gap-4 items-center py-8">
+    <motion.div initial={{ opacity: 0, translateY: -20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ duration: 0.25, scale: { type: "spring", visualDuration: 0.4 }, opacity: { ease: "linear" } }} 
+     className="bg-background flex flex-col gap-4 items-center py-8">
       <PageHeader text="ETS Standard Test Library" />
       <SearchBar onSearch={filterTests} />
       <Tabs style={{ maxWidth: '30%' }} variant="scrollable" value={value} onChange={handleChange} centered>
@@ -54,6 +57,6 @@ export default function TestsPage() {
         <Tab label="2018" />
       </Tabs>
       <TestCardGallery tests={curTests}></TestCardGallery>
-    </div>
+    </motion.div>
   );
 }

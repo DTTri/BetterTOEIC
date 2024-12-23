@@ -7,6 +7,8 @@ import Post from "@/entities/Post";
 import { sUser } from "@/store";
 import sForum from "@/store/forumStore";
 import { useEffect, useState } from "react";
+import { LazyMotion, domAnimation } from "motion/react";
+import * as motion from "motion/react-client";
 
 export default function ForumPage() {
   const forumStore = sForum.use((cur) => cur.posts);
@@ -41,7 +43,8 @@ export default function ForumPage() {
       } else {
         sortedPosts.sort(
           (a, b) =>
-            new Date(a["created_at"]).getTime() - new Date(b["created_at"]).getTime()
+            new Date(a["created_at"]).getTime() -
+            new Date(b["created_at"]).getTime()
         );
       }
     } else {
@@ -50,7 +53,8 @@ export default function ForumPage() {
       } else {
         sortedPosts.sort(
           (a, b) =>
-            new Date(b["created_at"]).getTime() - new Date(a["created_at"]).getTime()
+            new Date(b["created_at"]).getTime() -
+            new Date(a["created_at"]).getTime()
         );
       }
     }
@@ -58,17 +62,29 @@ export default function ForumPage() {
   };
 
   return (
-    <div className="min-h-screen h-full flex flex-row w-full">
-      <PostSearchBar filterPost={filterPost} searchPost={searchPost} />
-      <div className="content-post flex flex-col py-10 px-9 w-[70%] gap-6">
-        <PostSharing />
-        {posts.map((post) => (
-          <PostComponent userInfo={user._id} key={post._id} post={post} />
-        ))}
+    <motion.div
+      initial={{ opacity: 0, translateY: -20 }}
+      animate={{ opacity: 1, translateY: 0 }}
+      transition={{
+        duration: 0.4,
+        scale: { type: "spring", visualDuration: 0.4 },
+        opacity: { ease: "linear" },
+      }}
+    >
+      <div className="min-h-screen h-full flex flex-row w-full">
+        <PostSearchBar filterPost={filterPost} searchPost={searchPost} />
+        <div className="content-post flex flex-col py-10 px-9 w-[70%] gap-6">
+          <PostSharing />
+          <LazyMotion features={domAnimation} strict>
+            {posts.map((post) => (
+              <PostComponent userInfo={user._id} key={post._id} post={post} />
+            ))}
+          </LazyMotion>
+        </div>
+        <div className="py-10 px-5 pl-1 gap-7 w-[30%]">
+          <MustRead postLists={forumStore} />
+        </div>
       </div>
-      <div className="py-10 px-5 pl-1 gap-7 w-[30%]">
-        <MustRead postLists={forumStore}/>
-      </div>
-    </div>
+    </motion.div>
   );
 }
