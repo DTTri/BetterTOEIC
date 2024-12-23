@@ -19,7 +19,14 @@ export default function CreatingVocab({
   const inpRef = useRef<{ [key: string]: any }>({});
 
   const handleOnSave = () => {
-    if(!inpRef.current.word || !inpRef.current.meaning_en || !inpRef.current.meaning_vi || !inpRef.current.example || !inpRef.current.spelling || !inpRef.current.type) {
+    if (
+      !inpRef.current.word ||
+      !inpRef.current.meaning_en ||
+      !inpRef.current.meaning_vi ||
+      !inpRef.current.example ||
+      !inpRef.current.spelling ||
+      !inpRef.current.type
+    ) {
       alert("Please fill all fields");
       return;
     }
@@ -50,12 +57,19 @@ export default function CreatingVocab({
           type="text"
           placeholder="Vocabulary"
           name="word"
-          onChange={({ target }) => inpRef.current[target.name] = target.value}
+          onChange={({ target }) =>
+            (inpRef.current[target.name] = target.value)
+          }
           className="bg-gray-200 w-1/2 p-2 border-none rounded-lg text-base text-black"
         />
-        <Select onChange={
-          ({ target }) => inpRef.current["type"] = target.value as string
-        } disabled={isSaved} className="w-1/3" defaultValue="" >
+        <Select
+          onChange={({ target }) =>
+            (inpRef.current["type"] = target.value as string)
+          }
+          disabled={isSaved}
+          className="w-1/3"
+          defaultValue=""
+        >
           <MenuItem value="noun">Noun</MenuItem>
           <MenuItem value="adjective">Adjective</MenuItem>
           <MenuItem value="adverb">Adverb</MenuItem>
@@ -98,7 +112,9 @@ export default function CreatingVocab({
           disabled={isSaved}
           placeholder="English meaning"
           name="meaning_en"
-          onChange={({ target }) => inpRef.current[target.name] = target.value}
+          onChange={({ target }) =>
+            (inpRef.current[target.name] = target.value)
+          }
           className="bg-gray-200 flex-1 p-2 border-none rounded-lg text-base text-black"
         />
         <input
@@ -106,7 +122,9 @@ export default function CreatingVocab({
           disabled={isSaved}
           placeholder="Vietnamese meaning"
           name="meaning_vi"
-          onChange={({ target }) => inpRef.current[target.name] = target.value}
+          onChange={({ target }) =>
+            (inpRef.current[target.name] = target.value)
+          }
           className="bg-gray-200 flex-1 p-2 border-none rounded-lg text-base text-black"
         />
         <input
@@ -114,7 +132,9 @@ export default function CreatingVocab({
           disabled={isSaved}
           placeholder="Spelling"
           name="spelling"
-          onChange={({ target }) => inpRef.current[target.name] = target.value}
+          onChange={({ target }) =>
+            (inpRef.current[target.name] = target.value)
+          }
           className="bg-gray-200 w-full p-2 border-none rounded-lg text-base text-black"
         />
         <input
@@ -122,7 +142,9 @@ export default function CreatingVocab({
           disabled={isSaved}
           placeholder="Example"
           name="example"
-          onChange={({ target }) => inpRef.current[target.name] = target.value}
+          onChange={({ target }) =>
+            (inpRef.current[target.name] = target.value)
+          }
           className="bg-gray-200 w-full p-2 border-none rounded-lg text-base text-black"
         />
         <div className="flex flex-row justify-end">

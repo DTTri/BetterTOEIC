@@ -84,7 +84,7 @@ export default function UserManagementPage() {
     },
   ];
   return (
-    <div className="w-full h-screen rounded-xl p-4 flex flex-col gap-2 max-h-screen overflow-hidden bg-background">
+    <div className="w-full h-full rounded-xl p-4 flex flex-col gap-2 max-h-screen overflow-hidden bg-background">
       <h2 className="text-2xl font-bold text-black">Users List</h2>
       <div className="table-container w-full h-full">
         <ThemeProvider theme={adminTableTheme}>
@@ -92,18 +92,22 @@ export default function UserManagementPage() {
             style={{
               borderRadius: "20px",
               backgroundColor: "white",
+              height: "90%",
             }}
             rows={rows}
             columns={columns}
+            rowHeight={50}
             getRowId={(row) => row._id} // Specify custom id for each row
             initialState={{
               pagination: {
                 paginationModel: {
-                  pageSize: 9,
+                  pageSize: 6,
                 },
               },
             }}
-            pageSizeOptions={[5]}
+            pageSizeOptions={
+              rows.length < 6 ? [6, rows.length] : [6, rows.length + 1]
+            }
             slots={{ toolbar: GridToolbar }}
             rowSelection={false}
           />

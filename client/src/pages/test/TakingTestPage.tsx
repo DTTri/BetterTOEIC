@@ -54,10 +54,8 @@ export default function TakingTestPage({ isEvaluation = false }) {
 
   const onSubmit = async () => {
     try {
-      const correctAnswersPerPart = countCorrectAnswerPerPart();
       const completedTest: CompleteTestDTO = {
         testId: selectedTest?._id || "",
-        correctAnswersPerPart: correctAnswersPerPart,
         choices: answers,
       };
       const response = await testService.completeTest(userId, completedTest);
@@ -67,7 +65,7 @@ export default function TakingTestPage({ isEvaluation = false }) {
           // user is taking the test for evaluation (creating roadmap)
           // Logic for updating user level based on test result
 
-          const testScore = getTestScore(correctAnswersPerPart);
+          const testScore = getTestScore(countCorrectAnswerPerPart());
           console.log(testScore);
           sCreatingPersonalRoadmap.set((prev) => {
             prev.value.startLevel = ClassifyTestScore(testScore);

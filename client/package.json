@@ -33,6 +33,7 @@
     "react-dropzone": "^14.3.5",
     "react-router-dom": "^6.26.2",
     "react-signify": "^1.5.2",
+    "react-toastify": "^11.0.2",
     "swiper": "^11.1.14",
     "tailwind-merge": "^2.5.3",
     "tailwindcss-animate": "^1.0.7",

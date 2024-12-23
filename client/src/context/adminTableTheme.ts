@@ -1,5 +1,5 @@
-import { viVN as viVNCore } from "@mui/material/locale";
-import { viVN } from "@mui/x-data-grid/locales";
+// import { viVN as viVNCore } from "@mui/material/locale";
+// import { viVN } from "@mui/x-data-grid/locales";
 import { createTheme } from "@mui/material";
 
 const adminTableTheme = createTheme(
@@ -7,8 +7,8 @@ const adminTableTheme = createTheme(
     palette: {
       primary: { main: "#00205C" },
     },
-  },
-  viVN,
-  viVNCore
+  }
+  // viVN,
+  // viVNCore
 );
 export default adminTableTheme;

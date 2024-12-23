@@ -14,11 +14,11 @@ import { useNavigate } from "react-router-dom";
 
 export default function VocabManagementPage() {
   const vocabsByTopics = sVocab.use((state) => state.vocabTopics);
+  const nav = useNavigate();
   if (!vocabsByTopics) {
     return <LoadingProgress />;
   }
   const rows: VocabByTopic[] = vocabsByTopics;
-  const nav = useNavigate();
   const columns: GridColDef[] = [
     {
       field: "_id",
@@ -81,26 +81,30 @@ export default function VocabManagementPage() {
   ];
 
   return (
-    <div className="w-full h-screen p-4 rounded-xl flex flex-col gap-2 max-h-screen overflow-hidden bg-background">
-      <h2 className="text-2xl font-bold text-black">Topics List</h2>
+    <div className="w-full h-full p-4 rounded-xl flex flex-col gap-2 max-h-screen overflow-hidden bg-background">
+      <h2 className="text-2xl font-bold text-black">Vocabulary Topics List</h2>
       <div className="table-container w-full h-full">
         <ThemeProvider theme={adminTableTheme}>
           <DataGrid
             style={{
               borderRadius: "20px",
               backgroundColor: "white",
+              height: "100%",
             }}
             rows={rows}
             columns={columns}
+            rowHeight={50}
             getRowId={(row) => row._id} // Specify custom id for each row
             initialState={{
               pagination: {
                 paginationModel: {
-                  pageSize: 8,
+                  pageSize: 6,
                 },
               },
             }}
-            pageSizeOptions={[5]}
+            pageSizeOptions={
+              rows.length < 6 ? [6, rows.length] : [6, rows.length + 1]
+            }
             slots={{ toolbar: GridToolbar }}
             rowSelection={false}
           />

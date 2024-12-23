@@ -9,6 +9,17 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function CreatingPostPage() {
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
   const SUser = sUser.use((state) => state.info);
   const [user, setUser] = useState(SUser);
   const nav = useNavigate();
@@ -24,9 +35,11 @@ export default function CreatingPostPage() {
   }
 
   const uploadFile = async (file: File) => {
-    const response = await http.get(`file/presigned-url?fileName=${file.name}&contentType=${file.type}`);
+    const response = await http.get(
+      `file/presigned-url?fileName=${file.name}&contentType=${file.type}`
+    );
     console.log(response);
-    
+
     const result = await fetch(response.presignedUrl, {
       method: "PUT",
       headers: {
@@ -40,7 +53,7 @@ export default function CreatingPostPage() {
     console.log(result);
 
     return "https://seuit-qlnt.s3.amazonaws.com/" + response.key;
-  }
+  };
 
   const handleSubmit = async (files: File[]) => {
     try {
@@ -48,7 +61,7 @@ export default function CreatingPostPage() {
       const uploadPromises = files.map(async (file) => {
         return await uploadFile(file);
       });
-      if(uploadPromises.length > 0) {
+      if (uploadPromises.length > 0) {
         images = await Promise.all(uploadPromises);
       }
       console.log("Images uploaded:", images);
@@ -60,12 +73,12 @@ export default function CreatingPostPage() {
   };
 
   const handleCreateButtonClick = async () => {
-    if(!content.current) {
+    if (!content.current) {
       alert("Please enter content");
       return;
     }
     let images: string[] | null = null;
-    if(imgFile && imgFile.length > 0) {
+    if (imgFile && imgFile.length > 0) {
       images = await handleSubmit(imgFile || []);
     }
     const newPost: CreatePostDTO = {

@@ -106,10 +106,6 @@ class TestMiddleware {
         notEmpty: true,
         errorMessage: 'Test ID is required',
       },
-      correctAnswersPerPart: {
-        isArray: true,
-        errorMessage: 'Correct answers per part is invalid',
-      },
       choices: {
         isArray: true,
         errorMessage: 'Choices is invalid',

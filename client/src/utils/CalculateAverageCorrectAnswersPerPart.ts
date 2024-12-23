@@ -8,6 +8,7 @@ function getAverageCorrectAnswersPerPart(completedTests: CompletedTest[]) {
     },
     [0, 0, 0, 0, 0, 0, 0]
   );
+  if (completedTests.length === 0) return [0, 0, 0, 0, 0, 0, 0];
   return correctAnswersPerPart.map((count) =>
     Math.round(count / completedTests.length)
   );

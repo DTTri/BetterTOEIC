@@ -111,16 +111,19 @@ export default function RoadmapPage() {
           </div>
           <div className="roadmap-exercise-container rounded-xl w-5/6 bg-white p-8 mx-auto relative">
             <Button
-              variant="contained"
               color="primary"
               onClick={() => setIsConfirmResetRoadmapPopupOpen(true)}
               style={{
                 position: "absolute",
                 top: "1rem",
                 right: "1rem",
+                textTransform: "none",
+                color: "black",
+                fontSize: "0.9rem",
               }}
+              variant="outlined"
             >
-              Change roadmap
+              Change Roadmap
             </Button>
             <div className="parts-list w-3/5 mx-auto flex flex-col items-center gap-4">
               {/* sua lai map roadmapExercises ra sao cho cac phan tu co cung part se duoc truyen vao 1 ChaptersContainer, property cua 
