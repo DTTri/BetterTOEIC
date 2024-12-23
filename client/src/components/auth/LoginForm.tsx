@@ -36,7 +36,7 @@ export default function LoginForm() {
           sessionStorage.setItem('token', response.DT.accessToken);
           sessionStorage.setItem('_id', response.DT._id);
         }
-        nav('/');
+        nav('/test');
         sUser.set((prev) => {
           return prev.value.info = response.DT;
         });
@@ -56,7 +56,7 @@ export default function LoginForm() {
       console.log(response);
       if(response.EC === 0) {
         localStorage.setItem('token', response.DT);
-        nav('/');
+        nav('/test');
       }
     } catch (error) {
       console.log(error);

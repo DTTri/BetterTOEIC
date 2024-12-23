@@ -5,13 +5,13 @@ import {
   SelectItemWithText,
   SelectTrigger,
 } from "@/components/ui/select";
-import { sUser } from "@/store";
-import { Button } from "@mui/material";
-import { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import Logo from "../assets/Logo_BetterTOEIC.png";
-import Noti from "../assets/Noti_icon.svg";
-import LoadingProgress from "./LoadingProgress";
+import { sUser } from '@/store';
+import { Button } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import Logo from '../assets/Logo_BetterTOEIC.svg';
+// import Noti from '../assets/Noti_icon.svg';
+import LoadingProgress from './LoadingProgress';
 export default function Header() {
   const [selectedItem, setSelectedItem] = useState("");
   const nav = useNavigate();
@@ -77,122 +77,27 @@ export default function Header() {
               alt="BetterTOEIC"
             />
           </Link>
-          <div className="right flex flex-row gap-[32px] items-center justify-center">
-            <ul className="flex flex-row gap-[18px]">
-              {userInfo._id && (
-                <li>
-                  <Link to="/road-map">
-                    <Button
-                      className="hover:bg-slate-100"
-                      style={{
-                        fontWeight: "700",
-                        fontSize: "16px",
-                        color: "#000000",
-                        fontFamily: "Nunito Sans",
-                      }}
-                      variant="text"
-                      sx={{ textTransform: "none" }}
-                    >
-                      Roadmap
-                    </Button>
-                  </Link>
-                </li>
-              )}
-              <li>
-                <Link to="/">
-                  <Button
-                    className="hover:bg-slate-100"
-                    style={{
-                      fontWeight: "700",
-                      fontSize: "16px",
-                      color: "#000000",
-                      fontFamily: "Nunito Sans",
-                    }}
-                    variant="text"
-                    sx={{ textTransform: "none" }}
-                  >
-                    Tests
-                  </Button>
-                </Link>
-              </li>
-              <li>
-                <Link to="/practice">
-                  <Button
-                    className="hover:bg-slate-100"
-                    style={{
-                      fontWeight: "700",
-                      fontSize: "16px",
-                      color: "#000000",
-                      fontFamily: "Nunito Sans",
-                    }}
-                    variant="text"
-                    sx={{ textTransform: "none" }}
-                  >
-                    Practices
-                  </Button>
-                </Link>
-              </li>
-              <li>
-                <Link to="/vocab-gallery">
-                  <Button
-                    className="hover:bg-slate-100"
-                    style={{
-                      fontWeight: "700",
-                      fontSize: "16px",
-                      color: "#000000",
-                      fontFamily: "Nunito Sans",
-                    }}
-                    variant="text"
-                    sx={{ textTransform: "none" }}
-                  >
-                    Vocabulary
-                  </Button>
-                </Link>
-              </li>
-              <li>
-                <Link to="/forum">
-                  <Button
-                    className="hover:bg-slate-100"
-                    style={{
-                      fontWeight: "700",
-                      fontSize: "16px",
-                      color: "#000000",
-                      fontFamily: "Nunito Sans",
-                    }}
-                    variant="text"
-                    sx={{ textTransform: "none" }}
-                  >
-                    Forum
-                  </Button>
-                </Link>
-              </li>
-            </ul>
-            {userInfo._id && (
-              <div className="icon_noti">
-                <button className="flex items-center justify-center">
-                  <img src={Noti} alt="" />
-                </button>
-              </div>
-            )}
-            {userInfo._id && (
+        <div className="right flex flex-row gap-[32px] items-center justify-center">
+          <ul className='flex flex-row gap-[18px]'>
+            { userInfo._id && (<li><Link to='/road-map'><Button className='hover:bg-slate-100' style={{fontWeight: "700", fontSize: "16px", color:'#000000', fontFamily:'Nunito Sans'}} variant='text' sx={{textTransform:'none'}}>Roadmap</Button></Link></li>)}
+            <li><Link to='/test'><Button className='hover:bg-slate-100' style={{fontWeight: "700", fontSize: "16px", color:'#000000', fontFamily:'Nunito Sans'}} variant='text' sx={{textTransform:'none'}}>Tests</Button></Link></li>
+            <li><Link to='/practice'><Button className='hover:bg-slate-100' style={{fontWeight: "700", fontSize: "16px", color:'#000000', fontFamily:'Nunito Sans'}} variant='text' sx={{textTransform:'none'}}>Practices</Button></Link></li>
+            <li><Link to='/vocab-gallery'><Button className='hover:bg-slate-100' style={{fontWeight: "700", fontSize: "16px", color:'#000000', fontFamily:'Nunito Sans'}} variant='text' sx={{textTransform:'none'}}>Vocabulary</Button></Link></li>
+            <li><Link to='/forum'><Button className='hover:bg-slate-100' style={{fontWeight: "700", fontSize: "16px", color:'#000000', fontFamily:'Nunito Sans'}} variant='text' sx={{textTransform:'none'}}>Forum</Button></Link></li>
+            { !userInfo._id && (<li><Link to='/login'><Button className='hover:bg-slate-100' style={{fontWeight: "700", fontSize: "16px", color:'#000000', fontFamily:'Nunito Sans', borderColor: "#000000", borderRadius:"10px"}} variant='outlined' sx={{textTransform:'none'}}>Login</Button></Link></li>)}
+          </ul>
+          {/* { userInfo._id && (<div className="icon_noti">
+            <button className='flex items-center justify-center'><img src={Noti} alt="" /></button>
+          </div>)} */}
+          {
+            userInfo._id && (
               <Select onValueChange={handleItemChange}>
-                <SelectTrigger
-                  value={selectedItem}
-                  className="flex flex-row w-auto gap-4 justify-between shadow-none bg-background h-auto py-1 px-2 border-none"
-                >
-                  <img
-                    src={userInfo.avatar}
-                    alt=""
-                    className="max-h-10 max-w-10 aspect-square w-full h-full inline-block rounded-full object-fill"
-                  />
-                  <div className="flex flex-col">
-                    <span className="text-[16px] font-semibold ">
-                      {userInfo.name.split(" ")[0]}
-                    </span>
-                    <span className="text-[12px] font-normal ">
-                      {userInfo.isAdmin == true ? "Admin" : "User"}
-                    </span>
-                  </div>
+                <SelectTrigger value={selectedItem} className="flex flex-row w-auto gap-4 justify-between shadow-none bg-background h-auto py-1 px-2 border-none">
+                    <img src={userInfo.avatar} alt="" className="max-h-10 max-w-10 aspect-square w-full h-full inline-block rounded-full object-fill" />
+                    <div className="flex flex-col">
+                      <span className='text-[16px] font-semibold '>{userInfo.name.split(' ')}</span>
+                      <span className='text-[12px] font-normal '>{userInfo.isAdmin == true ? 'Admin' : 'User'}</span>
+                    </div>
                 </SelectTrigger>
                 <SelectContent className="bg-background">
                   <SelectGroup>

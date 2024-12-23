@@ -53,28 +53,25 @@ export default function TestDetailsPage() {
       <div className="mt-8 w-11/12 mx-auto bg-white rounded-xl p-4">
         <h2 className="text-2xl font-bold">{selectedTest?.title}</h2>
         <div className="flex flex-col gap-2">
-          <div>
-          <h3>{selectedTest?.title}</h3>
-          </div>
           <div className="flex gap-1 items-center">
             <AccessAlarmIcon fontSize="small" />
-            <span>Thời gian làm bài: 120 phút</span>
+            <span>Time: 120 minutes</span>
           </div>
           <div className="flex gap-1 items-center">
             <AccountTreeIcon fontSize="small" />
-            <span>Cấu trúc đề thi: 7 phần | 200 câu hỏi</span>
+            <span>Test structure: 7 sections | 200 questions</span>
           </div>
-          <div className="flex gap-1 items-center">
+          <div className="flex gap-1 items-center font-bold">
             <AssignmentIcon fontSize="small" />
-            <span>Kết quả làm bài:</span>
+            <span>Result record:</span>
           </div>
           <TestResultsTable testHistoryById={testHistoryById || []}/>
           <div className="w-full flex justify-center gap-4 mt-2">
-            <button className="bg-primary text-white px-4 py-2 rounded-lg">
-              <Link to={`/taking-test/${selectedTest?._id}`}>Bắt đầu thi</Link>
-            </button>
-            <Button onClick={handleOnSave} variant="contained" style={ { borderRadius: "10px", background: isSaved ? '#FF0000' : '#1976d4'  } } className=" text-white px-4 py-2 rounded-lg ml-2">
-              {isSaved ? "Bỏ lưu" : "Lưu đề thi"}
+            <Button variant="outlined" style={{ borderRadius: "8px", fontWeight: "700", color: "#000", borderColor: '#00205C' }} className="px-4 py-2 rounded-lg ml-2 shadow-lg">
+              <Link to={`/taking-test/${selectedTest?._id}`}>Start</Link>
+            </Button>
+            <Button onClick={handleOnSave} variant="contained" style={ { borderRadius: "8px", background: isSaved ? '#FF0000' : '#1976d4'  } } className=" text-white px-4 py-2 rounded-lg ml-2">
+              {isSaved ? "Unsave" : "Save"}
             </Button>
           </div>
         </div>

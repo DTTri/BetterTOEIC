@@ -1,4 +1,4 @@
-import Logo from '../assets/Logo_BetterTOEIC.png'
+import Logo from '../assets/Logo_BetterTOEIC.svg'
 import Facebook from '../assets/Facebook.svg'
 import Instagram from '../assets/Instagram.svg'
 import Youtube from '../assets/YouTube.svg'
@@ -64,7 +64,7 @@ export default function Footer() {
                   <a className='text-[#6F6C90] text-[17px] hover:text-[#3A7EE1]' href="tel:0123456789">0123456789</a>
                 </li>
                 <li>
-                  <a className='text-[#6F6C90] text-[17px] hover:text-[#3A7EE1]' href="#">UIT - ĐHQGHCM</a>
+                  <a className='text-[#6F6C90] text-[17px] hover:text-[#3A7EE1]' href="https://www.uit.edu.vn/">UIT - ĐHQGHCM</a>
                 </li>
               </ul>
             </div>
