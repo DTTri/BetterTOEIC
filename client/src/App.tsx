@@ -52,6 +52,7 @@ import sForum from "./store/forumStore";
 import ReviewTestPage from "./pages/test/ReviewTestPage";
 import ReviewPracticePage from "./pages/practice/ReviewPracticePage";
 import { User } from "./entities";
+import LearnPracticeLesson from "./pages/practice/LearnPracticeLesson";
 
 function App() {
   const curUser = localStorage.getItem("_id") || sessionStorage.getItem("_id");
@@ -384,6 +385,14 @@ function App() {
         element={
           <UserLayout>
             <PracticePage />
+          </UserLayout>
+        }
+      />
+      <Route
+        path="/pratice-lesson/:part/:id"
+        element={
+          <UserLayout haveFooter={false}>
+            <LearnPracticeLesson />
           </UserLayout>
         }
       />
