@@ -141,7 +141,7 @@ export default function TakingPracticePage() {
           <div className="information w-full flex flex-row justify-between">
             <h3 className="font-normal text-3xl text-[#000]">
               {(Number(part) == 1 || Number(part) == 2 || Number(part) == 5) ? `
-              Câu hỏi số ${(selectedQuestion?.question_number || 0)}` : `Question group ${selectedGroupNumber}`}
+                Question ${(selectedQuestion?.question_number || 0)}` : `Question group ${selectedGroupNumber}`}
             </h3>
             <CountingTimer key={id}/>
             <Button
