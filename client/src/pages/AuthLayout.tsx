@@ -6,7 +6,7 @@ export default function AuthLayout() {
   return (
     <div className='w-full overflow-y-auto bg-gray-100'>
         <Header />
-        <div className='w-full min-h-screen h-full'>
+        <div className='w-full h-full'>
           <Outlet />
         </div>
         <Footer /> 

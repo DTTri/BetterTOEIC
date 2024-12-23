@@ -17,7 +17,7 @@ export default function LeftBarVocab({
     .find((vocabhistory) => vocabhistory.topicId === id);
   useEffect(() => {}, [id]);
   return (
-    <div className="max-w-[300px] w-full items-center flex-col bg-[#fff] h-full overflow-y-auto py-5">
+    <div className="max-w-[270px] w-full items-center flex-col bg-[#fff] h-full overflow-y-auto py-5">
       <div className="flex flex-col items-center mx-auto">
         {VocabLists.map((vocab, index) => {
           return (

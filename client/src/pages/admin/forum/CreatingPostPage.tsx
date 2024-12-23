@@ -122,12 +122,23 @@ export default function CreatingPostPage() {
           multiple
           accept="image/*"
           onChange={(e) => {
-            if (e.target.files) {
-              setImgFile(Array.from(e.target.files));
-            }
+        if (e.target.files) {
+          setImgFile(Array.from(e.target.files));
+        }
           }}
-          className="w-full h-[150px] bg-gray-100 text-[20px] text-gray-500 flex items-center justify-center text-center border-2 border-dashed border-gray-300 rounded-md"
+          className=" bg-gray-100 text-[16px] text-gray-500 flex items-center justify-center text-center border-2 border-dashed border-gray-300 rounded-md"
         />
+        <div className="bg-gray-100 text-[16px] text-gray-500 w-full p-2 preview-container flex flex-wrap items-center gap-4">
+          {imgFile &&
+            imgFile.map((file, index) => (
+          <img
+            key={index}
+            src={URL.createObjectURL(file)}
+            alt={`preview-${index}`}
+            className="w-32 h-32 object-cover rounded-md"
+          />
+        ))}
+        </div>
       </div>
       <div className="w-full flex justify-end gap-2 items-center">
         <Button

@@ -52,6 +52,8 @@ import sForum from "./store/forumStore";
 import ReviewTestPage from "./pages/test/ReviewTestPage";
 import ReviewPracticePage from "./pages/practice/ReviewPracticePage";
 import { User } from "./entities";
+import LearnPracticeLesson from "./pages/practice/LearnPracticeLesson";
+import HomePage from "./pages/HomePage";
 import { ThemeProvider } from "@mui/material";
 import theme from "./theme";
 import { Flip, ToastContainer } from "react-toastify";
@@ -436,7 +438,7 @@ function App() {
             />
           </Route>
           <Route
-            path="/"
+            path="/test"
             element={
               <UserLayout>
                 <TestsPage />
@@ -597,6 +599,7 @@ function App() {
           />
           <Route path="" element={<AuthLayout></AuthLayout>}>
             <Route path="*" element={<ErrorPage />} />
+            <Route path="/" element={<HomePage />} />
             <Route path="/error" element={<ErrorPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />

@@ -101,7 +101,7 @@ const Flashcard = ({
             className=""
             onClick={handleClick}
           >
-            Nhấn để xem giải thích
+            Click to see meaning
           </Button>
         </div>
       </div>
@@ -136,14 +136,10 @@ const Flashcard = ({
 
         <div className="w-full h-[10%] flex justify-center items-center gap-5">
           <Button variant="contained" color="primary" onClick={handleClick}>
-            Quay lại
+            Back
           </Button>
-          <Button
-            onClick={() => onVocabRemember(vocabNumber)}
-            variant="contained"
-            color="primary"
-          >
-            Đã nhớ
+          <Button onClick={() => onVocabRemember(vocabNumber)} variant="contained" color="primary">
+            Next
           </Button>
         </div>
       </div>
