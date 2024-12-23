@@ -155,7 +155,7 @@ export default function CreatingPracticeExsPage() {
     document.getElementById("file-input")?.click();
   };
   return (
-    <div className="w-full h-full my-4 mr-4 rounded-xl bg-white text-black flex flex-col gap-4 p-4">
+    <div className="creating-test-container">
       <div className="select-part flex justify-center gap-4 items-center">
         <p className="text-3xl font-bold">Part:</p>
         <select

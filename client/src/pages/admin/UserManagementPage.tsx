@@ -84,16 +84,12 @@ export default function UserManagementPage() {
     },
   ];
   return (
-    <div className="w-full h-full rounded-xl p-4 flex flex-col gap-2 max-h-screen overflow-hidden bg-background">
+    <>
       <h2 className="text-2xl font-bold text-black">Users List</h2>
-      <div className="table-container w-full h-full">
+      <div className="admin-table-container">
         <ThemeProvider theme={adminTableTheme}>
           <DataGrid
-            style={{
-              borderRadius: "20px",
-              backgroundColor: "white",
-              height: "90%",
-            }}
+            className="admin-table"
             rows={rows}
             columns={columns}
             rowHeight={50}
@@ -113,6 +109,6 @@ export default function UserManagementPage() {
           />
         </ThemeProvider>
       </div>
-    </div>
+    </>
   );
 }

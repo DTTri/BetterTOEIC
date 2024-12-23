@@ -108,16 +108,12 @@ export default function RoadmapManagementPage() {
   });
 
   return (
-    <div className="w-full h-full p-4 rounded-xl flex flex-col gap-2 max-h-screen overflow-hidden bg-background">
+    <>
       <h2 className="text-2xl font-bold text-black">Roadmap Chapters List</h2>
-      <div className="table-container w-full h-full">
+      <div className="admin-table-container">
         <ThemeProvider theme={adminTableTheme}>
           <DataGrid
-            style={{
-              borderRadius: "20px",
-              backgroundColor: "white",
-              height: "100%",
-            }}
+            className="admin-table"
             rows={rows}
             columns={columns}
             rowHeight={50}
@@ -148,6 +144,6 @@ export default function RoadmapManagementPage() {
           Create Chapter
         </Button>
       </div>
-    </div>
+    </>
   );
 }

@@ -65,18 +65,27 @@ export default function QuestionComponent({
                   ({String.fromCharCode(65 + index)}) {optionValue && ":"}{" "}
                   {optionValue}
                 </label>
-                {userChoice ? (index + 1 === userChoice && userChoice !== question.correct_choice && (
-                  <CloseIcon color="error" />)) : <></>
-                }
-                {userChoice !== undefined ? (index + 1 === question.correct_choice && (
-                  <DoneIcon className="text-green-500" />)) : <></>
-                }
+                {userChoice ? (
+                  index + 1 === userChoice &&
+                  userChoice !== question.correct_choice && (
+                    <CloseIcon color="error" />
+                  )
+                ) : (
+                  <></>
+                )}
+                {userChoice !== undefined ? (
+                  index + 1 === question.correct_choice && (
+                    <DoneIcon className="text-green-500" />
+                  )
+                ) : (
+                  <></>
+                )}
               </div>
             );
           })}
         </div>
       </div>
-      { userChoice !== undefined && (
+      {userChoice !== undefined && (
         <div className="flex flex-col mt-2">
           <Button
             onClick={() => setShowExplanation(!showExplanation)}

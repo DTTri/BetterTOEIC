@@ -238,7 +238,7 @@ export default function CreatingTestPage() {
   };
 
   return (
-    <div className="w-full h-full my-4 mr-4 rounded-xl bg-white text-black flex flex-col gap-4 p-6">
+    <div className="creating-test-container">
       <h2 className="text-3xl font-bold">NEW TEST</h2>
       <hr />
       <div className="w-1/2 items-start flex justify-start gap-4">

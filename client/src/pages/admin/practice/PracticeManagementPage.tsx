@@ -161,7 +161,7 @@ export default function PracticeManagementPage() {
     },
   ];
   return (
-    <div className="w-full h-full p-4 rounded-xl flex flex-col gap-2 max-h-screen overflow-hidden bg-background">
+    <>
       <div className="header flex justify-between items-center">
         <h2 className="text-2xl font-bold text-black">
           {isTestList ? "Practice Exercises List" : "Lessons List"}
@@ -174,14 +174,10 @@ export default function PracticeManagementPage() {
           {isTestList ? "Lessons" : "Practice Tests"}
         </Button>
       </div>
-      <div className="table-container w-full h-full">
+      <div className="admin-table-container">
         <ThemeProvider theme={adminTableTheme}>
           <DataGrid
-            style={{
-              borderRadius: "20px",
-              backgroundColor: "white",
-              height: "100%",
-            }}
+            className="admin-table"
             rows={isTestList ? testRows : lessonRows}
             columns={isTestList ? testColumns : lessonColumns}
             rowHeight={50}
@@ -189,12 +185,12 @@ export default function PracticeManagementPage() {
             initialState={{
               pagination: {
                 paginationModel: {
-                  pageSize: 7,
+                  pageSize: 6,
                 },
               },
             }}
             pageSizeOptions={
-              isTestList ? [7, testRows.length] : [7, lessonRows.length + 1]
+              isTestList ? [6, testRows.length] : [6, lessonRows.length + 1]
             }
             slots={{ toolbar: GridToolbar }}
             rowSelection={false}
@@ -211,6 +207,6 @@ export default function PracticeManagementPage() {
           Create exercise
         </Button>
       </div>
-    </div>
+    </>
   );
 }

@@ -10,6 +10,7 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { useNavigate } from "react-router-dom";
 import { testStore } from "@/store/testStore";
 import { testService } from "@/services";
+
 export default function TestManagementPage() {
   const nav = useNavigate();
   const columns: GridColDef[] = [
@@ -108,16 +109,12 @@ export default function TestManagementPage() {
 
   const rows = testStore.use((v) => v.testList);
   return (
-    <div className="w-full h-full rounded-xl p-4 flex flex-col gap-2 max-h-screen overflow-hidden bg-background">
+    <>
       <h2 className="text-2xl font-bold text-black">Tests List</h2>
-      <div className="table-container w-full h-full">
+      <div className="admin-table-container ">
         <ThemeProvider theme={adminTableTheme}>
           <DataGrid
-            style={{
-              borderRadius: "20px",
-              backgroundColor: "white",
-              height: "100%",
-            }}
+            className="admin-table"
             rows={rows}
             columns={columns}
             rowHeight={50}
@@ -147,6 +144,6 @@ export default function TestManagementPage() {
           Create Test
         </Button>
       </div>
-    </div>
+    </>
   );
 }

@@ -12,6 +12,8 @@ import { roadmapService } from "@/services";
 import { Button } from "@mui/material";
 import { sRoadmap, sUser } from "@/store";
 import CompletedRoadmapExercise from "@/entities/CompletedRoadmapExercise";
+import * as motion from "motion/react-client";
+
 export default function DoingRoadmapExsPage() {
   const [currentQuestion, setCurrentQuestion] = useState(1);
   const [questionGroupLength, setQuestionGroupLength] = useState(1);
@@ -278,7 +280,15 @@ export default function DoingRoadmapExsPage() {
             </div>
           )}
         </div>
-        <div className="questions-container w-full bg-white rounded-xl p-4 h-[70vh] overflow-y-auto overflow-x-hidden">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.7 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{
+            duration: 0.4,
+            scale: { type: "spring", visualDuration: 0.4 },
+          }}
+          className="questions-container w-full bg-white rounded-xl p-4 h-[70vh] overflow-y-auto overflow-x-hidden"
+        >
           {roadmapExercise.part === 3 ||
           roadmapExercise.part === 4 ||
           roadmapExercise.part === 6 ||
@@ -322,7 +332,7 @@ export default function DoingRoadmapExsPage() {
                 }
                 return null;
               })}
-        </div>
+        </motion.div>
         <div className="w-full bg-white rounded-xl p-4">
           <h3 className="text-xl font-semibold text-black mb-4">Questions</h3>
           <div className="questions-list flex items-center gap-1">

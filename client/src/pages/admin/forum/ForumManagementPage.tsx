@@ -116,16 +116,12 @@ export default function ForumManagementPage() {
 
   // Map the posts array to rows
   return (
-    <div className="w-full h-full p-4 flex flex-col gap-2 max-h-screen overflow-hidden bg-background">
+    <>
       <h2 className="text-2xl font-bold text-black">Posts List</h2>
-      <div className="table-container w-full h-full">
+      <div className="admin-table-container">
         <ThemeProvider theme={adminTableTheme}>
           <DataGrid
-            style={{
-              borderRadius: "20px",
-              backgroundColor: "white",
-              height: "100%",
-            }}
+            className="admin-table"
             rows={forumStore}
             columns={columns}
             rowHeight={50}
@@ -150,6 +146,6 @@ export default function ForumManagementPage() {
       <div className="buttons flex gap-2 justify-end">
         <Button variant="contained">Create post</Button>
       </div>
-    </div>
+    </>
   );
 }

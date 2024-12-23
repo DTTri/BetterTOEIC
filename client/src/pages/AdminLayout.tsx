@@ -3,6 +3,7 @@ import { sUser } from "@/store";
 import { Navigate, Outlet } from "react-router-dom";
 import SideBar from "../components/admin/SideBar";
 import { Header } from "@/components";
+import * as motion from "motion/react-client";
 
 export default function AdminLayout() {
   const findUser = sUser.use((state) => state.info);
@@ -30,7 +31,17 @@ export default function AdminLayout() {
       <Header />
       <div className="flex flex-1">
         <SideBar />
-        <Outlet />
+        <motion.div
+          initial={{ opacity: 0, translateX: -20 }}
+          animate={{ opacity: 1, translateX: 0 }}
+          transition={{
+            duration: 0.4,
+            scale: { type: "spring", visualDuration: 0.4, bounce: 0.5 },
+          }}
+          className="w-full h-full m-2 rounded-xl p-4 flex flex-col gap-2 overflow-hidden bg-white"
+        >
+          <Outlet />
+        </motion.div>
       </div>
     </div>
   );

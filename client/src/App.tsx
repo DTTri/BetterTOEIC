@@ -54,7 +54,7 @@ import ReviewPracticePage from "./pages/practice/ReviewPracticePage";
 import { User } from "./entities";
 import { ThemeProvider } from "@mui/material";
 import theme from "./theme";
-import { Flip, toast, ToastContainer } from "react-toastify";
+import { Flip, ToastContainer } from "react-toastify";
 
 function App() {
   const curUser = localStorage.getItem("_id") || sessionStorage.getItem("_id");
@@ -88,15 +88,15 @@ function App() {
           sUser.set((prev) => (prev.value.usersPerBand = response.DT));
         } else {
           console.log("Fail to fetch users per band: ", response.EM);
-          toast("Fail to fetch users per band", {
-            type: "error",
-          });
+          // toast("Fail to fetch users per band", {
+          //   type: "error",
+          // });
         }
       } catch (error) {
         console.log("Fail to fetch users per band: ", error);
-        toast("Fail to fetch users per band", {
-          type: "error",
-        });
+        // toast("Fail to fetch users per band", {
+        //   type: "error",
+        // });
       }
     };
     const fetchTests = async () => {
@@ -107,15 +107,15 @@ function App() {
           testStore.set((prev) => (prev.value.testList = response.DT));
         } else {
           console.log("Fail to fetch tests: ", response.EM);
-          toast("Fail to fetch tests", {
-            type: "error",
-          });
+          // toast("Fail to fetch tests", {
+          //   type: "error",
+          // });
         }
       } catch (error) {
         console.log("Fail to fetch tests: ", error);
-        toast("Fail to fetch tests", {
-          type: "error",
-        });
+        // toast("Fail to fetch tests", {
+        //   type: "error",
+        // });
       }
     };
     const fetchTestHistory = async () => {
@@ -126,15 +126,15 @@ function App() {
           testStore.set((prev) => (prev.value.testHistory = response.DT));
         } else {
           console.log("Fail to fetch test history: ", response.EM);
-          toast("Fail to fetch test history", {
-            type: "error",
-          });
+          // toast("Fail to fetch test history", {
+          //   type: "error",
+          // });
         }
       } catch (error) {
         console.log("Fail to fetch test history: ", error);
-        toast("Fail to fetch test history", {
-          type: "error",
-        });
+        // toast("Fail to fetch test history", {
+        //   type: "error",
+        // });
       }
     };
     const fetchTestSaved = async () => {
@@ -145,15 +145,15 @@ function App() {
           testStore.set((prev) => (prev.value.testsSaved = response.DT));
         } else {
           console.log("Fail to fetch test saved: ", response.EM);
-          toast("Fail to fetch test saved", {
-            type: "error",
-          });
+          // toast("Fail to fetch test saved", {
+          //   type: "error",
+          // });
         }
       } catch (error) {
         console.log("Fail to fetch test saved: ", error);
-        toast("Fail to fetch test saved", {
-          type: "error",
-        });
+        // toast("Fail to fetch test saved", {
+        //   type: "error",
+        // });
       }
     };
     const fetchPracticeTests = async () => {
@@ -166,15 +166,15 @@ function App() {
           );
         } else {
           console.log("Fail to fetch practice tests: ", response.EM);
-          toast("Fail to fetch practice tests", {
-            type: "error",
-          });
+          // toast("Fail to fetch practice tests", {
+          //   type: "error",
+          // });
         }
       } catch (error) {
         console.log("Fail to fetch practice tests: ", error);
-        toast("Fail to fetch practice tests", {
-          type: "error",
-        });
+        // toast("Fail to fetch practice tests", {
+        //   type: "error",
+        // });
       }
     };
     const fetchPracticeTestHistory = async () => {
@@ -190,15 +190,15 @@ function App() {
           );
         } else {
           console.log("Fail to fetch pracitce test history: ", response.EM);
-          toast("Fail to fetch practice test history", {
-            type: "error",
-          });
+          // toast("Fail to fetch practice test history", {
+          //   type: "error",
+          // });
         }
       } catch (error) {
         console.log("Fail to fetch pracitce test history: ", error);
-        toast("Fail to fetch practice test history", {
-          type: "error",
-        });
+        // toast("Fail to fetch practice test history", {
+        //   type: "error",
+        // });
       }
     };
     const fetchPracticeLesson = async () => {
@@ -211,15 +211,15 @@ function App() {
           );
         } else {
           console.log("Fail to fetch practice lesson: ", response.EM);
-          toast("Fail to fetch practice lesson", {
-            type: "error",
-          });
+          // toast("Fail to fetch practice lesson", {
+          //   type: "error",
+          // });
         }
       } catch (error) {
         console.log("Fail to fetch practice lesson: ", error);
-        toast("Fail to fetch practice lesson", {
-          type: "error",
-        });
+        // toast("Fail to fetch practice lesson", {
+        //   type: "error",
+        // });
       }
     };
     const fetchPracticeLessonHistory = async () => {
@@ -236,15 +236,15 @@ function App() {
           );
         } else {
           console.log("Fail to fetch pracitce lesson history: ", response.EM);
-          toast("Fail to fetch practice lesson history", {
-            type: "error",
-          });
+          // toast("Fail to fetch practice lesson history", {
+          //   type: "error",
+          // });
         }
       } catch (error) {
         console.log("Fail to fetch pracitce lesson history: ", error);
-        toast("Fail to fetch practice lesson history", {
-          type: "error",
-        });
+        // toast("Fail to fetch practice lesson history", {
+        //   type: "error",
+        // });
       }
     };
     const fetchRoadmapExercises = async () => {
@@ -258,15 +258,15 @@ function App() {
           console.log("fetch roadmap exercises", res.DT);
         } else {
           console.log(res.EM);
-          toast("Fail to fetch roadmap exercises", {
-            type: "error",
-          });
+          // toast("Fail to fetch roadmap exercises", {
+          //   type: "error",
+          // });
         }
       } catch (err) {
         console.log(err);
-        toast("Fail to fetch roadmap exercises", {
-          type: "error",
-        });
+        // toast("Fail to fetch roadmap exercises", {
+        //   type: "error",
+        // });
       }
     };
     const fetchUserRoadmap = async () => {
@@ -278,15 +278,15 @@ function App() {
           console.log("fetch user roadmap", res.DT);
         } else {
           console.log(res.EM);
-          toast("Fail to fetch user roadmap", {
-            type: "error",
-          });
+          // toast("Fail to fetch user roadmap", {
+          //   type: "error",
+          // });
         }
       } catch (err) {
         console.log(err);
-        toast("Fail to fetch user roadmap", {
-          type: "error",
-        });
+        // toast("Fail to fetch user roadmap", {
+        //   type: "error",
+        // });
       }
     };
 
@@ -298,15 +298,15 @@ function App() {
           sVocab.set((prev) => (prev.value.vocabTopics = response.DT));
         } else {
           console.log("Fail to fetch vocabs: ", response.EM);
-          toast("Fail to fetch vocabs", {
-            type: "error",
-          });
+          // toast("Fail to fetch vocabs", {
+          //   type: "error",
+          // });
         }
       } catch (error) {
         console.log("Fail to fetch vocabs: ", error);
-        toast("Fail to fetch vocabs", {
-          type: "error",
-        });
+        // toast("Fail to fetch vocabs", {
+        //   type: "error",
+        // });
       }
     };
     const fetchSavedVocabs = async () => {
@@ -317,15 +317,15 @@ function App() {
           sVocab.set((prev) => (prev.value.vocabsSaved = response.DT));
         } else {
           console.log("Fail to fetch saved vocabs: ", response.EM);
-          toast("Fail to fetch saved vocabs", {
-            type: "error",
-          });
+          // toast("Fail to fetch saved vocabs", {
+          //   type: "error",
+          // });
         }
       } catch (error) {
         console.log("Fail to fetch saved vocabs: ", error);
-        toast("Fail to fetch saved vocabs", {
-          type: "error",
-        });
+        // toast("Fail to fetch saved vocabs", {
+        //   type: "error",
+        // });
       }
     };
     const fetchVocabHistory = async () => {
@@ -336,15 +336,15 @@ function App() {
           sVocab.set((prev) => (prev.value.vocabHistory = response.DT.topics));
         } else {
           console.log("Fail to fetch vocab history: ", response.EM);
-          toast("Fail to fetch vocab history", {
-            type: "error",
-          });
+          // toast("Fail to fetch vocab history", {
+          //   type: "error",
+          // });
         }
       } catch (error) {
         console.log("Fail to fetch vocab history: ", error);
-        toast("Fail to fetch vocab history", {
-          type: "error",
-        });
+        // toast("Fail to fetch vocab history", {
+        //   type: "error",
+        // });
       }
     };
     const fetchForum = async () => {
@@ -355,15 +355,15 @@ function App() {
           sForum.set((prev) => (prev.value.posts = response.DT));
         } else {
           console.log("Fail to fetch forum: ", response.EM);
-          toast("Fail to fetch forum", {
-            type: "error",
-          });
+          // toast("Fail to fetch forum", {
+          //   type: "error",
+          // });
         }
       } catch (error) {
         console.log("Fail to fetch forum: ", error);
-        toast("Fail to fetch forum", {
-          type: "error",
-        });
+        // toast("Fail to fetch forum", {
+        //   type: "error",
+        // });
       }
     };
     const fetchData = async () => {

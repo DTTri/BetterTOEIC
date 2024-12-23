@@ -8,6 +8,8 @@ import EditRoadIcon from "@mui/icons-material/EditRoad";
 import ForumIcon from "@mui/icons-material/Forum";
 import PersonIcon from "@mui/icons-material/Person";
 import { useEffect, useState } from "react";
+import * as motion from "motion/react-client";
+
 const menuItems = [
   {
     name: "Overall",
@@ -56,9 +58,15 @@ export default function SideBar() {
     }
   }, [location]);
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, height: 0, translateY: -10, scale: 0.9 }}
+      animate={{ opacity: 1, height: "auto", translateY: 0, scale: 1 }}
+      transition={{
+        duration: 0.6,
+        scale: { type: "spring", visualDuration: 0.4, bounce: 0.5 },
+      }}
       className="sidebar w-[200px] bg-white
-    shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out mr-4
+    shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out
     "
     >
       <div className="menu-item-list w-full flex flex-col items-start">
@@ -87,6 +95,6 @@ export default function SideBar() {
           </Button>
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 }

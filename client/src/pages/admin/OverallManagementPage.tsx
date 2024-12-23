@@ -151,7 +151,7 @@ export default function OverallManagementPage() {
   ];
 
   return (
-    <div className="w-full max-h-screen rounded-xl overflow-hidden p-4 flex flex-wrap justify-between h-screen bg-background">
+    <div className="w-full h-full flex flex-wrap justify-between">
       {/* TODO: make this reponsive when screen size is small, adjust the this flex */}
       <div className="new-users-info basis-full h-[45vh] flex flex-col gap-2">
         <div className="new-users-info__header flex items-center gap-2">

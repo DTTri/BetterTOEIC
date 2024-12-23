@@ -4,6 +4,7 @@ import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import theme from "@/theme";
+import * as motion from "motion/react-client";
 
 export default function CreatingQuestion({
   part,
@@ -62,7 +63,15 @@ export default function CreatingQuestion({
     document.getElementById(questionNumber + "-question-file-input")?.click();
   };
   return (
-    <form className="w-full flex flex-col gap-2 ">
+    <motion.form
+      initial={{ opacity: 0, translateY: -20 }}
+      animate={{ opacity: 1, scale: 1, translateY: 0 }}
+      transition={{
+        duration: 0.4,
+        scale: { type: "spring", visualDuration: 0.2, bounce: 0.25 },
+      }}
+      className="w-full flex flex-col gap-2 "
+    >
       <div className="flex w-3/4 gap-4 items-center relative">
         <p className="text-xl font-medium">Question {questionNumber}:</p>
         {part === 1 ? (
@@ -274,6 +283,6 @@ export default function CreatingQuestion({
       >
         {isEditing ? "Save" : "Edit"}
       </Button>
-    </form>
+    </motion.form>
   );
 }

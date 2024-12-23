@@ -7,6 +7,8 @@ import { sNewTest } from "@/store";
 import theme from "@/theme";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import * as motion from "motion/react-client";
+
 export default function CreatingQuestionGroup({
   part,
   questionNumberFrom,
@@ -74,7 +76,15 @@ export default function CreatingQuestionGroup({
       ?.click();
   };
   return (
-    <div className="w-3/4 flex flex-col gap-2 py-2">
+    <motion.div
+      initial={{ opacity: 0, translateY: -20 }}
+      animate={{ opacity: 1, scale: 1, translateY: 0 }}
+      transition={{
+        duration: 0.4,
+        scale: { type: "spring", visualDuration: 0.2, bounce: 0.25 },
+      }}
+      className="w-3/4 flex flex-col gap-2 py-2"
+    >
       {part === 7 ? (
         <div className="flex">
           <input
@@ -176,6 +186,6 @@ export default function CreatingQuestionGroup({
       >
         Add Question
       </Button>
-    </div>
+    </motion.div>
   );
 }
