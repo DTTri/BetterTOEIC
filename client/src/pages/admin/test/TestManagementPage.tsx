@@ -1,15 +1,10 @@
-import {
-  DataGrid,
-  GridActionsCellItem,
-  GridColDef,
-  GridToolbar,
-} from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
 import { Button, ThemeProvider } from "@mui/material";
 import { adminTableTheme } from "@/context";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+// import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { useNavigate } from "react-router-dom";
 import { testStore } from "@/store/testStore";
-import { testService } from "@/services";
+// import { testService } from "@/services";
 
 export default function TestManagementPage() {
   const nav = useNavigate();
@@ -74,37 +69,37 @@ export default function TestManagementPage() {
         );
       },
     },
-    {
-      field: "delete",
-      type: "actions",
-      flex: 0.5,
-      getActions: (params) => [
-        <GridActionsCellItem
-          icon={<DeleteForeverIcon />}
-          label="Delete"
-          onClick={() => {
-            const deleteTest = async () => {
-              try {
-                const res = await testService.deleteTest(params.row._id);
-                if (res.EC === 0) {
-                  console.log("Delete test success: ", res.DT);
-                  testStore.set((pre) => {
-                    pre.value.testList = pre.value.testList.filter(
-                      (test) => test._id !== params.row._id
-                    );
-                  });
-                } else {
-                  console.log("Delete test failed: ", res.EM);
-                }
-              } catch (err) {
-                console.log(err);
-              }
-            };
-            deleteTest();
-          }}
-        />,
-      ],
-    },
+    // {
+    //   field: "delete",
+    //   type: "actions",
+    //   flex: 0.5,
+    //   getActions: (params) => [
+    //     <GridActionsCellItem
+    //       icon={<DeleteForeverIcon />}
+    //       label="Delete"
+    //       onClick={() => {
+    //         const deleteTest = async () => {
+    //           try {
+    //             const res = await testService.deleteTest(params.row._id);
+    //             if (res.EC === 0) {
+    //               console.log("Delete test success: ", res.DT);
+    //               testStore.set((pre) => {
+    //                 pre.value.testList = pre.value.testList.filter(
+    //                   (test) => test._id !== params.row._id
+    //                 );
+    //               });
+    //             } else {
+    //               console.log("Delete test failed: ", res.EM);
+    //             }
+    //           } catch (err) {
+    //             console.log(err);
+    //           }
+    //         };
+    //         deleteTest();
+    //       }}
+    //     />,
+    //   ],
+    // },
   ];
 
   const rows = testStore.use((v) => v.testList);

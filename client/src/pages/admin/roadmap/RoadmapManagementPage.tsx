@@ -1,12 +1,7 @@
-import {
-  DataGrid,
-  GridActionsCellItem,
-  GridColDef,
-  GridToolbar,
-} from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
 import { Button, ThemeProvider } from "@mui/material";
 import { adminTableTheme } from "@/context";
-import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
+// import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 import { sRoadmap } from "@/store";
 import { useNavigate } from "react-router-dom";
 export default function RoadmapManagementPage() {
@@ -68,21 +63,21 @@ export default function RoadmapManagementPage() {
       align: "center",
       headerAlign: "center",
     },
-    {
-      field: "edit",
-      type: "actions",
-      flex: 0.5,
-      getActions: (params) => [
-        <GridActionsCellItem
-          icon={<ModeEditOutlineIcon />}
-          label="Edit"
-          onClick={() => {
-            console.log(params.row);
-            // nav(`/admin/roadmap/edit/${params.row._id}`);
-          }}
-        />,
-      ],
-    },
+    // {
+    //   field: "edit",
+    //   type: "actions",
+    //   flex: 0.5,
+    //   getActions: (params) => [
+    //     <GridActionsCellItem
+    //       icon={<ModeEditOutlineIcon />}
+    //       label="Edit"
+    //       onClick={() => {
+    //         console.log(params.row);
+    //         // nav(`/admin/roadmap/edit/${params.row._id}`);
+    //       }}
+    //     />,
+    //   ],
+    // },
   ];
   const roadmapExercises = sRoadmap.use((v) => v.exercises);
   const rows = roadmapExercises.map((exercise, index) => {

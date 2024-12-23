@@ -1,12 +1,7 @@
-import {
-  DataGrid,
-  GridActionsCellItem,
-  GridColDef,
-  GridToolbar,
-} from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
 import { Button, ThemeProvider } from "@mui/material";
 import { adminTableTheme } from "@/context";
-import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
+// import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 import { practiceStore } from "@/store/practiceStore";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -75,18 +70,18 @@ export default function PracticeManagementPage() {
       align: "center",
       headerAlign: "center",
     },
-    {
-      field: "edit",
-      type: "actions",
-      flex: 0.3,
-      getActions: (params) => [
-        <GridActionsCellItem
-          icon={<ModeEditOutlineIcon />}
-          label="Edit"
-          onClick={() => console.log("Edit", params.row)}
-        />,
-      ],
-    },
+    // {
+    //   field: "edit",
+    //   type: "actions",
+    //   flex: 0.3,
+    //   getActions: (params) => [
+    //     <GridActionsCellItem
+    //       icon={<ModeEditOutlineIcon />}
+    //       label="Edit"
+    //       onClick={() => console.log("Edit", params.row)}
+    //     />,
+    //   ],
+    // },
   ];
 
   const lessonRows = practiceLessonList.map((ex, index) => ({
@@ -147,18 +142,18 @@ export default function PracticeManagementPage() {
       align: "center",
       headerAlign: "center",
     },
-    {
-      field: "edit",
-      type: "actions",
-      flex: 0.3,
-      getActions: (params) => [
-        <GridActionsCellItem
-          icon={<ModeEditOutlineIcon />}
-          label="Edit"
-          onClick={() => console.log("Edit", params.row)}
-        />,
-      ],
-    },
+    // {
+    //   field: "edit",
+    //   type: "actions",
+    //   flex: 0.3,
+    //   getActions: (params) => [
+    //     <GridActionsCellItem
+    //       icon={<ModeEditOutlineIcon />}
+    //       label="Edit"
+    //       onClick={() => console.log("Edit", params.row)}
+    //     />,
+    //   ],
+    // },
   ];
   return (
     <>

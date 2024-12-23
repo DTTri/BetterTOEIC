@@ -1,17 +1,11 @@
-import {
-  DataGrid,
-  GridActionsCellItem,
-  GridColDef,
-  GridToolbar,
-} from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
 import { Button, ThemeProvider } from "@mui/material";
 import { adminTableTheme } from "@/context";
 import { Post } from "@/entities";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+// import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import sForum from "@/store/forumStore";
 import { useEffect, useState } from "react";
 import LoadingProgress from "@/components/LoadingProgress";
-import { forumService } from "@/services";
 export default function ForumManagementPage() {
   const forumStore = sForum.use((cur) => cur.posts);
   const [posts, setPosts] = useState<Post[]>(forumStore);
@@ -83,35 +77,35 @@ export default function ForumManagementPage() {
       headerAlign: "center",
       flex: 1,
     },
-    {
-      field: "actions",
-      type: "actions",
-      align: "center",
-      headerAlign: "center",
-      flex: 1,
-      getActions: (params) => [
-        <GridActionsCellItem
-          icon={<DeleteForeverIcon />}
-          label="Delete"
-          onClick={async () => {
-            console.log("Deleted: ", params.row);
-            // Add delete logic here
-            try {
-              const response = await forumService.deletePost(params.row._id);
-              if (response.EC === 0) {
-                setPosts((prev) =>
-                  prev.filter((post) => post._id !== params.row._id)
-                );
-              } else {
-                console.log("Error deleting post: ", response.EM);
-              }
-            } catch (error) {
-              console.log("Error deleting post: ", error);
-            }
-          }}
-        />,
-      ],
-    },
+    // {
+    //   field: "actions",
+    //   type: "actions",
+    //   align: "center",
+    //   headerAlign: "center",
+    //   flex: 1,
+    //   getActions: (params) => [
+    //     <GridActionsCellItem
+    //       icon={<DeleteForeverIcon />}
+    //       label="Delete"
+    //       onClick={async () => {
+    //         console.log("Deleted: ", params.row);
+    //         // Add delete logic here
+    //         try {
+    //           const response = await forumService.deletePost(params.row._id);
+    //           if (response.EC === 0) {
+    //             setPosts((prev) =>
+    //               prev.filter((post) => post._id !== params.row._id)
+    //             );
+    //           } else {
+    //             console.log("Error deleting post: ", response.EM);
+    //           }
+    //         } catch (error) {
+    //           console.log("Error deleting post: ", error);
+    //         }
+    //       }}
+    //     />,
+    //   ],
+    // },
   ];
 
   // Map the posts array to rows

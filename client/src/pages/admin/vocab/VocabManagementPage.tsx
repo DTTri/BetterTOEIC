@@ -1,12 +1,7 @@
-import {
-  DataGrid,
-  GridActionsCellItem,
-  GridColDef,
-  GridToolbar,
-} from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
 import { Button, ThemeProvider } from "@mui/material";
 import { adminTableTheme } from "@/context";
-import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
+// import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 import { VocabByTopic } from "@/entities";
 import { sVocab } from "@/store";
 import LoadingProgress from "@/components/LoadingProgress";
@@ -64,20 +59,20 @@ export default function VocabManagementPage() {
         return new Date(row.updated_at).toLocaleString();
       },
     },
-    {
-      field: "edit",
-      type: "actions",
-      flex: 0.3,
-      getActions: (params) => [
-        <GridActionsCellItem
-          icon={<ModeEditOutlineIcon />}
-          label="Edit"
-          onClick={() => {
-            console.log(params.row);
-          }}
-        />,
-      ],
-    },
+    // {
+    //   field: "edit",
+    //   type: "actions",
+    //   flex: 0.3,
+    //   getActions: (params) => [
+    //     <GridActionsCellItem
+    //       icon={<ModeEditOutlineIcon />}
+    //       label="Edit"
+    //       onClick={() => {
+    //         console.log(params.row);
+    //       }}
+    //     />,
+    //   ],
+    // },
   ];
 
   return (

@@ -1,13 +1,8 @@
-import {
-  DataGrid,
-  GridActionsCellItem,
-  GridColDef,
-  GridToolbar,
-} from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
 import { ThemeProvider } from "@mui/material";
 import { adminTableTheme } from "@/context";
 import { User } from "@/entities";
-import VisibilityIcon from "@mui/icons-material/Visibility";
+// import VisibilityIcon from "@mui/icons-material/Visibility";
 import { sUser } from "@/store";
 export default function UserManagementPage() {
   const users = sUser.use((v) => v.users);
@@ -62,26 +57,26 @@ export default function UserManagementPage() {
       align: "center",
       headerAlign: "center",
     },
-    {
-      field: "actions",
-      type: "actions",
-      flex: 0.2,
-      align: "center",
-      headerAlign: "center",
-      renderCell: (params) => {
-        return (
-          <div className="flex justify-center gap-2">
-            <GridActionsCellItem
-              icon={<VisibilityIcon />}
-              label="Xem chi tiết"
-              onClick={() => {
-                console.log(params.id);
-              }}
-            />
-          </div>
-        );
-      },
-    },
+    // {
+    //   field: "actions",
+    //   type: "actions",
+    //   flex: 0.2,
+    //   align: "center",
+    //   headerAlign: "center",
+    //   renderCell: (params) => {
+    //     return (
+    //       <div className="flex justify-center gap-2">
+    //         <GridActionsCellItem
+    //           icon={<VisibilityIcon />}
+    //           label="Xem chi tiết"
+    //           onClick={() => {
+    //             console.log(params.id);
+    //           }}
+    //         />
+    //       </div>
+    //     );
+    //   },
+    // },
   ];
   return (
     <>
