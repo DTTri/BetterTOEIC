@@ -24,7 +24,7 @@ export default function PracticePage() {
     <div>
       <div className="content">
         <h1 className="text-[52px] text-center text-[#202224] mt-8 font-bold">
-          Luyện tập cùng BetterTOEIC
+          Practice with BetterTOEIC 
         </h1>
         <div className="flex flex-col items-center gap-5 py-8">
           <PracticeList

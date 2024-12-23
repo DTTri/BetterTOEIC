@@ -30,7 +30,7 @@ export default function LeftBar() {
   console.log(practiceLessons);
 
   return (
-    <div className="max-w-[300px] w-full items-center flex-col bg-[#fff] py-5">
+    <div className="max-w-[270px] w-full items-center flex-col bg-[#fff] py-5">
       <div className="flex flex-row items-center justify-evenly mb-5">
         <Button
           onClick={() => setChoiced("lessons")}
