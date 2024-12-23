@@ -53,6 +53,7 @@ import ReviewTestPage from "./pages/test/ReviewTestPage";
 import ReviewPracticePage from "./pages/practice/ReviewPracticePage";
 import { User } from "./entities";
 import LearnPracticeLesson from "./pages/practice/LearnPracticeLesson";
+import HomePage from "./pages/HomePage";
 
 function App() {
   const curUser = localStorage.getItem("_id") || sessionStorage.getItem("_id");
@@ -501,6 +502,7 @@ function App() {
         }
       />
       <Route path="" element={<AuthLayout></AuthLayout>}>
+        <Route path="/" element={<HomePage />} />
         <Route path="*" element={<ErrorPage />} />
         <Route path="/error" element={<ErrorPage />} />
         <Route path="/login" element={<LoginPage />} />
