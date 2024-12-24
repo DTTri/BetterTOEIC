@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 
 export default function LoginForm() {
   const [email, setEmail] = React.useState("");
@@ -59,6 +60,8 @@ export default function LoginForm() {
   const getGoogleUrl = () => {
     const url = "https://accounts.google.com/o/oauth2/auth";
     const { VITE_GOOGLE_CLIENT_ID, VITE_GOOGLE_REDIRECT_URI } = import.meta.env;
+    const state = uuidv4();
+    sessionStorage.setItem("state", state);
     const query = {
       client_id: VITE_GOOGLE_CLIENT_ID,
       redirect_uri: VITE_GOOGLE_REDIRECT_URI,
@@ -68,6 +71,7 @@ export default function LoginForm() {
         "https://www.googleapis.com/auth/userinfo.email",
       ].join(" "),
       prompt: "consent",
+      state,
     };
     const queryString = new URLSearchParams(query).toString();
     return `${url}?${queryString}`;

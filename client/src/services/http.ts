@@ -1,7 +1,7 @@
 class Http {
   baseUrl: string;
   constructor() {
-    this.baseUrl = "http://localhost:8000/api";
+    this.baseUrl = "https://bettertoeic-nodejsserver.onrender.com/api";
   }
   private getURL(url: string) {
     return `${this.baseUrl}/${url}`;
