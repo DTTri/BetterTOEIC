@@ -6,7 +6,6 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-const { OAuth2Client } = require('google-auth-library');
 
 dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET || '';

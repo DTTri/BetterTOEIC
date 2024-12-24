@@ -308,9 +308,9 @@ class AuthMiddleware {
     } catch (err: any) {
       res.status(400).json({
         EC: 1,
-        EM: err.message,
+        EM: err,
       });
-      res.redirect(`${process.env.APP_URL}/`);
+      //redirect(`${process.env.APP_URL}/oauth?accessToken=xxx&userId=xxx`);
       return;
     }
   }

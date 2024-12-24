@@ -5,7 +5,10 @@ import bcrypt from 'bcrypt';
 import UserStatus from '~/constants/UserStatus';
 import { ObjectId } from 'mongodb';
 import { decodeStringUTF8 } from '~/utils/decodeUTF8';
+import axios from 'axios';
+import dotenv from 'dotenv';
 
+dotenv.config();
 class UserService {
   async addUser(user: User): Promise<boolean> {
     const result = await collections.users?.insertOne(user);
@@ -73,17 +76,17 @@ class UserService {
       redirect_uri: process.env.GOOGLE_REDIRECT_URI,
       grant_type: 'authorization_code',
     };
-    const res = await fetch('https://oauth2.googleapis.com/token', {
-      method: 'POST',
+    console.log(body);
+    const { data } = await axios.post('https://oauth2.googleapis.com/token', body, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: JSON.stringify(body),
     });
-    const data = await res.json();
+    console.log(data);
     return data;
   }
   async getUserByGoogleToken(token: string) {
+    console.log(token);
     const payload = token.split('.')[1];
     const decoded = JSON.parse(atob(payload));
     const { email, name, picture } = decoded;

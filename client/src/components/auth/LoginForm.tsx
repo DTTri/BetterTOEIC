@@ -56,13 +56,21 @@ export default function LoginForm() {
     }
   };
 
-  const handleGoogleLogin = async () => {
-    try {
-      const response = await authService.googleLogin({});
-      window.location.href = response.url;
-    } catch (error) {
-      console.log(error);
-    }
+  const getGoogleUrl = () => {
+    const url = "https://accounts.google.com/o/oauth2/auth";
+    const { VITE_GOOGLE_CLIENT_ID, VITE_GOOGLE_REDIRECT_URI } = import.meta.env;
+    const query = {
+      client_id: VITE_GOOGLE_CLIENT_ID,
+      redirect_uri: VITE_GOOGLE_REDIRECT_URI,
+      response_type: "code",
+      scope: [
+        "https://www.googleapis.com/auth/userinfo.profile",
+        "https://www.googleapis.com/auth/userinfo.email",
+      ].join(" "),
+      prompt: "consent",
+    };
+    const queryString = new URLSearchParams(query).toString();
+    return `${url}?${queryString}`;
   };
 
   useEffect(() => {
@@ -214,19 +222,15 @@ export default function LoginForm() {
           or
         </span>
       </div>
-      <a
-        target="blank"
-        href="#"
+      <Link
+        to={getGoogleUrl()}
         className="group gap-3 hover:bg-slate-100 hover:shadow-md flex items-center justify-center  bg-[#FAFAFA] border-[#eee] px-3 py-2 border shadow-sm rounded-md sm:text-sm"
       >
         <img className="w-5 h-5 " src={google_icon} alt="" />
-        <span
-          onClick={handleGoogleLogin}
-          className="inline-block text-xs text-[#828282] font-bold "
-        >
+        <span className="inline-block text-xs text-[#828282] font-bold ">
           Continue with google
         </span>
-      </a>
+      </Link>
       <div className="flex flex-row justify-center mt-5 gap-2">
         <span className="text-[#212121] font-normal text-[16px] ">
           New User?
