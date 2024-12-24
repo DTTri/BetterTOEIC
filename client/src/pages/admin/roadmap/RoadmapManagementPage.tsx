@@ -1,12 +1,7 @@
-import {
-  DataGrid,
-  GridActionsCellItem,
-  GridColDef,
-  GridToolbar,
-} from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
 import { Button, ThemeProvider } from "@mui/material";
 import { adminTableTheme } from "@/context";
-import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
+// import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 import { sRoadmap } from "@/store";
 import { useNavigate } from "react-router-dom";
 export default function RoadmapManagementPage() {
@@ -68,21 +63,21 @@ export default function RoadmapManagementPage() {
       align: "center",
       headerAlign: "center",
     },
-    {
-      field: "edit",
-      type: "actions",
-      flex: 0.5,
-      getActions: (params) => [
-        <GridActionsCellItem
-          icon={<ModeEditOutlineIcon />}
-          label="Edit"
-          onClick={() => {
-            console.log(params.row);
-            // nav(`/admin/roadmap/edit/${params.row._id}`);
-          }}
-        />,
-      ],
-    },
+    // {
+    //   field: "edit",
+    //   type: "actions",
+    //   flex: 0.5,
+    //   getActions: (params) => [
+    //     <GridActionsCellItem
+    //       icon={<ModeEditOutlineIcon />}
+    //       label="Edit"
+    //       onClick={() => {
+    //         console.log(params.row);
+    //         // nav(`/admin/roadmap/edit/${params.row._id}`);
+    //       }}
+    //     />,
+    //   ],
+    // },
   ];
   const roadmapExercises = sRoadmap.use((v) => v.exercises);
   const rows = roadmapExercises.map((exercise, index) => {
@@ -108,39 +103,42 @@ export default function RoadmapManagementPage() {
   });
 
   return (
-    <div className="w-full h-screen p-4 rounded-xl flex flex-col gap-2 max-h-screen overflow-hidden bg-background">
-      <h2 className="text-2xl font-bold text-black">Chapters List</h2>
-      <div className="table-container w-full h-full">
+    <>
+      <h2 className="text-2xl font-bold text-black">Roadmap Chapters List</h2>
+      <div className="admin-table-container">
         <ThemeProvider theme={adminTableTheme}>
           <DataGrid
-            style={{
-              borderRadius: "20px",
-              backgroundColor: "white",
-            }}
+            className="admin-table"
             rows={rows}
             columns={columns}
+            rowHeight={50}
             getRowId={(row) => row._id} // Specify custom id for each row
             initialState={{
               pagination: {
                 paginationModel: {
-                  pageSize: 9,
+                  pageSize: 7,
                 },
               },
             }}
-            pageSizeOptions={[5]}
+            pageSizeOptions={
+              rows.length < 7 ? [7, rows.length] : [7, rows.length + 1]
+            }
             slots={{ toolbar: GridToolbar }}
             rowSelection={false}
           />
         </ThemeProvider>
       </div>
-      <Button
-        variant="contained"
-        onClick={() => {
-          nav("/admin/roadmap/creatingRoadmapEx");
-        }}
-      >
-        Create Chapter
-      </Button>
-    </div>
+
+      <div className="buttons flex gap-2 justify-end">
+        <Button
+          variant="contained"
+          onClick={() => {
+            nav("/admin/roadmap/creatingRoadmapEx");
+          }}
+        >
+          Create Chapter
+        </Button>
+      </div>
+    </>
   );
 }

@@ -1,17 +1,11 @@
-import {
-  DataGrid,
-  GridActionsCellItem,
-  GridColDef,
-  GridToolbar,
-} from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
 import { Button, ThemeProvider } from "@mui/material";
 import { adminTableTheme } from "@/context";
 import { Post } from "@/entities";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+// import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import sForum from "@/store/forumStore";
 import { useEffect, useState } from "react";
 import LoadingProgress from "@/components/LoadingProgress";
-import { forumService } from "@/services";
 export default function ForumManagementPage() {
   const forumStore = sForum.use((cur) => cur.posts);
   const [posts, setPosts] = useState<Post[]>(forumStore);
@@ -83,59 +77,61 @@ export default function ForumManagementPage() {
       headerAlign: "center",
       flex: 1,
     },
-    {
-      field: "actions",
-      type: "actions",
-      align: "center",
-      headerAlign: "center",
-      flex: 1,
-      getActions: (params) => [
-        <GridActionsCellItem
-          icon={<DeleteForeverIcon />}
-          label="Delete"
-          onClick={async () => {
-            console.log("Deleted: ", params.row);
-            // Add delete logic here
-            try {
-              const response = await forumService.deletePost(params.row._id);
-              if (response.EC === 0) {
-                setPosts((prev) =>
-                  prev.filter((post) => post._id !== params.row._id)
-                );
-              } else {
-                console.log("Error deleting post: ", response.EM);
-              }
-            } catch (error) {
-              console.log("Error deleting post: ", error);
-            }
-          }}
-        />,
-      ],
-    },
+    // {
+    //   field: "actions",
+    //   type: "actions",
+    //   align: "center",
+    //   headerAlign: "center",
+    //   flex: 1,
+    //   getActions: (params) => [
+    //     <GridActionsCellItem
+    //       icon={<DeleteForeverIcon />}
+    //       label="Delete"
+    //       onClick={async () => {
+    //         console.log("Deleted: ", params.row);
+    //         // Add delete logic here
+    //         try {
+    //           const response = await forumService.deletePost(params.row._id);
+    //           if (response.EC === 0) {
+    //             setPosts((prev) =>
+    //               prev.filter((post) => post._id !== params.row._id)
+    //             );
+    //           } else {
+    //             console.log("Error deleting post: ", response.EM);
+    //           }
+    //         } catch (error) {
+    //           console.log("Error deleting post: ", error);
+    //         }
+    //       }}
+    //     />,
+    //   ],
+    // },
   ];
 
   // Map the posts array to rows
   return (
-    <div className="w-full h-screen p-4 flex flex-col gap-2 max-h-screen overflow-hidden bg-background">
+    <>
       <h2 className="text-2xl font-bold text-black">Posts List</h2>
-      <div className="table-container w-full h-full">
+      <div className="admin-table-container">
         <ThemeProvider theme={adminTableTheme}>
           <DataGrid
-            style={{
-              borderRadius: "20px",
-              backgroundColor: "white",
-            }}
-            rows={posts}
+            className="admin-table"
+            rows={forumStore}
             columns={columns}
+            rowHeight={50}
             getRowId={(row) => row._id} // Specify custom id for each row
             initialState={{
               pagination: {
                 paginationModel: {
-                  pageSize: 8,
+                  pageSize: 6,
                 },
               },
             }}
-            pageSizeOptions={[5]}
+            pageSizeOptions={
+              forumStore.length < 6
+                ? [6, forumStore.length]
+                : [6, forumStore.length + 1]
+            }
             slots={{ toolbar: GridToolbar }}
             rowSelection={false}
           />
@@ -144,6 +140,6 @@ export default function ForumManagementPage() {
       <div className="buttons flex gap-2 justify-end">
         <Button variant="contained">Create post</Button>
       </div>
-    </div>
+    </>
   );
 }

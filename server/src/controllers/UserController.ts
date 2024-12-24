@@ -45,6 +45,36 @@ class UserController {
       });
     }
   }
+  async getUserById(req: Request, res: Response) {
+    try {
+      const userId = req.params.userId;
+      const user = await userServiceInstance.findUserById(userId);
+      if (user) {
+        res.status(200).json({
+          EC: 0,
+          EM: 'User fetched successfully',
+          DT: {
+            ...user,
+            _id: user._id.toString(),
+            password: '',
+            forgotPasswordToken: '',
+            verifiedEmailToken: '',
+            refreshToken: '',
+          },
+        });
+      } else {
+        res.status(400).json({
+          EC: 2,
+          EM: 'User not found',
+        });
+      }
+    } catch (error: any) {
+      res.status(500).json({
+        EC: 1,
+        EM: error.message,
+      });
+    }
+  }
   async updateUser(req: Request, res: Response) {
     try {
       const userId = req.params.userId;

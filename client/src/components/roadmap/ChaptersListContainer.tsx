@@ -3,14 +3,21 @@ import LockIcon from "@mui/icons-material/Lock";
 import { useNavigate } from "react-router-dom";
 import { sRoadmap } from "@/store";
 import { RoadmapExercise, RoadmapHistory } from "@/entities";
+
 function NumberOfQuestions({
   numberOfQuestions,
+  isDone,
 }: {
   numberOfQuestions: number;
+  isDone: boolean;
 }) {
   return (
-    <div className="bg-tertiary rounded-3xl text-primary py-2 px-1 text-sm">
-      {numberOfQuestions} questions
+    <div
+      className={` rounded-3xl  w-8 h-8 flex justify-center items-center text-sm ${
+        isDone ? "bg-tertiary text-black" : "bg-primary text-white"
+      }`}
+    >
+      {numberOfQuestions}
     </div>
   );
 }
@@ -53,7 +60,10 @@ function ChapterItem({
       )}
       <span className="text-lg font-semibold">Chapter {chapter}</span>
       {isUnlocked ? (
-        <NumberOfQuestions numberOfQuestions={numberOfQuestions} />
+        <NumberOfQuestions
+          isDone={isDone}
+          numberOfQuestions={numberOfQuestions}
+        />
       ) : (
         <LockIcon fontSize="small" color="inherit" />
       )}

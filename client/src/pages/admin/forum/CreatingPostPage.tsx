@@ -7,8 +7,21 @@ import sForum from "@/store/forumStore";
 import { Button } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function CreatingPostPage() {
+  const [isCreating, setIsCreating] = useState(false);
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
   const SUser = sUser.use((state) => state.info);
   const [user, setUser] = useState(SUser);
   const nav = useNavigate();
@@ -23,10 +36,16 @@ export default function CreatingPostPage() {
     return <LoadingProgress />;
   }
 
+  if(isCreating) {
+    return <LoadingProgress />;
+  }
+
   const uploadFile = async (file: File) => {
-    const response = await http.get(`file/presigned-url?fileName=${file.name}&contentType=${file.type}`);
+    const response = await http.get(
+      `file/presigned-url?fileName=${file.name}&contentType=${file.type}`
+    );
     console.log(response);
-    
+
     const result = await fetch(response.presignedUrl, {
       method: "PUT",
       headers: {
@@ -35,12 +54,12 @@ export default function CreatingPostPage() {
       body: file,
     });
     if (!result.ok) {
-      throw new Error("Failed to upload file to S3");
+      throw new Error("Failed to upload image");
     }
     console.log(result);
 
     return "https://seuit-qlnt.s3.amazonaws.com/" + response.key;
-  }
+  };
 
   const handleSubmit = async (files: File[]) => {
     try {
@@ -48,24 +67,25 @@ export default function CreatingPostPage() {
       const uploadPromises = files.map(async (file) => {
         return await uploadFile(file);
       });
-      if(uploadPromises.length > 0) {
+      if (uploadPromises.length > 0) {
         images = await Promise.all(uploadPromises);
       }
       console.log("Images uploaded:", images);
       return images;
     } catch (error) {
-      console.error("Error uploading images:", error);
+      toast("Failed to upload images: " + error, { type: "error" });
       return null;
     }
   };
 
   const handleCreateButtonClick = async () => {
-    if(!content.current) {
-      alert("Please enter content");
+    setIsCreating(true);
+    if (!content.current) {
+      toast("Content cannot be empty", { type: "error" });
       return;
     }
     let images: string[] | null = null;
-    if(imgFile && imgFile.length > 0) {
+    if (imgFile && imgFile.length > 0) {
       images = await handleSubmit(imgFile || []);
     }
     const newPost: CreatePostDTO = {
@@ -80,14 +100,16 @@ export default function CreatingPostPage() {
     try {
       const response = await forumService.createPost(newPost);
       if (response.EC === 0) {
+        toast("Post created successfully", { type: "success" });
         sForum.set((pre) => pre.value.posts.push(response.DT));
         nav(-1);
       } else {
-        console.error("Failed to add product:", response.EM);
+        toast("Failed to create post: " + response.EM, { type: "error" });
       }
     } catch (error) {
-      console.error("Error adding product:", error);
+      toast("Failed to create post: " + error, { type: "error" });
     }
+    setIsCreating(false);
   };
 
   return (
@@ -113,8 +135,19 @@ export default function CreatingPostPage() {
               setImgFile(Array.from(e.target.files));
             }
           }}
-          className="w-full h-[150px] bg-gray-100 text-[20px] text-gray-500 flex items-center justify-center text-center border-2 border-dashed border-gray-300 rounded-md"
+          className=" bg-gray-100 text-[16px] text-gray-500 flex items-center justify-center text-center border-2 border-dashed border-gray-300 rounded-md"
         />
+        <div className="bg-gray-100 text-[16px] text-gray-500 w-full p-2 preview-container flex flex-wrap items-center gap-4">
+          {imgFile &&
+            imgFile.map((file, index) => (
+              <img
+                key={index}
+                src={URL.createObjectURL(file)}
+                alt={`preview-${index}`}
+                className="w-32 h-32 object-cover rounded-md"
+              />
+            ))}
+        </div>
       </div>
       <div className="w-full flex justify-end gap-2 items-center">
         <Button

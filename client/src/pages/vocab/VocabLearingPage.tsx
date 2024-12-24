@@ -11,9 +11,7 @@ export default function VocabLearingPage() {
   const { id } = useParams();
   const userId = sUser.use((state) => state.info._id);
 
-  const vocabTopic = sVocab
-    .use((cur) => cur.vocabTopics)
-    .find((vocab) => vocab._id === id);
+  const vocabTopic = sVocab.slice((state) => state.vocabTopics).use().find((vocab) => vocab._id === id);
   const [vocabs, setVocabs] = useState<Vocab[]>(vocabTopic?.vocabs || []);
 
   const vocabHistory = sVocab.use((cur) => cur.vocabHistory);
@@ -24,7 +22,9 @@ export default function VocabLearingPage() {
 
   useEffect(() => {
     if (vocabTopic) {
-      setSelectedVocab(vocabs[0]);
+      if(!selectedVocab){
+        setSelectedVocab(vocabs[0]);
+      }
       setVocabs(vocabTopic?.vocabs);
     }
   }, [vocabTopic, id]);
@@ -54,6 +54,8 @@ export default function VocabLearingPage() {
         setCompletedVocabs([...completedVocabs, vocabs[index]._id]);
         sVocab.set(prev => prev.value.vocabHistory = prev.value.vocabHistory.map(history => history.topicId === id ? {...history, completedVocabs: [...history.completedVocabs, vocabs[index]._id]} : history));
         console.log("Change remembered status successfully");
+        setCurVocabQuestionNumber(curVocabQuestionNumber + 1);
+        setSelectedVocab(vocabs[curVocabQuestionNumber + 1]);
       } else {
         console.log("Error when changing remembered status", response.EM);
       }

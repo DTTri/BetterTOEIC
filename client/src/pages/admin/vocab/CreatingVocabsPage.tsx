@@ -4,14 +4,28 @@ import CreateVocabDTO from "@/entities/DTOS/CreateVocabDTO";
 import http from "@/services/http";
 import vocabService from "@/services/vocabService";
 import { Button } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 export default function CreatingVocabsPage() {
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
   const [topicName, setTopicName] = useState<string>("");
   const nav = useNavigate();
   const [topicAvt, setTopicAvt] = useState<File | null>(null);
-  const [vocabs, setVocabs] = useState<{ id: string; number: number, vocab: CreateVocabDTO }[]>([
+  const [vocabs, setVocabs] = useState<
+    { id: string; number: number; vocab: CreateVocabDTO }[]
+  >([
     {
       id: uuidv4(),
       number: 1,
@@ -20,16 +34,25 @@ export default function CreatingVocabsPage() {
   ]);
   const [isWaiting, setIsWaiting] = useState<boolean>(false);
 
-  const handleOnSave = (createdVocab: CreateVocabDTO, createdVocabId: string) => {
-    setVocabs(vocabs.map((v) => (v.id === createdVocabId ? { ...v, vocab: createdVocab } : v)));
-  }
+  const handleOnSave = (
+    createdVocab: CreateVocabDTO,
+    createdVocabId: string
+  ) => {
+    setVocabs(
+      vocabs.map((v) =>
+        v.id === createdVocabId ? { ...v, vocab: createdVocab } : v
+      )
+    );
+  };
 
   console.log("vocabs " + vocabs[0].vocab.image);
 
   const uploadFile = async (file: File) => {
-    const response = await http.get(`file/presigned-url?fileName=${file.name}&contentType=${file.type}`);
+    const response = await http.get(
+      `file/presigned-url?fileName=${file.name}&contentType=${file.type}`
+    );
     console.log(response);
-    
+
     const result = await fetch(response.presignedUrl, {
       method: "PUT",
       headers: {
@@ -38,21 +61,21 @@ export default function CreatingVocabsPage() {
       body: file,
     });
     if (!result.ok) {
-      throw new Error("Failed to upload file to S3");
+      toast("Failed to upload file", { type: "error" });
     }
     console.log(result);
 
     return "https://seuit-qlnt.s3.amazonaws.com/" + response.key;
-  }
+  };
 
   const handleCreateTopic = async () => {
-    if(!topicName) {
+    if (!topicName) {
       alert("Please enter topic name");
       return;
     }
     setIsWaiting(true);
     let topicAvatarUrl = "";
-    if(topicAvt) {
+    if (topicAvt) {
       topicAvatarUrl = await uploadFile(topicAvt);
     }
 
@@ -60,14 +83,14 @@ export default function CreatingVocabsPage() {
       let imageUrl = "";
       let audioUrl = "";
 
-      if(vocab.vocab.image){
+      if (vocab.vocab.image) {
         imageUrl = await uploadFile(vocab.vocab.image);
       }
 
       if (vocab.vocab.audio) {
         audioUrl = await uploadFile(vocab.vocab.audio);
       }
-      
+
       console.log(imageUrl, audioUrl);
 
       return {
@@ -87,16 +110,17 @@ export default function CreatingVocabsPage() {
 
     try {
       const responseTopic = await vocabService.createVocabTopic(topicData);
-      if(responseTopic.EC === 0) {
+      if (responseTopic.EC === 0) {
+        toast("Create topic successfully", { type: "success" });
         setIsWaiting(false);
         nav("/admin/vocab");
       }
     } catch (error) {
-      console.error("Failed to create topic", error);
+      toast("Failed to create topic: " + error, { type: "error" });
     }
-  }
-  if(isWaiting) {
-    return <LoadingProgress />
+  };
+  if (isWaiting) {
+    return <LoadingProgress />;
   }
   console.log(vocabs);
   return (
@@ -141,7 +165,14 @@ export default function CreatingVocabsPage() {
         </div>
         <Button
           onClick={() =>
-            setVocabs([...vocabs, { id: uuidv4(), number: vocabs.length + 1, vocab: {} as CreateVocabDTO }])
+            setVocabs([
+              ...vocabs,
+              {
+                id: uuidv4(),
+                number: vocabs.length + 1,
+                vocab: {} as CreateVocabDTO,
+              },
+            ])
           }
         >
           Add vocabulary

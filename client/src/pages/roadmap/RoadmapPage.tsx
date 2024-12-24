@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { roadmapService } from "@/services";
+import * as motion from "motion/react-client";
+
 export default function RoadmapPage() {
   const nav = useNavigate();
   const roadmapExercises: RoadmapExercise[] = sRoadmap.use((v) => v.exercises);
@@ -87,7 +89,15 @@ export default function RoadmapPage() {
     <>
       {!userRoadmap ? (
         // inform user that they have not created a roadmap yet
-        <div className="bg-background w-full h-full py-8 flex flex-col items-center gap-4">
+        <motion.div
+          initial={{ opacity: 0, translateX: -20 }}
+          animate={{ opacity: 1, translateX: 0 }}
+          transition={{
+            duration: 0.4,
+            scale: { type: "spring", visualDuration: 0.4, bounce: 0.5 },
+          }}
+          className="bg-background w-full h-full py-8 flex flex-col items-center gap-4"
+        >
           <h1 className="text-4xl font-bold">
             You have not created a roadmap yet
           </h1>
@@ -100,7 +110,7 @@ export default function RoadmapPage() {
           >
             Let's create
           </Button>
-        </div>
+        </motion.div>
       ) : (
         <div className="bg-background w-full h-full py-8 flex flex-col items-center gap-4">
           <div className="w-1/2 min-w-fit mx-auto">
@@ -111,16 +121,19 @@ export default function RoadmapPage() {
           </div>
           <div className="roadmap-exercise-container rounded-xl w-5/6 bg-white p-8 mx-auto relative">
             <Button
-              variant="contained"
               color="primary"
               onClick={() => setIsConfirmResetRoadmapPopupOpen(true)}
               style={{
                 position: "absolute",
                 top: "1rem",
                 right: "1rem",
+                textTransform: "none",
+                color: "black",
+                fontSize: "0.9rem",
               }}
+              variant="outlined"
             >
-              Change roadmap
+              Change Roadmap
             </Button>
             <div className="parts-list w-3/5 mx-auto flex flex-col items-center gap-4">
               {/* sua lai map roadmapExercises ra sao cho cac phan tu co cung part se duoc truyen vao 1 ChaptersContainer, property cua 

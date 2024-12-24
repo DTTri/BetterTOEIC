@@ -15,6 +15,7 @@ export default function ReportUserPage() {
           test.attempted_at.split("T")[0] <= toDate
       )
       .map((test) => getTestScore(test.correctAnswersPerPart));
+    if (scores.length === 0) return 0;
     return scores.reduce((a, b) => a + b, 0) / scores.length;
   }
   const scorePerMonthData = [
@@ -47,11 +48,11 @@ export default function ReportUserPage() {
       score: getAverageScore("2022-07-01", "2022-07-31"),
     },
   ];
+  const averageCorrectAnswersPerPart =
+    getAverageCorrectAnswersPerPart(completedTests);
 
-  const accuracyPerPart = getAccuracyPerPart(
-    getAverageCorrectAnswersPerPart(completedTests)
-  );
-  const averageScore = getTestScore(accuracyPerPart);
+  const accuracyPerPart = getAccuracyPerPart(averageCorrectAnswersPerPart);
+  const averageScore = getTestScore(averageCorrectAnswersPerPart);
   const accuracyPerPartData = [
     { part: "Part 1", accuracy: accuracyPerPart[0] },
     { part: "Part 2", accuracy: accuracyPerPart[1] },
@@ -59,22 +60,25 @@ export default function ReportUserPage() {
     { part: "Part 4", accuracy: accuracyPerPart[3] },
     { part: "Part 5", accuracy: accuracyPerPart[4] },
     { part: "Part 6", accuracy: accuracyPerPart[5] },
-    { part: "Part 7", accuracy: accuracyPerPart[6] },
+    {
+      part: "Part 7",
+      accuracy: accuracyPerPart[6],
+    },
   ];
 
   return (
     <div className="w-full h-screen py-7 px-52">
       <h2 className="font-bold text-[#000] text-4xl text-center mb-4">
-        Thông tin cá nhân
+        Personal Stats
       </h2>
       <div className="chart flex flex-col">
         <div className="bg-[#fff] py-8 px-8 flex flex-col items-center gap-3">
           <div className="w-full flex flex-row items-center gap-4 ml-4">
             <h2 className="text-xl text-[#343C6A] font-semibold ">
-              Biểu đồ kết quả thi:{" "}
+              Test Score:
             </h2>
             <span className="py-[3px] px-6 rounded-xl border-[1px] bg-[#FAFBFD]">
-              Điểm trung bình: {averageScore}
+              Average score: {averageScore}
             </span>
           </div>
           <div className="test-score w-full mb-4 ">
@@ -107,7 +111,7 @@ export default function ReportUserPage() {
           </div>
           <div className="w-full flex flex-row items-center gap-4 ml-4">
             <h2 className="text-xl text-[#343C6A] font-semibold ">
-              Tỷ lệ chính xác theo từng part (%):
+              Accurate ratio per part:
             </h2>
           </div>
           <div className="part-accurac w-full ">

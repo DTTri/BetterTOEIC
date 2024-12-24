@@ -4,11 +4,27 @@ import CreatePracticeTestDTO from "@/entities/DTOS/CreatePracticeTestDTO";
 import http from "@/services/http";
 import practiceService from "@/services/practiceService";
 import { sNewTest } from "@/store";
+import theme from "@/theme";
 import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import { toast } from "react-toastify";
+
 export default function CreatingPracticeExsPage() {
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
   const nav = useNavigate();
   const [part, setPart] = useState<number>(1);
   const [mainAudio, setMainAudio] = useState<File | null>(null);
@@ -60,27 +76,58 @@ export default function CreatingPracticeExsPage() {
       });
       console.log(result);
       if (!result.ok) {
-        console.log("Failed to upload file to S3");
+        toast("Failed to upload file", {
+          type: "error",
+        });
+
         return "";
       }
       return "https://seuit-qlnt.s3.amazonaws.com/" + response.key;
     } catch (error) {
-      console.error("Error uploading file:", error);
+      toast("Failed to upload file: " + error, {
+        type: "error",
+      });
       return "";
     }
   };
 
   const handleCreatePracticeTest = async () => {
     if (part < 5 && !mainAudio) {
-      alert("Please upload main audio");
+      toast("Please upload main audio", {
+        type: "error",
+      });
       return;
     }
     const mainAudioUrl =
       part < 5 && mainAudio ? await uploadFile(mainAudio) : "";
+    if (part < 5 && mainAudioUrl === "") {
+      return;
+    }
+    const uploadedQuestionPromises = questions.map(async (question) => {
+      let imageUrls: string[] = [];
+      if (question.imageFiles) {
+        imageUrls = await Promise.all(
+          question.imageFiles.map(async (image) => await uploadFile(image))
+        );
+        imageUrls.forEach((imageUrl) => {
+          if (imageUrl === "") {
+            return null;
+          }
+        });
+        question.images = imageUrls;
+      }
+      return question;
+    });
+    const uploadedQuestions = await Promise.all(uploadedQuestionPromises);
+    uploadedQuestions.forEach((uploadedQuestion) => {
+      if (uploadedQuestion === null) {
+        return;
+      }
+    });
     try {
       const newPracticeTest: CreatePracticeTestDTO = {
         part: part,
-        questions: questions,
+        questions: uploadedQuestions,
         created_by: "admin",
         main_audio: mainAudioUrl,
       };
@@ -88,18 +135,31 @@ export default function CreatingPracticeExsPage() {
       const res = await practiceService.createPracticeTest(newPracticeTest);
       console.log(res);
       if (res.EC === 0) {
+        toast("Create practice test successfully", {
+          type: "success",
+        });
+
         nav("/admin/practice");
+      } else {
+        toast("Failed to create practice test", {
+          type: "error",
+        });
       }
     } catch (err) {
-      console.log(err);
+      toast("Failed to create practice test: " + err, {
+        type: "error",
+      });
     }
   };
+  const handleFileInputClick = () => {
+    document.getElementById("file-input")?.click();
+  };
   return (
-    <div className="w-full min-h-screen rounded-xl bg-white text-black flex flex-col gap-4 p-4">
-      <div className="select-part flex gap-2 items-center">
+    <div className="creating-test-container">
+      <div className="select-part flex justify-center gap-4 items-center">
         <p className="text-3xl font-bold">Part:</p>
         <select
-          className="p-2"
+          className="bg-gray-50 border border-black rounded-sm shadow-sm p-2 w-16 focus:outline-none focus:ring-1 focus:ring-black focus:border-transparent"
           value={part}
           onChange={(e) => {
             setPart(parseInt(e.target.value));
@@ -119,23 +179,38 @@ export default function CreatingPracticeExsPage() {
         <div className="audio flex gap-2 items-center">
           <p className="text-2xl font-bold">Listening Audio:</p>
           <input
+            id="file-input"
             type="file"
             accept="audio/*"
-            disabled={isAllBlocked}
             multiple={false}
             onChange={(e) => {
               if (e.target.files) {
                 setMainAudio(e.target.files[0]);
               }
             }}
+            style={{ display: "none" }}
+            disabled={isAllBlocked}
           />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleFileInputClick}
+            disabled={isAllBlocked}
+            startIcon={<AddPhotoAlternateIcon />}
+            style={{
+              backgroundColor: theme.palette.primary.main,
+            }}
+          >
+            Add audio file
+          </Button>
+          <p>{mainAudio?.name}</p>
         </div>
       )}
 
       <div className="flex flex-col gap-2">
         {questionGroups.map((questionGroup, index) => (
           <div
-            className="flex justify-between items-start"
+            className="flex justify-start items-start border-b-2 border-gray-300"
             key={questionGroup.id}
           >
             <div className="w-5/6">
@@ -180,48 +255,57 @@ export default function CreatingPracticeExsPage() {
                   deleteQuestionGroup(questionGroup.id);
                 }}
                 style={{
-                  backgroundColor: "#F44336",
+                  backgroundColor: theme.palette.error.main,
                   width: "fit-content",
                   fontSize: "0.8rem",
+                  textTransform: "none",
                 }}
               >
-                Delete question group
+                Delete Group
               </Button>
             )}
           </div>
         ))}
         {(part === 3 || part === 4 || part === 6 || part === 7) && (
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              setQuestionGroups([
-                ...questionGroups,
-                {
-                  id: uuidv4(),
-                  number: 1,
-                },
-              ]);
-            }}
-          >
-            Add question group
-          </Button>
+          <div className="flex justify-center">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                setQuestionGroups([
+                  ...questionGroups,
+                  {
+                    id: uuidv4(),
+                    number: 1,
+                  },
+                ]);
+              }}
+              style={{
+                backgroundColor: theme.palette.secondary.main,
+                color: "black",
+                textTransform: "none",
+                width: "fit-content",
+              }}
+              endIcon={<ArrowDownwardIcon />}
+            >
+              Add Question Group
+            </Button>
+          </div>
         )}
       </div>
-      <div className="buttons flex justify-end gap-2">
+      <div className="buttons flex justify-end gap-4">
         <Button
           variant="contained"
           color="secondary"
           onClick={handleChangeBlockStatus}
         >
-          {isAllBlocked ? "Unblock" : "Block"}
+          {isAllBlocked ? "Unsave" : "Save all"}
         </Button>
         <Button
           variant="contained"
           color="primary"
           style={{
             width: "fit-content",
-            margin: "auto",
           }}
           disabled={!isAllBlocked}
           onClick={handleCreatePracticeTest}

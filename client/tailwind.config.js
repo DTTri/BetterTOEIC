@@ -10,13 +10,13 @@ export default {
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
-          DEFAULT: "#0048FF", // Your previous secondary color
+          DEFAULT: "#D0E3FF", // Your previous secondary color
           foreground: "hsl(var(--secondary-foreground))",
         },
         tertiary: "#D0E3FF",
         background: "#F5F6FA", // Your previous background color
-        red: "#FF0000",
-        green: "#BCFFE3",
+        Red: "#FF0000",
+        Green: "#BCFFE3",
         foreground: "hsl(var(--foreground))",
         card: {
           DEFAULT: "hsl(var(--card))",

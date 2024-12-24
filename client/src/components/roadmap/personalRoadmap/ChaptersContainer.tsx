@@ -2,6 +2,7 @@ import { RoadmapExercise, RoadmapHistory } from "@/entities";
 import { sRoadmap } from "@/store";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import { useNavigate } from "react-router-dom";
+import * as motion from "motion/react-client";
 
 function ChapterItem({
   isDone,
@@ -17,7 +18,13 @@ function ChapterItem({
   onClick: () => void;
 }) {
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, height: 0 }}
+      animate={{ opacity: 1, height: "auto" }}
+      transition={{
+        duration: 0.4,
+        scale: { type: "spring", visualDuration: 0.4 },
+      }}
       className={`w-full flex items-center gap-2 px-2 py-1 border ${
         isDone
           ? "bg-primary border-white text-white"
@@ -33,7 +40,7 @@ function ChapterItem({
         <p className="text-sm font-semibold">Chapter {chapter}</p>
         <p className="text-xs">{numberOfQuestions} questions</p>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -56,7 +63,15 @@ export default function ChaptersContainer({
       : 0);
   const nav = useNavigate();
   return (
-    <div className="w-full bg-tertiary rounded-2xl p-4 pb-8">
+    <motion.div
+      initial={{ opacity: 0, translateY: -50 }}
+      animate={{ opacity: 1, translateY: 0 }}
+      transition={{
+        duration: 0.4,
+        scale: { type: "spring", visualDuration: 0.4, bounce: 0.5 },
+      }}
+      className="w-full bg-tertiary rounded-2xl p-4 pb-8"
+    >
       <div className="header mb-4">
         <h3 className="text-xl text-primary font-extrabold -mb-1">
           Part {part}
@@ -77,6 +92,6 @@ export default function ChaptersContainer({
           />
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 }

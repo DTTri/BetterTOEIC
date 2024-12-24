@@ -1,12 +1,7 @@
-import {
-  DataGrid,
-  GridActionsCellItem,
-  GridColDef,
-  GridToolbar,
-} from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
 import { Button, ThemeProvider } from "@mui/material";
 import { adminTableTheme } from "@/context";
-import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
+// import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 import { practiceStore } from "@/store/practiceStore";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -75,18 +70,18 @@ export default function PracticeManagementPage() {
       align: "center",
       headerAlign: "center",
     },
-    {
-      field: "edit",
-      type: "actions",
-      flex: 0.3,
-      getActions: (params) => [
-        <GridActionsCellItem
-          icon={<ModeEditOutlineIcon />}
-          label="Edit"
-          onClick={() => console.log("Edit", params.row)}
-        />,
-      ],
-    },
+    // {
+    //   field: "edit",
+    //   type: "actions",
+    //   flex: 0.3,
+    //   getActions: (params) => [
+    //     <GridActionsCellItem
+    //       icon={<ModeEditOutlineIcon />}
+    //       label="Edit"
+    //       onClick={() => console.log("Edit", params.row)}
+    //     />,
+    //   ],
+    // },
   ];
 
   const lessonRows = practiceLessonList.map((ex, index) => ({
@@ -147,24 +142,24 @@ export default function PracticeManagementPage() {
       align: "center",
       headerAlign: "center",
     },
-    {
-      field: "edit",
-      type: "actions",
-      flex: 0.3,
-      getActions: (params) => [
-        <GridActionsCellItem
-          icon={<ModeEditOutlineIcon />}
-          label="Edit"
-          onClick={() => console.log("Edit", params.row)}
-        />,
-      ],
-    },
+    // {
+    //   field: "edit",
+    //   type: "actions",
+    //   flex: 0.3,
+    //   getActions: (params) => [
+    //     <GridActionsCellItem
+    //       icon={<ModeEditOutlineIcon />}
+    //       label="Edit"
+    //       onClick={() => console.log("Edit", params.row)}
+    //     />,
+    //   ],
+    // },
   ];
   return (
-    <div className="w-full h-screen p-4 rounded-xl flex flex-col gap-2 max-h-screen overflow-hidden bg-background">
+    <>
       <div className="header flex justify-between items-center">
         <h2 className="text-2xl font-bold text-black">
-          {isTestList ? "Practice Tests" : "Lessons"}
+          {isTestList ? "Practice Exercises List" : "Lessons List"}
         </h2>
         <Button
           variant="contained"
@@ -174,24 +169,24 @@ export default function PracticeManagementPage() {
           {isTestList ? "Lessons" : "Practice Tests"}
         </Button>
       </div>
-      <div className="table-container w-full h-full">
+      <div className="admin-table-container">
         <ThemeProvider theme={adminTableTheme}>
           <DataGrid
-            style={{
-              borderRadius: "20px",
-              backgroundColor: "white",
-            }}
+            className="admin-table"
             rows={isTestList ? testRows : lessonRows}
             columns={isTestList ? testColumns : lessonColumns}
+            rowHeight={50}
             getRowId={(row) => row._id} // Specify custom id for each row
             initialState={{
               pagination: {
                 paginationModel: {
-                  pageSize: 8,
+                  pageSize: 6,
                 },
               },
             }}
-            pageSizeOptions={[5]}
+            pageSizeOptions={
+              isTestList ? [6, testRows.length] : [6, lessonRows.length + 1]
+            }
             slots={{ toolbar: GridToolbar }}
             rowSelection={false}
           />
@@ -207,6 +202,6 @@ export default function PracticeManagementPage() {
           Create exercise
         </Button>
       </div>
-    </div>
+    </>
   );
 }

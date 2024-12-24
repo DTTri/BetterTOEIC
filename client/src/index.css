@@ -16,6 +16,7 @@ audio::-webkit-media-controls-panel {
   background-color: white;
   border: 10px solid black;
 }
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -24,7 +25,7 @@ audio::-webkit-media-controls-panel {
     --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
-    --primary: 240 5.9% 10%;
+    --primary: #00205c;
     --primary-foreground: 0 0% 98%;
     --secondary: 240 4.8% 95.9%;
     --secondary-foreground: 240 5.9% 10%;
@@ -78,6 +79,18 @@ audio::-webkit-media-controls-panel {
   }
   body {
     @apply bg-background text-foreground;
+  }
+  .admin-table-container {
+    height: calc(100vh - 220px);
+    width: 100%;
+  }
+  .admin-table {
+    background-color: white;
+    height: 100%;
+    box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.1);
+  }
+  .creating-test-container {
+    @apply w-full h-full my-4 mr-4 rounded-xl bg-white text-black flex flex-col gap-4 px-2;
   }
 }
 

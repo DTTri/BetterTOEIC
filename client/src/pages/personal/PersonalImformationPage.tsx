@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import http from "@/services/http";
 import { userService } from "@/services";
 import { sUser } from "@/store";
+import theme from "@/theme";
+import { toast } from "react-toastify";
 
 export default function PersonalImformationPage() {
   const currentUser = sUser.use((v) => v.info);
@@ -36,14 +38,14 @@ export default function PersonalImformationPage() {
         body: file,
       });
       if (!result.ok) {
-        throw new Error("Failed to upload image to S3");
+        toast("Upload image failed", { type: "error" });
       }
       console.log(result);
       setAvatarUrl("https://seuit-qlnt.s3.amazonaws.com/" + response.key);
       key = response.key;
       return file;
     } catch (error) {
-      console.error("Error uploading image:", error);
+      toast("Upload image failed: " + error, { type: "error" });
       return null;
     }
   };
@@ -58,12 +60,12 @@ export default function PersonalImformationPage() {
       console.log(response);
 
       if (response.EC === 0) {
-        console.log("Update success");
+        toast("Update successfully", { type: "success" });
       } else {
-        console.log("Update failed");
+        toast("Update failed", { type: "error" });
       }
     } catch (error) {
-      console.error("Error updating user info:", error);
+      toast("Update failed: " + error, { type: "error" });
     }
   };
 
@@ -83,9 +85,9 @@ export default function PersonalImformationPage() {
   return (
     <div className="w-full h-screen py-7 px-52">
       <h2 className="font-bold text-[#000] text-4xl text-center mb-4">
-        Thông tin cá nhân
+        Personal Information
       </h2>
-      <div className="bg-[#fff] py-5 px-5 flex flex-col items-center gap-3">
+      <div className="bg-[#fff] py-5 px-5 flex flex-col items-center gap-3 relative">
         <Avatar alt="" src={avatarUrl} sx={{ width: 160, height: 160 }} />
         <input
           type="file"
@@ -99,7 +101,7 @@ export default function PersonalImformationPage() {
           }}
         />
         <TextField
-          label="Họ tên"
+          label="Fullname"
           variant="outlined"
           value={fullName}
           onChange={(e) => setFullName(e.target.value)}
@@ -107,32 +109,33 @@ export default function PersonalImformationPage() {
           style={{ width: "30%", backgroundColor: "#F8FAFC" }}
         />
 
-        <div className="w-[40%] flex flex-row justify-between ">
+        <div className="w-[40%] flex flex-row justify-center ">
           <Button
             onClick={() => setShowPasswordChangePopup(true)}
-            variant="outlined"
+            variant="contained"
             style={{
               backgroundColor: "#F2F2F2",
               color: "#000",
-              borderRadius: "20px",
-              fontSize: "16px",
+              fontSize: "14px",
               textTransform: "none",
+              position: "absolute",
+              left: 20,
+              bottom: 20,
             }}
           >
-            Đổi mật khẩu
+            Change Password
           </Button>
           <Button
             onClick={handleUpdateButtonClick}
             variant="outlined"
             style={{
-              backgroundColor: "#FFDCDC",
-              color: "#000",
-              borderRadius: "20px",
-              fontSize: "16px",
+              backgroundColor: theme.palette.primary.main,
+              color: "#fff",
+              fontSize: "14px",
               textTransform: "none",
             }}
           >
-            Cập nhật
+            Update
           </Button>
         </div>
       </div>

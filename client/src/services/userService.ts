@@ -8,6 +8,9 @@ class UserService {
   async getUsers() {
     return await http.get(this.getURI(""));
   }
+  async getUser(id: string) {
+    return await http.get(this.getURI(id));
+  }
 
   async updateUser(id: string, data: object) {
     return await http.put(this.getURI(id), data);
