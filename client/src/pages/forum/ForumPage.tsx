@@ -63,12 +63,12 @@ export default function ForumPage() {
 
   return (
     <motion.div
-      initial={{ opacity: 0, translateY: -20 }}
+      initial={{ opacity: 0, translateY: -50 }}
       animate={{ opacity: 1, translateY: 0 }}
       transition={{
-        duration: 0.4,
-        scale: { type: "spring", visualDuration: 0.4 },
-        opacity: { ease: "linear" },
+        duration: 0.35,
+        scale: { type: "spring"},
+        opacity: { ease: "easeInOut" },
       }}
     >
       <div className="min-h-screen h-full flex flex-row w-full">

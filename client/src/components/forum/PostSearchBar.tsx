@@ -15,7 +15,7 @@ export default function PostSearchBar({
   const [sort, setSort] = useState<string>("Giảm dần");
   const inpSearch = useRef("");
   return (
-    <div className="max-w-[330px] w-full items-center flex-col bg-[#fff] py-5 px-7">
+    <div className="max-w-[300px] w-full items-center flex-col bg-[#fff] py-5 px-5">
       <div className="search">
         <h4 className="text-[#202224] font-semibold mb-[10px]">Search Posts</h4>
         <div className="py-2 px-2 flex justify-between items-center border border-gray-300 bg-[#F6F6F6] rounded-xl w-full mb-[10px] focus-within:border-blue-500">

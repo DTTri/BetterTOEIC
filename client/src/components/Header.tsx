@@ -102,7 +102,7 @@ export default function Header() {
                     </div>
                 </SelectTrigger>
                 <SelectContent className="bg-background">
-                  <motion.div initial={{ opacity: 0, translateY: -30 }} animate={{ opacity: 1, translateY: 0 }} transition={{ duration: 0.15, scale: { type: "spring"}, opacity: { ease: "linear" } }}>
+                  <motion.div initial={{ opacity: 0, translateY: -20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ duration: 0.3, scale: { type: "spring"}, opacity: { ease: "easeInOut" } }}>
 
                   <SelectGroup>
                     {userInfo.isAdmin && (
