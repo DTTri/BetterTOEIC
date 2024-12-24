@@ -440,7 +440,7 @@ function App() {
           <Route
             path="/test"
             element={
-              <UserLayout>
+              <UserLayout passAll={true}>
                 <TestsPage />
               </UserLayout>
             }
@@ -552,7 +552,7 @@ function App() {
           <Route
             path="/forum"
             element={
-              <UserLayout haveFooter={false}>
+              <UserLayout passAll={true} haveFooter={false}>
                 <ForumPage />
               </UserLayout>
             }
