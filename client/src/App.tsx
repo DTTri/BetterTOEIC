@@ -488,7 +488,7 @@ function App() {
           <Route
             path="/practice"
             element={
-              <UserLayout>
+              <UserLayout passAll={true}>
                 <PracticePage />
               </UserLayout>
             }
@@ -528,7 +528,7 @@ function App() {
           <Route
             path="/vocab-gallery"
             element={
-              <UserLayout>
+              <UserLayout passAll={true}>
                 <VocabCardGallery />
               </UserLayout>
             }
