@@ -1,12 +1,17 @@
 import { useNavigate } from "react-router-dom";
+import * as motion from "motion/react-client";
+
 
 export default function HomePage() {
   const nav = useNavigate();
   const onStart = () => {
-    nav("/login");
+    nav("/test");
   };
   return (
-    <div>
+    <motion.div 
+      initial={{ opacity: 0, translateY: -20 }}
+      animate={{ opacity: 1, translateY: 0 }}
+      transition={{ duration: 0.35, scale: { type: "spring" }, opacity: { ease: "easeInOut" } }}>
       <section className="bg-gradient-to-r from-blue-500 to-teal-500 text-white py-20">
         <div className="container mx-auto text-center">
           <h1 className="text-4xl font-bold mb-4 animate-fade-in">
@@ -91,12 +96,12 @@ export default function HomePage() {
           Ready to Start Your TOEIC Journey?
         </h2>
         <button
-          onClick={onStart}
+          onClick={() => nav("/login")}
           className="bg-white text-blue-600 px-6 py-3 rounded font-semibold shadow-lg hover:bg-gray-100 animate-bounce"
         >
           Join Now
         </button>
       </section>
-    </div>
+    </motion.div>
   );
 }

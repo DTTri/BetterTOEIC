@@ -1,4 +1,4 @@
-import { SearchBar, TestCard } from "@/components";
+import { TestCard } from "@/components";
 import LeftBarPersonal from "@/components/personal/LeftBarPersonal";
 import { Test } from "@/entities";
 import { testStore } from "@/store/testStore";
@@ -23,7 +23,6 @@ export default function TestsSavedPage() {
       <div className="w-full flex flex-row gap-8 items-stretch">
         <LeftBarPersonal />
         <div className="flex flex-col w-full px-12 py-7 gap-5 items-center">
-          <SearchBar />
           <div className="w-full min-h-[500px] rounded-[15px] bg-[#fff]">
             <div className="w-full grid lg:grid-cols-2 gap-10 py-8 px-8 ">
               {filtertedTests?.map(

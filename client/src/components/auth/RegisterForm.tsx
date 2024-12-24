@@ -4,6 +4,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from '@mui/material';
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from "react-toastify";
 
 
 export default function RegisterForm() {
@@ -20,19 +21,19 @@ export default function RegisterForm() {
 
   const handleRegister = async () => {
     if(email === '' || password === '' || name === '' || retypePassword === '') {
-      alert('Please fill in all fields');
+      toast.error('Please fill in all fields');
       return;
     }
     if(!email.match(emailRegex)) {
-      alert('Please enter a valid email');
+      toast.error('Please enter a valid email');
       return;
     }
     if(!password.match(passwordRegex)) {
-      alert('Password must contain at least 12 characters, 1 uppercase letter, 1 number and 1 special character');
+      toast.error('Password must contain at least 12 characters, 1 uppercase letter, 1 number and 1 special character');
       return;
     }
     if(password !== retypePassword) {
-      alert('Passwords do not match');
+      toast.error('Passwords do not match');
       return;
     }
     try {
@@ -45,13 +46,16 @@ export default function RegisterForm() {
           setIsRegisterSuccess(true);
         }
         else {
+          toast.error("Fail to resgitser");
           console.log("Fail to send verification email " + repsonseVerify.EM);
         }
       }
       else{
+        toast.error("Fail to resgitser");
         console.log("Fail to register " + response.EM);
       }
     } catch (error) {
+      toast.error("Fail to resgitser");
       console.log(error);
     }
   }

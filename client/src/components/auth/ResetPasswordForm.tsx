@@ -3,6 +3,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput } from '@mui/material';
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from "react-toastify";
 
 
 export default function RessetPasswordForm() {
@@ -17,15 +18,15 @@ export default function RessetPasswordForm() {
 
   const handleResetPassword = async () => {
     if(password === '' || retypePassword === '') {
-      alert('Please fill in all fields');
+      toast.error('Please fill in all fields');
       return;
     }
     if(!password.match(passwordRegex)) {
-      alert('Password must contain at least 12 characters, 1 uppercase letter, 1 number and 1 special character');
+      toast.error('Password must contain at least 12 characters, 1 uppercase letter, 1 number and 1 special character');
       return;
     }
     if(password !== retypePassword) {
-      alert('Passwords do not match');
+      toast.error('Passwords do not match');
       return;
     }
     try {
@@ -35,12 +36,15 @@ export default function RessetPasswordForm() {
         "token": token
       });
       if(response.EC === 0) {
+        toast.success('Reset password successfully');
         nav('/login');
       }
       else{
+        toast.error("Fail to reset password");
         console.log("Fail to reset password " + response.EM);
       }
     } catch (error) {
+      toast.error("Fail to reset password");
       console.log(error);
     }
   }
