@@ -57,6 +57,7 @@ import { ThemeProvider } from "@mui/material";
 import theme from "./theme";
 import { Flip, ToastContainer } from "react-toastify";
 import LoginOauth from "./pages/auth/LoginOAuth";
+import LearnPracticeLesson from "./pages/practice/LearnPracticeLesson";
 
 function App() {
   const userJustLoggedIn = sUser.use((state) => state.info);
