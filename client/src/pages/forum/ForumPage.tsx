@@ -8,7 +8,6 @@ import { sUser } from "@/store";
 import sForum from "@/store/forumStore";
 import { useEffect, useState } from "react";
 import { LazyMotion, domAnimation } from "motion/react";
-import * as motion from "motion/react-client";
 
 export default function ForumPage() {
   const forumStore = sForum.use((cur) => cur.posts);
@@ -62,15 +61,7 @@ export default function ForumPage() {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, translateY: -50 }}
-      animate={{ opacity: 1, translateY: 0 }}
-      transition={{
-        duration: 0.35,
-        scale: { type: "spring"},
-        opacity: { ease: "easeInOut" },
-      }}
-    >
+
       <div className="min-h-screen h-full flex flex-row w-full">
         <PostSearchBar filterPost={filterPost} searchPost={searchPost} />
         <div className="content-post flex flex-col py-10 px-9 w-[70%] gap-6">
@@ -85,6 +76,5 @@ export default function ForumPage() {
           <MustRead postLists={forumStore} />
         </div>
       </div>
-    </motion.div>
   );
 }

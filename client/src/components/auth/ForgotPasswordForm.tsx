@@ -9,7 +9,6 @@ import { toast } from "react-toastify";
 export default function ForgotPasswordForm() {
   const [email, setEmail] = React.useState('');
   const [show, setShow] = React.useState(false);
-  const [isSuccess, setIssuccess] = React.useState(false);
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const nav = useNavigate();
   
@@ -60,7 +59,6 @@ export default function ForgotPasswordForm() {
         }
       </div>
       <Button onClick={handleForgotPassword} variant='outlined' style={{backgroundColor: '#3A7EE1', color: '#fff', fontFamily: 'Nunito Sans', fontSize: '18px', fontWeight: 'bold', textTransform: 'none', borderRadius: '8px', padding: '8px 0', width: '100%', cursor: 'pointer', marginTop: '20px'}}>SEND</Button>
-      {isSuccess && <p className='text-cyan-600 text-sm font-normal mt-4'>Verification link has been sent to your email</p>}
       <div className="flex flex-row justify-center mt-5 gap-2">
         <span className='text-[#212121] font-normal text-[16px] '>New User?</span>
         <Link to='/register' className='text-[#212121] font-bold text-[16px] underline hover:text-slate-500'>SIGN UP HERE</Link>

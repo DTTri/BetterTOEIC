@@ -494,6 +494,14 @@ function App() {
             }
           />
           <Route
+            path="/pratice-lesson/:part/:id"
+            element={
+              <UserLayout haveFooter={false}>
+                <LearnPracticeLesson />
+              </UserLayout>
+            }
+          />
+          <Route
             path="/taking-practice/:part/:id"
             element={
               <UserLayout haveFooter={false}>
