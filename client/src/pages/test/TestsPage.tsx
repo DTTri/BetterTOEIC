@@ -4,6 +4,7 @@ import { Test } from "@/entities";
 import { testStore } from "@/store/testStore";
 import { Tab, Tabs } from "@mui/material";
 import { useEffect, useState } from "react";
+
 import * as motion from "motion/react-client";
 import LoadingProgress from "@/components/LoadingProgress";
 
@@ -17,7 +18,6 @@ export default function TestsPage() {
   }
 
   const [curTests, setCurTests] = useState<Test[]>(testList);
-
   useEffect(() => {
     setCurTests(testList);
   }, [testList]);
@@ -37,14 +37,16 @@ export default function TestsPage() {
   };
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    console.log(event.currentTarget.textContent?.toString() || "")
+    console.log(event.currentTarget.textContent?.toString() || "");
     setValue(newValue);
     if (newValue === 0) {
       setCurTests(testList);
     } else {
       setCurTests(
         testList.filter((test) =>
-          test.title.toString().includes(event.currentTarget.textContent?.toString() || "")
+          test.title
+            .toString()
+            .includes(event.currentTarget.textContent?.toString() || "")
         )
       );
     }
@@ -57,7 +59,13 @@ export default function TestsPage() {
      className="bg-background flex flex-col gap-4 items-center py-8">
       <PageHeader text="ETS Standard Test Library" />
       <SearchBar onSearch={filterTests} />
-      <Tabs style={{ maxWidth: '30%' }} variant="scrollable" value={value} onChange={handleChange} centered>
+      <Tabs
+        style={{ maxWidth: "30%" }}
+        variant="scrollable"
+        value={value}
+        onChange={handleChange}
+        centered
+      >
         <Tab label="All" />
         <Tab label="2024" />
         <Tab label="2023" />

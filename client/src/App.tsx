@@ -52,15 +52,18 @@ import sForum from "./store/forumStore";
 import ReviewTestPage from "./pages/test/ReviewTestPage";
 import ReviewPracticePage from "./pages/practice/ReviewPracticePage";
 import { User } from "./entities";
-import LearnPracticeLesson from "./pages/practice/LearnPracticeLesson";
 import HomePage from "./pages/HomePage";
 import { ThemeProvider } from "@mui/material";
 import theme from "./theme";
 import { Flip, ToastContainer } from "react-toastify";
+import LoginOauth from "./pages/auth/LoginOAuth";
 
 function App() {
-  const curUser = localStorage.getItem("_id") || sessionStorage.getItem("_id");
+  const userJustLoggedIn = sUser.use((state) => state.info);
   useEffect(() => {
+    const curUser =
+      localStorage.getItem("_id") || sessionStorage.getItem("_id");
+
     const fetchAllUsers = async () => {
       try {
         const response = await userService.getUsers();
@@ -388,8 +391,8 @@ function App() {
         fetchForum(),
       ]);
     };
-    fetchData();
-  }, []);
+    if (curUser && curUser !== "") fetchData();
+  }, [userJustLoggedIn]);
 
   return (
     <>
@@ -610,6 +613,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/error" element={<ErrorPage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/oauth" element={<LoginOauth />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route
