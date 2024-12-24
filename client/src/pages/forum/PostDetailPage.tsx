@@ -10,6 +10,7 @@ import { sUser } from "@/store";
 import sForum from "@/store/forumStore";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { LazyMotion, domAnimation } from "motion/react";
 
 export default function PostDetailPage() {
   const { id } = useParams();
@@ -160,15 +161,17 @@ export default function PostDetailPage() {
           post={post}
         />
         <CommentCreating onCommentCreated={handleOnComment} />
-        {comments.map((comment, _index) => (
-          <CommentComp
-            userId={user._id}
-            onDelete={handleDeleteComment}
-            onLike={handleOnLikeComment}
-            key={post._id}
-            comment={comment}
-          />
-        ))}
+        <LazyMotion features={domAnimation} strict>
+          {comments.map((comment, _index) => (
+            <CommentComp
+              userId={user._id}
+              onDelete={handleDeleteComment}
+              onLike={handleOnLikeComment}
+              key={post._id}
+              comment={comment}
+            />
+          ))}
+        </LazyMotion>
       </div>
       <div className="py-10 px-5 pl-1 gap-7 w-[30%]">
         <MustRead postLists={postLists} />

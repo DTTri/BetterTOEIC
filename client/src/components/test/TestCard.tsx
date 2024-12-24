@@ -2,6 +2,7 @@
 import { Test } from "@/entities";
 import clock from "../../assets/charm_clock-alarm.svg";
 import Hierarchy from "../../assets/Hierarchy.png";
+import Test_Img from "../../assets/Test_Img.svg";
 
 export default function TestCard({
   test,
@@ -19,8 +20,8 @@ export default function TestCard({
       <div className="img w-[40%] h-[170px] rounded-s-[20px]">
         <img
           className="w-full h-full object-cover object-center"
-          src="https://i.pinimg.com/enabled_lo/564x/7b/20/0c/7b200c51edd5fb28230611e5fc48754f.jpg"
-          alt=""
+          src={Test_Img}
+          alt="TOEIC_Test"
         />
       </div>
       <div className="w-[60%] flex flex-col gap-2 px-4 py-3">

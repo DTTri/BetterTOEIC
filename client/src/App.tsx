@@ -443,7 +443,7 @@ function App() {
           <Route
             path="/test"
             element={
-              <UserLayout>
+              <UserLayout passAll={true}>
                 <TestsPage />
               </UserLayout>
             }
@@ -491,8 +491,16 @@ function App() {
           <Route
             path="/practice"
             element={
-              <UserLayout>
+              <UserLayout passAll={true}>
                 <PracticePage />
+              </UserLayout>
+            }
+          />
+          <Route
+            path="/pratice-lesson/:part/:id"
+            element={
+              <UserLayout haveFooter={false}>
+                <LearnPracticeLesson />
               </UserLayout>
             }
           />
@@ -523,7 +531,7 @@ function App() {
           <Route
             path="/vocab-gallery"
             element={
-              <UserLayout>
+              <UserLayout passAll={true}>
                 <VocabCardGallery />
               </UserLayout>
             }
@@ -547,7 +555,7 @@ function App() {
           <Route
             path="/forum"
             element={
-              <UserLayout haveFooter={false}>
+              <UserLayout passAll={true} haveFooter={false}>
                 <ForumPage />
               </UserLayout>
             }

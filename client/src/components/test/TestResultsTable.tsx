@@ -3,6 +3,8 @@ import { CompletedTest } from "@/entities/TestHistory";
 import getTestScore from "@/utils/CalculateTestScore";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import { useNavigate, useParams } from "react-router-dom";
+import * as motion from "motion/react-client";
+
 export default function TestResultsTable( { testHistoryById } : {  testHistoryById: CompletedTest[] }) {
   // const data = [
   //   {
@@ -34,7 +36,8 @@ export default function TestResultsTable( { testHistoryById } : {  testHistoryBy
   const nav = useNavigate();
   const {id} = useParams();
   return (
-    <div className="overflow-x-auto">
+    <div 
+     className="overflow-x-auto">
       <table className="min-w-full bg-primary text-white">
         <thead>
           <tr className="uppercase text-sm leading-normal">
@@ -53,7 +56,14 @@ export default function TestResultsTable( { testHistoryById } : {  testHistoryBy
         </thead>
         <tbody className="text-sm font-light">
           {testHistoryById.map((item, index) => (
-            <tr key={index} className="border-b border-gray-200 ">
+            <motion.tr 
+              initial={{ opacity: 0, translateY: -20 }}
+              animate={{ opacity: 1, translateY: 0 }}
+              transition={{
+                duration: 0.3,
+                scale: { type: "spring", bounce: 0.5 },
+              }}
+              key={index} className="border-b border-gray-200 ">
               <td className="py-3 px-6 text-center whitespace-nowrap border border-white">
                 {item.attempted_at.split("T")[0] + " " + item.attempted_at.split("T")[1].toString().split(".")[0]}
               </td>
@@ -68,10 +78,10 @@ export default function TestResultsTable( { testHistoryById } : {  testHistoryBy
               </td>
               <td className="py-3 px-6 text-center border border-white">
                 <button onClick={() => nav(`/review-test/${id}/${item.attempted_at}`)}>
-                  <RemoveRedEyeIcon color="primary" />
+                  <RemoveRedEyeIcon style={{color: "white"}} />
                 </button>
               </td>
-            </tr>
+            </motion.tr>
           ))}
         </tbody>
       </table>

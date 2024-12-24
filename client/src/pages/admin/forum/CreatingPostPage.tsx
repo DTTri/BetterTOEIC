@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 export default function CreatingPostPage() {
+  const [isCreating, setIsCreating] = useState(false);
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       event.preventDefault();
@@ -32,6 +33,10 @@ export default function CreatingPostPage() {
   }, [SUser]);
 
   if (!user) {
+    return <LoadingProgress />;
+  }
+
+  if(isCreating) {
     return <LoadingProgress />;
   }
 
@@ -74,6 +79,7 @@ export default function CreatingPostPage() {
   };
 
   const handleCreateButtonClick = async () => {
+    setIsCreating(true);
     if (!content.current) {
       toast("Content cannot be empty", { type: "error" });
       return;
@@ -103,6 +109,7 @@ export default function CreatingPostPage() {
     } catch (error) {
       toast("Failed to create post: " + error, { type: "error" });
     }
+    setIsCreating(false);
   };
 
   return (

@@ -13,7 +13,7 @@ export default function MustRead({ postLists }: { postLists: Post[] }) {
   );
   const lastTwoPosts = postLists.slice(-2);
   return (
-    <div className="w-full bg-[#fff] py-7 px-5 flex flex-col items-center rounded-[15px] gap-6">
+    <div className="max-w-[380px] w-full bg-[#fff] py-7 px-5 flex flex-col items-center rounded-[15px] gap-6">
       <div className="w-full ">
         <div className="flex flex-row items-center gap-3 py-2 border-b-[1px] mb-4">
           <StarBorderIcon
@@ -27,7 +27,7 @@ export default function MustRead({ postLists }: { postLists: Post[] }) {
             className="px-5 text-[#1682FD] font-semibold text-[16px] line-clamp-1 overflow-hidden text-ellipsis text-nowrap"
             style={{ listStyleType: "disc" }}
           >
-            {sortedPosts.slice(0, 2).map((post, index) => (
+            {sortedPosts && sortedPosts.slice(0, 2).map((post, index) => (
                 <li key={index} className="hover:text-[#FE5507]">
                     <Link to={`/post-detail/${post._id}`} className="ellipsis">
                     {post.content}
@@ -50,7 +50,7 @@ export default function MustRead({ postLists }: { postLists: Post[] }) {
             className="px-5 text-[#1682FD] font-semibold text-[16px] line-clamp-1 overflow-hidden text-ellipsis text-nowrap"
             style={{ listStyleType: "disc" }}
           >
-            {lastTwoPosts.map((post, index) => (
+            {lastTwoPosts && lastTwoPosts.map((post, index) => (
               <li key={index} className="hover:text-[#FE5507]">
                 <Link to={`/post-detail/${post._id}`} className="ellipsis">
                   {post.content}

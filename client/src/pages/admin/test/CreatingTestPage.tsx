@@ -13,7 +13,6 @@ import { testStore } from "@/store/testStore";
 import theme from "@/theme";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { toast } from "react-toastify";
-import { error } from "console";
 export default function CreatingTestPage() {
   const nav = useNavigate();
 

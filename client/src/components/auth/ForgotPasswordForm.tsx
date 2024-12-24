@@ -3,12 +3,12 @@ import { Button, TextField } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import authService from '@/services/authService';
+import { toast } from "react-toastify";
 
 
 export default function ForgotPasswordForm() {
   const [email, setEmail] = React.useState('');
   const [show, setShow] = React.useState(false);
-  const [isSuccess, setIssuccess] = React.useState(false);
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const nav = useNavigate();
   
@@ -18,19 +18,20 @@ export default function ForgotPasswordForm() {
 
   const handleForgotPassword = async () => {
     if(email === '') {
-      alert('Please fill in all fields');
+      toast.error('Please fill in all fields');
       return;
     }
     if(!email.match(emailRegex)) {
-      alert('Please enter a valid email');
+      toast.error('Please enter a valid email');
       return;
     }
     try {
       const response = await authService.forgotPassword({email});
       if(response.EC === 0) {
-        setIssuccess(true);
+        toast.success('Verification link has been sent to your email');
       }
     } catch (error) {
+      toast.error("Fail to forgotpassword");
       console.log("Fail to forgotpassword " + error);
     }    
   }
@@ -58,7 +59,6 @@ export default function ForgotPasswordForm() {
         }
       </div>
       <Button onClick={handleForgotPassword} variant='outlined' style={{backgroundColor: '#3A7EE1', color: '#fff', fontFamily: 'Nunito Sans', fontSize: '18px', fontWeight: 'bold', textTransform: 'none', borderRadius: '8px', padding: '8px 0', width: '100%', cursor: 'pointer', marginTop: '20px'}}>SEND</Button>
-      {isSuccess && <p className='text-cyan-600 text-sm font-normal mt-4'>Verification link has been sent to your email</p>}
       <div className="flex flex-row justify-center mt-5 gap-2">
         <span className='text-[#212121] font-normal text-[16px] '>New User?</span>
         <Link to='/register' className='text-[#212121] font-bold text-[16px] underline hover:text-slate-500'>SIGN UP HERE</Link>
