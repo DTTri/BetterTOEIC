@@ -5,6 +5,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from '@mui/material';
 import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 export default function LoginForm() {
   const [email, setEmail] = React.useState('');
@@ -18,11 +19,11 @@ export default function LoginForm() {
   
   const handleLogin = async () => {
     if(email === '' || password === '') {
-      alert('Please fill in all fields');
+      toast.error('Please fill in all fields');
       return;
     }
     if(!email.match(emailRegex)) {
-      alert('Please enter a valid email');
+      toast.error('Please enter a valid email');
       return;
     }
     try {
@@ -37,15 +38,18 @@ export default function LoginForm() {
           sessionStorage.setItem('_id', response.DT._id);
         }
         nav('/test');
+        toast.success('Login successfully');
         sUser.set((prev) => {
           return prev.value.info = response.DT;
         });
       }
       else{
+        toast.error("Fail to login");
         console.log("Fail to login " + response.EM);
         setNoti(response.EM);
       }
     } catch (error) {
+      toast.error("Fail to login");
       console.log(error);
     }
   }
@@ -57,6 +61,7 @@ export default function LoginForm() {
       if(response.EC === 0) {
         localStorage.setItem('token', response.DT);
         nav('/test');
+        toast.success('Login successfully');
       }
     } catch (error) {
       console.log(error);
