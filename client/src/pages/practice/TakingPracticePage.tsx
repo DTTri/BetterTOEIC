@@ -175,6 +175,7 @@ export default function TakingPracticePage() {
                 fontWeight: "700",
                 borderRadius: "10px",
                 marginRight: "24px",
+                color: "#fff",
               }}
               variant="contained"
               color="success"
@@ -216,6 +217,7 @@ export default function TakingPracticePage() {
                       borderRadius: "10px",
                       marginRight: "24px",
                       textTransform: "none",
+                      color: "#fff",
                     }}
                     variant="contained"
                     color="success"
@@ -237,6 +239,7 @@ export default function TakingPracticePage() {
                       borderRadius: "10px",
                       marginRight: "24px",
                       textTransform: "none",
+                      color: "#fff",
                     }}
                     variant="contained"
                     color="success"
