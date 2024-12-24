@@ -286,6 +286,34 @@ class AuthMiddleware {
       return;
     }
   }
+  async checkGoogleLoginUser(req: Request, res: Response, next: NextFunction) {
+    const { code } = req.query;
+    try {
+      const data = await userServiceInstance.getOauthGoogleToken(code as string);
+      const { id_token } = data;
+      const googleUser = await userServiceInstance.getUserByGoogleToken(id_token);
+      const user = await userServiceInstance.findUserByEmail(googleUser?.email);
+      if (!user) {
+        req.body.existUser = false;
+        req.body.user = {
+          ...googleUser,
+          isAdmin: false,
+          password: Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8),
+        };
+      } else {
+        req.body.existUser = true;
+        req.body.user = { ...user };
+      }
+      next();
+    } catch (err: any) {
+      res.status(400).json({
+        EC: 1,
+        EM: err.message,
+      });
+      res.redirect(`${process.env.APP_URL}/`);
+      return;
+    }
+  }
 }
 const authMiddlewareInstance = new AuthMiddleware();
 export default authMiddlewareInstance;

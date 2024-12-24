@@ -8,24 +8,24 @@ class AuthService {
     return await http.post(this.getURI("login"), data);
   }
   async googleLogin(data: object) {
-    return await http.post(this.getURI("google-login"), data);
+    return await http.post(this.getURI("googleRequest"), data);
   }
   async register(data: object) {
-    return await http.post(this.getURI("register"), data); 
+    return await http.post(this.getURI("register"), data);
   }
-  async forgotPassword (data: object) {
+  async forgotPassword(data: object) {
     return await http.post(this.getURI("forgot-password"), data);
   }
-  async resetPassword (data: object) {
+  async resetPassword(data: object) {
     return await http.post(this.getURI("reset-password"), data);
   }
-  async verifyEmail (data: object) {
+  async verifyEmail(data: object) {
     return await http.post(this.getURI("verify-email"), data);
   }
-  async refreshToken (data: object) {
+  async refreshToken(data: object) {
     return await http.post(this.getURI("refresh-token"), data);
   }
-  async sendVerificationEmail (data: object) {
+  async sendVerificationEmail(data: object) {
     return await http.post(this.getURI("send-verification-email"), data);
   }
 }

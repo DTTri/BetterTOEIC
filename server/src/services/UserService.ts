@@ -4,6 +4,7 @@ import { sendForgotPasswordEmail, sendVerificationEmail } from '~/utils/Mailer';
 import bcrypt from 'bcrypt';
 import UserStatus from '~/constants/UserStatus';
 import { ObjectId } from 'mongodb';
+import { decodeStringUTF8 } from '~/utils/decodeUTF8';
 
 class UserService {
   async addUser(user: User): Promise<boolean> {
@@ -63,6 +64,30 @@ class UserService {
   }
   async updateUserInfo(user: User): Promise<void> {
     await collections.users?.updateOne({ email: user.email }, { $set: user });
+  }
+  async getOauthGoogleToken(code: string) {
+    const body = {
+      code,
+      client_id: process.env.CLIENT_ID,
+      client_secret: process.env.CLIENT_SECRET,
+      redirect_uri: process.env.GOOGLE_REDIRECT_URI,
+      grant_type: 'authorization_code',
+    };
+    const res = await fetch('https://oauth2.googleapis.com/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: JSON.stringify(body),
+    });
+    const data = await res.json();
+    return data;
+  }
+  async getUserByGoogleToken(token: string) {
+    const payload = token.split('.')[1];
+    const decoded = JSON.parse(atob(payload));
+    const { email, name, picture } = decoded;
+    return { email, name: decodeStringUTF8(name), profileImg: picture };
   }
 }
 const userServiceInstance = new UserService();

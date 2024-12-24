@@ -6,6 +6,8 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+const { OAuth2Client } = require('google-auth-library');
+
 dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET || '';
 class AuthController {
@@ -15,8 +17,7 @@ class AuthController {
       const newUser: User = {
         ...req.body,
         _id: new ObjectId(),
-        avatar:
-          'https://www.w3schools.com/howto/img_avatar.png',
+        avatar: 'https://www.w3schools.com/howto/img_avatar.png',
         status: UserStatus.PENDING,
         verifiedEmailToken: '',
         forgotPasswordToken: '',
@@ -124,69 +125,107 @@ class AuthController {
       });
     }
   }
+  // async googleLogin(req: Request, res: Response) {
+  //   try {
+  //     console.log('Google login request body:', req.body);
+  //     const { email } = req.body;
+  //     const user = await userServiceInstance.findUserByEmail(email);
+  //     if (!user) {
+  //       const generatedPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
+  //       const hashedPassword: string = await bcrypt.hash(generatedPassword, 10);
+  //       const newUser: User = {
+  //         name: req.body.name,
+  //         email,
+  //         password: hashedPassword,
+  //         status: UserStatus.ACTIVE,
+  //         avatar: req.body.profileImg,
+  //         verifiedEmailToken: '',
+  //         forgotPasswordToken: '',
+  //         refreshToken: '',
+  //         _id: new ObjectId(),
+  //         created_at: new Date().toISOString(),
+  //         updated_at: new Date().toISOString(),
+  //         isAdmin: false,
+  //       };
+  //       const result = await userServiceInstance.addUser(newUser);
+  //       if (!result) {
+  //         res.status(400).json({
+  //           EC: 1,
+  //           EM: 'Internal server error',
+  //         });
+  //       }
+  //     }
+  //     if (user) {
+  //       const accessToken = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '15m' });
+  //       const refreshToken = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1y' });
+  //       await userServiceInstance.updateLoginTokens(email, refreshToken);
+  //       const { password, ...userWithoutPassword } = user;
+  //       res.cookie('refreshToken', refreshToken, {
+  //         httpOnly: true,
+  //         sameSite: 'none',
+  //         secure: true,
+  //         // 1 year
+  //         maxAge: 7 * 24 * 60 * 60 * 1000,
+  //       });
+
+  //       res.status(200).json({
+  //         EC: 0,
+  //         EM: 'Login successful',
+  //         DT: {
+  //           ...userWithoutPassword,
+  //           accessToken,
+  //         },
+  //       });
+  //     } else {
+  //       res.status(400).json({
+  //         EC: 2,
+  //         EM: 'Internal server error',
+  //       });
+  //     }
+  //   } catch (error: any) {
+  //     res.status(400).json({
+  //       EC: 3,
+  //       EM: error.message,
+  //     });
+  //   }
+  // }
   async googleLogin(req: Request, res: Response) {
-    try {
-      console.log('Google login request body:', req.body);
-      const { email } = req.body;
-      const user = await userServiceInstance.findUserByEmail(email);
-      if (!user) {
-        const generatedPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
-        const hashedPassword: string = await bcrypt.hash(generatedPassword, 10);
+    const { existUser } = req.body;
+    if (!existUser) {
+      try {
+        const user = req.body.user;
         const newUser: User = {
-          name: req.body.name,
-          email,
-          password: hashedPassword,
+          ...user,
+          _id: new ObjectId(),
+          avatar: user.profileImg,
           status: UserStatus.ACTIVE,
-          avatar: req.body.profileImg,
           verifiedEmailToken: '',
           forgotPasswordToken: '',
           refreshToken: '',
-          _id: new ObjectId(),
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
           isAdmin: false,
         };
-        const result = await userServiceInstance.addUser(newUser);
-        if (!result) {
-          res.status(400).json({
-            EC: 1,
-            EM: 'Internal server error',
-          });
-        }
-      }
-      if (user) {
-        const accessToken = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '15m' });
-        const refreshToken = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1y' });
-        await userServiceInstance.updateLoginTokens(email, refreshToken);
-        const { password, ...userWithoutPassword } = user;
-        res.cookie('refreshToken', refreshToken, {
-          httpOnly: true,
-          sameSite: 'none',
-          secure: true,
-          // 1 year
-          maxAge: 7 * 24 * 60 * 60 * 1000,
-        });
-
-        res.status(200).json({
-          EC: 0,
-          EM: 'Login successful',
-          DT: {
-            ...userWithoutPassword,
-            accessToken,
-          },
-        });
-      } else {
+        req.body.user = newUser;
+        await userServiceInstance.addUser(newUser);
+      } catch (err: any) {
         res.status(400).json({
           EC: 2,
-          EM: 'Internal server error',
+          EM: err.message,
         });
+        return;
       }
-    } catch (error: any) {
-      res.status(400).json({
-        EC: 3,
-        EM: error.message,
-      });
     }
+    const accessToken = jwt.sign({ userId: req.body.user._id }, JWT_SECRET, { expiresIn: '15m' });
+    const refreshToken = jwt.sign({ userId: req.body.user._id }, JWT_SECRET, { expiresIn: '1y' });
+    await userServiceInstance.updateLoginTokens(req.body.user.email, refreshToken);
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+    res.redirect(`${process.env.APP_URL}/oauth?accessToken=${accessToken}&userId=${req.body.user._id}`);
   }
 
   async forgotPassword(req: Request, res: Response) {
