@@ -6,10 +6,11 @@ import { Post } from "@/entities";
 import sForum from "@/store/forumStore";
 import { useEffect, useState } from "react";
 import LoadingProgress from "@/components/LoadingProgress";
+import { useNavigate } from "react-router-dom";
 export default function ForumManagementPage() {
   const forumStore = sForum.use((cur) => cur.posts);
   const [posts, setPosts] = useState<Post[]>(forumStore);
-
+  const nav = useNavigate();
   useEffect(() => {
     if (forumStore.length > 0) {
       setPosts(forumStore);
@@ -138,7 +139,14 @@ export default function ForumManagementPage() {
         </ThemeProvider>
       </div>
       <div className="buttons flex gap-2 justify-end">
-        <Button variant="contained">Create post</Button>
+        <Button
+          onClick={() => {
+            nav("/forum/create-post");
+          }}
+          variant="contained"
+        >
+          Create post
+        </Button>
       </div>
     </>
   );

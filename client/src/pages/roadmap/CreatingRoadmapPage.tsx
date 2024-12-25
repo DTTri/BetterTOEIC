@@ -71,7 +71,6 @@ export default function CreatingRoadmapPage() {
         current_level: sCreatingPersonalRoadmap.value.startLevel,
       });
       if (res.EC === 0) {
-        toast("Create roadmap successfully", { type: "success" });
         sRoadmap.set(
           (pre) => (pre.value.userRoadmap = res.DT as RoadmapHistory)
         );

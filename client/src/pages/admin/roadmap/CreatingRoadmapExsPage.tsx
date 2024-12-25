@@ -144,7 +144,7 @@ export default function CreatingRoadmapExsPage() {
         });
         nav("/admin/roadmap");
       } else {
-        toast("Create roadmap exercise failed", {
+        toast("Create roadmap exercise failed: " + res.EM, {
           type: "error",
         });
       }
