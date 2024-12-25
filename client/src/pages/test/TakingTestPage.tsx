@@ -113,6 +113,7 @@ export default function TakingTestPage({ isEvaluation = false }) {
               fontWeight: "700",
               borderRadius: "10px",
               marginRight: "24px",
+              color: "#FFFFFF",
             }}
             variant="contained"
             color="success"

@@ -372,27 +372,32 @@ function App() {
         // });
       }
     };
-    const fetchData = async () => {
+    const fetchSecureData = async () => {
       await fetchAllUsers();
       await fetchUserRoadmap();
-
       await Promise.all([
         fetchUsersPerBand(),
-        fetchTests(),
         fetchTestHistory(),
         fetchTestSaved(),
-        fetchPracticeTests(),
         fetchPracticeTestHistory(),
         fetchPracticeLesson(),
         fetchPracticeLessonHistory(),
         fetchRoadmapExercises(),
-        fetchVocabs(),
         fetchSavedVocabs(),
         fetchVocabHistory(),
-        fetchForum(),
       ]);
     };
-    if (curUser && curUser !== "") fetchData();
+
+    const fetchNotSecureData = async () => {
+      await Promise.all([
+        fetchTests(),
+        fetchForum(),
+        fetchVocabs(),
+        fetchPracticeTests(),
+      ])
+    }
+    fetchNotSecureData();
+    if (curUser && curUser !== "") fetchSecureData();
   }, [userJustLoggedIn]);
 
   return (
