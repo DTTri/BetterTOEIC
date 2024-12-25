@@ -2,6 +2,7 @@ import { CreateRoadmapExerciseDTO, CreatePersonalRoadmapDTO, CompleteRoadmapExer
 import { Request, Response, NextFunction } from 'express';
 import { checkSchema, validationResult } from 'express-validator';
 import { start } from 'repl';
+import { roadmapServiceInstance } from '~/services';
 class RoadmapMiddleware {
   async createRoadmapExercise(req: Request, res: Response, next: NextFunction) {
     await checkSchema({
@@ -41,6 +42,18 @@ class RoadmapMiddleware {
             .join(', '),
         EC: 1,
         DT: errors.array(),
+      });
+      return;
+    }
+    const findExistedRoadmapChapter = roadmapServiceInstance.getRoadmapChapter(
+      req.body.phase,
+      req.body.part,
+      req.body.chapter
+    );
+    if (!findExistedRoadmapChapter) {
+      res.status(400).json({
+        EM: 'Roadmap chapter existed',
+        EC: 1,
       });
       return;
     }
