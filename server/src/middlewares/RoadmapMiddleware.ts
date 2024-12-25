@@ -45,12 +45,12 @@ class RoadmapMiddleware {
       });
       return;
     }
-    const findExistedRoadmapChapter = roadmapServiceInstance.getRoadmapChapter(
+    const findExistedRoadmapChapter = await roadmapServiceInstance.getRoadmapChapter(
       req.body.phase,
       req.body.part,
       req.body.chapter
     );
-    if (!findExistedRoadmapChapter) {
+    if (findExistedRoadmapChapter) {
       res.status(400).json({
         EM: 'Roadmap chapter existed',
         EC: 1,
