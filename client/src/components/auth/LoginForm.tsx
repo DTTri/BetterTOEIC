@@ -1,14 +1,20 @@
-
 import { v4 as uuidv4 } from "uuid";
-import google_icon from '@/assets/google_icon.svg';
-import authService from '@/services/authService';
-import { sUser } from '@/store';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from '@mui/material';
-import React, { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-
+import google_icon from "@/assets/google_icon.svg";
+import authService from "@/services/authService";
+import { sUser } from "@/store";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import {
+  Button,
+  FormControl,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  OutlinedInput,
+  TextField,
+} from "@mui/material";
+import React, { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function LoginForm() {
   const [email, setEmail] = React.useState("");
@@ -21,13 +27,12 @@ export default function LoginForm() {
   const nav = useNavigate();
 
   const handleLogin = async () => {
-
-    if(email === '' || password === '') {
-      toast.error('Please fill in all fields');
+    if (email === "" || password === "") {
+      toast.error("Please fill in all fields");
       return;
     }
-    if(!email.match(emailRegex)) {
-      toast.error('Please enter a valid email');
+    if (!email.match(emailRegex)) {
+      toast.error("Please enter a valid email");
       return;
     }
     try {
@@ -40,14 +45,11 @@ export default function LoginForm() {
           sessionStorage.setItem("token", response.DT.accessToken);
           sessionStorage.setItem("_id", response.DT._id);
         }
-        nav('/test');
-        toast.success('Login successfully');
+        nav("/test");
         sUser.set((prev) => {
           return (prev.value.info = response.DT);
         });
-
-      }
-      else{
+      } else {
         toast.error("Fail to login");
         console.log("Fail to login " + response.EM);
         setNoti(response.EM);
@@ -77,7 +79,6 @@ export default function LoginForm() {
     const queryString = new URLSearchParams(query).toString();
     return `${url}?${queryString}`;
   };
-
 
   useEffect(() => {
     setShow(true);
