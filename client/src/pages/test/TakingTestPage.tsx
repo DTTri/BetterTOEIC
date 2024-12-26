@@ -200,6 +200,7 @@ export default function TakingTestPage({ isEvaluation = false }) {
                   borderRadius: "10px",
                   marginTop: "24px",
                   marginLeft: "auto",
+                  color: "#FFFFFF",
                 }}
                 variant="contained"
                 color="success"

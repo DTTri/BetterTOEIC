@@ -33,6 +33,13 @@ class RoadmapService {
     }
     return null;
   }
+  async getRoadmapChapter(phase: number, part: number, chapter: number): Promise<RoadmapExercise | null> {
+    const result = await collections.roadmapExercises?.findOne({ phase, part, chapter });
+    if (result) {
+      return result as RoadmapExercise;
+    }
+    return null;
+  }
   async updateRoadmapHistory(userId: string, completedRoadmapExercise: CompletedRoadmapExercise): Promise<boolean> {
     const getUserRoadmapHistoryResult = await collections.roadmapHistories?.findOne({ _id: new ObjectId(userId) });
     const userRoadmapHistory = getUserRoadmapHistoryResult as RoadmapHistory;

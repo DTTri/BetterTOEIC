@@ -144,7 +144,7 @@ export default function CreatingRoadmapExsPage() {
         });
         nav("/admin/roadmap");
       } else {
-        toast("Create roadmap exercise failed", {
+        toast("Create roadmap exercise failed: " + res.EM, {
           type: "error",
         });
       }
@@ -159,6 +159,8 @@ export default function CreatingRoadmapExsPage() {
   };
   return (
     <div className="creating-test-container">
+      <h2 className="text-3xl font-bold">NEW CHAPTER</h2>
+      <hr />
       <div className="selects-container flex gap-4 items-center">
         <div className="flex gap-2 items-center">
           <p className="text-3xl font-bold">Phase:</p>

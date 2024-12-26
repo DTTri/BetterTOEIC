@@ -196,10 +196,11 @@ export default function PracticeManagementPage() {
         <Button
           variant="contained"
           onClick={() => {
-            nav("creatingPracticeEx");
+            if (isTestList) nav("creatingPracticeEx");
+            else nav("creatingPracticeLesson");
           }}
         >
-          Create exercise
+          {isTestList ? "Create Practice Test" : "Create Lesson"}
         </Button>
       </div>
     </>
