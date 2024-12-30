@@ -12,7 +12,6 @@ import Timer from "../../components/test/Timer";
 import { testService } from "@/services";
 
 import ClassifyTestScore from "@/utils/ClassifyTestScore";
-import getTestScore from "@/utils/CalculateTestScore";
 import CompleteTestDTO from "@/entities/DTOS/CompleteTestDTO";
 
 export default function TakingTestPage({ isEvaluation = false }) {
@@ -34,23 +33,23 @@ export default function TakingTestPage({ isEvaluation = false }) {
     });
   };
 
-  const countCorrectAnswerPerPart = () => {
-    const correctAnswerPerPart: number[] = Array(7).fill(0);
-    for (let i = 1; i <= 7; i++) {
-      let correctAnswer = 0;
-      selectedTest?.questions.forEach((question, index) => {
-        if (question.part === i) {
-          if (question.correct_choice === answers[index]) {
-            console.log(question.correct_choice);
-            console.log(answers[index]);
-            correctAnswer++;
-          }
-        }
-      });
-      correctAnswerPerPart[i - 1] = correctAnswer;
-    }
-    return correctAnswerPerPart;
-  };
+  // const countCorrectAnswerPerPart = () => {
+  //   const correctAnswerPerPart: number[] = Array(7).fill(0);
+  //   for (let i = 1; i <= 7; i++) {
+  //     let correctAnswer = 0;
+  //     selectedTest?.questions.forEach((question, index) => {
+  //       if (question.part === i) {
+  //         if (question.correct_choice === answers[index]) {
+  //           console.log(question.correct_choice);
+  //           console.log(answers[index]);
+  //           correctAnswer++;
+  //         }
+  //       }
+  //     });
+  //     correctAnswerPerPart[i - 1] = correctAnswer;
+  //   }
+  //   return correctAnswerPerPart;
+  // };
 
   const onSubmit = async () => {
     try {
@@ -62,14 +61,9 @@ export default function TakingTestPage({ isEvaluation = false }) {
       if (response.EC === 0) {
         console.log("Success: " + response.DT);
         if (isEvaluation) {
-          // user is taking the test for evaluation (creating roadmap)
-          // Logic for updating user level based on test result
-
-          const testScore = getTestScore(countCorrectAnswerPerPart());
-          console.log(testScore);
           sCreatingPersonalRoadmap.set((prev) => {
-            prev.value.startLevel = ClassifyTestScore(testScore);
-            prev.value.evaluationTestScore = testScore;
+            prev.value.startLevel = ClassifyTestScore(response.DT.score);
+            prev.value.evaluationTestScore = response.DT.score;
           });
           nav("/creating-roadmap");
         } else {
