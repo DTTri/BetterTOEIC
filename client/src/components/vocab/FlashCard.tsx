@@ -74,16 +74,16 @@ const Flashcard = ({
             fontSize="large"
           />
         </div>
-        <div className="img mx-auto max-w-[320px] max-h-[250px] rounded-[20px] mb-4">
+        <div className="img mx-auto max-w-[320px] h-[270px] rounded-[20px] mb-4">
           <img
-            className="w-full h-full object-cover object-center"
+            className="w-full h-full object-contain object-center"
             src={vocab.image}
             alt=""
           />
         </div>
 
-        <div className="word flex flex-col justify-center mb-4">
-          <div className="flex flex-row gap-[6px] justify-center items-end">
+        <div className="word flex flex-col justify-center mb-3">
+          <div className="flex flex-row gap-[4px] justify-center items-end">
             <h4 className=" text-3xl font-bold text-[#202224]">{vocab.word}</h4>
             <p className="text-[16px] font-medium text-[#202224]">
               ({vocab.type})
