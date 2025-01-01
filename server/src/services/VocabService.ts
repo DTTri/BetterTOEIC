@@ -13,7 +13,27 @@ class VocabService {
     return result ? true : false;
   }
   async deleteVocabTopic(topicId: string): Promise<boolean> {
-    const result = await collections.vocabTopics?.deleteOne({ _id: new ObjectId(topicId) });
+    const result = await Promise.all([
+      collections.vocabTopics?.deleteOne({ _id: new ObjectId(topicId) }),
+      async () => {
+        const userVocabHistory = (await collections.vocabHistories?.find().toArray()) as VocabHistory[];
+        if (userVocabHistory) {
+          userVocabHistory.forEach(async (user) => {
+            user.topics.filter((topic) => topic.topicId !== topicId);
+          });
+          collections.vocabHistories?.updateMany({}, { $set: { topics: userVocabHistory.map((user) => user.topics) } });
+        }
+      },
+      async () => {
+        const userVocabsSaved = (await collections.vocabsSaved?.find().toArray()) as VocabsSaved[];
+        if (userVocabsSaved) {
+          userVocabsSaved.forEach(async (user) => {
+            user.vocabs.filter((vocab) => vocab.topicId !== topicId);
+          });
+          collections.vocabsSaved?.updateMany({}, { $set: { vocabs: userVocabsSaved.map((user) => user.vocabs) } });
+        }
+      },
+    ]);
     return result ? true : false;
   }
   async getAllVocabTopics(): Promise<VocabTopic[] | null> {

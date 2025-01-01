@@ -15,7 +15,23 @@ class PracticeService {
     return result ? true : false;
   }
   async deletePracticeTest(practiceTestId: string): Promise<boolean> {
-    const result = await collections.practiceTests?.deleteOne({ _id: new ObjectId(practiceTestId) });
+    const result = await Promise.all([
+      collections.practiceTests?.deleteOne({ _id: new ObjectId(practiceTestId) }),
+      async () => {
+        const userPracticeTestHistory = (await collections.practiceTestHistories
+          ?.find()
+          .toArray()) as PracticeTestHistory[];
+        if (userPracticeTestHistory) {
+          userPracticeTestHistory.forEach(async (user) => {
+            user.completedPracticeTests.filter((test) => test.practiceTestId !== practiceTestId);
+          });
+          collections.practiceTestHistories?.updateMany(
+            {},
+            { $set: { completedPracticeTests: userPracticeTestHistory.map((user) => user.completedPracticeTests) } }
+          );
+        }
+      },
+    ]);
     return result ? true : false;
   }
 
