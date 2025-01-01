@@ -1,13 +1,22 @@
-import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridActionsCellItem,
+  GridColDef,
+  GridToolbar,
+} from "@mui/x-data-grid";
 import { Button, ThemeProvider } from "@mui/material";
 import { adminTableTheme } from "@/context";
-// import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { useNavigate } from "react-router-dom";
 import { testStore } from "@/store/testStore";
-// import { testService } from "@/services";
+import { useState } from "react";
+import { testService } from "@/services";
+import { toast } from "react-toastify";
 
 export default function TestManagementPage() {
   const nav = useNavigate();
+  const [isConfirmPopupOpen, setIsConfirmPopupOpen] = useState(false);
+  const [selectedTestId, setSelectedTestId] = useState<string>("");
   const columns: GridColDef[] = [
     {
       field: "_id",
@@ -69,40 +78,40 @@ export default function TestManagementPage() {
         );
       },
     },
-    // {
-    //   field: "delete",
-    //   type: "actions",
-    //   flex: 0.5,
-    //   getActions: (params) => [
-    //     <GridActionsCellItem
-    //       icon={<DeleteForeverIcon />}
-    //       label="Delete"
-    //       onClick={() => {
-    //         const deleteTest = async () => {
-    //           try {
-    //             const res = await testService.deleteTest(params.row._id);
-    //             if (res.EC === 0) {
-    //               console.log("Delete test success: ", res.DT);
-    //               testStore.set((pre) => {
-    //                 pre.value.testList = pre.value.testList.filter(
-    //                   (test) => test._id !== params.row._id
-    //                 );
-    //               });
-    //             } else {
-    //               console.log("Delete test failed: ", res.EM);
-    //             }
-    //           } catch (err) {
-    //             console.log(err);
-    //           }
-    //         };
-    //         deleteTest();
-    //       }}
-    //     />,
-    //   ],
-    // },
+    {
+      field: "delete",
+      type: "actions",
+      flex: 0.5,
+      getActions: (params) => [
+        <GridActionsCellItem
+          icon={<DeleteForeverIcon />}
+          label="Delete"
+          onClick={() => {
+            setSelectedTestId(params.id as string);
+            setIsConfirmPopupOpen(true);
+          }}
+        />,
+      ],
+    },
   ];
 
   const rows = testStore.use((v) => v.testList);
+  const handleDeleteTest = async () => {
+    try {
+      const res = await testService.deleteTest(selectedTestId);
+      setIsConfirmPopupOpen(false);
+      if (res.EC === 0) {
+        const newTests = rows.filter((test) => test._id !== selectedTestId);
+        testStore.set((pre) => (pre.value.testList = newTests));
+        toast.success("Test deleted successfully");
+      } else {
+        toast.error("Failed to delete test");
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Failed to delete test");
+    }
+  };
   return (
     <>
       <h2 className="text-2xl font-bold text-black">Tests List</h2>
@@ -139,6 +148,35 @@ export default function TestManagementPage() {
           Create Test
         </Button>
       </div>
+      {isConfirmPopupOpen && (
+        <div
+          className="
+        fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center"
+        >
+          <div className="bg-white rounded-xl p-4 w-1/3 flex flex-col items-center gap-2">
+            <h2 className="text-xl font-bold text-black text-center">
+              Are you sure you want to delete this test?
+            </h2>
+            <div className="flex gap-2 justify-center">
+              <Button
+                variant="contained"
+                onClick={() => {
+                  setIsConfirmPopupOpen(false);
+                }}
+              >
+                No
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={handleDeleteTest}
+              >
+                Yes
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

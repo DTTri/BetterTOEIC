@@ -4,7 +4,7 @@ import UserMiddlewareInstance from '~/middlewares/UserMiddleware';
 
 const userRouter = Router();
 userRouter.get('/', userControllerInstance.getAllUsers);
-userRouter.get('/:userId', userControllerInstance.getUserById);
+userRouter.get('/getUserById/:userId', userControllerInstance.getUserById);
 userRouter.put('/:userId', userControllerInstance.updateUser);
 userRouter.get('/totalUsersPerBand', userControllerInstance.getTotalUsersPerBand);
 userRouter.put(

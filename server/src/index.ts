@@ -2,7 +2,8 @@ import express, { Express, json } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import { connectDB } from './config/connectDB';
-import { practiceRouter, roadmapRouter, testRouter, vocabRouter, authRouter, userRouter, fileRouter } from './routes';import swaggerUi from 'swagger-ui-express';
+import { practiceRouter, roadmapRouter, testRouter, vocabRouter, authRouter, userRouter, fileRouter } from './routes';
+import swaggerUi from 'swagger-ui-express';
 import YAML from 'yaml';
 import fs from 'fs';
 import path from 'path';
@@ -20,7 +21,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api/test', testRouter);
 app.use('/api/practice', practiceRouter);
 app.use('/api/roadmap', roadmapRouter);
-app.use('/api/file', fileRouter)
+app.use('/api/file', fileRouter);
 app.use('/api/vocab', vocabRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);

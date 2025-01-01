@@ -9,7 +9,7 @@ class UserService {
     return await http.get(this.getURI(""));
   }
   async getUser(id: string) {
-    return await http.get(this.getURI(id));
+    return await http.get(this.getURI("getUserById/" + id));
   }
 
   async updateUser(id: string, data: object) {

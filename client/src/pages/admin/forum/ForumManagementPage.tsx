@@ -1,12 +1,13 @@
-import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
+import { DataGrid, GridActionsCellItem, GridColDef, GridToolbar } from "@mui/x-data-grid";
 import { Button, ThemeProvider } from "@mui/material";
 import { adminTableTheme } from "@/context";
 import { Post } from "@/entities";
-// import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import DeleteIcon from '@mui/icons-material/Delete';
 import sForum from "@/store/forumStore";
 import { useEffect, useState } from "react";
 import LoadingProgress from "@/components/LoadingProgress";
 import { useNavigate } from "react-router-dom";
+import { forumService } from "@/services";
 export default function ForumManagementPage() {
   const forumStore = sForum.use((cur) => cur.posts);
   const [posts, setPosts] = useState<Post[]>(forumStore);
@@ -19,6 +20,20 @@ export default function ForumManagementPage() {
 
   if (!posts) {
     return <LoadingProgress />;
+  }
+
+  const handleOnDeletePost = async (postId: string) => {
+    try {
+      const response = await forumService.deletePost(postId);
+      if (response.EC === 0) {
+        sForum.set((prev) => {
+          return prev.value.posts.filter((post) => post._id !== post._id);
+        });
+        setPosts(posts.filter((post) => post._id !== post._id));
+      }
+    } catch (error) {
+      console.log("Fail to delete post");
+    }
   }
 
   const columns: GridColDef[] = [
@@ -78,35 +93,22 @@ export default function ForumManagementPage() {
       headerAlign: "center",
       flex: 1,
     },
-    // {
-    //   field: "actions",
-    //   type: "actions",
-    //   align: "center",
-    //   headerAlign: "center",
-    //   flex: 1,
-    //   getActions: (params) => [
-    //     <GridActionsCellItem
-    //       icon={<DeleteForeverIcon />}
-    //       label="Delete"
-    //       onClick={async () => {
-    //         console.log("Deleted: ", params.row);
-    //         // Add delete logic here
-    //         try {
-    //           const response = await forumService.deletePost(params.row._id);
-    //           if (response.EC === 0) {
-    //             setPosts((prev) =>
-    //               prev.filter((post) => post._id !== params.row._id)
-    //             );
-    //           } else {
-    //             console.log("Error deleting post: ", response.EM);
-    //           }
-    //         } catch (error) {
-    //           console.log("Error deleting post: ", error);
-    //         }
-    //       }}
-    //     />,
-    //   ],
-    // },
+    {
+      field: "actions",
+      type: "actions",
+      align: "center",
+      headerAlign: "center",
+      flex: 1,
+      getActions: (params) => [
+        <GridActionsCellItem
+          icon={<DeleteIcon />}
+          label="Delete"
+          onClick={() => {
+            handleOnDeletePost(params.row._id);
+          }}
+        />,
+      ],
+    },
   ];
 
   // Map the posts array to rows
