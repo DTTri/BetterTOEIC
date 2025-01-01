@@ -1,15 +1,24 @@
-import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridActionsCellItem,
+  GridColDef,
+  GridToolbar,
+} from "@mui/x-data-grid";
 import { Button, ThemeProvider } from "@mui/material";
 import { adminTableTheme } from "@/context";
-// import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { practiceStore } from "@/store/practiceStore";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import practiceService from "@/services/practiceService";
+import { toast } from "react-toastify";
 export default function PracticeManagementPage() {
   const nav = useNavigate();
   const [isTestList, setIsTestList] = useState(true);
   const practiceTestList = practiceStore.use((v) => v.practiceTestList);
   const practiceLessonList = practiceStore.use((v) => v.practiceLesson);
+  const [selectedTestId, setSelectedTestId] = useState<string>("");
+  const [isConfirmPopupOpen, setIsConfirmPopupOpen] = useState<boolean>(false);
   const testRows = practiceTestList.map((ex, index) => ({
     ...ex,
     index: index + 1,
@@ -70,18 +79,22 @@ export default function PracticeManagementPage() {
       align: "center",
       headerAlign: "center",
     },
-    // {
-    //   field: "edit",
-    //   type: "actions",
-    //   flex: 0.3,
-    //   getActions: (params) => [
-    //     <GridActionsCellItem
-    //       icon={<ModeEditOutlineIcon />}
-    //       label="Edit"
-    //       onClick={() => console.log("Edit", params.row)}
-    //     />,
-    //   ],
-    // },
+    {
+      field: "delete",
+      type: "actions",
+      flex: 0.3,
+      getActions: (params) => [
+        <GridActionsCellItem
+          icon={<DeleteIcon />}
+          label="Delete"
+          onClick={() => {
+            console.log(params.row);
+            setSelectedTestId(params.id as string);
+            setIsConfirmPopupOpen(true);
+          }}
+        />,
+      ],
+    },
   ];
 
   const lessonRows = practiceLessonList.map((ex, index) => ({
@@ -155,6 +168,25 @@ export default function PracticeManagementPage() {
     //   ],
     // },
   ];
+
+  const handleDeletePracticeTest = async () => {
+    try {
+      const res = await practiceService.deletePraticeTest(selectedTestId);
+      setIsConfirmPopupOpen(false);
+      if (res.EC === 0) {
+        const newTestList = practiceTestList.filter(
+          (test) => test._id !== selectedTestId
+        );
+        practiceStore.set((pre) => (pre.value.practiceTestList = newTestList));
+        toast.success("Practice Test deleted successfully");
+      } else {
+        toast.error("Failed to delete Practice Test");
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Failed to delete Practice Test");
+    }
+  };
   return (
     <>
       <div className="header flex justify-between items-center">
@@ -203,6 +235,32 @@ export default function PracticeManagementPage() {
           {isTestList ? "Create Practice Test" : "Create Lesson"}
         </Button>
       </div>
+      {isConfirmPopupOpen && (
+        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white rounded-xl p-4 w-1/3 flex flex-col items-center gap-2">
+            <h2 className="text-xl font-bold text-center">
+              Are you sure you want to delete this topic?
+            </h2>
+            <div className="flex gap-4 justify-center">
+              <Button
+                variant="contained"
+                onClick={() => {
+                  setIsConfirmPopupOpen(false);
+                }}
+              >
+                No
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={handleDeletePracticeTest}
+              >
+                Yes
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

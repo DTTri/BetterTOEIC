@@ -174,8 +174,8 @@ export default function RoadmapManagementPage() {
       </div>
       {isConfirmPopupOpen && (
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white rounded-xl p-4 w-1/3">
-            <h2 className="text-xl font-bold mb-4 text-center">
+          <div className="bg-white rounded-xl p-4 w-1/3 flex flex-col items-center gap-2">
+            <h2 className="text-xl font-bold text-center">
               Are you sure you want to delete this chapter?
             </h2>
             <div className="flex gap-4 justify-center">
