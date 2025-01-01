@@ -1,11 +1,14 @@
-import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
+import { DataGrid, GridActionsCellItem, GridColDef, GridToolbar } from "@mui/x-data-grid";
 import { Button, ThemeProvider } from "@mui/material";
 import { adminTableTheme } from "@/context";
 // import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
+import DeleteIcon from '@mui/icons-material/Delete';
 import { VocabByTopic } from "@/entities";
 import { sVocab } from "@/store";
 import LoadingProgress from "@/components/LoadingProgress";
 import { useNavigate } from "react-router-dom";
+import vocabService from "@/services/vocabService";
+import { toast } from "react-toastify";
 
 export default function VocabManagementPage() {
   const vocabsByTopics = sVocab.use((state) => state.vocabTopics);
@@ -14,6 +17,20 @@ export default function VocabManagementPage() {
     return <LoadingProgress />;
   }
   const rows: VocabByTopic[] = vocabsByTopics;
+  const deleteVocab = async (id: string) => {
+    try {
+      const response = await vocabService.deleteVocabTopic(id);
+      if (response.EC === 0) {
+        toast.success("Delete vocab successfully");
+        sVocab.set(prev => prev.value.vocabTopics.filter(vocab => vocab._id !== id));
+        rows.filter(vocab => vocab._id !== id);
+      } else {
+        toast.error("Delete vocab failed" + response.EM);
+      }
+    } catch (error) {
+      toast.error("Error when deleting vocab");
+    }
+  }
   const columns: GridColDef[] = [
     {
       field: "_id",
@@ -73,6 +90,20 @@ export default function VocabManagementPage() {
     //     />,
     //   ],
     // },
+    {
+      field: "delete",
+      type: "actions",
+      flex: 0.3,
+      getActions: (params) => [
+        <GridActionsCellItem
+          icon={<DeleteIcon />}
+          label="Delete"
+          onClick={() => {
+            deleteVocab(params.row._id);
+          }}
+        />,
+      ],
+    },
   ];
 
   return (

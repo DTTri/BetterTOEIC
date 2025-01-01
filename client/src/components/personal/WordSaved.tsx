@@ -1,4 +1,5 @@
 import { SavedVocab } from "@/entities";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function WordSaved({ vocab }: { vocab: SavedVocab }) {
   return (
@@ -15,6 +16,7 @@ export default function WordSaved({ vocab }: { vocab: SavedVocab }) {
         <p className="text-base font-normal text-[#202224] ">
           {vocab.meaning_vi}
         </p>
+        <DeleteIcon className="cursor-pointer hover:bg-slate-200 rounded-full flex-1" />
       </div>
       <div className="w-full">
         <p className="text-base font-normal text-[#202224] text-wrap">
