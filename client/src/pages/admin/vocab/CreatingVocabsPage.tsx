@@ -70,7 +70,7 @@ export default function CreatingVocabsPage() {
 
   const handleCreateTopic = async () => {
     if (!topicName) {
-      alert("Please enter topic name");
+      toast.error("Please enter topic name");
       return;
     }
     setIsWaiting(true);

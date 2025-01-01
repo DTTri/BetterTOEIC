@@ -1,8 +1,13 @@
-import { DataGrid, GridActionsCellItem, GridColDef, GridToolbar } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridActionsCellItem,
+  GridColDef,
+  GridToolbar,
+} from "@mui/x-data-grid";
 import { Button, ThemeProvider } from "@mui/material";
 import { adminTableTheme } from "@/context";
 // import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
-import DeleteIcon from '@mui/icons-material/Delete'
+import DeleteIcon from "@mui/icons-material/Delete";
 import { VocabByTopic } from "@/entities";
 import { sVocab } from "@/store";
 import LoadingProgress from "@/components/LoadingProgress";
@@ -16,7 +21,7 @@ export default function VocabManagementPage() {
   const vocabsByTopics = sVocab.use((state) => state.vocabTopics);
   const nav = useNavigate();
   const [isConfirmPopupOpen, setIsConfirmPopupOpen] = useState<boolean>(false);
-  const [selectedTopicId, setSelectedTopicId] = useState<string>("");
+  const [selectedTopicId, _setSelectedTopicId] = useState<string>("");
   if (!vocabsByTopics) {
     return <LoadingProgress />;
   }
@@ -26,15 +31,17 @@ export default function VocabManagementPage() {
       const response = await vocabService.deleteVocabTopic(id);
       if (response.EC === 0) {
         toast.success("Delete vocab successfully");
-        sVocab.set(prev => prev.value.vocabTopics.filter(vocab => vocab._id !== id));
-        rows.filter(vocab => vocab._id !== id);
+        sVocab.set((prev) =>
+          prev.value.vocabTopics.filter((vocab) => vocab._id !== id)
+        );
+        rows.filter((vocab) => vocab._id !== id);
       } else {
         toast.error("Delete vocab failed" + response.EM);
       }
     } catch (error) {
       toast.error("Error when deleting vocab");
     }
-  }
+  };
   const columns: GridColDef[] = [
     {
       field: "_id",
@@ -102,7 +109,7 @@ export default function VocabManagementPage() {
         <GridActionsCellItem
           icon={<DeleteIcon />}
           label="Delete"
-          onClick={() => {            
+          onClick={() => {
             deleteVocab(params.row._id);
           }}
         />,
