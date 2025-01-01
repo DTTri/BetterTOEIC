@@ -2,17 +2,21 @@ import { DataGrid, GridActionsCellItem, GridColDef, GridToolbar } from "@mui/x-d
 import { Button, ThemeProvider } from "@mui/material";
 import { adminTableTheme } from "@/context";
 // import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from '@mui/icons-material/Delete'
 import { VocabByTopic } from "@/entities";
 import { sVocab } from "@/store";
 import LoadingProgress from "@/components/LoadingProgress";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+
 import vocabService from "@/services/vocabService";
 import { toast } from "react-toastify";
 
 export default function VocabManagementPage() {
   const vocabsByTopics = sVocab.use((state) => state.vocabTopics);
   const nav = useNavigate();
+  const [isConfirmPopupOpen, setIsConfirmPopupOpen] = useState<boolean>(false);
+  const [selectedTopicId, setSelectedTopicId] = useState<string>("");
   if (!vocabsByTopics) {
     return <LoadingProgress />;
   }
@@ -98,13 +102,31 @@ export default function VocabManagementPage() {
         <GridActionsCellItem
           icon={<DeleteIcon />}
           label="Delete"
-          onClick={() => {
+          onClick={() => {            
             deleteVocab(params.row._id);
           }}
         />,
       ],
     },
   ];
+
+  const handleDeleteTopic = async () => {
+    try {
+      const res = await vocabService.deleteVocabTopic(selectedTopicId);
+      if (res.EC === 0) {
+        const newVocabsByTopics = vocabsByTopics.filter(
+          (topic) => topic._id !== selectedTopicId
+        );
+        sVocab.set((pre) => (pre.value.vocabTopics = newVocabsByTopics));
+        toast.success("Topic deleted successfully");
+      } else {
+        toast.error("Failed to delete topic");
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Failed to delete topic");
+    }
+  };
 
   return (
     <>
@@ -140,6 +162,32 @@ export default function VocabManagementPage() {
       >
         <Button variant="contained">Create topic</Button>
       </div>
+      {isConfirmPopupOpen && (
+        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white rounded-xl p-4 w-1/3 flex flex-col items-center gap-2">
+            <h2 className="text-xl font-bold text-center">
+              Are you sure you want to delete this topic?
+            </h2>
+            <div className="flex gap-4 justify-center">
+              <Button
+                variant="contained"
+                onClick={() => {
+                  setIsConfirmPopupOpen(false);
+                }}
+              >
+                No
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={handleDeleteTopic}
+              >
+                Yes
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

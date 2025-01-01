@@ -106,15 +106,6 @@ export default function CreatingPracticeLessonsPage() {
       </div>
       <div className="w-full flex justify-end gap-2 items-center">
         <Button
-          variant="contained"
-          style={{
-            backgroundColor: "#D0E3FF",
-            color: "#1E3A8A",
-          }}
-        >
-          Refresh
-        </Button>
-        <Button
           onClick={handleCreate}
           variant="contained"
           style={{ backgroundColor: "#00205C" }}

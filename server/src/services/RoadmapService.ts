@@ -11,7 +11,18 @@ class RoadmapService {
   async deleteRoadmapExercise(roadmapExerciseId: string): Promise<boolean> {
     const result = await Promise.all([
       collections.roadmapExercises?.deleteOne({ _id: new ObjectId(roadmapExerciseId) }),
-      collections.roadmapHistories?.deleteMany({ 'completedRoadmapExercises.roadmapExerciseId': roadmapExerciseId }),
+      async () => {
+        const userRoadmapHistory = (await collections.roadmapHistories?.find().toArray()) as RoadmapHistory[];
+        if (userRoadmapHistory) {
+          userRoadmapHistory.forEach(async (user) => {
+            user.completedRoadmapExercises.filter((exercise) => exercise.roadmapExerciseId !== roadmapExerciseId);
+          });
+          collections.roadmapHistories?.updateMany(
+            {},
+            { $set: { completedRoadmapExercises: userRoadmapHistory.map((user) => user.completedRoadmapExercises) } }
+          );
+        }
+      },
     ]);
 
     return result ? true : false;

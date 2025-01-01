@@ -10,7 +10,33 @@ class TestService {
   }
 
   async deleteTest(testId: string): Promise<boolean> {
-    const result = await collections.tests?.deleteOne({ _id: new ObjectId(testId) });
+    const result = await Promise.all([
+      collections.tests?.deleteOne({ _id: new ObjectId(testId) }),
+      async () => {
+        const userTestHistory = (await collections.testHistories?.find().toArray()) as TestHistory[];
+        if (userTestHistory) {
+          userTestHistory.forEach(async (user) => {
+            user.completedTests.filter((test) => test.testId !== testId);
+          });
+          collections.testHistories?.updateMany(
+            {},
+            { $set: { completedTests: userTestHistory.map((user) => user.completedTests) } }
+          );
+        }
+      },
+      async () => {
+        const userTestsSaved = (await collections.testsSaved?.find().toArray()) as TestsSaved[];
+        if (userTestsSaved) {
+          userTestsSaved.forEach(async (user) => {
+            user.savedTests.filter((test) => test.testId !== testId);
+          });
+          collections.testsSaved?.updateMany(
+            {},
+            { $set: { savedTests: userTestsSaved.map((user) => user.savedTests) } }
+          );
+        }
+      },
+    ]);
     return result ? true : false;
   }
   async getAllTests(): Promise<Test[] | null> {
