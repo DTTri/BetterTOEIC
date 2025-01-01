@@ -23,12 +23,12 @@ class PracticeService {
           .toArray()) as PracticeTestHistory[];
         if (userPracticeTestHistory) {
           userPracticeTestHistory.forEach(async (user) => {
-            user.completedPracticeTests.filter((test) => test.practiceTestId !== practiceTestId);
+            user.completedPracticeTests = user.completedPracticeTests.filter(
+              (test) => test.practiceTestId !== practiceTestId
+            );
           });
-          collections.practiceTestHistories?.updateMany(
-            {},
-            { $set: { completedPracticeTests: userPracticeTestHistory.map((user) => user.completedPracticeTests) } }
-          );
+          await collections.practiceTestHistories?.deleteMany({});
+          await collections.practiceTestHistories?.insertMany(userPracticeTestHistory);
         }
       },
     ]);
@@ -62,7 +62,23 @@ class PracticeService {
     return result ? true : false;
   }
   async deletePracticeLesson(practiceLessonId: string): Promise<boolean> {
-    const result = await collections.practiceLessons?.deleteOne({ _id: new ObjectId(practiceLessonId) });
+    const result = await Promise.all([
+      collections.practiceLessons?.deleteOne({ _id: new ObjectId(practiceLessonId) }),
+      async () => {
+        const userPracticeLessonHistory = (await collections.practiceLessonHistories
+          ?.find()
+          .toArray()) as PracticeLessonHistory[];
+        if (userPracticeLessonHistory) {
+          userPracticeLessonHistory.forEach(async (user) => {
+            user.completedPracticeLessons = user.completedPracticeLessons.filter(
+              (lesson) => lesson.practiceLessonId !== practiceLessonId
+            );
+          });
+          await collections.practiceLessonHistories?.deleteMany({});
+          await collections.practiceLessonHistories?.insertMany(userPracticeLessonHistory);
+        }
+      },
+    ]);
     return result ? true : false;
   }
   async getAllPracticeLessons(): Promise<PracticeLesson[] | null> {

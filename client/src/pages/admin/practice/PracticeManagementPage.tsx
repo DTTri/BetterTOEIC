@@ -19,6 +19,9 @@ export default function PracticeManagementPage() {
   const practiceLessonList = practiceStore.use((v) => v.practiceLesson);
   const [selectedTestId, setSelectedTestId] = useState<string>("");
   const [isConfirmPopupOpen, setIsConfirmPopupOpen] = useState<boolean>(false);
+  const [selectedLessonId, setSelectedLessonId] = useState<string>("");
+  const [isConfirmLessonPopupOpen, setIsConfirmLessonPopupOpen] =
+    useState<boolean>(false);
   const testRows = practiceTestList.map((ex, index) => ({
     ...ex,
     index: index + 1,
@@ -155,18 +158,21 @@ export default function PracticeManagementPage() {
       align: "center",
       headerAlign: "center",
     },
-    // {
-    //   field: "edit",
-    //   type: "actions",
-    //   flex: 0.3,
-    //   getActions: (params) => [
-    //     <GridActionsCellItem
-    //       icon={<ModeEditOutlineIcon />}
-    //       label="Edit"
-    //       onClick={() => console.log("Edit", params.row)}
-    //     />,
-    //   ],
-    // },
+    {
+      field: "delete",
+      type: "actions",
+      flex: 0.3,
+      getActions: (params) => [
+        <GridActionsCellItem
+          icon={<DeleteIcon />}
+          label="Delete"
+          onClick={() => {
+            setSelectedLessonId(params.id as string);
+            setIsConfirmLessonPopupOpen(true);
+          }}
+        />,
+      ],
+    },
   ];
 
   const handleDeletePracticeTest = async () => {
@@ -185,6 +191,25 @@ export default function PracticeManagementPage() {
     } catch (err) {
       console.log(err);
       toast.error("Failed to delete Practice Test");
+    }
+  };
+
+  const handleDeletePracticeLesson = async () => {
+    try {
+      const res = await practiceService.deletePraticeLesson(selectedLessonId);
+      setIsConfirmLessonPopupOpen(false);
+      if (res.EC === 0) {
+        const newLessonList = practiceLessonList.filter(
+          (lesson) => lesson._id !== selectedLessonId
+        );
+        practiceStore.set((pre) => (pre.value.practiceLesson = newLessonList));
+        toast.success("Practice Lesson deleted successfully");
+      } else {
+        toast.error("Failed to delete Practice Lesson");
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Failed to delete Practice Lesson");
     }
   };
   return (
@@ -254,6 +279,32 @@ export default function PracticeManagementPage() {
                 variant="contained"
                 color="error"
                 onClick={handleDeletePracticeTest}
+              >
+                Yes
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+      {isConfirmLessonPopupOpen && (
+        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white rounded-xl p-4 w-1/3 flex flex-col items-center gap-2">
+            <h2 className="text-xl font-bold text-center">
+              Are you sure you want to delete this lesson?
+            </h2>
+            <div className="flex gap-4 justify-center">
+              <Button
+                variant="contained"
+                onClick={() => {
+                  setIsConfirmLessonPopupOpen(false);
+                }}
+              >
+                No
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={handleDeletePracticeLesson}
               >
                 Yes
               </Button>

@@ -9,20 +9,24 @@ class RoadmapService {
     return result ? true : false;
   }
   async deleteRoadmapExercise(roadmapExerciseId: string): Promise<boolean> {
+    console.log(roadmapExerciseId);
+    const updateUserRoadmapHistory = async () => {
+      const userRoadmapHistory = (await collections.roadmapHistories?.find().toArray()) as RoadmapHistory[];
+      if (userRoadmapHistory) {
+        userRoadmapHistory.forEach(async (user) => {
+          user.completedRoadmapExercises = user.completedRoadmapExercises.filter((exercise) => {
+            console.log(exercise.roadmapExerciseId + ' ' + roadmapExerciseId);
+            return exercise.roadmapExerciseId !== roadmapExerciseId;
+          });
+        });
+        await collections.roadmapHistories?.deleteMany({});
+        await collections.roadmapHistories?.insertMany(userRoadmapHistory);
+      }
+    };
     const result = await Promise.all([
       collections.roadmapExercises?.deleteOne({ _id: new ObjectId(roadmapExerciseId) }),
-      async () => {
-        const userRoadmapHistory = (await collections.roadmapHistories?.find().toArray()) as RoadmapHistory[];
-        if (userRoadmapHistory) {
-          userRoadmapHistory.forEach(async (user) => {
-            user.completedRoadmapExercises.filter((exercise) => exercise.roadmapExerciseId !== roadmapExerciseId);
-          });
-          collections.roadmapHistories?.updateMany(
-            {},
-            { $set: { completedRoadmapExercises: userRoadmapHistory.map((user) => user.completedRoadmapExercises) } }
-          );
-        }
-      },
+      ,
+      updateUserRoadmapHistory(),
     ]);
 
     return result ? true : false;
