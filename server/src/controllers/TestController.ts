@@ -3,6 +3,7 @@ import { ObjectId } from 'mongodb';
 import { CompletedTest, Test } from '~/models';
 import { CompleteTestDTO } from '~/models/DTOs';
 import { testServiceInstance } from '~/services';
+import getTestScore from '~/utils/CalculateTestScore';
 class TestController {
   async createTest(req: Request, res: Response) {
     try {
@@ -128,6 +129,7 @@ class TestController {
         ...completeTestDTO,
         correctAnswersPerPart,
         attempted_at: new Date().toISOString(),
+        score: getTestScore(correctAnswersPerPart, test.questions),
       };
       const result = await testServiceInstance.updateTestHistory(req.params.userId, completedTest);
       if (result) {

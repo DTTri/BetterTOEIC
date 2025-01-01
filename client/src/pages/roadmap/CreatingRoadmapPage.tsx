@@ -20,7 +20,7 @@ import { testStore } from "@/store/testStore";
 import { Button } from "@mui/material";
 import theme from "@/theme";
 import { toast } from "react-toastify";
-
+import geotag from "@/assets/geotag.png";
 export default function CreatingRoadmapPage() {
   const [currentStep, setCurrentStep] = useState(0);
   const [completeCreatingRoadmap, setCompleteCreatingRoadmap] = useState(false);
@@ -122,7 +122,7 @@ export default function CreatingRoadmapPage() {
               {/* THIẾT LẬP TRÌNH ĐỘ HIỆN TẠI */}
               SET YOUR CURRENT LEVEL
             </h3>
-            <img className="h-56" src="/src/assets/geotag.png" alt="geotag" />
+            <img className="h-56" src={geotag} alt="geotag" />
             <p className="text-xl font-bold text-center">
               {/* Để có được một lộ trình đúng đắn và cụ thể, hãy cho chúng tôi biết
               trình độ hiện tại của bạn! */}
@@ -160,10 +160,18 @@ export default function CreatingRoadmapPage() {
             </div>
           </SwiperSlide>
           <SwiperSlide className="step-1.2 flex flex-col gap-4">
-            <h3 className="text-3xl font-bold">
-              {/*ThIẾT LẬP TRÌNH ĐỘ HIỆN TẠI */}
-              SET YOUR CURRENT LEVEL
-            </h3>
+            <div className="flex gap-4 items-center">
+              <h3 className="text-3xl font-bold">
+                {/*ThIẾT LẬP TRÌNH ĐỘ HIỆN TẠI */}
+                SET YOUR CURRENT LEVEL
+              </h3>
+              {evaluationTestScore > -1 && (
+                <div className="px-2 py-1 border border-black rounded-md text-xl font-semibold">
+                  {/* Điểm TOEIC: {evaluationTestScore} */}
+                  Your evaluation test score: {evaluationTestScore}
+                </div>
+              )}
+            </div>
             <div className="level-chart-container w-3/4 mx-auto">
               <LevelChart isStartChart={true} />
             </div>
@@ -200,10 +208,15 @@ export default function CreatingRoadmapPage() {
             </div>
           </SwiperSlide>
           <SwiperSlide className="step-2 flex flex-col gap-4">
-            <h3 className=" text-3xl font-bold">
-              {/* THIẾT LẬP MỤC TIÊU */}
-              SET YOUR TARGET LEVEL
-            </h3>
+            <div className="flex gap-4 items-center">
+              <h3 className="text-3xl font-bold">SET YOUR TARGET LEVEL</h3>
+              {evaluationTestScore > -1 && (
+                <div className="px-2 py-1 border border-black rounded-md text-xl font-semibold">
+                  {/* Điểm TOEIC: {evaluationTestScore} */}
+                  Your evaluation test score: {evaluationTestScore}
+                </div>
+              )}
+            </div>
             <div className="level-chart-container w-3/4 mx-auto">
               <LevelChart isStartChart={false} />
             </div>
