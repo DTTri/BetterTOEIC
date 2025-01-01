@@ -1,7 +1,17 @@
 import { SavedVocab } from "@/entities";
+import SaveVocabDTO from "@/entities/DTOS/SaveVocabDTO";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-export default function WordSaved({ vocab }: { vocab: SavedVocab }) {
+export default function WordSaved({
+  vocab,
+  handleUnSaveVocab,
+  }
+    : 
+  {
+    vocab: SavedVocab;
+    handleUnSaveVocab: (vocab: SaveVocabDTO) => void;
+  })
+{
   return (
     <div className="w-full px-8 py-3 bg-[#D9E7FF] rounded-[30px] flex flex-col gap-[10px]">
       <div className="flex flex-row items-center gap-4">
@@ -16,7 +26,14 @@ export default function WordSaved({ vocab }: { vocab: SavedVocab }) {
         <p className="text-base font-normal text-[#202224] ">
           {vocab.meaning_vi}
         </p>
-        <DeleteIcon className="cursor-pointer hover:bg-slate-200 rounded-full flex-1" />
+        <div className="flex-1 justify-end flex flex-row">
+          <DeleteIcon onClick={() => {
+            handleUnSaveVocab({
+              ...vocab,
+              isSaving: false,
+            });
+          }} className=" max-w-5 h-5 cursor-pointer hover:bg-slate-300 rounded-full " />
+        </div>
       </div>
       <div className="w-full">
         <p className="text-base font-normal text-[#202224] text-wrap">
