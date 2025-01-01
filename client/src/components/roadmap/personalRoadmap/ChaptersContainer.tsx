@@ -84,7 +84,12 @@ export default function ChaptersContainer({
         {chapters.map((chapter, index) => (
           <ChapterItem
             key={chapter._id}
-            isDone={index < chapters.length - chaptersLeft}
+            isDone={
+              userRoadmap !== null &&
+              userRoadmap.completedRoadmapExercises.some(
+                (exercise) => exercise.roadmapExerciseId === chapter._id
+              )
+            }
             isUnlocked={index <= chapters.length - chaptersLeft}
             chapter={chapter.chapter}
             numberOfQuestions={chapter.questions.length}

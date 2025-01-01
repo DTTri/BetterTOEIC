@@ -9,7 +9,11 @@ class RoadmapService {
     return result ? true : false;
   }
   async deleteRoadmapExercise(roadmapExerciseId: string): Promise<boolean> {
-    const result = await collections.roadmapExercises?.deleteOne({ _id: new ObjectId(roadmapExerciseId) });
+    const result = await Promise.all([
+      collections.roadmapExercises?.deleteOne({ _id: new ObjectId(roadmapExerciseId) }),
+      collections.roadmapHistories?.deleteMany({ 'completedRoadmapExercises.roadmapExerciseId': roadmapExerciseId }),
+    ]);
+
     return result ? true : false;
   }
   async getAllRoadmapExercises(): Promise<RoadmapExercise[] | null> {

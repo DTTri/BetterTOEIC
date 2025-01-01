@@ -1,11 +1,22 @@
-import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridActionsCellItem,
+  GridColDef,
+  GridToolbar,
+} from "@mui/x-data-grid";
 import { Button, ThemeProvider } from "@mui/material";
 import { adminTableTheme } from "@/context";
-// import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { sRoadmap } from "@/store";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { roadmapService } from "@/services";
+import { toast } from "react-toastify";
 export default function RoadmapManagementPage() {
   const nav = useNavigate();
+  const [isConfirmPopupOpen, setIsConfirmPopupOpen] = useState<boolean>(false);
+  const [selectedRoadmapExercise, setSelectedRoadmapExercise] =
+    useState<string>("");
   const columns: GridColDef[] = [
     {
       field: "index",
@@ -63,21 +74,21 @@ export default function RoadmapManagementPage() {
       align: "center",
       headerAlign: "center",
     },
-    // {
-    //   field: "edit",
-    //   type: "actions",
-    //   flex: 0.5,
-    //   getActions: (params) => [
-    //     <GridActionsCellItem
-    //       icon={<ModeEditOutlineIcon />}
-    //       label="Edit"
-    //       onClick={() => {
-    //         console.log(params.row);
-    //         // nav(`/admin/roadmap/edit/${params.row._id}`);
-    //       }}
-    //     />,
-    //   ],
-    // },
+    {
+      field: "delete",
+      type: "actions",
+      flex: 0.5,
+      getActions: (params) => [
+        <GridActionsCellItem
+          icon={<DeleteIcon />}
+          label="Delete"
+          onClick={() => {
+            setSelectedRoadmapExercise(params.row._id);
+            setIsConfirmPopupOpen(true);
+          }}
+        />,
+      ],
+    },
   ];
   const roadmapExercises = sRoadmap.use((v) => v.exercises);
   const rows = roadmapExercises.map((exercise, index) => {
@@ -101,6 +112,28 @@ export default function RoadmapManagementPage() {
         .join("/"),
     };
   });
+
+  const handleDeleteChapter = async () => {
+    try {
+      const res = await roadmapService.deleteRoadmapExercise(
+        selectedRoadmapExercise
+      );
+      setIsConfirmPopupOpen(false);
+      if (res.EC === 0) {
+        const newRoadmapExercises = roadmapExercises.filter(
+          (exercise) => exercise._id !== selectedRoadmapExercise
+        );
+        sRoadmap.set((pre) => (pre.value.exercises = newRoadmapExercises));
+        toast.success("Chapter deleted successfully");
+      } else {
+        console.log(res.EM);
+        toast.error("Failed to delete chapter");
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Failed to delete chapter");
+    }
+  };
 
   return (
     <>
@@ -139,6 +172,32 @@ export default function RoadmapManagementPage() {
           Create Chapter
         </Button>
       </div>
+      {isConfirmPopupOpen && (
+        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white rounded-xl p-4 w-1/3">
+            <h2 className="text-xl font-bold mb-4 text-center">
+              Are you sure you want to delete this chapter?
+            </h2>
+            <div className="flex gap-4 justify-center">
+              <Button
+                variant="contained"
+                onClick={() => {
+                  setIsConfirmPopupOpen(false);
+                }}
+              >
+                No
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={handleDeleteChapter}
+              >
+                Yes
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
