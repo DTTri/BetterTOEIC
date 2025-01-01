@@ -307,7 +307,7 @@ class PracticeController {
           DT: practiceTestHistory.completedPracticeTests,
         });
       } else {
-        res.status(404).json({
+        res.status(400).json({
           EM: 'Practice test history not found',
           EC: 1,
         });
