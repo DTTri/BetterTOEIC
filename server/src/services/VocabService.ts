@@ -19,18 +19,20 @@ class VocabService {
         const userVocabHistory = (await collections.vocabHistories?.find().toArray()) as VocabHistory[];
         if (userVocabHistory) {
           userVocabHistory.forEach(async (user) => {
-            user.topics.filter((topic) => topic.topicId !== topicId);
+            user.topics = user.topics.filter((topic) => topic.topicId !== topicId);
           });
-          collections.vocabHistories?.updateMany({}, { $set: { topics: userVocabHistory.map((user) => user.topics) } });
+          await collections.vocabHistories?.deleteMany({});
+          await collections.vocabHistories?.insertMany(userVocabHistory);
         }
       },
       async () => {
         const userVocabsSaved = (await collections.vocabsSaved?.find().toArray()) as VocabsSaved[];
         if (userVocabsSaved) {
           userVocabsSaved.forEach(async (user) => {
-            user.vocabs.filter((vocab) => vocab.topicId !== topicId);
+            user.vocabs = user.vocabs.filter((vocab) => vocab.topicId !== topicId);
           });
-          collections.vocabsSaved?.updateMany({}, { $set: { vocabs: userVocabsSaved.map((user) => user.vocabs) } });
+          await collections.vocabsSaved?.deleteMany({});
+          await collections.vocabsSaved?.insertMany(userVocabsSaved);
         }
       },
     ]);

@@ -16,24 +16,20 @@ class TestService {
         const userTestHistory = (await collections.testHistories?.find().toArray()) as TestHistory[];
         if (userTestHistory) {
           userTestHistory.forEach(async (user) => {
-            user.completedTests.filter((test) => test.testId !== testId);
+            user.completedTests = user.completedTests.filter((test) => test.testId !== testId);
           });
-          collections.testHistories?.updateMany(
-            {},
-            { $set: { completedTests: userTestHistory.map((user) => user.completedTests) } }
-          );
+          await collections.testHistories?.deleteMany({});
+          await collections.testHistories?.insertMany(userTestHistory);
         }
       },
       async () => {
         const userTestsSaved = (await collections.testsSaved?.find().toArray()) as TestsSaved[];
         if (userTestsSaved) {
           userTestsSaved.forEach(async (user) => {
-            user.savedTests.filter((test) => test.testId !== testId);
+            user.savedTests = user.savedTests.filter((test) => test.testId !== testId);
           });
-          collections.testsSaved?.updateMany(
-            {},
-            { $set: { savedTests: userTestsSaved.map((user) => user.savedTests) } }
-          );
+          await collections.testsSaved?.deleteMany({});
+          await collections.testsSaved?.insertMany(userTestsSaved);
         }
       },
     ]);
