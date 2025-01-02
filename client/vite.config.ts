@@ -18,6 +18,12 @@ export default defineConfig({
     commonjsOptions: {
       ignoreTryCatch: false, // Bỏ qua một số kiểm tra
     },
+    terserOptions: {
+      compress: {
+        drop_console: true, // Xóa tất cả console.log
+        drop_debugger: true, // Xóa debugger
+      },
+    }
   },
   esbuild: {
     exclude: /node_modules/,
