@@ -3,6 +3,7 @@ import LoadingProgress from "@/components/LoadingProgress";
 import CreateVocabDTO from "@/entities/DTOS/CreateVocabDTO";
 import http from "@/services/http";
 import vocabService from "@/services/vocabService";
+import { sVocab } from "@/store";
 import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -112,6 +113,7 @@ export default function CreatingVocabsPage() {
       const responseTopic = await vocabService.createVocabTopic(topicData);
       if (responseTopic.EC === 0) {
         toast("Create topic successfully", { type: "success" });
+        sVocab.set((pre) => pre.value.vocabTopics.push(responseTopic.data));
         setIsWaiting(false);
         nav("/admin/vocab");
       }

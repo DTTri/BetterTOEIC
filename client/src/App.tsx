@@ -561,7 +561,7 @@ function App() {
           <Route
             path="/forum"
             element={
-              <UserLayout haveFooter={false}>
+              <UserLayout haveFooter={false} passAll={true}>
                 <ForumPage />
               </UserLayout>
             }
