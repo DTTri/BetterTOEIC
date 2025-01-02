@@ -59,7 +59,7 @@ export default function CommentComponent({
         <Avatar
           style={{ width: "40px", height: "40px" }}
           alt="avatar"
-          src="https://www.w3schools.com/howto/img_avatar.png"
+          src={comment.creator.avatar}
         />
         <div className="flex-1 flex flex-col ml-2">
           <h1 className="text-[15px] font-semibold">

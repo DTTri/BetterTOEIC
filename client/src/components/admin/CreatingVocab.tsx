@@ -2,6 +2,7 @@ import { Button, IconButton, MenuItem, Select } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useRef, useState } from "react";
 import CreateVocabDTO from "@/entities/DTOS/CreateVocabDTO";
+import { toast } from "react-toastify";
 export default function CreatingVocab({
   vocabId,
   vocabNumber,
@@ -27,7 +28,7 @@ export default function CreatingVocab({
       !inpRef.current.spelling ||
       !inpRef.current.type
     ) {
-      alert("Please fill all fields");
+      toast.error("Please fill all fields");
       return;
     }
     setIsSaved(!isSaved);

@@ -10,13 +10,8 @@ export default defineConfig({
     },
   },
   build: {
-    rollupOptions: {
-      external: [
-        'react-dropzone-uploader' // Thêm thư viện gây lỗi vào đây
-      ],
-    },
     commonjsOptions: {
-      ignoreTryCatch: false, // Bỏ qua một số kiểm tra
+      ignoreTryCatch: false,
     },
   },
   esbuild: {

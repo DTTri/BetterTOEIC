@@ -21,27 +21,11 @@ export default function VocabManagementPage() {
   const vocabsByTopics = sVocab.use((state) => state.vocabTopics);
   const nav = useNavigate();
   const [isConfirmPopupOpen, setIsConfirmPopupOpen] = useState<boolean>(false);
-  const [selectedTopicId, _setSelectedTopicId] = useState<string>("");
+  const [selectedTopicId, setSelectedTopicId] = useState<string>("");
   if (!vocabsByTopics) {
     return <LoadingProgress />;
   }
   const rows: VocabByTopic[] = vocabsByTopics;
-  const deleteVocab = async (id: string) => {
-    try {
-      const response = await vocabService.deleteVocabTopic(id);
-      if (response.EC === 0) {
-        toast.success("Delete vocab successfully");
-        sVocab.set((prev) =>
-          prev.value.vocabTopics.filter((vocab) => vocab._id !== id)
-        );
-        rows.filter((vocab) => vocab._id !== id);
-      } else {
-        toast.error("Delete vocab failed" + response.EM);
-      }
-    } catch (error) {
-      toast.error("Error when deleting vocab");
-    }
-  };
   const columns: GridColDef[] = [
     {
       field: "_id",
@@ -110,7 +94,8 @@ export default function VocabManagementPage() {
           icon={<DeleteIcon />}
           label="Delete"
           onClick={() => {
-            deleteVocab(params.row._id);
+            setSelectedTopicId(params.row._id);
+            setIsConfirmPopupOpen(true);
           }}
         />,
       ],
@@ -187,7 +172,10 @@ export default function VocabManagementPage() {
               <Button
                 variant="contained"
                 color="error"
-                onClick={handleDeleteTopic}
+                onClick={() => {
+                  handleDeleteTopic();
+                  setIsConfirmPopupOpen(false);
+                }}
               >
                 Yes
               </Button>
