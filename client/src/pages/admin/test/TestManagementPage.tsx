@@ -32,7 +32,16 @@ export default function TestManagementPage() {
       align: "center",
       headerAlign: "center",
     },
-
+    {
+      field: "type",
+      headerName: "TYPE",
+      flex: 1,
+      align: "center",
+      headerAlign: "center",
+      valueGetter: (_, row) => {
+        return row.isMiniTest ? "Mini Test" : "Full Test";
+      },
+    },
     {
       field: "created_by",
       headerName: "CREATOR",
@@ -46,6 +55,9 @@ export default function TestManagementPage() {
       flex: 0.8,
       align: "center",
       headerAlign: "center",
+      valueGetter: (_, row) => {
+        return row.created_at.split("T")[0].split("-").reverse().join("/");
+      },
     },
     {
       field: "updated_at",
@@ -53,6 +65,9 @@ export default function TestManagementPage() {
       flex: 0.8,
       align: "center",
       headerAlign: "center",
+      valueGetter: (_, row) => {
+        return row.updated_at.split("T")[0].split("-").reverse().join("/");
+      },
     },
     {
       field: "difficulty",

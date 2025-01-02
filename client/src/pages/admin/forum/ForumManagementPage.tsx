@@ -1,8 +1,13 @@
-import { DataGrid, GridActionsCellItem, GridColDef, GridToolbar } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridActionsCellItem,
+  GridColDef,
+  GridToolbar,
+} from "@mui/x-data-grid";
 import { Button, ThemeProvider } from "@mui/material";
 import { adminTableTheme } from "@/context";
 import { Post } from "@/entities";
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from "@mui/icons-material/Delete";
 import sForum from "@/store/forumStore";
 import { useEffect, useState } from "react";
 import LoadingProgress from "@/components/LoadingProgress";
@@ -34,7 +39,7 @@ export default function ForumManagementPage() {
     } catch (error) {
       console.log("Fail to delete post");
     }
-  }
+  };
 
   const columns: GridColDef[] = [
     {
@@ -68,6 +73,9 @@ export default function ForumManagementPage() {
       align: "center",
       headerAlign: "center",
       flex: 1,
+      valueGetter: (_, row) => {
+        return row.totalLike.length;
+      },
     },
     {
       field: "totalComment",
@@ -75,7 +83,7 @@ export default function ForumManagementPage() {
       align: "center",
       headerAlign: "center",
       flex: 1,
-      valueGetter: (_value, row) => {
+      valueGetter: (_, row) => {
         return row.comments.length;
       },
     },
@@ -85,6 +93,9 @@ export default function ForumManagementPage() {
       align: "center",
       headerAlign: "center",
       flex: 1,
+      valueGetter: (_, row) => {
+        return row.created_at.split("T")[0].split("-").reverse().join("/");
+      },
     },
     {
       field: "updated_at",
@@ -92,6 +103,9 @@ export default function ForumManagementPage() {
       align: "center",
       headerAlign: "center",
       flex: 1,
+      valueGetter: (_, row) => {
+        return row.updated_at.split("T")[0].split("-").reverse().join("/");
+      },
     },
     {
       field: "actions",

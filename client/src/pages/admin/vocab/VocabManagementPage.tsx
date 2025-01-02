@@ -73,8 +73,8 @@ export default function VocabManagementPage() {
       flex: 1,
       align: "center",
       headerAlign: "center",
-      valueFormatter: (_params, row) => {
-        return new Date(row.created_at).toLocaleString();
+      valueFormatter: (_, row) => {
+        return row.created_at.split("T")[0].split("-").reverse().join("/");
       },
     },
     {
@@ -83,8 +83,8 @@ export default function VocabManagementPage() {
       flex: 1,
       align: "center",
       headerAlign: "center",
-      valueFormatter: (_params, row) => {
-        return new Date(row.updated_at).toLocaleString();
+      valueFormatter: (_, row) => {
+        return row.updated_at.split("T")[0].split("-").reverse().join("/");
       },
     },
     // {

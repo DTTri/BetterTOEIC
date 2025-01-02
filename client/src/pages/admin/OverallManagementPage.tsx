@@ -2,6 +2,7 @@ import { sUser } from "@/store";
 import sForum from "@/store/forumStore";
 import { LineChart } from "@mui/x-charts/LineChart";
 import { PieChart } from "@mui/x-charts/PieChart";
+import { useEffect, useState } from "react";
 
 export default function OverallManagementPage() {
   console.log("OverallManagementPage");
@@ -15,14 +16,6 @@ export default function OverallManagementPage() {
     ).length;
   };
   const newUsersPerMonthData = [
-    {
-      month: "January",
-      newUsers: getNewUsersPerMonth("2024-01-01", "2024-01-31"),
-    },
-    {
-      month: "February",
-      newUsers: getNewUsersPerMonth("2024-02-01", "2024-02-29"),
-    },
     {
       month: "March",
       newUsers: getNewUsersPerMonth("2024-03-01", "2024-03-31"),
@@ -59,47 +52,67 @@ export default function OverallManagementPage() {
       month: "November",
       newUsers: getNewUsersPerMonth("2024-11-01", "2024-11-30"),
     },
+    {
+      month: "December",
+      newUsers: getNewUsersPerMonth("2024-12-01", "2024-12-31"),
+    },
   ];
   const totalUsersPerBand: number[] = sUser.use((v) => v.usersPerBand);
 
-  const averageScoreData = [
+  const scoreBandsPercent = [0, 0, 0, 0, 0];
+  const [averageScoreData, setAverageScoreData] = useState<
+    {
+      label: string;
+      value: number;
+      color: string;
+    }[]
+  >([
     {
       label: "10 - 215",
-      value: Math.floor((totalUsersPerBand[0] / totalUsers) * 100),
+      value: scoreBandsPercent[0],
       color: "#B3AA00",
     },
     {
       label: "220 - 465",
-      value: Math.floor((totalUsersPerBand[1] / totalUsers) * 100),
+      value: scoreBandsPercent[1],
       color: "#00871D",
     },
     {
       label: "470 - 725",
-      value: Math.floor((totalUsersPerBand[2] / totalUsers) * 100),
+      value: scoreBandsPercent[2],
       color: "#1CCF00",
     },
     {
       label: "730 - 855",
-      value: Math.floor((totalUsersPerBand[3] / totalUsers) * 100),
+      value: scoreBandsPercent[3],
       color: "#005F88",
     },
     {
       label: "860 - 990",
-      value: Math.floor((totalUsersPerBand[4] / totalUsers) * 100),
+      value: scoreBandsPercent[4],
       color: "#DDFF00",
     },
-  ];
+  ]);
+  useEffect(() => {
+    if (totalUsersPerBand.length > 0) {
+      const totalUsers = totalUsersPerBand.reduce((acc, cur) => acc + cur, 0);
+      totalUsersPerBand.forEach((band, index) => {
+        scoreBandsPercent[index] = Math.floor((band / totalUsers) * 100);
+      });
+      setAverageScoreData(
+        averageScoreData.map((data, index) => ({
+          ...data,
+          value: scoreBandsPercent[index],
+        }))
+      );
+
+      console.log("scoreBandsPercent", scoreBandsPercent);
+    }
+  }, [totalUsersPerBand]);
+
   const posts = sForum.use((v) => v.posts);
   const totalPostCreated = posts.length;
   const postsCreatedPerMonthData = [
-    {
-      month: "May",
-      postCreated: posts.filter(
-        (post) =>
-          post.created_at.split("T")[0] >= "2024-05-01" &&
-          post.created_at.split("T")[0] <= "2024-05-31"
-      ).length,
-    },
     {
       month: "June",
       postCreated: posts.filter(
@@ -148,10 +161,28 @@ export default function OverallManagementPage() {
           post.created_at.split("T")[0] <= "2024-11-30"
       ).length,
     },
+    {
+      month: "December",
+      postCreated: posts.filter(
+        (post) =>
+          post.created_at.split("T")[0] >= "2024-12-01" &&
+          post.created_at.split("T")[0] <= "2024-12-31"
+      ).length,
+    },
+    {
+      month: "January",
+      postCreated: posts.filter(
+        (post) =>
+          post.created_at.split("T")[0] >= "2025-01-01" &&
+          post.created_at.split("T")[0] <= "2025-01-31"
+      ).length,
+    },
   ];
 
+  console.log("postsCreatedPerMonthData", postsCreatedPerMonthData);
+
   return (
-    <div className="w-full h-full flex flex-wrap justify-between">
+    <div className="w-full h-full flex flex-wrap justify-between gap-y-6">
       {/* TODO: make this reponsive when screen size is small, adjust the this flex */}
       <div className="new-users-info basis-full h-[45vh] flex flex-col gap-2">
         <div className="new-users-info__header flex items-center gap-2">
@@ -219,7 +250,7 @@ export default function OverallManagementPage() {
             series={[
               {
                 type: "line",
-                dataKey: "postAccess",
+                dataKey: "postCreated",
                 area: true,
                 color: "#1814F3",
               },
