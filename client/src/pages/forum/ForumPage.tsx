@@ -6,8 +6,10 @@ import LoadingProgress from "@/components/LoadingProgress";
 import Post from "@/entities/Post";
 import { sUser } from "@/store";
 import sForum from "@/store/forumStore";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { LazyMotion, domAnimation } from "motion/react";
+import { LazyLoadComponent } from "react-lazy-load-image-component";
+import { PostComponentSkeleton } from "@/components/forum/skeletons";
 
 export default function ForumPage() {
   const forumStore = sForum.use((cur) => cur.posts);
@@ -66,11 +68,11 @@ export default function ForumPage() {
         <PostSearchBar filterPost={filterPost} searchPost={searchPost} />
         <div className="content-post flex flex-col py-10 px-9 w-[70%] gap-6">
           <PostSharing />
-          <LazyMotion features={domAnimation} strict>
+          <LazyLoadComponent placeholder={<PostComponentSkeleton/>}>
             {posts.map((post) => (
               <PostComponent userInfo={user._id} key={post._id} post={post} />
             ))}
-          </LazyMotion>
+          </LazyLoadComponent>
         </div>
         <div className="py-10 px-5 pl-1 gap-7 w-[30%]">
           <MustRead postLists={forumStore} />

@@ -11,7 +11,10 @@ export default function VocabLearingPage() {
   const { id } = useParams();
   const userId = sUser.use((state) => state.info._id);
 
-  const vocabTopic = sVocab.slice((state) => state.vocabTopics).use().find((vocab) => vocab._id === id);
+  const vocabTopic = sVocab
+    .slice((state) => state.vocabTopics)
+    .use()
+    .find((vocab) => vocab._id === id);
   const [vocabs, setVocabs] = useState<Vocab[]>(vocabTopic?.vocabs || []);
 
   const vocabHistory = sVocab.use((cur) => cur.vocabHistory);
@@ -22,7 +25,7 @@ export default function VocabLearingPage() {
 
   useEffect(() => {
     if (vocabTopic) {
-      if(!selectedVocab){
+      if (!selectedVocab) {
         setSelectedVocab(vocabs[0]);
       }
       setVocabs(vocabTopic?.vocabs);
@@ -52,7 +55,20 @@ export default function VocabLearingPage() {
       });
       if (response.EC === 0) {
         setCompletedVocabs([...completedVocabs, vocabs[index]._id]);
-        sVocab.set(prev => prev.value.vocabHistory = prev.value.vocabHistory.map(history => history.topicId === id ? {...history, completedVocabs: [...history.completedVocabs, vocabs[index]._id]} : history));
+        sVocab.set(
+          (prev) =>
+            (prev.value.vocabHistory = prev.value.vocabHistory.map((history) =>
+              history.topicId === id
+                ? {
+                    ...history,
+                    completedVocabs: [
+                      ...history.completedVocabs,
+                      vocabs[index]._id,
+                    ],
+                  }
+                : history
+            ))
+        );
         console.log("Change remembered status successfully");
         setCurVocabQuestionNumber(curVocabQuestionNumber + 1);
         setSelectedVocab(vocabs[curVocabQuestionNumber + 1]);
@@ -70,23 +86,24 @@ export default function VocabLearingPage() {
   }
 
   return (
-      <div className="w-full h-screen flex flex-row items-stretch">
-        <LeftBarVocab VocabLists={sVocab.value.vocabTopics} />
-        <div className="w-full flex flex-col gap-4 py-4 px-6">
-          <FlashCard
-            topicName={vocabTopic.name}
-            vocabNumber={curVocabQuestionNumber}
-            onVocabRemember={handleOnRememberedChange}
-            vocab={selectedVocab || vocabs[0]}
-          />
-          <QuestionPalette
-            numberOfQuestions={vocabs.length}
-            onQuestionSelectedChange={handleOnQuestionNumberChange}
-            vocabs={vocabs}
-            completedVocabs={completedVocabs}
-            curQuestionNumber={curVocabQuestionNumber}
-          />
-        </div>
+    <div className="w-full h-screen flex flex-row items-stretch">
+      <LeftBarVocab VocabLists={sVocab.value.vocabTopics} />
+      <div className="w-full flex flex-col gap-4 py-4 px-6">
+        <FlashCard
+          topicName={vocabTopic.name}
+          vocabNumber={curVocabQuestionNumber}
+          onVocabRemember={handleOnRememberedChange}
+          vocab={selectedVocab || vocabs[0]}
+        />
+
+        <QuestionPalette
+          numberOfQuestions={vocabs.length}
+          onQuestionSelectedChange={handleOnQuestionNumberChange}
+          vocabs={vocabs}
+          completedVocabs={completedVocabs}
+          curQuestionNumber={curVocabQuestionNumber}
+        />
       </div>
+    </div>
   );
 }

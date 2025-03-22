@@ -79,10 +79,10 @@ function App() {
             });
           }
         } else {
-          console.log("Fail to fetch all users: ", response.EM);
+          //console.log("Fail to fetch all users: ", response.EM);
         }
       } catch (error) {
-        console.log("Fail to fetch all users: ", error);
+        //console.log("Fail to fetch all users: ", error);
       }
     };
 
@@ -424,27 +424,12 @@ function App() {
             <Route path="user" element={<UserManagementPage />} />
             <Route path="vocab" element={<VocabManagementPage />} />
             <Route path="test/creatingTest" element={<CreatingTestPage />} />
-            <Route
-              path="test/creatingMiniTest"
-              element={<CreatingMiniTestPage />}
-            />
-            <Route
-              path="practice/creatingPracticeEx"
-              element={<CreatingPracticeExsPage />}
-            />
-            <Route
-              path="practice/creatingPracticeLesson"
-              element={<CreatingPracticeLessonsPage />}
-            />
-            <Route
-              path="roadmap/creatingRoadmapEx"
-              element={<CreatingRoadmapExsPage />}
-            />
+            <Route path="test/creatingMiniTest" element={<CreatingMiniTestPage />}/>
+            <Route path="practice/creatingPracticeEx" element={<CreatingPracticeExsPage />}/>
+            <Route path="practice/creatingPracticeLesson" element={<CreatingPracticeLessonsPage />}/>
+            <Route path="roadmap/creatingRoadmapEx" element={<CreatingRoadmapExsPage />}/>
             <Route path="forum/creatingPost" element={<CreatingPostPage />} />
-            <Route
-              path="vocab/creatingVocab"
-              element={<CreatingVocabsPage />}
-            />
+            <Route path="vocab/creatingVocab" element={<CreatingVocabsPage />}/>
           </Route>
           <Route
             path="/test"
@@ -622,10 +607,7 @@ function App() {
             <Route path="/oauth" element={<LoginOauth />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-            <Route
-              path="/reset-password/:token"
-              element={<RessetPasswordPage />}
-            />
+            <Route path="/reset-password/:token" element={<RessetPasswordPage />}/>
             <Route path="/verifyEmail/:token" element={<VerifyEmailPage />} />
           </Route>
         </Routes>

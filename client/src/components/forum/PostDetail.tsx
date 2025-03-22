@@ -7,6 +7,7 @@ import { Avatar } from "@mui/material";
 import { useState } from "react";
 import LoadingProgress from "../LoadingProgress";
 import ImageModal from "./ImageModal";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 function PostOptions(
     { onDelete, onEdit } : { 
@@ -90,7 +91,8 @@ export default function PostDetail( { post
       </div>
       <div className="images w-full overflow-auto flex flex-row gap-3 mb-4">
         {post.contentImage.map((image, index) => (
-          <img
+          <LazyLoadImage
+            effect="opacity"
             key={index}
             src={image}
             alt="image"
