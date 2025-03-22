@@ -66,6 +66,9 @@ const VocabManagementPage = lazy(
   () => import("./admin/vocab/VocabManagementPage")
 );
 const CreatingTestPage = lazy(() => import("./admin/test/CreatingTestPage"));
+const CreatingSWTestPage = lazy(
+  () => import("./admin/test/CreatingSWTestPage")
+);
 const CreatingPracticeExsPage = lazy(
   () => import("./admin/practice/CreatingPracticeExsPage")
 );
@@ -130,6 +133,7 @@ export {
   UserManagementPage,
   VocabManagementPage,
   CreatingTestPage,
+  CreatingSWTestPage,
   CreatingPracticeExsPage,
   CreatingPracticeLessonsPage,
   CreatingRoadmapExsPage,

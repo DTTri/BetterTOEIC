@@ -44,6 +44,7 @@ import {
   WordSavedPage,
   LoginOauth,
   LearnPracticeLesson,
+  CreatingSWTestPage,
 } from "./pages";
 
 import { useEffect } from "react";
@@ -433,7 +434,10 @@ function App() {
             <Route path="user" element={<UserManagementPage />} />
             <Route path="vocab" element={<VocabManagementPage />} />
             <Route path="test/creatingTest" element={<CreatingTestPage />} />
-
+            <Route
+              path="test/creatingSWTest"
+              element={<CreatingSWTestPage />}
+            />
             <Route
               path="practice/creatingPracticeEx"
               element={<CreatingPracticeExsPage />}
