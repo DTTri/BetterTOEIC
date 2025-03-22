@@ -20,7 +20,7 @@ export default function QuestionComponent({
   const [showExplanation, setShowExplanation] = useState(false);
   //{strImg = '', questionText, questionNum, options} : {strImg?: string, questionText:string, questionNum: number, options: string[]}
   return (
-    <div className="mb-4">
+    <div className="mb-4" id={question.question_number.toString()}>
       <h4 className="text-[18px] w-full font-bold mb-2 text-wrap">
         Question {question.question_number}: {question.text}
       </h4>

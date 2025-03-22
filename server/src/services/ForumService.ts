@@ -19,8 +19,16 @@ class ForumService {
   }
   async getAllPosts(): Promise<Post[] | null> {
     const result = await collections.posts?.find().toArray();
+    const users = await collections.users?.find().toArray();
     if (result) {
-      return result as Post[];
+      return result.map((post) => {
+        const foundUser = users?.find((user) => user._id.toString() === post.creator._id);
+        if (foundUser) {
+          post.creator.username = foundUser.username;
+          post.creator.avatar = foundUser.avatar;
+        }
+        return post as Post;
+      }) as Post[];
     }
     return null;
   }

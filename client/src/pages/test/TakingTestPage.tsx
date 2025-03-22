@@ -13,6 +13,8 @@ import { testService } from "@/services";
 
 import ClassifyTestScore from "@/utils/ClassifyTestScore";
 import CompleteTestDTO from "@/entities/DTOS/CompleteTestDTO";
+import { LazyLoadComponent } from "react-lazy-load-image-component";
+import { QuestionComponentSkeleton } from "@/components/test/skeletons";
 
 export default function TakingTestPage({ isEvaluation = false }) {
   const { id } = useParams();
@@ -80,6 +82,9 @@ export default function TakingTestPage({ isEvaluation = false }) {
 
   const onMoveToChosenQuestion = (question_number: number) => {
     setCurrentPart(selectedTest?.questions[question_number].part || 1);
+    setTimeout(() => {
+      document.getElementById((question_number + 1).toString())?.scrollIntoView();
+    }, 150);
   };
 
   const singleQuestionParts = selectedTest?.questions.filter(
@@ -146,12 +151,14 @@ export default function TakingTestPage({ isEvaluation = false }) {
             {singleQuestionParts?.map((question, index) => {
               return (
                 question.part === currentPart && (
-                  <QuestionComponent
-                    ans={answers}
-                    onChoose={onChoose}
-                    key={index}
-                    question={question}
-                  />
+                  <LazyLoadComponent placeholder={<QuestionComponentSkeleton/>}>
+                    <QuestionComponent 
+                      ans={answers}
+                      onChoose={onChoose}
+                      key={index}
+                      question={question}
+                    />
+                  </LazyLoadComponent>
                 )
               );
             })}
