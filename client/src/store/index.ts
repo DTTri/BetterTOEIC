@@ -3,4 +3,16 @@ import { sCreatingPersonalRoadmap } from "./roadmapStore";
 import sUser from "./userStore";
 import sVocab from "./vocabStore";
 import sNewTest from "./adminStore";
-export { sRoadmap, sCreatingPersonalRoadmap, sUser, sVocab, sNewTest };
+import { testStore } from "./testStore";
+import { practiceStore } from "./practiceStore";
+import sForum from "./forumStore";
+export {
+  sRoadmap,
+  sCreatingPersonalRoadmap,
+  sUser,
+  sVocab,
+  sNewTest,
+  testStore,
+  practiceStore,
+  sForum,
+};
