@@ -11,6 +11,8 @@ import sForum from "@/store/forumStore";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { LazyMotion, domAnimation } from "motion/react";
+import { LazyLoadComponent } from "react-lazy-load-image-component";
+import { CommentSkeleton } from "@/components/forum/skeletons";
 
 export default function PostDetailPage() {
   const { id } = useParams();
@@ -161,17 +163,17 @@ export default function PostDetailPage() {
           post={post}
         />
         <CommentCreating onCommentCreated={handleOnComment} />
-        <LazyMotion features={domAnimation} strict>
           {comments.map((comment, _index) => (
-            <CommentComp
-              userId={user._id}
-              onDelete={handleDeleteComment}
-              onLike={handleOnLikeComment}
-              key={post._id}
-              comment={comment}
-            />
+            <LazyLoadComponent placeholder={<CommentSkeleton />}>
+              <CommentComp
+                userId={user._id}
+                onDelete={handleDeleteComment}
+                onLike={handleOnLikeComment}
+                key={post._id}
+                comment={comment}
+              />
+            </LazyLoadComponent>
           ))}
-        </LazyMotion>
       </div>
       <div className="py-10 px-5 pl-1 gap-7 w-[30%]">
         <MustRead postLists={postLists} />

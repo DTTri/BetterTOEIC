@@ -2,9 +2,8 @@
 const QuestionsListContainer = ( { ans, onMoveToChosenQuestion } : { ans?: number[], onMoveToChosenQuestion: (question_number: number) => void }) => {
   const numberOfQuestionsPerPart = [6, 24, 38, 30, 30, 30, 30];
 
-  const handleQuestionClick = (index: number) => {
-    onMoveToChosenQuestion(index);
-    // Scroll to question
+  const handleQuestionClick = async (index: number) => {
+      onMoveToChosenQuestion(index);
   };
 
   let runningTotal = 0;

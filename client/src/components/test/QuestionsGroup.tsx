@@ -1,5 +1,6 @@
 import Question from "@/entities/Question";
 import QuestionComponent from "./QuestionComponent";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 // Part 6 & 7 Component with Paragraph and Image Handling
 export default function QuestionsGroup({

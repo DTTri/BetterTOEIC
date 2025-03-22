@@ -3,7 +3,7 @@ import CommentIcon from "@mui/icons-material/Comment";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { Avatar } from "@mui/material";
 import { Link } from "react-router-dom";
-
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 export default function PostComponent({ userInfo, post }: { userInfo: string, post: Post }) {
   const isLiked = post.totalLike.find((item) => item === userInfo);
@@ -34,8 +34,8 @@ export default function PostComponent({ userInfo, post }: { userInfo: string, po
         </p>
         <div className="images w-full overflow-auto flex flex-row gap-3 mt-2">
           {post.contentImage.map((image, index) => (
-            <img key={index} src={image} alt='image' className="w-[120px] h-[120px] object-cover rounded-[6px] hover:shadow-gray-800 cursor-pointer"/>)
-          )}
+            <LazyLoadImage effect="opacity" key={index} src={image} alt='image' className="w-[120px] h-[120px] object-cover rounded-[6px] hover:shadow-gray-800 cursor-pointer"/>
+          ))}
         </div>
       </div>
       <div className="react flex flex-row items-center gap-6">
