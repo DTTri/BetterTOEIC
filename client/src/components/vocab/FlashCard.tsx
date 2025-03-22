@@ -76,11 +76,11 @@ const Flashcard = ({
           />
         </div>
         <div className="img mx-auto max-w-[320px] h-[270px] rounded-[20px] mb-4">
-          <img
-            className="w-full h-full object-contain object-center"
-            src={vocab.image}
-            alt=""
-          />
+            <img
+              className="w-full h-full object-contain object-center"
+              src={vocab.image}
+              alt=""
+            />
         </div>
 
         <div className="word flex flex-col justify-center mb-3">
