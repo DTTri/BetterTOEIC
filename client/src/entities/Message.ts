@@ -4,9 +4,10 @@ type Message = {
     created_At: string
 }
 
-enum Role {
+export enum Role {
     User = 'User',
-    Admin = 'Admin'
+    Admin = 'Admin',
+    Bot = 'Bot'
 }
 
 export default Message;

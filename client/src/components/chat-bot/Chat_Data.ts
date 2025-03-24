@@ -1,52 +1,56 @@
-[
+import Message, { Role } from "@/entities/Message";
+
+const ChatData: Message[] = [
     {
-      "role": "user",
+      "role": Role.User,
       "content": "Hello, how can I improve my TOEIC score?",
       "created_At": "2025-03-22T10:00:00Z"
     },
     {
-      "role": "bot",
+      "role": Role.Bot,
       "content": "Hi! To improve your TOEIC score, you should practice regularly and focus on your weak areas.",
       "created_At": "2025-03-22T10:00:05Z"
     },
     {
-      "role": "user",
+      "role": Role.User,
       "content": "What are some good resources for TOEIC practice?",
       "created_At": "2025-03-22T10:01:00Z"
     },
     {
-      "role": "bot",
+      "role": Role.Bot,
       "content": "You can use official TOEIC practice tests, online courses, and TOEIC preparation books.",
       "created_At": "2025-03-22T10:01:10Z"
     },
     {
-      "role": "user",
+      "role": Role.User,
       "content": "How often should I take practice tests?",
       "created_At": "2025-03-22T10:02:00Z"
     },
     {
-      "role": "bot",
+      "role": Role.Bot,
       "content": "It's recommended to take practice tests at least once a week to track your progress.",
       "created_At": "2025-03-22T10:02:10Z"
     },
     {
-      "role": "user",
+      "role": Role.User,
       "content": "What should I do if I find the listening section difficult?",
       "created_At": "2025-03-22T10:03:00Z"
     },
     {
-      "role": "bot",
+      "role": Role.Bot,
       "content": "For the listening section, practice listening to English audio materials like podcasts, news, and movies.",
       "created_At": "2025-03-22T10:03:10Z"
     },
     {
-      "role": "user",
+      "role": Role.User,
       "content": "Any tips for the reading section?",
       "created_At": "2025-03-22T10:04:00Z"
     },
     {
-      "role": "bot",
+      "role": Role.Bot,
       "content": "For the reading section, practice reading English articles and books, and focus on improving your vocabulary.",
       "created_At": "2025-03-22T10:04:10Z"
     }
   ]
+
+  export default ChatData;
