@@ -17,6 +17,7 @@ export default function UserLayout({
   haveFooter?: boolean;
   passAll?: boolean;
 }) {
+  const [isOpenChatBot, setIsOpenChatBot] = useState<Boolean>(false);
   if (passAll) {
     return (
       <div className="w-full overflow-y-auto bg-gray-100">
@@ -46,7 +47,6 @@ export default function UserLayout({
     return <Navigate to="/login" />;
   }
 
-  const [isOpenChatBot, setIsOpenChatBot] = useState<Boolean>(false);
   const handleOpenChatBot = () => {
     setIsOpenChatBot(!isOpenChatBot)
   }
