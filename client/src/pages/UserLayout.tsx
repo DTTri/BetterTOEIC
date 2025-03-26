@@ -1,9 +1,10 @@
 import { Footer, Header } from "@/components";
 import { Navigate } from "react-router-dom";
-
+import chatIcon from "../assets/chat_bot_icon.svg";
 import LoadingProgress from "@/components/LoadingProgress";
 import { sUser } from "@/store";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
+import Conversation from "@/components/chat-bot/Conversation";
 
 export default function UserLayout({
   children,
@@ -16,6 +17,7 @@ export default function UserLayout({
   haveFooter?: boolean;
   passAll?: boolean;
 }) {
+  const [isOpenChatBot, setIsOpenChatBot] = useState<Boolean>(false);
   if (passAll) {
     return (
       <div className="w-full overflow-y-auto bg-gray-100">
@@ -44,8 +46,21 @@ export default function UserLayout({
     sUser.reset();
     return <Navigate to="/login" />;
   }
+
+  const handleOpenChatBot = () => {
+    setIsOpenChatBot(!isOpenChatBot)
+  }
   return (
     <div className="w-full overflow-y-auto bg-gray-100">
+      <div onClick={handleOpenChatBot} className="fixed z-[1000] h-[60px] w-[60px] overflow-hidden rounded-full right-4 bottom-5 hover:shadow-md cursor-pointer">
+        <img
+          src={chatIcon}
+          className="w-full h-full block object-cover object-center"
+        />
+      </div>
+      {
+        isOpenChatBot && <Conversation handleCloseChatBot={() => setIsOpenChatBot(false)}/>
+      }
       {haveHeader && <Header />}
       <div className="w-full min-h-screen h-full">{children}</div>
       {haveFooter && <Footer />}
