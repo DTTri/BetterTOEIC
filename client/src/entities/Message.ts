@@ -1,7 +1,8 @@
 type Message = {
     role: Role,
     content: string,
-    created_At: string
+    created_At: string,
+    images?: string[]
 }
 
 export enum Role {

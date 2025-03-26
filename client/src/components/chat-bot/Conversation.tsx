@@ -16,6 +16,7 @@ export default function Conversation({
 }) {
   // messages is a sample data
   const [messagesState, setMessagesState] = useState<Message[]>([]);
+  const [typeChatHeight, setTypeChatHeight] = useState<number>(50); // Default height
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -30,15 +31,29 @@ export default function Conversation({
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const handleAddMessage = (typedContent: string) => {
-    setMessagesState([
+  const handleAddMessage = (typedContent: string, images: File[]) => {
+    const newMessages = [
       ...messagesState,
       {
         role: Role.User,
         content: typedContent,
         created_At: new Date().toISOString(),
       },
-    ]);
+    ];
+
+    images.forEach((image) => {
+      newMessages.push({
+        role: Role.User,
+        content: URL.createObjectURL(image),
+        created_At: new Date().toISOString(),
+      });
+    });
+
+    setMessagesState(newMessages);
+  };
+
+  const handleHeightChange = (height: number) => {
+    setTypeChatHeight(height);
   };
 
   return (
@@ -57,21 +72,22 @@ export default function Conversation({
           style={{ width: 24, height: 24, color: "#000000" }}
           fontSize="large"
         />
-        <h3 className="ml-5 font-extrabold text-3xl text-[#000000]">
-          Chat bot
-        </h3>
+        <h3 className="ml-5 font-extrabold text-3xl text-[#000000]">Chat bot</h3>
       </div>
-      <div className="conversation h-[78%] flex flex-col w-full p-5 gap-5 overflow-auto">
+      <div
+        className="conversation flex flex-col w-full p-5 overflow-auto"
+        style={{ height: `calc(100% - ${typeChatHeight}px - 30px)` }} // Adjust height based on TypeChat height
+      >
         {messagesState?.map((message, i) =>
           message.role === Role.User ? (
-            <UserLogChat key={i} message={message.content} />
+            <UserLogChat key={i} message={message} />
           ) : (
-            <BotLogChat key={i} message={message.content} />
+            <BotLogChat key={i} message={message} />
           )
         )}
         <div ref={messagesEndRef} />
       </div>
-      <TypeChat handleAddMessage={handleAddMessage} />
+      <TypeChat onHeightChange={handleHeightChange}  handleAddMessage={handleAddMessage}  />
     </motion.div>
   );
 }

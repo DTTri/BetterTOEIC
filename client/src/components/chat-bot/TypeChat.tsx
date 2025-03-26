@@ -5,8 +5,10 @@ import { useEffect, useState } from "react";
 
 export default function TypeChat({
   handleAddMessage,
+  onHeightChange,
 }: {
-  handleAddMessage: (typedContent: string) => void;
+  handleAddMessage: (typedContent: string, images: File[]) => void;
+  onHeightChange: (height: number) => void;
 }) {
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
 
@@ -15,6 +17,11 @@ export default function TypeChat({
       setSelectedImages([]);
     };
   }, []);
+
+  useEffect(() => {
+    const height = selectedImages.length > 0 ? 200 : 100; // Adjust the height based on the number of selected images
+    onHeightChange(height);
+  }, [selectedImages, onHeightChange]);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -30,10 +37,10 @@ export default function TypeChat({
   const handleOnSend = () => {
     const message = document.querySelector("textarea") as HTMLTextAreaElement;
     if (message.value.trim() === "" && selectedImages.length === 0) return;
-    handleAddMessage(message.value);
+    handleAddMessage(message.value, selectedImages);
     message.value = "";
     setSelectedImages([]);
-  }
+  };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === "Enter" && !event.shiftKey) {
@@ -43,7 +50,25 @@ export default function TypeChat({
   };
 
   return (
-    <div className="w-full h-[12%] rounded-3xl bg-[#fff] px-6 py-4 flex flex-col gap-2 relative">
+    <div className="w-full rounded-3xl rounded-t-none border-t-[1px] border-t-slate-200 bg-[#fff] px-6 py-4 flex flex-col gap-2">
+      {selectedImages.length > 0 && (
+        <div className="flex flex-wrap gap-1">
+          {selectedImages.map((image, index) => (
+            <div key={index} className="relative">
+              <img
+                src={URL.createObjectURL(image)}
+                alt={`Selected ${index}`}
+                className="w-20 h-20 object-cover rounded-md"
+              />
+              <DeleteIcon
+                fontSize="medium"
+                onClick={() => handleRemoveImage(index)}
+                className="absolute top-0 right-0 cursor-pointer text-red-500"
+              />
+            </div>
+          ))}
+        </div>
+      )}
       <div className="flex flex-row items-top gap-1">
         <textarea
           placeholder="Write your message"
@@ -69,22 +94,6 @@ export default function TypeChat({
           color="primary"
           className="cursor-pointer hover:bg-slate-200 rounded-full"
         />
-      </div>
-      <div className="flex flex-wrap gap-1 absolute bottom-20">
-        {selectedImages.map((image, index) => (
-          <div key={index} className="relative">
-            <img
-              src={URL.createObjectURL(image)}
-              alt={`Selected ${index}`}
-              className="w-20 h-20 object-cover rounded-md"
-            />
-            <DeleteIcon
-              fontSize="medium"
-              onClick={() => handleRemoveImage(index)}
-              className="absolute top-0 right-0 cursor-pointer text-red-500"
-            />
-          </div>
-        ))}
       </div>
     </div>
   );
