@@ -8,7 +8,6 @@ class Http {
   }
   async get(endpoint: string) {
     const response = await fetch(this.getURL(endpoint));
-    console.log(response);
     return response.json();
   }
   async post(endpoint: string, data: object) {

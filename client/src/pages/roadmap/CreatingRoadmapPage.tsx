@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import SwiperCore from "swiper";
+
 // Import components
 import {
   Steps,
@@ -11,8 +12,7 @@ import {
   LevelExplain,
 } from "../../components";
 // Import Swiper styles
-import "swiper/css";
-import "swiper/css/navigation";
+
 import { sCreatingPersonalRoadmap, sRoadmap, sUser } from "@/store";
 import { roadmapService } from "@/services";
 import { RoadmapExercise, RoadmapHistory } from "@/entities";
@@ -117,7 +117,15 @@ export default function CreatingRoadmapPage() {
           onSwiper={(swiper) => setSwiperInstance(swiper)}
           className="w-full h-full mb-12"
         >
-          <SwiperSlide className="step-1.1 flex flex-col items-center gap-6">
+          <SwiperSlide
+            className="step-1.1"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "24px",
+            }}
+          >
             <h3 className="text-3xl font-bold text-center">
               {/* THIẾT LẬP TRÌNH ĐỘ HIỆN TẠI */}
               SET YOUR CURRENT LEVEL
@@ -159,7 +167,14 @@ export default function CreatingRoadmapPage() {
               </Button>
             </div>
           </SwiperSlide>
-          <SwiperSlide className="step-1.2 flex flex-col gap-4">
+          <SwiperSlide
+            className="step-1.2"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "24px",
+            }}
+          >
             <div className="flex gap-4 items-center">
               <h3 className="text-3xl font-bold">
                 {/*ThIẾT LẬP TRÌNH ĐỘ HIỆN TẠI */}
@@ -207,7 +222,14 @@ export default function CreatingRoadmapPage() {
               </Button>
             </div>
           </SwiperSlide>
-          <SwiperSlide className="step-2 flex flex-col gap-4">
+          <SwiperSlide
+            className="step-2"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "24px",
+            }}
+          >
             <div className="flex gap-4 items-center">
               <h3 className="text-3xl font-bold">SET YOUR TARGET LEVEL</h3>
               {evaluationTestScore > -1 && (
@@ -249,7 +271,14 @@ export default function CreatingRoadmapPage() {
               </Button>
             </div>
           </SwiperSlide>
-          <SwiperSlide className="step-3 flex flex-col gap-8">
+          <SwiperSlide
+            className="step-3"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "24px",
+            }}
+          >
             <h3 className="text-3xl font-bold">
               {/* XÂY DỰNG LỘ TRÌNH HỌC */}
               BUILDING YOUR ROADMAP

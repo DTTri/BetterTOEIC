@@ -1,8 +1,14 @@
 import { Button } from "@mui/material";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import theme from "@/theme";
-
+import { Editor } from "@tinymce/tinymce-react";
+import { Editor as TinyMCEEditor } from "tinymce";
+import { useRef } from "react";
 export default function CreatingSWTestPage() {
+  const API_KEY = import.meta.env.VITE_TINY_MCE_API_KEY;
+  const q6EditorRef = useRef<TinyMCEEditor | null>(null);
+  const q7EditorRef = useRef<TinyMCEEditor | null>(null);
+
   return (
     <div className="creating-test-container">
       <h2 className="text-2xl font-bold">S&W Toeic Test</h2>
@@ -611,13 +617,40 @@ export default function CreatingSWTestPage() {
           <div className="w-full flex justify-between pr-4">
             <div className="basis-1/2 flex flex-col gap-2">
               <h4 className="text-lg font-medium">Question 6:</h4>
-              <textarea
-                // value={question}
-                // onChange={(e) => setQuestion(e.target.value)}
-                // disabled={isAllBlocked}
-                placeholder="Typing the question"
-                rows={6}
-                className="border-2 border-black rounded-sm shadow-md p-2 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+              <Editor
+                apiKey={API_KEY}
+                onInit={(_evt, editor) => (q6EditorRef.current = editor)}
+                init={{
+                  height: 500,
+                  menubar: false,
+                  plugins: [
+                    "advlist",
+                    "autolink",
+                    "lists",
+                    "link",
+                    "image",
+                    "charmap",
+                    "preview",
+                    "anchor",
+                    "searchreplace",
+                    "visualblocks",
+                    "code",
+                    "fullscreen",
+                    "insertdatetime",
+                    "media",
+                    "table",
+                    "code",
+                    "help",
+                    "wordcount",
+                  ],
+                  toolbar:
+                    "undo redo | blocks | " +
+                    "bold italic forecolor | alignleft aligncenter " +
+                    "alignright alignjustify | bullist numlist outdent indent | " +
+                    "removeformat | help",
+                  content_style:
+                    "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+                }}
               />
             </div>
             <Button
@@ -641,13 +674,40 @@ export default function CreatingSWTestPage() {
           <div className="w-full flex justify-between pr-4">
             <div className="basis-1/2 flex flex-col gap-2">
               <h4 className="text-lg font-medium">Question 7:</h4>
-              <textarea
-                // value={question}
-                // onChange={(e) => setQuestion(e.target.value)}
-                // disabled={isAllBlocked}
-                placeholder="Typing the question"
-                rows={6}
-                className="border-2 border-black rounded-sm shadow-md p-2 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+              <Editor
+                apiKey={API_KEY}
+                onInit={(_evt, editor) => (q7EditorRef.current = editor)}
+                init={{
+                  height: 500,
+                  menubar: false,
+                  plugins: [
+                    "advlist",
+                    "autolink",
+                    "lists",
+                    "link",
+                    "image",
+                    "charmap",
+                    "preview",
+                    "anchor",
+                    "searchreplace",
+                    "visualblocks",
+                    "code",
+                    "fullscreen",
+                    "insertdatetime",
+                    "media",
+                    "table",
+                    "code",
+                    "help",
+                    "wordcount",
+                  ],
+                  toolbar:
+                    "undo redo | blocks | " +
+                    "bold italic forecolor | alignleft aligncenter " +
+                    "alignright alignjustify | bullist numlist outdent indent | " +
+                    "removeformat | help",
+                  content_style:
+                    "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+                }}
               />
             </div>
             <Button
