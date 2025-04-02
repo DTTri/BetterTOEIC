@@ -48,7 +48,6 @@ export default function Conversation({
         created_At: new Date().toISOString(),
       });
     });
-
     setMessagesState(newMessages);
   };
 

@@ -1,5 +1,5 @@
 import { PageHeader, SearchBar } from "@/components";
-import TestCardGallery from "@/components/test/TestCardGallery";
+import TestCardGallery from "@/components/LRtest/TestCardGallery";
 import { Test } from "@/entities";
 import { testStore } from "@/store/testStore";
 import { Tab, Tabs } from "@mui/material";

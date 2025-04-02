@@ -2,7 +2,7 @@ import { testStore } from "@/store/testStore";
 import { Button } from "@mui/material";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import QuestionsListContainer from "../../components/test/QuestionsListContainer";
+import QuestionsListContainer from "../../components/LRtest/QuestionsListContainer";
 import { QuestionComponent } from "@/components";
 import LoadingProgress from "@/components/LoadingProgress";
 
@@ -14,23 +14,33 @@ export default function ReviewTestPage() {
     .use((pre) => pre.testList)
     .find((test) => test._id === id);
 
-  const testHistory = testStore.use((state) => state.testHistory).find((test) => test.testId === id && test.attempted_at === attemp);
-  if(!testHistory){
-    return <LoadingProgress />
+  const testHistory = testStore
+    .use((state) => state.testHistory)
+    .find((test) => test.testId === id && test.attempted_at === attemp);
+  if (!testHistory) {
+    return <LoadingProgress />;
   }
-
 
   const onMoveToChosenQuestion = (question_number: number) => {
     setCurrentPart(selectedTest?.questions[question_number].part || 1);
   };
 
-  if(!testHistory) {
+  if (!testHistory) {
     return (
-        <div className="w-full h-screen flex flex-col items-center justify-center gap-2">
-            <div className="text-2xl font-bold">You haven't taken this test yet</div>
-            <Button onClick={() => nav("/test")} variant="contained" color="primary" sx={{ textTransform: "none" }}>Back to test</Button>
+      <div className="w-full h-screen flex flex-col items-center justify-center gap-2">
+        <div className="text-2xl font-bold">
+          You haven't taken this test yet
         </div>
-    )
+        <Button
+          onClick={() => nav("/test")}
+          variant="contained"
+          color="primary"
+          sx={{ textTransform: "none" }}
+        >
+          Back to test
+        </Button>
+      </div>
+    );
   }
   return (
     <div className="bg-background">
@@ -61,19 +71,17 @@ export default function ReviewTestPage() {
               ))}
             </div>
             {/* Map questions until part 2 */}
-            {
-                selectedTest?.questions.map((question, index) => {
-                    if (question.part === currentPart) {
-                        return (
-                            <QuestionComponent
-                                key={index}
-                                userChoice={testHistory?.choices[index]}
-                                question={question}
-                            />
-                        );
-                    }
-                })
-            }
+            {selectedTest?.questions.map((question, index) => {
+              if (question.part === currentPart) {
+                return (
+                  <QuestionComponent
+                    key={index}
+                    userChoice={testHistory?.choices[index]}
+                    question={question}
+                  />
+                );
+              }
+            })}
             <div className="w-full flex ">
               <Button
                 style={{
