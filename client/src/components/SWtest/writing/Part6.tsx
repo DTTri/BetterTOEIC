@@ -14,9 +14,9 @@ export default function Part6({ questions, onComplete }: Part6Props) {
   const [answers, setAnswers] = useState<string[]>(
     new Array(questions.length).fill("")
   );
-  const [timeRemaining, setTimeRemaining] = useState(8 * 60); // 8 minutes in seconds
 
   const handleTimeEnd = () => {
+    console.log("time end");
     onComplete(answers);
   };
 
@@ -52,13 +52,10 @@ export default function Part6({ questions, onComplete }: Part6Props) {
             <h2 className="text-3xl font-bold mb-4 w-full text-center block">
               Question 12-16: Write ONE sentence based on a picture
             </h2>
-            <h3 className="text-lg font-semibold mb-4">Direction:</h3>
-            <p className="text-gray-700">
-              In this part of the test, you will write ONE sentence that is
+            <h3 className="text-lg font-medium mb-4">Direction: In this part of the test, you will write ONE sentence that is
               based on a picture. With each picture, you will be given TWO words
               or phrases that you must use in your sentence. You can change the
-              forms of the words and you can use the words in any order.
-            </p>
+              forms of the words and you can use the words in any order.</h3>
             <div className="hidden">
               <Timer
                 initialSeconds={10}
@@ -78,8 +75,8 @@ export default function Part6({ questions, onComplete }: Part6Props) {
                 />
               </div>
               <div className="space-y-6">
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <h4 className="text-sm font-semibold text-gray-600 mb-2">
+                <div className="bg-gray-50 p-2 rounded-lg">
+                  <h4 className="text-sm font-bold text-gray-600 mb-2">
                     Keywords: {questions[currentQuestion]?.passages?.[0]}
                   </h4>
                 </div>
@@ -101,7 +98,7 @@ export default function Part6({ questions, onComplete }: Part6Props) {
                 Previous
               </button>
               <Timer
-                initialSeconds={timeRemaining}
+                initialSeconds={8 * 60}
                 onTimeEnd={handleTimeEnd}
                 isPreparation={false}
               />

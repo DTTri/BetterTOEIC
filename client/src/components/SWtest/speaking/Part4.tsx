@@ -9,7 +9,9 @@ interface Part4Props {
 }
 
 export default function Part4({ question, onComplete }: Part4Props) {
-  const [stage, setStage] = useState<"direction" | "preparation" | "recording">();
+  const [stage, setStage] = useState<
+    "direction" | "preparation" | "recording"
+  >("preparation");
 
   useEffect(() => {
     setStage(question.question_number === 8 ? "direction" : "preparation");
@@ -38,10 +40,11 @@ export default function Part4({ question, onComplete }: Part4Props) {
   const handleRecordingComplete = (blob: Blob) => {
     onComplete(blob);
   };
+  console.log("stage" + stage);
 
   return (
     <div className="max-w-3xl mx-auto p-6">
-      <div className="bg-red-800 text-white py-3 px-6 rounded-t-lg">
+      <div className="bg-[#981C1E] text-white text-center w-full font-bold py-3 px-5 text-2xl rounded-t-lg">
         <h2 className="text-lg font-semibold">
           QUESTION {question.question_number} OF 19
         </h2>
@@ -49,19 +52,16 @@ export default function Part4({ question, onComplete }: Part4Props) {
 
       <div className="bg-white rounded-b-lg shadow-lg p-6 space-y-6">
         {stage === "direction" ? (
-          <div className="mb-8">
-            <h2>
+          <div className="mb-4">
+            <h2 className="text-3xl font-bold mb-4 w-full text-center block">
               Question 8-10: Respond to questions using provided information
             </h2>
-            <h3 className="text-lg font-semibold mb-4">Direction:</h3>
-            <p className="text-gray-700">
-              In this part of the test, you will answer three questions based on
+            <h3 className="text-lg font-medium mb-4">Direction: In this part of the test, you will answer three questions based on
               the information provided. You will have 45 seconds to read the
               information before the questions begin. You will have 3 seconds to
               prepare for each question. For questions 8 and 9, you will have 15
               seconds to respond. For question 10, you will have 30 seconds to
-              respond.
-            </p>
+              respond.</h3>
             <div className="hidden">
               <Timer
                 initialSeconds={10}
@@ -72,7 +72,7 @@ export default function Part4({ question, onComplete }: Part4Props) {
           </div>
         ) : (
           <div className="w-full">
-            <div className="flex justify-center mb-8">
+            <div className="flex justify-center mb-4">
               <img
                 src={question.images?.[0]}
                 alt="Schedule Information"
@@ -80,28 +80,18 @@ export default function Part4({ question, onComplete }: Part4Props) {
               />
             </div>
 
-            {stage === "recording" && (
-              <div className="bg-gray-50 p-6 rounded-lg mb-8">
-                <h4 className="text-lg font-semibold mb-4">{question.text}</h4>
-                <p className="text-lg leading-relaxed">
-                  Question: {question.passages?.[0]}
-                </p>
-              </div>
-            )}
+            <div className="bg-gray-50 p-6 rounded-lg mb-8">
+              <h4 className="text-lg font-semibold mb-4">{question.text}</h4>
+              <p className="text-lg leading-relaxed">
+                Question: {question.passages?.[0]}
+              </p>
+            </div>
 
             <div className="flex justify-center mb-6">
-              <Timer
-                initialSeconds={
-                  stage === "preparation"
-                    ? 3
-                    : getResponseTime(question.question_number)
-                }
-                onTimeEnd={
-                  stage === "preparation"
-                    ? handlePreparationEnd
-                    : handleRecordingEnd
-                }
-                isPreparation={stage === "preparation"}
+            <Timer
+                initialSeconds={stage == "preparation" ? 3 : getResponseTime(question.question_number)}
+                onTimeEnd={stage == "preparation" ? handlePreparationEnd : handleRecordingEnd}
+                isPreparation={stage === 'preparation'}
               />
             </div>
 

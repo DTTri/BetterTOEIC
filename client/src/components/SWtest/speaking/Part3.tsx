@@ -8,7 +8,7 @@ interface Part3Props {
 }
 
 export default function Part3({ question, onComplete }: Part3Props) {
-  const [stage, setStage] = useState<"direction" | "preparation" | "recording">();
+  const [stage, setStage] = useState<"direction" | "preparation" | "recording">("preparation");
 
   useEffect(() => {
     setStage(question.question_number === 5 ? "direction" : "preparation");
@@ -17,8 +17,8 @@ export default function Part3({ question, onComplete }: Part3Props) {
   const [isRecording, setIsRecording] = useState(false);
 
   // Get response time based on question number (15s for first two, 30s for last)
-  const getResponseTime = (questionIndex: number) => {
-    return questionIndex === 7 ? 30 : 15;
+  const getResponseTime = (questionNumber: number) => {
+    return questionNumber === 7 ? 30 : 15;
   };
 
   const handleDirectionEnd = () => {
@@ -40,7 +40,7 @@ export default function Part3({ question, onComplete }: Part3Props) {
 
   return (
     <div className="max-w-3xl mx-auto p-6">
-      <div className="bg-red-800 text-white py-3 px-6 rounded-t-lg">
+      <div className="bg-[#981C1E] text-white text-center w-full font-bold py-3 px-5 text-2xl rounded-t-lg">
         <h2 className="text-lg font-semibold">
           QUESTION {question.question_number} OF 19
         </h2>
@@ -48,17 +48,14 @@ export default function Part3({ question, onComplete }: Part3Props) {
 
       <div className="bg-white rounded-b-lg shadow-lg p-6 space-y-6">
         {stage == "direction" ? (
-          <div className="mb-8">
+          <div className="mb-4">
             <h2 className="text-3xl font-bold mb-4 w-full text-center block">
               Question 5-7: Answer the questions
             </h2>
-            <h3 className="text-lg font-semibold mb-4">Direction:</h3>
-            <p className="text-gray-700">
-              In this part of the test, you will answer three questions. You
+            <h3 className="text-lg font-medium mb-4">Direction: In this part of the test, you will answer three questions. You
               will have 3 seconds to prepare for each question. For questions 5
               and 6, you will have 15 seconds to respond to each question. For
-              question 7, you will have 30 seconds to respond
-            </p>
+              question 7, you will have 30 seconds to respond</h3>
             <div className="hidden">
               <Timer
                 initialSeconds={10}

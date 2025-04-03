@@ -16,12 +16,13 @@ export default function Timer({
 
   useEffect(() => {
     setSeconds(initialSeconds);
+    console.log("initial seconds" + initialSeconds);
   }, [initialSeconds]);
 
   useEffect(() => {
-    if (seconds === 0) {
-      console.log("time end");
+    if (seconds <= 0) {
       onTimeEnd();
+      console.log("time end");
       return;
     }
 
@@ -33,21 +34,20 @@ export default function Timer({
   }, [seconds]);
 
   const formatTime = (totalSeconds: number) => {
-    const minutes = Math.floor(totalSeconds / 60);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
     const remainingSeconds = totalSeconds % 60;
-    return `${String(minutes).padStart(2, "0")}:${String(
-      remainingSeconds
-    ).padStart(2, "0")}`;
+    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(remainingSeconds).padStart(2, "0")}`;
   };
 
   return (
-    <div className="flex flex-col items-center bg-white rounded-lg shadow-md min-w-[120px]">
-      <div className="w-full text-sm font-semibold bg-[#00205b] text-white p-2 rounded-t-lg">
+    <div className="flex flex-col items-center bg-white rounded-lg shadow-md min-w-[180px]">
+      <div className="w-full text-base font-semibold bg-[#00205b] text-white p-1 text-center rounded-t-lg">
         {isPreparation ? "PREPARATION TIME" : "RESPONSE TIME"}
       </div>
-      <div className="w-full p-2 flex items-center justify-center gap-2">
-        <AccessAlarmIcon fontSize="large" />
-        <span className="text-2xl font-bold text-gray-800">
+      <div className="w-full p-1 flex items-center justify-center gap-1">
+        <AccessAlarmIcon fontSize="medium" />
+        <span className="text-xl font-bold text-gray-800">
           {formatTime(seconds)}
         </span>
       </div>
