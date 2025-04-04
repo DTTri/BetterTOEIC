@@ -17,7 +17,7 @@ export default function Timer({
   useEffect(() => {
     setSeconds(initialSeconds);
     console.log("initial seconds" + initialSeconds);
-  }, [initialSeconds]);
+  }, [onTimeEnd]);
 
   useEffect(() => {
     if (seconds <= 0) {
@@ -37,7 +37,10 @@ export default function Timer({
     const hours = Math.floor(totalSeconds / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
     const remainingSeconds = totalSeconds % 60;
-    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(remainingSeconds).padStart(2, "0")}`;
+    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
+      2,
+      "0"
+    )}:${String(remainingSeconds).padStart(2, "0")}`;
   };
 
   return (

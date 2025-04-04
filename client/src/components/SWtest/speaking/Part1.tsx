@@ -13,11 +13,13 @@ export default function Part1({ question, onComplete }: Part1Props) {
     "direction" | "preparation" | "recording"
   >("preparation");
 
+  const [isRecording, setIsRecording] = useState(false);
+
   useEffect(() => {
     setStage(question.question_number === 1 ? "direction" : "preparation");
   }, [question]);
 
-  const [isRecording, setIsRecording] = useState(false);
+
 
   const handleDirectionEnd = () => {
     setStage("preparation");
