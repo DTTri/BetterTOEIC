@@ -2,7 +2,7 @@ import { LeftBar, ListeningAudio, QuestionsGroup } from "@/components";
 import LoadingProgress from "@/components/LoadingProgress";
 import CountingTimer from "@/components/practice/CountingTimer";
 import PracticeQuestionPallete from "@/components/practice/PracticeQuestionPallete";
-import QuestionComponent from "@/components/test/QuestionComponent";
+import QuestionComponent from "@/components/LRtest/QuestionComponent";
 import { Question } from "@/entities";
 import CompletePracticeTestDTO from "@/entities/DTOS/CompletePracticeTestDTO";
 import practiceService from "@/services/practiceService";
@@ -94,30 +94,40 @@ export default function TakingPracticePage() {
   };
 
   const handlePreviousButtonClick = () => {
-    if(Number(part) == 1 || Number(part) == 2 || Number(part) == 5){
+    if (Number(part) == 1 || Number(part) == 2 || Number(part) == 5) {
       console.log(selectedQuestion.question_number);
       setSelectedQuestion(questions[selectedQuestion.question_number - 2]);
-    }
-    else{
+    } else {
       setSelectedGroupNumber(selectedGroupNumber - 1);
-      setSelectedQuestionGroup(questions.filter(question => question.question_group_number == questionGroupCount[selectedGroupNumber - 2]));
+      setSelectedQuestionGroup(
+        questions.filter(
+          (question) =>
+            question.question_group_number ==
+            questionGroupCount[selectedGroupNumber - 2]
+        )
+      );
     }
-  }
+  };
 
   const handleNextButtonClick = () => {
-    if(Number(part) == 1 || Number(part) == 2 || Number(part) == 5){
+    if (Number(part) == 1 || Number(part) == 2 || Number(part) == 5) {
       setSelectedQuestion(questions[selectedQuestion.question_number]);
-    }
-    else{
+    } else {
       setSelectedGroupNumber(selectedGroupNumber + 1);
-      setSelectedQuestionGroup(questions.filter(question => question.question_group_number == questionGroupCount[selectedGroupNumber]));
+      setSelectedQuestionGroup(
+        questions.filter(
+          (question) =>
+            question.question_group_number ==
+            questionGroupCount[selectedGroupNumber]
+        )
+      );
     }
-  }
+  };
 
   console.log(questionGroupCount.length);
   console.log(answers);
   console.log(selectedQuestionGroup[0]?.question_group_number);
-  
+
   const onSubmit = async () => {
     try {
       const completedTest: CompletePracticeTestDTO = {
@@ -147,12 +157,21 @@ export default function TakingPracticePage() {
       console.log("Submit failed" + error);
     }
   };
-  
-  if((Number(part) == 1 || Number(part) == 2 || Number(part) == 5) && !selectedQuestion){ 
+
+  if (
+    (Number(part) == 1 || Number(part) == 2 || Number(part) == 5) &&
+    !selectedQuestion
+  ) {
     return <LoadingProgress />;
   }
-  
-  if((Number(part) == 3 || Number(part) == 4 || Number(part) == 6 || Number(part) == 7) && selectedQuestionGroup.length == 0){
+
+  if (
+    (Number(part) == 3 ||
+      Number(part) == 4 ||
+      Number(part) == 6 ||
+      Number(part) == 7) &&
+    selectedQuestionGroup.length == 0
+  ) {
     return <LoadingProgress />;
   }
 
@@ -163,8 +182,10 @@ export default function TakingPracticePage() {
         <div className="max-w-[1200px] p-6 w-full min-h-screen flex flex-col gap-2">
           <div className="information w-full flex flex-row justify-between">
             <h3 className="font-normal text-3xl text-[#000]">
-              {(Number(part) == 1 || Number(part) == 2 || Number(part) == 5) ? `
-                Question ${(selectedQuestion?.question_number || 0)}` : `Question group ${selectedGroupNumber}`}
+              {Number(part) == 1 || Number(part) == 2 || Number(part) == 5
+                ? `
+                Question ${selectedQuestion?.question_number || 0}`
+                : `Question group ${selectedGroupNumber}`}
             </h3>
             <CountingTimer key={id} />
             <Button
@@ -203,54 +224,54 @@ export default function TakingPracticePage() {
                 ans={answers}
                 questions={selectedQuestionGroup}
                 onChoose={onChoose}
-              />)
-            }
+              />
+            )}
             <div className="w-full flex flex-row justify-between">
-              {
-                selectedGroupNumber > 1 || selectedQuestion?.question_number > 1 ? (
-                  <Button
-                    style={{
-                      padding: "7px 20px 7px",
-                      backgroundColor: "#00205C",
-                      fontSize: "16px",
-                      fontWeight: "700",
-                      borderRadius: "10px",
-                      marginRight: "24px",
-                      textTransform: "none",
-                      color: "#fff",
-                    }}
-                    variant="contained"
-                    color="success"
-                    onClick={handlePreviousButtonClick}
-                  >
-                    Previous
-                  </Button>
-                ) : (
-                  <div></div>)
-              }
-              {
-                selectedGroupNumber < questionGroupCount.length ||  (selectedQuestion && selectedQuestion.question_number < questions.length) ? (
-                  <Button
-                    style={{
-                      padding: "7px 20px 7px",
-                      backgroundColor: "#00205C",
-                      fontSize: "16px",
-                      fontWeight: "700",
-                      borderRadius: "10px",
-                      marginRight: "24px",
-                      textTransform: "none",
-                      color: "#fff",
-                    }}
-                    variant="contained"
-                    color="success"
-                    onClick={handleNextButtonClick}
-                  >
-                    Next
-                  </Button>
-                ) : (
-                  <div></div>
-                )
-              }
+              {selectedGroupNumber > 1 ||
+              selectedQuestion?.question_number > 1 ? (
+                <Button
+                  style={{
+                    padding: "7px 20px 7px",
+                    backgroundColor: "#00205C",
+                    fontSize: "16px",
+                    fontWeight: "700",
+                    borderRadius: "10px",
+                    marginRight: "24px",
+                    textTransform: "none",
+                    color: "#fff",
+                  }}
+                  variant="contained"
+                  color="success"
+                  onClick={handlePreviousButtonClick}
+                >
+                  Previous
+                </Button>
+              ) : (
+                <div></div>
+              )}
+              {selectedGroupNumber < questionGroupCount.length ||
+              (selectedQuestion &&
+                selectedQuestion.question_number < questions.length) ? (
+                <Button
+                  style={{
+                    padding: "7px 20px 7px",
+                    backgroundColor: "#00205C",
+                    fontSize: "16px",
+                    fontWeight: "700",
+                    borderRadius: "10px",
+                    marginRight: "24px",
+                    textTransform: "none",
+                    color: "#fff",
+                  }}
+                  variant="contained"
+                  color="success"
+                  onClick={handleNextButtonClick}
+                >
+                  Next
+                </Button>
+              ) : (
+                <div></div>
+              )}
             </div>
           </div>
           {Number(part) == 1 || Number(part) == 2 || Number(part) == 5 ? (

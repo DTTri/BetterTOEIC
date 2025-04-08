@@ -10,12 +10,14 @@ import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Logo from "../assets/Logo_BetterTOEIC.svg";
-// import Noti from '../assets/Noti_icon.svg';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import LoadingProgress from "./LoadingProgress";
 import * as motion from "motion/react-client";
 
 export default function Header() {
   const [selectedItem, setSelectedItem] = useState("");
+  const [isTestOpen, setIsTestOpen] = useState(false);
   const nav = useNavigate();
   const location = useLocation();
 
@@ -48,28 +50,59 @@ export default function Header() {
 
   const handleItemChange = (e: string) => {
     setSelectedItem(e);
-    if (e === "log-out") {
-      localStorage.removeItem("token");
-      localStorage.removeItem("_id");
-      sessionStorage.removeItem("token");
-      sessionStorage.removeItem("_id");
-      sessionStorage.removeItem("state");
-      sUser.reset();
-      nav("/login");
-    } else if (e === "admin") {
-      nav("/admin");
-    } else if (e === "user-info") {
-      nav("/user-info");
-    } else if (e === "report") {
-      nav("/user-report");
-    } else if (e === "word-saved") {
-      nav("/word-saved");
-    } else if (e === "test-saved") {
-      nav("/test-saved");
+    switch (e) {
+      case "log-out":
+        localStorage.removeItem("token");
+        localStorage.removeItem("_id");
+        sessionStorage.removeItem("token");
+        sessionStorage.removeItem("_id");
+        sessionStorage.removeItem("state");
+        sUser.reset();
+        nav("/login");
+        break;
+      case "admin":
+        nav("/admin");
+        break;
+      case "user-info":
+        nav("/user-info");
+        break;
+      case "report":
+        nav("/user-report");
+        break;
+      case "word-saved":
+        nav("/word-saved");
+        break;
+      case "test-saved":
+        nav("/test-saved");
+        break;
     }
   };
-  console.log("userInfo._id:", userInfo._id); // Add this line to log userInfo._id
 
+  const handleTestChange = (e: string) => {
+    switch (e) {
+      case "l&r":
+        nav("/tests/l&r");
+        break;
+      case "s&w":
+        nav("/tests/s&w");
+        break;
+    } 
+  };
+
+  // useEffect(() => {
+  //   const handleClickOutside = (event: MouseEvent) => {
+  //     if(!isTestOpen) return;
+  //     const target = event.target as HTMLElement; // Type assertion to HTMLElement
+  //     if (isTestOpen && !target.closest('#test-dropdown')) {
+  //       setIsTestOpen(false);
+  //     }
+  //   };
+
+  //   document.addEventListener('click', handleClickOutside);
+  //   return () => {
+  //     document.removeEventListener('click', handleClickOutside); // Cleanup on unmount
+  //   };
+  // }, [isTestOpen]);
   return (
     <>
       <header className=" bg-[#ffffff] w-full px-9 py-3 flex justify-center">
@@ -102,22 +135,48 @@ export default function Header() {
                   </Link>
                 </li>
               )}
-              <li>
-                <Link to="/test">
-                  <Button
-                    className="hover:bg-slate-100"
-                    style={{
-                      fontWeight: "700",
-                      fontSize: "16px",
-                      color: "#000000",
-                      fontFamily: "Nunito Sans",
+              <li onClick={() => setIsTestOpen(!isTestOpen)} className="flex flex-row items-center justify-center cursor-pointer gap-1 relative hover:bg-slate-100">
+                <Button
+                  className="hover:bg-slate-100"
+                  variant="text"
+                  style={{
+                    fontWeight: "700",
+                    fontSize: "16px",
+                    color: "#000000",
+                    fontFamily: "Nunito Sans",
+                  }}
+                  sx={{ textTransform: "none" }}
+                >
+                  Tests
+                </Button>
+                {isTestOpen ? <ExpandMoreIcon /> : <KeyboardArrowRightIcon />}
+                {isTestOpen && (
+                  <motion.div
+                    id="test-dropdown"
+                    initial={{ opacity: 0, translateY: -20 }}
+                    animate={{ opacity: 1, translateY: 0 }}
+                    transition={{
+                      duration: 0.3,
+                      scale: { type: "spring" },
+                      opacity: { ease: "easeInOut" },
                     }}
-                    variant="text"
-                    sx={{ textTransform: "none" }}
+                    
+                    className="flex flex-col rounded-4 absolute top-full left-0 bg-white mt-1 w-[200px] shadow-md"
                   >
-                    Tests
-                  </Button>
-                </Link>
+                    <div
+                      className="hover:bg-slate-100 px-4 py-2 text-sm font-semibold"
+                      onClick={() => handleTestChange("l&r")}
+                    >
+                      Listening & Reading
+                    </div>
+                    <div
+                      className="hover:bg-slate-100 px-4 py-2 text-sm font-semibold"
+                      onClick={() => handleTestChange("s&w")}
+                    >
+                      Speaking & Writing
+                    </div>
+                  </motion.div>
+                )}
               </li>
               <li>
                 <Link to="/practice">
