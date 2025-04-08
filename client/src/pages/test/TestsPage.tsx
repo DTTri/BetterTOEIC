@@ -11,6 +11,7 @@ import LoadingProgress from "@/components/LoadingProgress";
 export default function TestsPage() {
   const testList: Test[] = testStore.use((pre) => pre.testList);
   const [value, setValue] = useState(0);
+  const [testValue, setTestValue] = useState(0);
   const [curTests, setCurTests] = useState<Test[]>(testList);
   useEffect(() => {
     setCurTests(testList);
@@ -34,7 +35,6 @@ export default function TestsPage() {
   };
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    console.log(event.currentTarget.textContent?.toString() || "");
     setValue(newValue);
     if (newValue === 0) {
       setCurTests(testList);
@@ -49,7 +49,17 @@ export default function TestsPage() {
     }
   };
 
-  console.log(curTests.length);
+  const handleTestChange = (event: React.SyntheticEvent, newValue: number) => {
+    console.log(event.currentTarget.textContent?.toString() || "");
+    setTestValue(newValue);
+    if (newValue === 0) {
+      setCurTests(testList.filter((test) => test.isLRTest === true));
+    } else {
+      setCurTests(testList.filter((test) => test.isLRTest === false));
+    }
+  };
+
+  console.log("curtest" + curTests.length);
 
   return (
     <motion.div
@@ -65,11 +75,18 @@ export default function TestsPage() {
       <PageHeader text="ETS Standard Test Library" />
       <SearchBar onSearch={filterTests} />
       <Tabs
+        style={{ maxWidth: "40%" }}
+        value={testValue}
+        onChange={handleTestChange}
+      >
+        <Tab label="Listening & Reading" />
+        <Tab label="Speaking & Writing" />
+      </Tabs>
+      <Tabs
         style={{ maxWidth: "30%" }}
         variant="scrollable"
         value={value}
         onChange={handleChange}
-        centered
       >
         <Tab label="All" />
         <Tab label="2024" />

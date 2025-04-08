@@ -10,8 +10,8 @@ import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Logo from "../assets/Logo_BetterTOEIC.svg";
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import LoadingProgress from "./LoadingProgress";
 import * as motion from "motion/react-client";
 
@@ -45,8 +45,6 @@ export default function Header() {
   if (!userInfo) {
     return <LoadingProgress />;
   }
-
-  console.log("userInfo:", userInfo); // Add this line to log userInfo
 
   const handleItemChange = (e: string) => {
     setSelectedItem(e);
@@ -86,23 +84,26 @@ export default function Header() {
       case "s&w":
         nav("/tests/s&w");
         break;
-    } 
+    }
   };
 
-  // useEffect(() => {
-  //   const handleClickOutside = (event: MouseEvent) => {
-  //     if(!isTestOpen) return;
-  //     const target = event.target as HTMLElement; // Type assertion to HTMLElement
-  //     if (isTestOpen && !target.closest('#test-dropdown')) {
-  //       setIsTestOpen(false);
-  //     }
-  //   };
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!isTestOpen) return;
+      const target = event.target as HTMLElement;
+      if (
+        !target.closest("#test-dropdown") &&
+        !target.closest(".test-button")
+      ) {
+        setIsTestOpen(false);
+      }
+    };
 
-  //   document.addEventListener('click', handleClickOutside);
-  //   return () => {
-  //     document.removeEventListener('click', handleClickOutside); // Cleanup on unmount
-  //   };
-  // }, [isTestOpen]);
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside); // Cleanup on unmount
+    };
+  }, [isTestOpen]);
   return (
     <>
       <header className=" bg-[#ffffff] w-full px-9 py-3 flex justify-center">
@@ -135,9 +136,10 @@ export default function Header() {
                   </Link>
                 </li>
               )}
-              <li onClick={() => setIsTestOpen(!isTestOpen)} className="flex flex-row items-center justify-center cursor-pointer gap-1 relative hover:bg-slate-100">
+              <Link to="/test"
+                className="flex flex-row items-center justify-center cursor-pointer gap-1 relative hover:bg-slate-100">
                 <Button
-                  className="hover:bg-slate-100"
+                  className="hover:bg-slate-100 test-button"
                   variant="text"
                   style={{
                     fontWeight: "700",
@@ -149,7 +151,7 @@ export default function Header() {
                 >
                   Tests
                 </Button>
-                {isTestOpen ? <ExpandMoreIcon /> : <KeyboardArrowRightIcon />}
+                {/* {isTestOpen ? <ExpandMoreIcon /> : <KeyboardArrowRightIcon />}
                 {isTestOpen && (
                   <motion.div
                     id="test-dropdown"
@@ -160,7 +162,6 @@ export default function Header() {
                       scale: { type: "spring" },
                       opacity: { ease: "easeInOut" },
                     }}
-                    
                     className="flex flex-col rounded-4 absolute top-full left-0 bg-white mt-1 w-[200px] shadow-md"
                   >
                     <div
@@ -176,8 +177,9 @@ export default function Header() {
                       Speaking & Writing
                     </div>
                   </motion.div>
-                )}
-              </li>
+                )} */}
+              </Link>
+
               <li>
                 <Link to="/practice">
                   <Button

@@ -31,24 +31,24 @@ export default function Conversation({
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const handleAddMessage = (typedContent: string, images: File[]) => {
+  const handleAddMessage = (typedContent: string, images?: File[]) => {
     const newMessages = [
       ...messagesState,
       {
         role: Role.User,
         content: typedContent,
         created_At: new Date().toISOString(),
+        images: images?.map((image) => URL.createObjectURL(image)), // Tạo URL blob cho ảnh
       },
     ];
-
-    images.forEach((image) => {
-      newMessages.push({
-        role: Role.User,
-        content: URL.createObjectURL(image),
-        created_At: new Date().toISOString(),
-      });
-    });
+  
     setMessagesState(newMessages);
+  
+    // Cleanup URL blob sau khi sử dụng
+    images?.forEach((image) => {
+      const blobUrl = URL.createObjectURL(image);
+      URL.revokeObjectURL(blobUrl); // Giải phóng bộ nhớ
+    });
   };
 
   const handleHeightChange = (height: number) => {

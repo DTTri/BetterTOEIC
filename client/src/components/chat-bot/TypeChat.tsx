@@ -2,12 +2,13 @@ import SendIcon from "@mui/icons-material/Send";
 import ImageIcon from "@mui/icons-material/Image";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function TypeChat({
   handleAddMessage,
   onHeightChange,
 }: {
-  handleAddMessage: (typedContent: string, images: File[]) => void;
+  handleAddMessage: (typedContent: string, images?: File[]) => void;
   onHeightChange: (height: number) => void;
 }) {
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
@@ -36,8 +37,20 @@ export default function TypeChat({
 
   const handleOnSend = () => {
     const message = document.querySelector("textarea") as HTMLTextAreaElement;
-    if (message.value.trim() === "" && selectedImages.length === 0) return;
-    handleAddMessage(message.value, selectedImages);
+    if (message.value.trim() === "") {
+      toast.error("Please enter a message before sending.");
+      return;
+    }
+    if (selectedImages.length > 5) {
+      toast.error("You can only upload a maximum of 5 images.");
+      return;
+    }
+    if(selectedImages.length == 0) {
+      handleAddMessage(message.value);
+    }
+    else{
+      handleAddMessage(message.value, selectedImages);
+    }
     message.value = "";
     setSelectedImages([]);
   };
