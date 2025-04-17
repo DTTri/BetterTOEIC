@@ -13,6 +13,8 @@ import CreateUserDTO from './CreateUserDTO';
 import SaveVocabDTO from './SaveVocabDTO';
 import CreatePostDTO from './CreatePostDTO';
 import CreateCommentDTO from './CreateCommentDTO';
+import CreateSWTestDTO from './CreateSWTestDTO';
+import CompleteSWTestDTO from './CompleteSWTestDTO';
 export {
   CompleteTestDTO,
   CreateTestDTO,
@@ -28,5 +30,7 @@ export {
   CreateUserDTO,
   SaveVocabDTO,
   CreatePostDTO,
-  CreateCommentDTO
+  CreateCommentDTO,
+  CreateSWTestDTO,
+  CompleteSWTestDTO,
 };

@@ -4,6 +4,7 @@ import roadmapServiceInstance from './RoadmapService';
 import vocabServiceInstance from './VocabService';
 import userServiceInstance from './UserService';
 import { forumServiceInstance } from './ForumService';
+import swTestServiceInstance from './SWTestService';
 export {
   testServiceInstance,
   practiceServiceInstance,
@@ -11,4 +12,5 @@ export {
   vocabServiceInstance,
   userServiceInstance,
   forumServiceInstance,
+  swTestServiceInstance,
 };
