@@ -33,6 +33,7 @@ import PostSearchBar from "./forum/PostSearchBar";
 import PostSharing from "./forum/PostSharing";
 import CreatingQuestion from "./admin/CreatingQuestion";
 import CreatingQuestionGroup from "./admin/CreatingQuestionGroup";
+import SWQuestionReview from "./test/SWQuestionReview";
 export {
   Footer,
   Header,
@@ -69,4 +70,5 @@ export {
   PostSharing,
   CreatingQuestion,
   CreatingQuestionGroup,
+  SWQuestionReview,
 };

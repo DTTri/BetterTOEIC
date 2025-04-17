@@ -3,8 +3,13 @@ import { Navigate } from "react-router-dom";
 import chatIcon from "../assets/chat_bot_icon.svg";
 import LoadingProgress from "@/components/LoadingProgress";
 import { sUser } from "@/store";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
 import { ReactNode, useState } from "react";
 import Conversation from "@/components/chat-bot/Conversation";
+
 
 export default function UserLayout({
   children,

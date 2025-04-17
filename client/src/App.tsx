@@ -44,6 +44,8 @@ import {
   WordSavedPage,
   LoginOauth,
   LearnPracticeLesson,
+  CreatingSWTestPage,
+  ReviewSWTestPage,
 } from "./pages";
 
 import { useEffect } from "react";
@@ -78,7 +80,6 @@ function App() {
     const fetchAllUsers = async () => {
       try {
         const response = await userService.getUsers();
-        console.log(response);
         if (response.EC === 0) {
           sUser.set((prev) => (prev.value.users = response.DT));
           if (curUser && curUser !== "") {
@@ -99,7 +100,6 @@ function App() {
     const fetchUsersPerBand = async () => {
       try {
         const response = await userService.getTotalUsersPerBand();
-        console.log(response);
         if (response.EC === 0) {
           sUser.set((prev) => (prev.value.usersPerBand = response.DT));
         } else {
@@ -118,7 +118,6 @@ function App() {
     const fetchTests = async () => {
       try {
         const response = await testService.getTests();
-        console.log(response);
         if (response.EC === 0) {
           testStore.set((prev) => (prev.value.testList = response.DT));
         } else {
@@ -137,7 +136,6 @@ function App() {
     const fetchTestHistory = async () => {
       try {
         const response = await testService.getTestHistory(curUser || "");
-        console.log(response);
         if (response.EC === 0) {
           testStore.set((prev) => (prev.value.testHistory = response.DT));
         } else {
@@ -175,7 +173,6 @@ function App() {
     const fetchPracticeTests = async () => {
       try {
         const response = await practiceService.getPracticeTests();
-        console.log(response);
         if (response.EC === 0) {
           practiceStore.set(
             (prev) => (prev.value.practiceTestList = response.DT)
@@ -198,7 +195,6 @@ function App() {
         const response = await practiceService.getPracticeTestHistory(
           curUser || ""
         );
-        console.log(response);
         if (response.EC === 0) {
           console.log("history" + response.DT.length);
           practiceStore.set(
@@ -220,7 +216,6 @@ function App() {
     const fetchPracticeLesson = async () => {
       try {
         const response = await practiceService.getPracticeLessons();
-        console.log(response);
         if (response.EC === 0) {
           practiceStore.set(
             (prev) => (prev.value.practiceLesson = response.DT)
@@ -243,7 +238,6 @@ function App() {
         const response = await practiceService.getPracticeLessonHistory(
           curUser || ""
         );
-        console.log(response);
         if (response.EC === 0) {
           practiceStore.set(
             (prev) =>
@@ -265,13 +259,11 @@ function App() {
     };
     const fetchRoadmapExercises = async () => {
       try {
-        console.log("User roadmap: " + sRoadmap.value.userRoadmap);
         const res = await roadmapService.getRoadmapExercisesByPhase(
           sRoadmap.value.userRoadmap?.current_level || 1
         );
         if (res.EC === 0) {
           sRoadmap.set((pre) => (pre.value.exercises = res.DT));
-          console.log("fetch roadmap exercises", res.DT);
         } else {
           console.log(res.EM);
           // toast("Fail to fetch roadmap exercises", {
@@ -290,8 +282,6 @@ function App() {
         const res = await roadmapService.getRoadmapHistory(curUser || "");
         if (res.EC === 0) {
           sRoadmap.set((pre) => (pre.value.userRoadmap = res.DT));
-
-          console.log("fetch user roadmap", res.DT);
         } else {
           console.log(res.EM);
           // toast("Fail to fetch user roadmap", {
@@ -310,7 +300,6 @@ function App() {
       try {
         const response = await vocabService.getAllVocabTopics();
         if (response.EC === 0) {
-          console.log(response);
           sVocab.set((prev) => (prev.value.vocabTopics = response.DT));
         } else {
           console.log("Fail to fetch vocabs: ", response.EM);
@@ -329,7 +318,6 @@ function App() {
       try {
         const response = await vocabService.getVocabsSaved(curUser || "");
         if (response.EC === 0) {
-          console.log(response);
           sVocab.set((prev) => (prev.value.vocabsSaved = response.DT));
         } else {
           console.log("Fail to fetch saved vocabs: ", response.EM);
@@ -348,7 +336,6 @@ function App() {
       try {
         const response = await vocabService.getVocabHistory(curUser || "");
         if (response.EC === 0) {
-          console.log(response);
           sVocab.set((prev) => (prev.value.vocabHistory = response.DT.topics));
         } else {
           console.log("Fail to fetch vocab history: ", response.EM);
@@ -367,7 +354,6 @@ function App() {
       try {
         const response = await forumService.getAllPosts();
         if (response.EC === 0) {
-          console.log(response);
           sForum.set((prev) => (prev.value.posts = response.DT));
         } else {
           console.log("Fail to fetch forum: ", response.EM);
@@ -434,7 +420,10 @@ function App() {
             <Route path="user" element={<UserManagementPage />} />
             <Route path="vocab" element={<VocabManagementPage />} />
             <Route path="test/creatingTest" element={<CreatingTestPage />} />
-
+            <Route
+              path="test/creatingSWTest"
+              element={<CreatingSWTestPage />}
+            />
             <Route
               path="practice/creatingPracticeEx"
               element={<CreatingPracticeExsPage />}
@@ -498,6 +487,14 @@ function App() {
             element={
               <UserLayout haveFooter={false}>
                 <ReviewTestPage />
+              </UserLayout>
+            }
+          />
+          <Route
+            path="/review-sw-test/:id/:attemp"
+            element={
+              <UserLayout haveFooter={false}>
+                <ReviewSWTestPage />
               </UserLayout>
             }
           />

@@ -66,6 +66,9 @@ const VocabManagementPage = lazy(
   () => import("./admin/vocab/VocabManagementPage")
 );
 const CreatingTestPage = lazy(() => import("./admin/test/CreatingTestPage"));
+const CreatingSWTestPage = lazy(
+  () => import("./admin/test/CreatingSWTestPage")
+);
 const CreatingPracticeExsPage = lazy(
   () => import("./admin/practice/CreatingPracticeExsPage")
 );
@@ -87,6 +90,7 @@ const PracticePage = lazy(() => import("./practice/PracticePage"));
 const TakingPracticePage = lazy(() => import("./practice/TakingPracticePage"));
 
 const ReviewTestPage = lazy(() => import("./test/ReviewTestPage"));
+const ReviewSWTestPage = lazy(() => import("./test/ReviewSWTestPage"));
 const ReviewPracticePage = lazy(() => import("./practice/ReviewPracticePage"));
 const VocabCardGalleryPage = lazy(() => import("./vocab/VocabCardGalleryPage"));
 const VocabLearingPage = lazy(() => import("./vocab/VocabLearingPage"));
@@ -130,6 +134,7 @@ export {
   UserManagementPage,
   VocabManagementPage,
   CreatingTestPage,
+  CreatingSWTestPage,
   CreatingPracticeExsPage,
   CreatingPracticeLessonsPage,
   CreatingRoadmapExsPage,
@@ -138,6 +143,7 @@ export {
   AdminLayout,
   UserLayout,
   ReviewTestPage,
+  ReviewSWTestPage,
   ReviewPracticePage,
   VocabCardGalleryPage,
   VocabLearingPage,
