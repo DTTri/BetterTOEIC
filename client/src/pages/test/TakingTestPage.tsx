@@ -4,17 +4,17 @@ import { sCreatingPersonalRoadmap, sUser } from "@/store";
 import { Button } from "@mui/material";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import ListeningAudio from "../../components/test/ListeningAudio";
-import QuestionComponent from "../../components/test/QuestionComponent";
-import QuestionsGroup from "../../components/test/QuestionsGroup";
-import QuestionsListContainer from "../../components/test/QuestionsListContainer";
-import Timer from "../../components/test/Timer";
+import ListeningAudio from "../../components/LRtest/ListeningAudio";
+import QuestionComponent from "../../components/LRtest/QuestionComponent";
+import QuestionsGroup from "../../components/LRtest/QuestionsGroup";
+import QuestionsListContainer from "../../components/LRtest/QuestionsListContainer";
+import Timer from "../../components/LRtest/Timer";
 import { testService } from "@/services";
 
 import ClassifyTestScore from "@/utils/ClassifyTestScore";
 import CompleteTestDTO from "@/entities/DTOS/CompleteTestDTO";
 import { LazyLoadComponent } from "react-lazy-load-image-component";
-import { QuestionComponentSkeleton } from "@/components/test/skeletons";
+import { QuestionComponentSkeleton } from "@/components/LRtest/skeletons";
 
 export default function TakingTestPage({ isEvaluation = false }) {
   const { id } = useParams();
@@ -83,7 +83,9 @@ export default function TakingTestPage({ isEvaluation = false }) {
   const onMoveToChosenQuestion = (question_number: number) => {
     setCurrentPart(selectedTest?.questions[question_number].part || 1);
     setTimeout(() => {
-      document.getElementById((question_number + 1).toString())?.scrollIntoView();
+      document
+        .getElementById((question_number + 1).toString())
+        ?.scrollIntoView();
     }, 150);
   };
 
@@ -151,8 +153,10 @@ export default function TakingTestPage({ isEvaluation = false }) {
             {singleQuestionParts?.map((question, index) => {
               return (
                 question.part === currentPart && (
-                  <LazyLoadComponent placeholder={<QuestionComponentSkeleton/>}>
-                    <QuestionComponent 
+                  <LazyLoadComponent
+                    placeholder={<QuestionComponentSkeleton />}
+                  >
+                    <QuestionComponent
                       ans={answers}
                       onChoose={onChoose}
                       key={index}

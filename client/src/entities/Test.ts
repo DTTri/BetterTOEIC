@@ -5,6 +5,7 @@ type Test = {
   title: string;
   description: string;
   main_audio: string;
+  isLRTest?: boolean;
   created_by: string;
   created_at: string;
   updated_at: string;

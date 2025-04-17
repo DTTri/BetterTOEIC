@@ -69,6 +69,7 @@ import { User } from "./entities";
 import { ThemeProvider } from "@mui/material";
 import theme from "./theme";
 import RessetPasswordPage from "./pages/auth/RessetPasswordPage";
+import TakingSWTest from "./pages/test/TakingSWTest";
 
 function App() {
   const userJustLoggedIn = sUser.use((state) => state.info);
@@ -462,6 +463,14 @@ function App() {
             element={
               <UserLayout haveFooter={false}>
                 <TakingTestPage />
+              </UserLayout>
+            }
+          />
+          <Route
+            path="/taking-sw-test/:id"
+            element={
+              <UserLayout haveFooter={false}>
+                <TakingSWTest />
               </UserLayout>
             }
           />
