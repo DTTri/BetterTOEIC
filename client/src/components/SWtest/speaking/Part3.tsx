@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Timer from "../Timer";
 import AudioRecorder from "../AudioRecorder";
 import { Question } from "@/entities";
+import { Part3SWTestTime } from "../SWTestTime";
 interface Part3Props {
   question: Question;
   onComplete: (recordings: Blob) => void;
@@ -18,7 +19,7 @@ export default function Part3({ question, onComplete }: Part3Props) {
 
   // Get response time based on question number (15s for first two, 30s for last)
   const getResponseTime = (questionNumber: number) => {
-    return questionNumber === 7 ? 30 : 15;
+    return questionNumber === 7 ? (Part3SWTestTime.question7?.RecordingTime || 30) : (Part3SWTestTime.question56?.RecordingTime || 15);
   };
 
   const handleDirectionEnd = () => {
@@ -58,7 +59,7 @@ export default function Part3({ question, onComplete }: Part3Props) {
               question 7, you will have 30 seconds to respond</h3>
             <div className="hidden">
               <Timer
-                initialSeconds={10}
+                initialSeconds={Part3SWTestTime.DirectionTime || 10}
                 onTimeEnd={handleDirectionEnd}
                 isPreparation={false}
               />
@@ -75,7 +76,7 @@ export default function Part3({ question, onComplete }: Part3Props) {
 
             <div className="flex justify-center mb-6">
               <Timer
-                initialSeconds={stage == "preparation" ? 3 : getResponseTime(question.question_number)}
+                initialSeconds={stage == "preparation" ? (Part3SWTestTime.PreparationTime || 3) : getResponseTime(question.question_number)}
                 onTimeEnd={stage == "preparation" ? handlePreparationEnd : handleRecordingEnd}
                 isPreparation={stage === 'preparation'}
               />

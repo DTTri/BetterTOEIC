@@ -71,10 +71,14 @@ export default function TestNavigator({
     switch (currentPart) {
       case 1:
         return (
-          <Part1
-            question={questions[currentQuestion]}
-            onComplete={handleRecordingComplete}
-          />
+          // <Part1
+          //   question={questions[currentQuestion]}
+          //   onComplete={handleRecordingComplete}
+          // />
+          <Part6
+          questions={questions.filter((q) => q.part === 6)}
+          onComplete={handleAnswerComplete}
+        />
         );
       case 2:
         return (
