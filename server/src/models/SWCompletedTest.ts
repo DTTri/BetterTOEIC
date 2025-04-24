@@ -4,6 +4,7 @@ type SWCompletedTest = {
   evaluations?: string[];
   sampleAnswers?: string[];
   scores?: number[];
+  s3_url?: string;
   attempted_at: string;
 };
 
