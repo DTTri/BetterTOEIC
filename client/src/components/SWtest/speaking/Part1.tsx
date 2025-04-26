@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Timer from "../Timer";
 import AudioRecorder from "../AudioRecorder";
 import { Question } from "@/entities";
+import { Part1SWTestTime } from "../SWTestTime";
 
 interface Part1Props {
   question: Question;
@@ -66,7 +67,7 @@ export default function Part1({ question, onComplete }: Part1Props) {
             </p>
             <div className="hidden">
               <Timer
-                initialSeconds={10}
+                initialSeconds={Part1SWTestTime.DirectionTime || 10}
                 onTimeEnd={handleDirectionEnd}
                 isPreparation={false}
               />
@@ -80,7 +81,7 @@ export default function Part1({ question, onComplete }: Part1Props) {
 
             <div className="flex justify-center mb-6">
               <Timer
-                initialSeconds={stage === "preparation" ? 45 : 45}
+                initialSeconds={stage === "preparation" ? Part1SWTestTime.PreparationTime || 45 : Part1SWTestTime.RecordingTime || 45}
                 onTimeEnd={
                   stage === "preparation"
                     ? handlePreparationEnd

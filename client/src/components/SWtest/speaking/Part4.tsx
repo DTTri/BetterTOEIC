@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Timer from "../Timer";
 import AudioRecorder from "../AudioRecorder";
 import { Question } from "@/entities";
+import { Part4SWTestTime } from "../SWTestTime";
 
 interface Part4Props {
   question: Question;
@@ -21,7 +22,7 @@ export default function Part4({ question, onComplete }: Part4Props) {
 
   // Get response time based on question number (15s for first two, 30s for last)
   const getResponseTime = (questionIndex: number) => {
-    return questionIndex === 10 ? 30 : 15;
+    return questionIndex === 10 ? (Part4SWTestTime.question10?.RecordingTime || 30) : (Part4SWTestTime.question89?.RecordingTime || 15);
   };
 
   const handleDirectionEnd = () => {
@@ -64,7 +65,7 @@ export default function Part4({ question, onComplete }: Part4Props) {
               respond.</h3>
             <div className="hidden">
               <Timer
-                initialSeconds={10}
+                initialSeconds={Part4SWTestTime.DirectionTime || 10}
                 onTimeEnd={handleDirectionEnd}
                 isPreparation={false}
               />
@@ -89,7 +90,7 @@ export default function Part4({ question, onComplete }: Part4Props) {
 
             <div className="flex justify-center mb-6">
             <Timer
-                initialSeconds={stage == "preparation" ? 3 : getResponseTime(question.question_number)}
+                initialSeconds={stage == "preparation" ? (Part4SWTestTime.PreparationTime || 3) : getResponseTime(question.question_number)}
                 onTimeEnd={stage == "preparation" ? handlePreparationEnd : handleRecordingEnd}
                 isPreparation={stage === 'preparation'}
               />

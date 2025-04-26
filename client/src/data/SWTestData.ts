@@ -30,7 +30,7 @@ const templateSWTestData : Test = {
             choices: [],
             correct_choice: 0,
             part: 2,
-            images: ['https://lh6.googleusercontent.com/1VOycWU0JUfgwSb5cb8Ag7B2JqFiYr4UTjlX8SIDf8L65QfW-7L3Td19USLz7Lj64KutcvLLahLfjblZRBS3B6IVj2oPjwlX_SPuwjG9txFye38ggJoIzK3DTxrclJJAYZjgPWEZOeXcotTWzNXH7Ck'],
+            images: ['https://jaxtina.com/wp-content/uploads/2021/10/TOEIC-Speaking-Question-3-1.jpg'],
         },
         {
             question_number: 4,
@@ -38,7 +38,7 @@ const templateSWTestData : Test = {
             choices: [],
             correct_choice: 0,
             part: 2,
-            images: ['https://lh3.googleusercontent.com/xQNtN8BILOVnpzvdBl9I4lYhm4nGqqJuVCAjObyGroyAzBJcNt90vqgEtji8MOTW5cEZ9qnoaN2EzF6_T6rIj9vllDEwxRC_RvDrPGOOpnFWjf6WSmL2Roic1Xsu0YD5ajF4GpQ89XDfi87l3VZUpD0'],
+            images: ['https://media.zim.vn/610aa95592067e001e3dde36/TOEIC-Speaking-Describe-a-picture-_-6.jpg'],
         },
         {
             question_number: 5,

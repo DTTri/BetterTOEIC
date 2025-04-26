@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Timer from "../Timer";
 import TextEditor from "../TextEditor";
 import { Question } from "@/entities";
+import { Part7SWTestTime } from "../SWTestTime";
 
 interface Part7Props {
   question: Question;
@@ -35,7 +36,7 @@ export default function Part7({ question, onComplete }: Part7Props) {
         {stage === "direction" ? (
           <div className="mb-8">
             <h2 className="text-3xl font-bold mb-4 w-full text-center block">
-              Question 17-20: Write an email response
+              Question 17-18: Write an email response
             </h2>
             <h3 className="text-lg font-medium mb-4">
               Direction: In this part of the test, you will read an email and
@@ -45,7 +46,7 @@ export default function Part7({ question, onComplete }: Part7Props) {
             </h3>
             <div className="hidden">
               <Timer
-                initialSeconds={10}
+                initialSeconds={Part7SWTestTime.DirectionTime || 10}
                 onTimeEnd={() => setStage("writing")}
                 isPreparation={false}
               />
@@ -55,7 +56,7 @@ export default function Part7({ question, onComplete }: Part7Props) {
           <div className="flex flex-col gap-2">
             <div className="w-full flex justify-center items-center">
               <Timer
-                initialSeconds={10 * 60}
+                initialSeconds={Part7SWTestTime.RecordingTime || 600}
                 onTimeEnd={handleTimeEnd}
                 isPreparation={false}
               />
