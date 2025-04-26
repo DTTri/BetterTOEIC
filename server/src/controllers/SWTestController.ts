@@ -117,13 +117,12 @@ class SWTestController {
         return;
       }
 
-      // First, save the user's answers
       const completedTest: SWCompletedTest = {
         ...completeSWTestDTO,
         attempted_at: new Date().toISOString(),
       };
 
-      // Save the initial test submission
+      // save completed test
       const saveResult = await swTestServiceInstance.updateSWTestHistory(req.params.userId, completedTest);
       if (!saveResult) {
         res.status(400).json({
@@ -133,9 +132,9 @@ class SWTestController {
         return;
       }
 
-      // Now, evaluate the answers using Hugging Face
+      //evaluate the answers using Hugging Face
       try {
-        const { evaluations, sampleAnswers, scores, transcriptions } = await huggingFaceServiceInstance.evaluateSWTest(
+        const { evaluations, sampleAnswers, scores } = await huggingFaceServiceInstance.evaluateSWTest(
           swTest,
           completeSWTestDTO.answers
         );
@@ -153,28 +152,23 @@ class SWTestController {
           res.status(200).json({
             EM: 'SW Test evaluated and saved successfully',
             EC: 0,
-            DT: {
-              testId: completeSWTestDTO.testId,
-              evaluations,
-              sampleAnswers,
-              scores,
-              transcriptions,
-            },
+            DT: {},
           });
         } else {
           res.status(200).json({
             EM: 'SW Test answers saved but evaluation failed to update',
             EC: 1,
-            DT: completedTest,
+            DT: {},
           });
         }
       } catch (evaluationError) {
         console.error('Error during evaluation:', evaluationError);
-        // If evaluation fails, we still return success for saving the answers
         res.status(200).json({
           EM: 'SW Test answers saved but evaluation failed',
           EC: 1,
-          DT: completedTest,
+          DT: {
+            error: evaluationError,
+          },
         });
       }
     } catch (err: any) {
