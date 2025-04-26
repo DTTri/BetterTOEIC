@@ -5,4 +5,5 @@ import vocabRouter from './VocabRoutes';
 import authRouter from './AuthRoutes';
 import userRouter from './UserRoutes';
 import fileRouter from './FileRoutes';
-export { testRouter, practiceRouter, roadmapRouter, vocabRouter, authRouter, userRouter, fileRouter };
+import swTestRouter from './SWTestRoutes';
+export { testRouter, practiceRouter, roadmapRouter, vocabRouter, authRouter, userRouter, fileRouter, swTestRouter };
