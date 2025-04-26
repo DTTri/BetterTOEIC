@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Timer from "../Timer";
 import AudioRecorder from "../AudioRecorder";
 import { Question } from "@/entities";
+import { Part5SWTestTime } from "../SWTestTime";
 interface Part5Props {
   question: Question;
   onComplete: (recording: Blob) => void;
@@ -51,7 +52,7 @@ export default function Part5({ question, onComplete }: Part5Props) {
               Then you will have 60 seconds to speak about the topic.</h3>
             <div className="hidden">
               <Timer
-                initialSeconds={10}
+                initialSeconds={Part5SWTestTime.DirectionTime || 10}
                 onTimeEnd={handleDirectionEnd}
                 isPreparation={false}
               />
@@ -65,7 +66,7 @@ export default function Part5({ question, onComplete }: Part5Props) {
 
             <div className="flex justify-center mb-6">
               <Timer
-                initialSeconds={stage === "preparation" ? 45 : 60}
+                initialSeconds={stage === "preparation" ? (Part5SWTestTime.PreparationTime || 45) : (Part5SWTestTime.RecordingTime || 60)}
                 onTimeEnd={
                   stage === "preparation"
                     ? handlePreparationEnd

@@ -2,6 +2,7 @@ import { useState } from "react";
 import Timer from "../Timer";
 import TextEditor from "../TextEditor";
 import { Question } from "@/entities";
+import { Part8SWTestTime } from "../SWTestTime";
 interface Part8Props {
   question: Question;
   onComplete: (answer: string) => void;
@@ -37,7 +38,7 @@ export default function Part8({ question, onComplete }: Part8Props) {
               between 300-350 words.</h3>
             <div className="hidden">
               <Timer
-                initialSeconds={10}
+                initialSeconds={Part8SWTestTime.DirectionTime || 10}
                 onTimeEnd={() => setStage("writing")}
                 isPreparation={false}
               />
@@ -47,7 +48,7 @@ export default function Part8({ question, onComplete }: Part8Props) {
           <div className="flex flex-col gap-2">
             <div className="w-full flex justify-center items-center">
               <Timer
-                initialSeconds={30 * 60}
+                initialSeconds={Part8SWTestTime.RecordingTime || 1800}
                 onTimeEnd={handleTimeEnd}
                 isPreparation={false}
               />

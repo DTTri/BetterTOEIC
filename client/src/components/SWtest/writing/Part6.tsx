@@ -2,6 +2,7 @@ import { useState } from "react";
 import Timer from "../Timer";
 import TextEditor from "../TextEditor";
 import { Question } from "@/entities";
+import { Part6SWTestTime } from "../SWTestTime";
 
 interface Part6Props {
   questions: Question[];
@@ -58,7 +59,7 @@ export default function Part6({ questions, onComplete }: Part6Props) {
               forms of the words and you can use the words in any order.</h3>
             <div className="hidden">
               <Timer
-                initialSeconds={10}
+                initialSeconds={Part6SWTestTime.DirectionTime || 10}
                 onTimeEnd={() => setStage("writing")}
                 isPreparation={false}
               />
@@ -66,15 +67,15 @@ export default function Part6({ questions, onComplete }: Part6Props) {
           </div>
         ) : (
           <div className="w-full">
-            <div className="grid grid-cols-2 gap-6">
-              <div>
+            <div className="grid grid-cols-2 gap-6 ">
+              <div className="w-full h-[265px] rounded-lg">
                 <img
                   src={questions[currentQuestion]?.images?.[0]}
                   alt={`Question ${currentQuestion + 1}`}
-                  className="w-full rounded-lg shadow-md"
+                  className="w-full h-full object-fill rounded-lg shadow-md"
                 />
               </div>
-              <div className="space-y-6">
+              <div className="space-y-6 h-full">
                 <div className="bg-gray-50 p-2 rounded-lg">
                   <h4 className="text-sm font-bold text-gray-600 mb-2">
                     Keywords: {questions[currentQuestion]?.passages?.[0]}
@@ -98,7 +99,7 @@ export default function Part6({ questions, onComplete }: Part6Props) {
                 Previous
               </button>
               <Timer
-                initialSeconds={8 * 60}
+                initialSeconds={(Part6SWTestTime.RecordingTime || 480)}
                 onTimeEnd={handleTimeEnd}
                 isPreparation={false}
               />
