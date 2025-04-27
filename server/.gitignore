@@ -1,4 +1,4 @@
 node_modules/
 dist/
 .env
-src/config/diagflow-credentials.json
+**/diagflow-credentials.json
