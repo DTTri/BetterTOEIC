@@ -16,16 +16,32 @@ export default function UserLayout({
   haveHeader = true,
   haveFooter = true,
   passAll = false,
+  haveChatBot = true,
 }: {
   children: ReactNode;
   haveHeader?: boolean;
   haveFooter?: boolean;
   passAll?: boolean;
+  haveChatBot?: boolean;
 }) {
   const [isOpenChatBot, setIsOpenChatBot] = useState<Boolean>(false);
+  const handleOpenChatBot = () => {
+    setIsOpenChatBot(!isOpenChatBot)
+  }
   if (passAll) {
     return (
       <div className="w-full overflow-y-auto bg-gray-100">
+        {haveChatBot && 
+          <div onClick={handleOpenChatBot} className="fixed z-[1000] h-[60px] w-[60px] overflow-hidden rounded-full right-5 bottom-6 hover:shadow-md cursor-pointer">
+            <img
+              src={chatIcon}
+              className="w-full h-full block object-cover object-center"
+            />
+          </div>
+        }
+        {
+          (isOpenChatBot && haveChatBot) && <Conversation handleCloseChatBot={() => setIsOpenChatBot(false)}/>
+        }
         {haveHeader && <Header />}
         <div className="w-full min-h-screen h-full">{children}</div>
         {haveFooter && <Footer />}
@@ -52,19 +68,18 @@ export default function UserLayout({
     return <Navigate to="/login" />;
   }
 
-  const handleOpenChatBot = () => {
-    setIsOpenChatBot(!isOpenChatBot)
-  }
   return (
     <div className="w-full overflow-y-auto bg-gray-100">
-      <div onClick={handleOpenChatBot} className="fixed z-[1000] h-[60px] w-[60px] overflow-hidden rounded-full right-5 bottom-6 hover:shadow-md cursor-pointer">
-        <img
-          src={chatIcon}
-          className="w-full h-full block object-cover object-center"
-        />
-      </div>
+      {haveChatBot && 
+        <div onClick={handleOpenChatBot} className="fixed z-[1000] h-[60px] w-[60px] overflow-hidden rounded-full right-5 bottom-6 hover:shadow-md cursor-pointer">
+          <img
+            src={chatIcon}
+            className="w-full h-full block object-cover object-center"
+          />
+        </div>
+      }
       {
-        isOpenChatBot && <Conversation handleCloseChatBot={() => setIsOpenChatBot(false)}/>
+        (isOpenChatBot && haveChatBot) && <Conversation handleCloseChatBot={() => setIsOpenChatBot(false)}/>
       }
       {haveHeader && <Header />}
       <div className="w-full min-h-screen h-full">{children}</div>

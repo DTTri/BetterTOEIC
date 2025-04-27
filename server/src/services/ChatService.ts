@@ -15,19 +15,19 @@ class ChatService {
       );
 
       let content = '';
+
+      console.log("dialogflowResponse" + dialogflowResponse.parameters);
     
       if (dialogflowResponse.matched) {
         const params = dialogflowResponse.parameters;
-        if (params?.url) {
-          content = `${params.responseText} ${params.url}`;
-        } else {
-          content = dialogflowResponse.response;
-        }
+        content = params?.responseText + (params?.url ? ` ${params.url}` : '');
       }
       else {
         const gptResponse = await gptService.generateResponse(message);
         content = gptResponse.content;
       }
+
+      console.log("content" + content);
 
       const responseMessage: ChatMessage = {
         role: 'bot',

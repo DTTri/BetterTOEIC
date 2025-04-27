@@ -30,8 +30,6 @@ class DialogflowService {
 
     // this.projectId = process.env.DIALOGFLOW_PROJECT_ID || '';
 
-
-
     try {
       // Sử dụng file credentials trực tiếp
       const keyFilePath = path.resolve(__dirname, '../config/diagflow-credentials.json');
@@ -86,12 +84,14 @@ class DialogflowService {
         responseText: payload?.responseText?.stringValue || ''
       };
 
+      const isMatched = !!(result.intent?.displayName && result.intent.isFallback !== true);
+
       return {
         intent: result.intent?.displayName || '',
         confidence: result.intentDetectionConfidence || 0,
         response: result.fulfillmentText || '',
         parameters: parameters,
-        matched: !!result.intent?.displayName,
+        matched: isMatched,
       };
     } catch (error) {
       console.error('Error detecting intent:', error);

@@ -461,7 +461,7 @@ function App() {
           <Route
             path="/taking-test/:id"
             element={
-              <UserLayout haveFooter={false}>
+              <UserLayout haveFooter={false} haveChatBot={false}>
                 <TakingTestPage />
               </UserLayout>
             }
@@ -469,7 +469,7 @@ function App() {
           <Route
             path="/taking-sw-test/:id"
             element={
-              <UserLayout haveFooter={false}>
+              <UserLayout haveFooter={false} haveChatBot={false}>
                 <TakingSWTest />
               </UserLayout>
             }

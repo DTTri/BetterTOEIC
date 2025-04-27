@@ -26,9 +26,13 @@ export default function Conversation({
     if (user?._id) {
       const loadChatHistory = async () => {
         try {
-          const response = await chatService.getChatHistory(user._id);
+          const response = await fetch(
+            `http://localhost:8000/api/chat/history/${user._id}`
+          ).then((res) => res.json());
 
-          if (response.EC == 0) {
+          console.log(response);
+
+          if (response.EC === 0) {
             setMessages(response.DT.chats);
           }
           else{
@@ -67,13 +71,23 @@ export default function Conversation({
 
     setMessages((prev) => [...prev, newUserMessage]);
 
+    console.log("Sending message:", typedContent);
+    console.log("Language code:", languageCode);
+
     try {
       setIsLoading(true);
-      const response = await chatService.sendMessage(
-        typedContent,
-        languageCode,
-        user?._id
-      );
+      const response = await fetch(
+        `http://localhost:8000/api/chat/message${
+          user?._id ? "/?userId=" + user._id : ""
+        }`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ message: typedContent, languageCode }),
+        }
+      ).then((res) => res.json());
 
       if (response.EC === 0 && response.DT) {
         // Add bot response
@@ -81,6 +95,11 @@ export default function Conversation({
         setMessages((prev) => [...prev, botMessage]);
       } else {
         toast.error("Failed to get response from bot");
+        setMessages((prev) => [...prev, {
+          role: Role.Bot,
+          content: languageCode === "vi" ? "Hệ thống đang bận." : "System is in trouble.",
+          created_At: new Date().toISOString(),
+        }]);
       }
     } catch (error) {
       console.error("Failed to send message:", error);

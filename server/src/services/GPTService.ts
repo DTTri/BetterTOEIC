@@ -3,8 +3,6 @@ import { GPTResponse } from '~/models/Chat';
 
 class GPTService {
   private openai: OpenAI;
-  private readonly MAX_RETRIES = 3;
-  private readonly TIMEOUT = 30000; // 30 seconds
   private readonly MAX_TOKENS = 150; // Limit response length
 
   constructor() {
@@ -15,8 +13,6 @@ class GPTService {
 
     this.openai = new OpenAI({
       apiKey,
-      timeout: this.TIMEOUT,
-      maxRetries: this.MAX_RETRIES,
     });
   }
 
@@ -30,7 +26,7 @@ class GPTService {
           },
           { role: "user", content: message }
         ],
-        model: "gpt-3.5-turbo",
+        model: "gpt-4o-mini",
         max_tokens: this.MAX_TOKENS,
         temperature: 0.7, // Add some variability but keep responses focused
         presence_penalty: 0.6, // Encourage diverse responses
@@ -44,9 +40,7 @@ class GPTService {
       }
 
       return { content };
-    } catch (error: any) {
-      console.error('GPT Service Error:', error);
-      
+    } catch (error: any) {      
       // Handle specific OpenAI errors
       if (error.status === 429) {
         return {
