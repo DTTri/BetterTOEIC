@@ -57,7 +57,7 @@ export default function UserLayout({
   }
   return (
     <div className="w-full overflow-y-auto bg-gray-100">
-      <div onClick={handleOpenChatBot} className="fixed z-[1000] h-[60px] w-[60px] overflow-hidden rounded-full right-4 bottom-5 hover:shadow-md cursor-pointer">
+      <div onClick={handleOpenChatBot} className="fixed z-[1000] h-[60px] w-[60px] overflow-hidden rounded-full right-5 bottom-6 hover:shadow-md cursor-pointer">
         <img
           src={chatIcon}
           className="w-full h-full block object-cover object-center"

@@ -6,49 +6,88 @@ import { useEffect, useRef, useState } from "react";
 import UserLogChat from "./UserLogChat";
 import BotLogChat from "./BotLogChat";
 import TypeChat from "./TypeChat";
+import chatService from "@/services/chatService";
+import { toast } from "react-toastify";
+import { sUser } from "@/store";
 
 export default function Conversation({
-  messages = ChatData,
   handleCloseChatBot,
 }: {
-  messages?: Message[];
   handleCloseChatBot: () => void;
 }) {
-  // messages is a sample data
-  const [messagesState, setMessagesState] = useState<Message[]>([]);
-  const [typeChatHeight, setTypeChatHeight] = useState<number>(50); // Default height
+  const user = sUser.use((state) => state.info);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [typeChatHeight, setTypeChatHeight] = useState<number>(50);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // Load chat history when component mounts and user exists
   useEffect(() => {
-    setMessagesState(messages);
-  }, [messages]);
+    if (user?._id) {
+      const loadChatHistory = async () => {
+        try {
+          const response = await chatService.getChatHistory(user._id);
+
+          if (response.EC == 0) {
+            setMessages(response.DT.chats);
+          }
+          else{
+            toast.error("Failed to load chat history");
+          }
+        } catch (error) {
+          console.error("Failed to load chat history:", error);
+          toast.error("Failed to load chat history");
+        }
+      };
+
+      loadChatHistory();
+    }
+  }, [user?._id]);
 
   useEffect(() => {
     scrollToBottom();
-  }, [messagesState]);
+  }, [messages]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const handleAddMessage = (typedContent: string, images?: File[]) => {
-    const newMessages = [
-      ...messagesState,
-      {
-        role: Role.User,
-        content: typedContent,
-        created_At: new Date().toISOString(),
-        images: images?.map((image) => URL.createObjectURL(image)), // Tạo URL blob cho ảnh
-      },
-    ];
-  
-    setMessagesState(newMessages);
-  
-    // Cleanup URL blob sau khi sử dụng
-    images?.forEach((image) => {
-      const blobUrl = URL.createObjectURL(image);
-      URL.revokeObjectURL(blobUrl); // Giải phóng bộ nhớ
-    });
+  const handleAddMessage = async (
+    typedContent: string,
+    languageCode: "vi" | "en" = "en"
+  ) => {
+    if (!typedContent.trim()) return;
+
+    // Add user message immediately
+    const newUserMessage: Message = {
+      role: Role.User,
+      content: typedContent,
+      created_At: new Date().toISOString(),
+    };
+
+    setMessages((prev) => [...prev, newUserMessage]);
+
+    try {
+      setIsLoading(true);
+      const response = await chatService.sendMessage(
+        typedContent,
+        languageCode,
+        user?._id
+      );
+
+      if (response.EC === 0 && response.DT) {
+        // Add bot response
+        const botMessage: Message = response.DT as Message;
+        setMessages((prev) => [...prev, botMessage]);
+      } else {
+        toast.error("Failed to get response from bot");
+      }
+    } catch (error) {
+      console.error("Failed to send message:", error);
+      toast.error("Failed to send message");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleHeightChange = (height: number) => {
@@ -71,22 +110,33 @@ export default function Conversation({
           style={{ width: 24, height: 24, color: "#000000" }}
           fontSize="large"
         />
-        <h3 className="ml-5 font-extrabold text-3xl text-[#000000]">Chat bot</h3>
+        <h3 className="ml-5 font-extrabold text-3xl text-[#000000]">
+          Chat bot
+        </h3>
       </div>
       <div
         className="conversation flex flex-col w-full p-5 overflow-auto"
-        style={{ height: `calc(100% - ${typeChatHeight}px - 30px)` }} // Adjust height based on TypeChat height
+        style={{ height: `calc(100% - ${typeChatHeight}px - 30px)` }}
       >
-        {messagesState?.map((message, i) =>
+        {messages.map((message, i) =>
           message.role === Role.User ? (
             <UserLogChat key={i} message={message} />
           ) : (
             <BotLogChat key={i} message={message} />
           )
         )}
+        {isLoading && (
+          <div className="flex justify-center">
+            <div className="animate-bounce">...</div>
+          </div>
+        )}
         <div ref={messagesEndRef} />
       </div>
-      <TypeChat onHeightChange={handleHeightChange}  handleAddMessage={handleAddMessage}  />
+      <TypeChat
+        onHeightChange={handleHeightChange}
+        handleAddMessage={handleAddMessage}
+        isLoading={isLoading}
+      />
     </motion.div>
   );
 }
