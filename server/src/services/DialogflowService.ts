@@ -11,36 +11,30 @@ class DialogflowService {
   private projectId: string;
 
   constructor() {
-    // const privateKey = process.env.DIALOGFLOW_PRIVATE_KEY
-    //   ? process.env.DIALOGFLOW_PRIVATE_KEY.split(String.raw`\n`).join('\n')
-    //   : '';
-
-    // const credentials = {
-    //   type: process.env.DIALOGFLOW_TYPE,
-    //   project_id: process.env.DIALOGFLOW_PROJECT_ID,
-    //   private_key_id: process.env.DIALOGFLOW_PRIVATE_KEY_ID,
-    //   private_key: privateKey,
-    //   client_email: process.env.DIALOGFLOW_CLIENT_EMAIL,
-    //   client_id: process.env.DIALOGFLOW_CLIENT_ID,
-    //   auth_uri: process.env.DIALOGFLOW_AUTH_URI,
-    //   token_uri: process.env.DIALOGFLOW_TOKEN_URI,
-    //   auth_provider_x509_cert_url: process.env.DIALOGFLOW_AUTH_PROVIDER_CERT_URL,
-    //   client_x509_cert_url: process.env.DIALOGFLOW_CLIENT_CERT_URL
-    // };
-
-    // this.projectId = process.env.DIALOGFLOW_PROJECT_ID || '';
 
     try {
-      // Sử dụng file credentials trực tiếp
-      const keyFilePath = path.resolve(__dirname, '../config/diagflow-credentials.json');
-      
+      const credentials = {
+        "type": process.env.DIALOGFLOW_TYPE,
+        "project_id": process.env.DIALOGFLOW_PROJECT_ID,
+        "private_key_id": process.env.DIALOGFLOW_PRIVATE_KEY_ID,
+        "private_key": process.env.DIALOGFLOW_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+        "client_email": process.env.DIALOGFLOW_CLIENT_EMAIL,
+        "client_id": process.env.DIALOGFLOW_CLIENT_ID,
+        "auth_uri": process.env.DIALOGFLOW_AUTH_URI,
+        "token_uri": process.env.DIALOGFLOW_TOKEN_URI,
+        "auth_provider_x509_cert_url": process.env.DIALOGFLOW_AUTH_PROVIDER_CERT_URL,
+        "client_x509_cert_url": process.env.DIALOGFLOW_CLIENT_CERT_URL,
+      };
+
       this.sessionClient = new dialogflow.SessionsClient({
-        keyFilename: keyFilePath
+        credentials: credentials
       });
 
-      // Lấy project ID từ credentials file
-      const credentials = require(keyFilePath);
-      this.projectId = credentials.project_id;
+      this.projectId = process.env.DIALOGFLOW_PROJECT_ID || '';
+
+      if (!this.projectId) {
+        throw new Error('DIALOGFLOW_PROJECT_ID is not defined in environment variables');
+      }
 
     } catch (error) {
       console.error('Error initializing Dialogflow client:', error);
