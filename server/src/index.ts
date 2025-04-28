@@ -17,6 +17,7 @@ import YAML from 'yaml';
 import fs from 'fs';
 import path from 'path';
 import forumRouter from './routes/ForumRoutes';
+import chatRouter from './routes/ChatRoutes';
 dotenv.config(); //configure env enviroment to use data from .env
 
 const app: Express = express();
@@ -35,6 +36,7 @@ app.use('/api/vocab', vocabRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 app.use('/api/forum', forumRouter);
+app.use('/api/chat', chatRouter);
 app.use('/api/swtest', swTestRouter);
 connectDB()
   .then(() => {

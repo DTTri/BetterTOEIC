@@ -6,9 +6,8 @@ type Message = {
 }
 
 export enum Role {
-    User = 'User',
-    Admin = 'Admin',
-    Bot = 'Bot'
+    User = 'user',
+    Bot = 'bot'
 }
 
 export default Message;
