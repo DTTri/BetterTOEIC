@@ -18,6 +18,10 @@ import VocabsSaved from './VocabsSaved';
 import User from './User';
 import Post from './Post';
 import Comment from './Comment';
+import SWTest from './SWTest';
+import SWQuestion from './SWQuestion';
+import SWCompletedTest from './SWCompletedTest';
+import SWTestHistory from './SWTestHistory';
 export {
   Test,
   CompletedTest,
@@ -38,5 +42,9 @@ export {
   VocabsSaved,
   User,
   Post,
-  Comment
+  Comment,
+  SWTest,
+  SWQuestion,
+  SWCompletedTest,
+  SWTestHistory,
 };
