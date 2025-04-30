@@ -1964,6 +1964,134 @@ paths:
                   EC:
                     type: integer
                     example: 2
+  /chat/message:
+    post:
+      summary: Send a message to the chatbot
+      tags:
+        - Chat
+      parameters:
+        - name: userId
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Optional user ID for tracking conversation history
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  description: The message to send to the chatbot
+                  example: "How can I improve my TOEIC score?"
+                languageCode:
+                  type: string
+                  description: The language code for the message
+                  default: "en"
+                  example: "en"
+      responses:
+        '200':
+          description: Message processed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  role:
+                    type: string
+                    enum: [bot]
+                    example: "bot"
+                  content:
+                    type: string
+                    example: "To improve your TOEIC score, you should focus on these key areas: 1. Regular practice with official TOEIC materials..."
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: "2024-01-20T15:30:00.000Z"
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Message is required"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Failed to process message"
+
+  /chat/history/{userId}:
+    get:
+      summary: Get chat history for a user
+      tags:
+        - Chat
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the user whose chat history to retrieve
+          example: "user123"
+      responses:
+        '200':
+          description: Chat history retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                    example: "user123"
+                  chats:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        role:
+                          type: string
+                          enum: [user, bot]
+                          example: "user"
+                        content:
+                          type: string
+                          example: "How can I improve my TOEIC score?"
+                        created_at:
+                          type: string
+                          format: date-time
+                          example: "2024-01-20T15:30:00.000Z"
+        '404':
+          description: Chat history not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Chat history not found for this user"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Failed to retrieve chat history"
 components:
   schemas:
     SWTest:
@@ -2572,3 +2700,29 @@ components:
             type: string
           avatar:
             type: string
+
+    ChatMessage:
+      type: object
+      properties:
+        role:
+          type: string
+          enum: [user, bot]
+          example: "user"
+        content:
+          type: string
+          example: "How can I improve my TOEIC score?"
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-01-20T15:30:00.000Z"
+
+    ChatHistory:
+      type: object
+      properties:
+        userId:
+          type: string
+          example: "user123"
+        chats:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatMessage'
