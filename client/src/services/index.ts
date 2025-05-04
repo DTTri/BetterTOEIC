@@ -3,7 +3,8 @@ import roadmapService from "./roadmapService";
 import userService from "./userService";
 import forumService from "./forumService";
 import practiceService from "./practiceService";
-import vocabService from "./vocabService";
+import vocabService from "./vocabService"; 
+import chatService from "./chatService";
 export {
   testService,
   roadmapService,
@@ -11,4 +12,5 @@ export {
   forumService,
   practiceService,
   vocabService,
+  chatService,
 };

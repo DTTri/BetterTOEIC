@@ -1,4 +1,4 @@
-import Message from "@/entities/Message";
+import Message from "@/entities/Chat";
 import { useState } from "react";
 import ImageModal from "../forum/ImageModal";
 
@@ -10,7 +10,7 @@ export default function UserLogChat({ message }: { message: Message }) {
     } else {
       setSelectedImage(image); // Select the clicked image
     }
-  }
+  };
   return (
     <div className="w-full flex flex-row justify-end mb-5">
       <div className="max-w-[80%] flex flex-col gap-1 items-end">
@@ -29,7 +29,12 @@ export default function UserLogChat({ message }: { message: Message }) {
           {message.content}
         </div>
       </div>
-      {selectedImage !== null && (<ImageModal src={selectedImage} onClose={() => setSelectedImage(null)}/>)}
+      {selectedImage !== null && (
+        <ImageModal
+          src={selectedImage}
+          onClose={() => setSelectedImage(null)}
+        />
+      )}
     </div>
   );
 }

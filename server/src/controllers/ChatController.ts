@@ -33,12 +33,15 @@ class ChatController {
   async getChatHistory(req: Request, res: Response): Promise<void> {
     try {
       const { userId } = req.params;
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
       
       if (!userId) {
         res.status(400).json({
           EC: 1,
           EM: 'User ID is required',
         });
+        return;
       }
 
       const findUser = await collections.users?.findOne({ _id: new ObjectId(userId) });
@@ -47,11 +50,10 @@ class ChatController {
           EC: 1,
           EM: 'User not found',
         });
+        return;
       }
 
-      const history = await chatService.getChatHistory(userId);
-
-      console.log("history", history);
+      const history = await chatService.getChatHistory(userId, page, limit);
 
       res.json({
         EC: 0,

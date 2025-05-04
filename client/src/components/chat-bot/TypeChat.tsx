@@ -49,7 +49,7 @@ export default function TypeChat({
   };
 
   return (
-    <div className="w-full rounded-3xl rounded-t-none border-t-[1px] border-t-slate-200 bg-[#fff] px-5 py-4 ">
+    <div className="w-full rounded-3xl rounded-t-none border-t-[1px] border-t-slate-200 bg-[#fff] px-4 py-3 ">
       <div className="flex flex-row items-top gap-1">
         <textarea
           placeholder="Write your message"

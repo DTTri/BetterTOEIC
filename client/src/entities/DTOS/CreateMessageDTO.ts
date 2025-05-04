@@ -1,7 +1,7 @@
-import { Role } from "../Message";
+import { Role } from "../Chat";
 
 type CreateMessageDTO = {
-    role: Role;
-    content: string;
+  role: Role;
+  content: string;
 };
 export default CreateMessageDTO;

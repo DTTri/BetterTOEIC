@@ -1,14 +1,13 @@
 import * as motion from "motion/react-client";
 import RemoveIcon from "@mui/icons-material/Remove";
-import Message, { Role } from "@/entities/Message";
-import ChatData from "./Chat_Data";
-import { useEffect, useRef, useState } from "react";
+import Message, { Role } from "@/entities/Chat";
+import { useEffect, useRef, useState, useCallback } from "react";
 import UserLogChat from "./UserLogChat";
 import BotLogChat from "./BotLogChat";
 import TypeChat from "./TypeChat";
 import chatService from "@/services/chatService";
 import { toast } from "react-toastify";
-import { sUser } from "@/store";
+import { sChat, sUser } from "@/store";
 
 export default function Conversation({
   handleCloseChatBot,
@@ -16,45 +15,94 @@ export default function Conversation({
   handleCloseChatBot: () => void;
 }) {
   const user = sUser.use((state) => state.info);
+  const chat = sChat.use((state) => state.chatHistory);
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [typeChatHeight, setTypeChatHeight] = useState<number>(50);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const conversationRef = useRef<HTMLDivElement>(null);
+  const prevScrollHeightRef = useRef<number>(0);
+  const shouldScrollToBottomRef = useRef<boolean>(true);
 
-  // Load chat history when component mounts and user exists
   useEffect(() => {
-    if (user?._id) {
-      const loadChatHistory = async () => {
-        try {
-          const response = await fetch(
-            `http://localhost:8000/api/chat/history/${user._id}`
-          ).then((res) => res.json());
-
-          console.log(response);
-
-          if (response.EC === 0) {
-            setMessages(response.DT.chats);
-          }
-          else{
-            toast.error("Failed to load chat history");
-          }
-        } catch (error) {
-          console.error("Failed to load chat history:", error);
-          toast.error("Failed to load chat history");
-        }
-      };
-
-      loadChatHistory();
+    if (chat && chat.length > 0) {
+      setMessages(chat);
+      shouldScrollToBottomRef.current = true;
     }
-  }, [user?._id]);
+  }, [chat]);
+
+  const loadChatHistory = async (page: number) => {
+    if (!user?._id) return;
+    
+    try {
+      if (page === 1) {
+        setIsLoading(true);
+        shouldScrollToBottomRef.current = true;
+      } else {
+        setIsLoadingMore(true);
+        shouldScrollToBottomRef.current = false;
+        
+        if (conversationRef.current) {
+          prevScrollHeightRef.current = conversationRef.current.scrollHeight;
+        }
+      }
+
+      const response = await chatService.getChatHistory(user._id, page, 10);
+
+      if (response.EC === 0) {
+        const newMessages = response.DT.chats;
+        
+        setMessages(prev => 
+          page === 1 ? newMessages : [...newMessages, ...prev]
+        );
+        
+        setCurrentPage(page);
+        setHasMore(response.DT.pagination?.hasMore || false);
+        
+        if (page === 1) {
+          sChat.set((prev) => (prev.value.chatHistory = newMessages));
+        }
+      } else {
+        toast.error("Failed to load chat history");
+      }
+    } catch (error) {
+      console.error("Failed to load chat history:", error);
+      toast.error("Failed to load chat history");
+    } finally {
+      setIsLoading(false);
+      setIsLoadingMore(false);
+    }
+  };
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    if (isLoadingMore === false && prevScrollHeightRef.current > 0 && conversationRef.current) {
+      const newScrollHeight = conversationRef.current.scrollHeight;
+      const scrollDiff = newScrollHeight - prevScrollHeightRef.current;
+      conversationRef.current.scrollTop = scrollDiff > 0 ? scrollDiff : 0;
+      prevScrollHeightRef.current = 0;
+    }
+  }, [isLoadingMore, messages]);
+
+  useEffect(() => {
+    if (shouldScrollToBottomRef.current) {
+      scrollToBottom();
+    }
+  }, [messages.length]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+
+  const handleScroll = useCallback(() => {
+    if (!conversationRef.current || isLoadingMore || !hasMore) return;
+    
+    if (conversationRef.current.scrollTop < 50) {
+      loadChatHistory(currentPage + 1);
+    }
+  }, [currentPage, isLoadingMore, hasMore]);
 
   const handleAddMessage = async (
     typedContent: string,
@@ -62,44 +110,31 @@ export default function Conversation({
   ) => {
     if (!typedContent.trim()) return;
 
-    // Add user message immediately
     const newUserMessage: Message = {
       role: Role.User,
       content: typedContent,
       created_At: new Date().toISOString(),
     };
 
+    shouldScrollToBottomRef.current = true;
+    
     setMessages((prev) => [...prev, newUserMessage]);
-
-    console.log("Sending message:", typedContent);
-    console.log("Language code:", languageCode);
 
     try {
       setIsLoading(true);
-      const response = await fetch(
-        `http://localhost:8000/api/chat/message${
-          user?._id ? "/?userId=" + user._id : ""
-        }`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ message: typedContent, languageCode }),
-        }
-      ).then((res) => res.json());
+      const responseChat = await chatService.sendMessage(
+        typedContent,
+        languageCode,
+        user?._id
+      );
 
-      if (response.EC === 0 && response.DT) {
-        // Add bot response
-        const botMessage: Message = response.DT as Message;
+      if (responseChat.EC === 0) {
+        const botMessage: Message = responseChat.DT as Message;
         setMessages((prev) => [...prev, botMessage]);
+        
+        sChat.set((prev) => (prev.value.chatHistory = [...prev.value.chatHistory, newUserMessage, botMessage]));
       } else {
         toast.error("Failed to get response from bot");
-        setMessages((prev) => [...prev, {
-          role: Role.Bot,
-          content: languageCode === "vi" ? "Hệ thống đang bận." : "System is in trouble.",
-          created_At: new Date().toISOString(),
-        }]);
       }
     } catch (error) {
       console.error("Failed to send message:", error);
@@ -120,9 +155,9 @@ export default function Conversation({
       transition={{ type: "tween" }}
       whileInView={{ x: -85, y: 0, scale: 1 }}
       exit={{ x: 150, y: 200, scale: 0 }}
-      className="fixed z-[2000] right-0 bottom-6 w-[450px] h-[600px] bg-[#fff] rounded-[40px] shadow-md shadow-slate-400 overflow-hidden"
+      className="fixed z-[2000] right-0 bottom-6 w-[450px] h-[600px] bg-[#fff] rounded-[24px] shadow-md shadow-slate-400 overflow-hidden"
     >
-      <div className="title h-[10%] flex flex-row items-center py-4 px-6 border-b-[1px] border-b-slate-200">
+      <div className="title flex flex-row items-center py-4 px-6 border-b-[1px] border-b-slate-200">
         <RemoveIcon
           onClick={handleCloseChatBot}
           className="hover:shadow-md hover:shadow-slate-300 rounded-full"
@@ -134,9 +169,17 @@ export default function Conversation({
         </h3>
       </div>
       <div
+        ref={conversationRef}
         className="conversation flex flex-col w-full p-5 overflow-auto"
         style={{ height: `calc(100% - ${typeChatHeight}px - 30px)` }}
+        onScroll={handleScroll}
       >
+        {isLoadingMore && (
+          <div className="flex justify-center py-2 mb-4">
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900"></div>
+          </div>
+        )}
+        
         {messages.map((message, i) =>
           message.role === Role.User ? (
             <UserLogChat key={i} message={message} />
@@ -144,6 +187,7 @@ export default function Conversation({
             <BotLogChat key={i} message={message} />
           )
         )}
+        
         {isLoading && (
           <div className="flex justify-center">
             <div className="animate-bounce">...</div>

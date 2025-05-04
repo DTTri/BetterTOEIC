@@ -7,7 +7,6 @@ import { ObjectId } from 'mongodb';
 class ChatService {
   async handleMessage(message: string, languageCode: string, userId?: string): Promise<ChatMessage> {
     try {
-      // Thử với Dialogflow trước
       const dialogflowResponse = await dialogflowService.detectIntent(
         userId || 'guest',
         message,
@@ -20,7 +19,8 @@ class ChatService {
     
       if (dialogflowResponse.matched) {
         const params = dialogflowResponse.parameters;
-        content = params?.responseText + (params?.url ? ` ${params.url}` : '');
+        const fullResponse = dialogflowResponse.response + ' ' || '';
+        content = fullResponse + params?.responseText + (params?.url ? ` ${params.url}` : '');
       }
       else {
         const gptResponse = await gptService.generateResponse(message);
@@ -93,22 +93,53 @@ class ChatService {
     }
   }
 
-  async getChatHistory(userId: string): Promise<ChatHistory | null> {
-    const conversation = await collections.conversations?.findOne({ userId: new ObjectId(userId) });
-    if (conversation) {
-      return {
-        userId: conversation.userId.toString(),
-        chats: conversation.chats,
-      } as ChatHistory;
-    }
-    else {
-      return {
-        userId: userId,
-        chats: [],
-      } as ChatHistory;
+  async getChatHistory(userId: string, page: number = 1, limit: number = 10): Promise<ChatHistory | null> {
+    try {
+      const conversation = await collections.conversations?.findOne({ userId: new ObjectId(userId) });
+      
+      if (conversation) {
+        const totalMessages = conversation.chats.length;
+        const totalPages = Math.ceil(totalMessages / limit);
+        
+        // Sort chats by created_at in descending order
+        const sortedChats = [...conversation.chats].sort(
+          (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        );
+        
+        const paginatedChats = sortedChats.slice((page - 1) * limit, page * limit);
+        
+        const orderedChats = page === 1 ? paginatedChats.reverse() : paginatedChats;
+        
+        return {
+          userId: conversation.userId.toString(),
+          chats: orderedChats,
+          pagination: {
+            currentPage: page,
+            totalPages,
+            totalMessages,
+            hasMore: page < totalPages
+          }
+        } as ChatHistory;
+      }
+      else {
+        return {
+          userId: userId,
+          chats: [],
+          pagination: {
+            currentPage: 1,
+            totalPages: 0,
+            totalMessages: 0,
+            hasMore: false
+          }
+        } as ChatHistory;
+      }
+    } catch (error) {
+      console.error('Error getting chat history:', error);
+      return null;
     }
   }
 }
 
 export const chatService = new ChatService();
+
 

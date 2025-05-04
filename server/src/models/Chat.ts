@@ -7,6 +7,12 @@ export interface ChatMessage {
 export interface ChatHistory {
   userId: string;
   chats: ChatMessage[];
+  pagination?: {
+    currentPage: number;
+    totalPages: number;
+    totalMessages: number;
+    hasMore: boolean;
+  }
 }
 
 export interface DialogflowResponse {

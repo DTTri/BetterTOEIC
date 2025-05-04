@@ -1,4 +1,4 @@
-type Message = {
+type ChatMessage = {
     role: Role,
     content: string,
     created_At: string,
@@ -10,4 +10,4 @@ export enum Role {
     Bot = 'bot'
 }
 
-export default Message;
+export default ChatMessage;

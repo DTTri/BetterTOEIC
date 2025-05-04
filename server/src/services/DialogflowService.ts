@@ -66,7 +66,7 @@ class DialogflowService {
         return {
           intent: '',
           confidence: 0,
-          response: 'Không có phản hồi từ Dialogflow.',
+          response: 'No response generated.',
           matched: false,
         };
       }

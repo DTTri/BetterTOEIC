@@ -11,29 +11,14 @@ class chatService {
     languageCode: string = "en",
     userId?: string
   ) {
-    try {
-      const response = await http.post(
-        this.getURI(`message${userId ? "/?userId=" + userId : ""}`),
-        {
-          message,
-          languageCode,
-        }
-      );
-      return response.data;
-    } catch (error) {
-      console.error("Chat service error:", error);
-      throw error;
-    }
+    return await http.post(this.getURI(`message${userId ? `?userId=${userId}` : ""}`), {
+      message,
+      languageCode,
+    });
   }
 
-  async getChatHistory(userId: string) {
-    try {
-      const response = await http.get(this.getURI(`history/${userId}`));
-      return response.data;
-    } catch (error) {
-      console.error("Chat service error:", error);
-      throw error;
-    }
+  async getChatHistory(userId: string, page: number = 1, limit: number = 10) {
+    return await http.get(this.getURI(`history/${userId}?page=${page}&limit=${limit}`));
   }
 }
 

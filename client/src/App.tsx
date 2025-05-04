@@ -56,6 +56,7 @@ import {
   roadmapService,
   vocabService,
   practiceService,
+  chatService,
 } from "./services";
 import {
   sRoadmap,
@@ -64,6 +65,7 @@ import {
   testStore,
   practiceStore,
   sForum,
+  sChat,
 } from "./store";
 import { User } from "./entities";
 import { ThemeProvider } from "@mui/material";
@@ -115,6 +117,7 @@ function App() {
         // });
       }
     };
+
     const fetchTests = async () => {
       try {
         const response = await testService.getTests();
@@ -133,6 +136,7 @@ function App() {
         // });
       }
     };
+
     const fetchTestHistory = async () => {
       try {
         const response = await testService.getTestHistory(curUser || "");
@@ -151,6 +155,7 @@ function App() {
         // });
       }
     };
+
     const fetchTestSaved = async () => {
       try {
         const response = await testService.getTestsSaved(curUser || "");
@@ -170,6 +175,7 @@ function App() {
         // });
       }
     };
+
     const fetchPracticeTests = async () => {
       try {
         const response = await practiceService.getPracticeTests();
@@ -190,6 +196,7 @@ function App() {
         // });
       }
     };
+
     const fetchPracticeTestHistory = async () => {
       try {
         const response = await practiceService.getPracticeTestHistory(
@@ -213,6 +220,7 @@ function App() {
         // });
       }
     };
+
     const fetchPracticeLesson = async () => {
       try {
         const response = await practiceService.getPracticeLessons();
@@ -233,6 +241,7 @@ function App() {
         // });
       }
     };
+
     const fetchPracticeLessonHistory = async () => {
       try {
         const response = await practiceService.getPracticeLessonHistory(
@@ -257,6 +266,7 @@ function App() {
         // });
       }
     };
+
     const fetchRoadmapExercises = async () => {
       try {
         const res = await roadmapService.getRoadmapExercisesByPhase(
@@ -277,6 +287,7 @@ function App() {
         // });
       }
     };
+
     const fetchUserRoadmap = async () => {
       try {
         const res = await roadmapService.getRoadmapHistory(curUser || "");
@@ -314,6 +325,7 @@ function App() {
         // });
       }
     };
+
     const fetchSavedVocabs = async () => {
       try {
         const response = await vocabService.getVocabsSaved(curUser || "");
@@ -332,6 +344,7 @@ function App() {
         // });
       }
     };
+
     const fetchVocabHistory = async () => {
       try {
         const response = await vocabService.getVocabHistory(curUser || "");
@@ -350,6 +363,7 @@ function App() {
         // });
       }
     };
+
     const fetchForum = async () => {
       try {
         const response = await forumService.getAllPosts();
@@ -368,6 +382,20 @@ function App() {
         // });
       }
     };
+
+    const fetchChatHistory = async () => {
+      try {
+        const response = await chatService.getChatHistory(curUser || "");
+        if (response.EC === 0) {
+          sChat.set((prev) => (prev.value.chatHistory = response.DT.chats));
+        } else {
+          console.log("Fail to fetch chat history: ", response.EM);
+        }
+      } catch (error) {
+        console.log("Fail to fetch chat history: ", error);
+      }
+    }
+
     const fetchSecureData = async () => {
       await fetchAllUsers();
       await fetchUserRoadmap();
@@ -381,6 +409,7 @@ function App() {
         fetchRoadmapExercises(),
         fetchSavedVocabs(),
         fetchVocabHistory(),
+        fetchChatHistory(),
       ]);
     };
 
