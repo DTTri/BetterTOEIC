@@ -98,21 +98,28 @@ class ChatService {
       const conversation = await collections.conversations?.findOne({ userId: new ObjectId(userId) });
       
       if (conversation) {
-        const totalMessages = conversation.chats.length;
-        const totalPages = Math.ceil(totalMessages / limit);
-        
-        // Sort chats by created_at in descending order
         const sortedChats = [...conversation.chats].sort(
-          (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+          (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
         );
         
-        const paginatedChats = sortedChats.slice((page - 1) * limit, page * limit);
+        const totalMessages = sortedChats.length;
+        const totalPages = Math.ceil(totalMessages / limit);
         
-        const orderedChats = page === 1 ? paginatedChats.reverse() : paginatedChats;
+        let startIndex, endIndex;
+        
+        if (page === 1) {
+          startIndex = Math.max(0, totalMessages - limit);
+          endIndex = totalMessages;
+        } else {
+          endIndex = Math.max(0, totalMessages - (page - 1) * limit);
+          startIndex = Math.max(0, endIndex - limit);
+        }
+        
+        const paginatedChats = sortedChats.slice(startIndex, endIndex);
         
         return {
           userId: conversation.userId.toString(),
-          chats: orderedChats,
+          chats: paginatedChats,
           pagination: {
             currentPage: page,
             totalPages,
@@ -141,5 +148,6 @@ class ChatService {
 }
 
 export const chatService = new ChatService();
+
 
 

@@ -26,13 +26,43 @@ export default function Conversation({
   const conversationRef = useRef<HTMLDivElement>(null);
   const prevScrollHeightRef = useRef<number>(0);
   const shouldScrollToBottomRef = useRef<boolean>(true);
+  const isInitialMountRef = useRef<boolean>(true);
+
+  useEffect(() => {
+    shouldScrollToBottomRef.current = true;
+    isInitialMountRef.current = true;
+    
+    return () => {
+      shouldScrollToBottomRef.current = true;
+      isInitialMountRef.current = true;
+    };
+  }, []);
 
   useEffect(() => {
     if (chat && chat.length > 0) {
       setMessages(chat);
       shouldScrollToBottomRef.current = true;
+    } else if (user?._id) {
+      loadChatHistory(1);
     }
-  }, [chat]);
+  }, [user?._id, chat]);
+
+  useEffect(() => {
+    if (isInitialMountRef.current && messages.length > 0) {
+      setTimeout(() => {
+        scrollToBottom();
+        isInitialMountRef.current = false;
+      }, 100);
+    }
+  }, [messages]);
+
+  const sortMessagesByTime = (msgs: Message[]): Message[] => {
+    return [...msgs].sort((a, b) => {
+      const timeA = new Date(a.created_At || a.created_At || 0).getTime();
+      const timeB = new Date(b.created_At || b.created_At || 0).getTime();
+      return timeA - timeB;
+    }); 
+  };
 
   const loadChatHistory = async (page: number) => {
     if (!user?._id) return;
@@ -55,16 +85,18 @@ export default function Conversation({
       if (response.EC === 0) {
         const newMessages = response.DT.chats;
         
-        setMessages(prev => 
-          page === 1 ? newMessages : [...newMessages, ...prev]
-        );
+        if (page === 1) {
+          setMessages(newMessages);
+          sChat.set((prev) => (prev.value.chatHistory = newMessages));
+        } else {
+          setMessages(prev => {
+            const combinedMessages = [...newMessages, ...prev];
+            return sortMessagesByTime(combinedMessages);
+          });
+        }
         
         setCurrentPage(page);
         setHasMore(response.DT.pagination?.hasMore || false);
-        
-        if (page === 1) {
-          sChat.set((prev) => (prev.value.chatHistory = newMessages));
-        }
       } else {
         toast.error("Failed to load chat history");
       }
@@ -87,13 +119,17 @@ export default function Conversation({
   }, [isLoadingMore, messages]);
 
   useEffect(() => {
-    if (shouldScrollToBottomRef.current) {
+    if (shouldScrollToBottomRef.current && !isInitialMountRef.current) {
       scrollToBottom();
     }
-  }, [messages.length]);
+  }, [messages]);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    } else if (conversationRef.current) {
+      conversationRef.current.scrollTop = conversationRef.current.scrollHeight;
+    }
   };
 
   const handleScroll = useCallback(() => {
@@ -148,6 +184,12 @@ export default function Conversation({
     setTypeChatHeight(height);
   };
 
+  const handleAnimationComplete = () => {
+    setTimeout(() => {
+      scrollToBottom();
+    }, 300);
+  };
+
   return (
     <motion.div
       initial={{ x: 150, y: 200, scale: 0 }}
@@ -155,6 +197,7 @@ export default function Conversation({
       transition={{ type: "tween" }}
       whileInView={{ x: -85, y: 0, scale: 1 }}
       exit={{ x: 150, y: 200, scale: 0 }}
+      onAnimationComplete={handleAnimationComplete}
       className="fixed z-[2000] right-0 bottom-6 w-[450px] h-[600px] bg-[#fff] rounded-[24px] shadow-md shadow-slate-400 overflow-hidden"
     >
       <div className="title flex flex-row items-center py-4 px-6 border-b-[1px] border-b-slate-200">
