@@ -9,6 +9,14 @@ import chatService from "@/services/chatService";
 import { toast } from "react-toastify";
 import { sChat, sUser } from "@/store";
 
+const sortMessagesByTime = (msgs: Message[]): Message[] => {
+  return [...msgs].sort((a, b) => {
+    const timeA = new Date(a.created_At || a.created_At || 0).getTime();
+    const timeB = new Date(b.created_At || b.created_At || 0).getTime();
+    return timeA - timeB;
+  });
+};
+
 export default function Conversation({
   handleCloseChatBot,
 }: {
@@ -40,10 +48,8 @@ export default function Conversation({
 
   useEffect(() => {
     if (chat && chat.length > 0) {
-      setMessages(chat);
+      setMessages(sortMessagesByTime(chat));
       shouldScrollToBottomRef.current = true;
-    } else if (user?._id) {
-      loadChatHistory(1);
     }
   }, [user?._id, chat]);
 
@@ -55,14 +61,6 @@ export default function Conversation({
       }, 100);
     }
   }, [messages]);
-
-  const sortMessagesByTime = (msgs: Message[]): Message[] => {
-    return [...msgs].sort((a, b) => {
-      const timeA = new Date(a.created_At || a.created_At || 0).getTime();
-      const timeB = new Date(b.created_At || b.created_At || 0).getTime();
-      return timeA - timeB;
-    }); 
-  };
 
   const loadChatHistory = async (page: number) => {
     if (!user?._id) return;
@@ -86,8 +84,8 @@ export default function Conversation({
         const newMessages = response.DT.chats;
         
         if (page === 1) {
-          setMessages(newMessages);
-          sChat.set((prev) => (prev.value.chatHistory = newMessages));
+          setMessages(sortMessagesByTime(newMessages));
+          sChat.set((prev) => (prev.value.chatHistory = sortMessagesByTime(newMessages)));
         } else {
           setMessages(prev => {
             const combinedMessages = [...newMessages, ...prev];
@@ -146,10 +144,11 @@ export default function Conversation({
   ) => {
     if (!typedContent.trim()) return;
 
+    const currentTime = new Date().toISOString();
     const newUserMessage: Message = {
       role: Role.User,
       content: typedContent,
-      created_At: new Date().toISOString(),
+      created_At: currentTime,
     };
 
     shouldScrollToBottomRef.current = true;
@@ -166,9 +165,15 @@ export default function Conversation({
 
       if (responseChat.EC === 0) {
         const botMessage: Message = responseChat.DT as Message;
+        
+        botMessage.created_At = new Date(Date.now() + 1000).toISOString();
+        
         setMessages((prev) => [...prev, botMessage]);
         
-        sChat.set((prev) => (prev.value.chatHistory = [...prev.value.chatHistory, newUserMessage, botMessage]));
+        sChat.set((prev) => {
+          const updatedHistory = [...prev.value.chatHistory, newUserMessage, botMessage];
+          return { ...prev, value: { ...prev.value, chatHistory: updatedHistory } };
+        });
       } else {
         toast.error("Failed to get response from bot");
       }
@@ -189,6 +194,8 @@ export default function Conversation({
       scrollToBottom();
     }, 300);
   };
+
+  const sortedMessages = sortMessagesByTime(messages);
 
   return (
     <motion.div
@@ -223,7 +230,7 @@ export default function Conversation({
           </div>
         )}
         
-        {messages.map((message, i) =>
+        {sortedMessages.map((message, i) =>
           message.role === Role.User ? (
             <UserLogChat key={i} message={message} />
           ) : (

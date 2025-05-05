@@ -15,7 +15,7 @@ class ChatService {
 
       let content = '';
 
-      console.log("dialogflowResponse" + dialogflowResponse.parameters);
+      console.log("dialogflowResponse" + dialogflowResponse.matched);
     
       if (dialogflowResponse.matched) {
         const params = dialogflowResponse.parameters;

@@ -40,15 +40,7 @@ class GPTService {
       }
 
       return { content };
-    } catch (error: any) {      
-      // Handle specific OpenAI errors
-      if (error.status === 429) {
-        return {
-          content: 'Service is currently busy. Please try again in a moment.',
-          error: 'RATE_LIMIT_EXCEEDED'
-        };
-      }
-
+    } catch (error: any) {     
       return {
         content: 'Sorry, an error occurred while processing your request.',
         error: error.message || 'UNKNOWN_ERROR'
