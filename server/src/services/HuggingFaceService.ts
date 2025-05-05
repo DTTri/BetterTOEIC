@@ -35,13 +35,12 @@ class HuggingFaceService {
     evaluations: string[];
     sampleAnswers: string[];
     scores: number[];
-    transcriptions?: string[];
   }> {
     try {
       const evaluations: string[] = new Array(answers.length);
       const sampleAnswers: string[] = new Array(answers.length);
       const scores: number[] = new Array(answers.length);
-      const transcriptions: string[] = new Array(11); // for speaking questions
+      const transcriptions: string[] = new Array(11);
 
       const speakingAnswers = answers.slice(0, 11);
       const transcriptionPromises = speakingAnswers.map(async (audioUrl, index) => {
@@ -132,7 +131,7 @@ class HuggingFaceService {
         });
       }
 
-      return { evaluations, sampleAnswers, scores, transcriptions };
+      return { evaluations, sampleAnswers, scores };
     } catch (error) {
       console.error('Error evaluating SW Test:', error);
       throw error;

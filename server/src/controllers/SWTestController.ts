@@ -1,9 +1,8 @@
 import { Request, Response } from 'express';
 import { ObjectId } from 'mongodb';
-import { SWTest, SWCompletedTest } from '~/models';
+import { SWTest } from '~/models';
 import { CompleteSWTestDTO } from '~/models/DTOs';
 import { swTestServiceInstance } from '~/services';
-import huggingFaceServiceInstance from '~/services/HuggingFaceService';
 
 class SWTestController {
   async createSWTest(req: Request, res: Response) {
@@ -117,61 +116,44 @@ class SWTestController {
         return;
       }
 
-      const completedTest: SWCompletedTest = {
-        ...completeSWTestDTO,
-        attempted_at: new Date().toISOString(),
-      };
+      const speakingAudioBlobs: Buffer[] = [];
+      const writingAnswers: string[] = [];
 
-      // save completed test
-      const saveResult = await swTestServiceInstance.updateSWTestHistory(req.params.userId, completedTest);
-      if (!saveResult) {
-        res.status(400).json({
-          EM: 'Failed to save SW Test answers',
-          EC: 4,
-        });
-        return;
-      }
-
-      //evaluate the answers using Hugging Face
-      try {
-        const { evaluations, sampleAnswers, scores } = await huggingFaceServiceInstance.evaluateSWTest(
-          swTest,
-          completeSWTestDTO.answers
-        );
-
-        // Update the test history with evaluations
-        const updateResult = await swTestServiceInstance.updateSWTestEvaluation(
-          req.params.userId,
-          completeSWTestDTO.testId,
-          evaluations,
-          sampleAnswers,
-          scores
-        );
-
-        if (updateResult) {
-          res.status(200).json({
-            EM: 'SW Test evaluated and saved successfully',
-            EC: 0,
-            DT: {},
-          });
+      completeSWTestDTO.answers.forEach((answer, index) => {
+        if (index < 11) {
+          if (typeof answer === 'string' && answer.startsWith('data:audio')) {
+            const base64Data = answer.split(',')[1];
+            const audioBuffer = Buffer.from(base64Data, 'base64');
+            speakingAudioBlobs.push(audioBuffer);
+          } else {
+            speakingAudioBlobs.push(Buffer.from(answer));
+          }
         } else {
-          res.status(200).json({
-            EM: 'SW Test answers saved but evaluation failed to update',
-            EC: 1,
-            DT: {},
-          });
+          writingAnswers.push(answer);
         }
-      } catch (evaluationError) {
-        console.error('Error during evaluation:', evaluationError);
+      });
+
+      const result = await swTestServiceInstance.completeSWTest(
+        req.params.userId,
+        completeSWTestDTO.testId,
+        speakingAudioBlobs,
+        writingAnswers
+      );
+
+      if (result) {
         res.status(200).json({
-          EM: 'SW Test answers saved but evaluation failed',
-          EC: 1,
-          DT: {
-            error: evaluationError,
-          },
+          EM: 'SW Test submitted successfully and queued for evaluation',
+          EC: 0,
+          DT: {},
+        });
+      } else {
+        res.status(400).json({
+          EM: 'Failed to submit SW Test',
+          EC: 4,
         });
       }
     } catch (err: any) {
+      console.error('Error in completeSWTest:', err);
       res.status(500).json({
         EM: err.message,
         EC: 4,
@@ -181,20 +163,18 @@ class SWTestController {
 
   async getSWTestHistory(req: Request, res: Response) {
     try {
-      const swTestHistory = await swTestServiceInstance.getSWTestHistory(req.params.userId);
-      if (swTestHistory) {
-        res.status(200).json({
-          EM: 'SW Test history fetched successfully',
-          EC: 0,
-          DT: swTestHistory.completedTests,
-        });
-      } else {
-        res.status(400).json({
-          EM: 'Failed to fetch SW Test history',
-          EC: 1,
-        });
-      }
+      const page = req.query.page ? parseInt(req.query.page as string) : 1;
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
+
+      const swTestHistory = await swTestServiceInstance.getSWTestHistory(req.params.userId, page, limit);
+
+      res.status(200).json({
+        EM: 'SW Test history fetched successfully',
+        EC: 0,
+        DT: swTestHistory,
+      });
     } catch (err: any) {
+      console.error('Error in getSWTestHistory:', err);
       res.status(500).json({
         EM: err.message,
         EC: 2,
@@ -202,41 +182,47 @@ class SWTestController {
     }
   }
 
-  async updateSWTestEvaluation(req: Request, res: Response) {
+  async getUserStatistics(req: Request, res: Response) {
     try {
-      const { testId, evaluations, sampleAnswers, scores } = req.body;
+      const stats = await swTestServiceInstance.getUserStatistics(req.params.userId);
 
-      if (!testId || !evaluations || !sampleAnswers || !scores) {
-        res.status(400).json({
-          EM: 'Missing required fields',
-          EC: 1,
-        });
-        return;
-      }
+      res.status(200).json({
+        EM: 'User statistics fetched successfully',
+        EC: 0,
+        DT: stats,
+      });
+    } catch (err: any) {
+      console.error('Error in getUserStatistics:', err);
+      res.status(500).json({
+        EM: err.message,
+        EC: 2,
+      });
+    }
+  }
 
-      const result = await swTestServiceInstance.updateSWTestEvaluation(
-        req.params.userId,
-        testId,
-        evaluations,
-        sampleAnswers,
-        scores
-      );
+  async getCompletedTest(req: Request, res: Response) {
+    try {
+      const { userId, testId } = req.params;
 
-      if (result) {
+      const completedTest = await swTestServiceInstance.getCompletedTest(userId, testId);
+
+      if (completedTest) {
         res.status(200).json({
-          EM: 'SW Test evaluation updated successfully',
+          EM: 'Completed test fetched successfully',
           EC: 0,
+          DT: completedTest,
         });
       } else {
-        res.status(400).json({
-          EM: 'Failed to update SW Test evaluation',
-          EC: 2,
+        res.status(404).json({
+          EM: 'Completed test not found',
+          EC: 1,
         });
       }
     } catch (err: any) {
+      console.error('Error in getCompletedTest:', err);
       res.status(500).json({
         EM: err.message,
-        EC: 3,
+        EC: 2,
       });
     }
   }
