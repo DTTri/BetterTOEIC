@@ -2045,6 +2045,25 @@ paths:
             type: string
           description: The ID of the user whose chat history to retrieve
           example: "user123"
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          description: Page number for pagination
+          example: 1
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+          description: Number of messages per page
+          example: 10
       responses:
         '200':
           description: Chat history retrieved successfully
@@ -2053,25 +2072,37 @@ paths:
               schema:
                 type: object
                 properties:
-                  userId:
+                  EC:
+                    type: integer
+                    example: 0
+                  EM:
                     type: string
-                    example: "user123"
-                  chats:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        role:
-                          type: string
-                          enum: [user, bot]
-                          example: "user"
-                        content:
-                          type: string
-                          example: "How can I improve my TOEIC score?"
-                        created_at:
-                          type: string
-                          format: date-time
-                          example: "2024-01-20T15:30:00.000Z"
+                    example: "Chat history fetched successfully"
+                  DT:
+                    type: object
+                    properties:
+                      userId:
+                        type: string
+                        example: "user123"
+                      chats:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/ChatMessage'
+                      pagination:
+                        type: object
+                        properties:
+                          currentPage:
+                            type: integer
+                            example: 1
+                          totalPages:
+                            type: integer
+                            example: 5
+                          totalMessages:
+                            type: integer
+                            example: 48
+                          hasMore:
+                            type: boolean
+                            example: true
         '404':
           description: Chat history not found
           content:
@@ -2079,7 +2110,10 @@ paths:
               schema:
                 type: object
                 properties:
-                  error:
+                  EC:
+                    type: integer
+                    example: 1
+                  EM:
                     type: string
                     example: "Chat history not found for this user"
         '500':
@@ -2089,7 +2123,10 @@ paths:
               schema:
                 type: object
                 properties:
-                  error:
+                  EC:
+                    type: integer
+                    example: 2
+                  EM:
                     type: string
                     example: "Failed to retrieve chat history"
 components:

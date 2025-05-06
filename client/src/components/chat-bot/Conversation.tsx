@@ -11,8 +11,8 @@ import { sChat, sUser } from "@/store";
 
 const sortMessagesByTime = (msgs: Message[]): Message[] => {
   return [...msgs].sort((a, b) => {
-    const timeA = new Date(a.created_At || a.created_At || 0).getTime();
-    const timeB = new Date(b.created_At || b.created_At || 0).getTime();
+    const timeA = new Date(a.created_At || 0).getTime();
+    const timeB = new Date(b.created_At || 0).getTime();
     return timeA - timeB;
   });
 };
@@ -34,33 +34,30 @@ export default function Conversation({
   const conversationRef = useRef<HTMLDivElement>(null);
   const prevScrollHeightRef = useRef<number>(0);
   const shouldScrollToBottomRef = useRef<boolean>(true);
-  const isInitialMountRef = useRef<boolean>(true);
+  const shouldLoadMoreRef = useRef<boolean>(false);
 
   useEffect(() => {
     shouldScrollToBottomRef.current = true;
-    isInitialMountRef.current = true;
+    
+    if (user?._id) {
+      loadChatHistory(1);
+    }
     
     return () => {
       shouldScrollToBottomRef.current = true;
-      isInitialMountRef.current = true;
+      shouldLoadMoreRef.current = false;
     };
-  }, []);
+  }, [user?._id]);
 
   useEffect(() => {
-    if (chat && chat.length > 0) {
-      setMessages(sortMessagesByTime(chat));
-      shouldScrollToBottomRef.current = true;
-    }
-  }, [user?._id, chat]);
-
-  useEffect(() => {
-    if (isInitialMountRef.current && messages.length > 0) {
+    if (messages.length > 0 && shouldScrollToBottomRef.current) {
+      scrollToBottom();
       setTimeout(() => {
-        scrollToBottom();
-        isInitialMountRef.current = false;
-      }, 100);
+        shouldLoadMoreRef.current = true;
+      }, 1000);
     }
   }, [messages]);
+
 
   const loadChatHistory = async (page: number) => {
     if (!user?._id) return;
@@ -117,7 +114,7 @@ export default function Conversation({
   }, [isLoadingMore, messages]);
 
   useEffect(() => {
-    if (shouldScrollToBottomRef.current && !isInitialMountRef.current) {
+    if (shouldScrollToBottomRef.current) {
       scrollToBottom();
     }
   }, [messages]);
@@ -131,7 +128,7 @@ export default function Conversation({
   };
 
   const handleScroll = useCallback(() => {
-    if (!conversationRef.current || isLoadingMore || !hasMore) return;
+    if (!conversationRef.current || isLoadingMore || !hasMore || !shouldLoadMoreRef.current) return;
     
     if (conversationRef.current.scrollTop < 50) {
       loadChatHistory(currentPage + 1);
@@ -195,8 +192,6 @@ export default function Conversation({
     }, 300);
   };
 
-  const sortedMessages = sortMessagesByTime(messages);
-
   return (
     <motion.div
       initial={{ x: 150, y: 200, scale: 0 }}
@@ -230,7 +225,7 @@ export default function Conversation({
           </div>
         )}
         
-        {sortedMessages.map((message, i) =>
+        {sortMessagesByTime(messages).map((message, i) =>
           message.role === Role.User ? (
             <UserLogChat key={i} message={message} />
           ) : (
