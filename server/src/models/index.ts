@@ -22,6 +22,8 @@ import SWTest from './SWTest';
 import SWQuestion from './SWQuestion';
 import SWCompletedTest from './SWCompletedTest';
 import SWTestHistory from './SWTestHistory';
+import { SWTestHistoryPartition, SWTestMetadata } from './SWTestHistoryPartition';
+import { SWTestContent } from './SWTestContent';
 export {
   Test,
   CompletedTest,
@@ -47,4 +49,7 @@ export {
   SWQuestion,
   SWCompletedTest,
   SWTestHistory,
+  SWTestHistoryPartition,
+  SWTestMetadata,
+  SWTestContent,
 };
