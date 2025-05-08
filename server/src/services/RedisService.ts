@@ -8,7 +8,7 @@ class RedisService {
   private readonly DEFAULT_TTL = 60 * 60 * 24; // 24 hours in seconds
   private readonly STATS_TTL = 60 * 60; // 1 hour in seconds
   private readonly HISTORY_TTL = 60 * 60 * 3; // 3 hours in seconds
-  private readonly CHAT_TTL = 60 * 5; //Time to live for bot chat
+  private readonly CHAT_TTL = 60 * 10; //Time to live for bot chat
   private isConnected = false;
   private connectionFailed = false;
   private isRedisEnabled = true;
@@ -172,10 +172,9 @@ class RedisService {
     try {
       const key = `chat:context:${userId}`;
 
-      //const currentContext = await this.client!.lRange(key, 0, -1);
-      await this.client!.rPush(key, JSON.stringify(message));
+      await this.client!.lPush(key, JSON.stringify(message));
       await this.client!.expire(key, this.CHAT_TTL);
-      await this.client!.lTrim(key, 0, 4); // Keep 5 messages in the context
+      await this.client!.lTrim(key, 0, 4);
     } catch (error) {
       console.error('Redis error in add and cache Message:', error);
       return null;
@@ -188,9 +187,9 @@ class RedisService {
     try {
       const key = `chat:context:${userId}`;
       
-      // Get recent messages from Redis
       const messages = await this.client!.lRange(key, 0, count - 1);
-      return messages.map(msg => JSON.parse(msg)).reverse() as ChatMessage[];
+      
+      return messages.map(msg => JSON.parse(msg)) as ChatMessage[];
     } catch (error) {
       console.error('Redis error in getCacheMessage:', error);
       return null;

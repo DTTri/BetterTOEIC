@@ -6,30 +6,28 @@ import { ObjectId } from 'mongodb';
 import redisServiceInstance from './RedisService';
 
 const MAX_CHAT_MESSAGES = 200;
-const REDIS_CONTEXT_TTL = 300; // 5 minutes in seconds
 const REDIS_CONTEXT_SIZE = 5; // Number of recent messages to keep as context
 
 class ChatService {
   async handleMessage(message: string, languageCode: string, userId?: string): Promise<ChatMessage> {
     try {
-      if (userId) {
-        await this.storeMessageInRedisContext(userId, 'user', message);
-      }
-
-      const recentContext = userId ? await redisServiceInstance.getRecentChatContext(userId, REDIS_CONTEXT_SIZE) : [];
       const dialogflowResponse = await dialogflowService.detectIntent(userId || 'guest', message, languageCode);
 
       let content = '';
-
       console.log('dialogflowResponse' + dialogflowResponse.matched);
 
       if (dialogflowResponse.matched) {
         const params = dialogflowResponse.parameters;
         const fullResponse = dialogflowResponse.response + ' ' || '';
         content = fullResponse + params?.responseText + (params?.url ? ` ${params.url}` : '');
-      } else {
-        const gptResponse = await gptService.generateResponse(message, recentContext || []);
+      } else if(userId) {
+        const recentContext = userId ? await redisServiceInstance.getRecentChatContext(userId, REDIS_CONTEXT_SIZE) : [];
+        
+        const gptResponse = await gptService.generateResponse(userId, message, languageCode, recentContext || []);
         content = gptResponse.content;
+      }
+      else {
+        content = 'I am sorry, You must login to use this feature.';
       }
 
       console.log('content' + content);
@@ -41,8 +39,6 @@ class ChatService {
       };
 
       if (userId) {
-        await this.storeMessageInRedisContext(userId, 'bot', content);
-
         await this.saveConversation(userId, message, content);
       }
 
