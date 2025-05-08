@@ -1,12 +1,14 @@
 import { createClient, RedisClientType } from 'redis';
 import { SWTestMetadata } from '~/models/SWTestHistoryPartition';
 import { SWTestContent } from '~/models/SWTestContent';
+import { ChatMessage } from '~/models/Chat';
 
 class RedisService {
   private client: RedisClientType | null = null;
   private readonly DEFAULT_TTL = 60 * 60 * 24; // 24 hours in seconds
   private readonly STATS_TTL = 60 * 60; // 1 hour in seconds
   private readonly HISTORY_TTL = 60 * 60 * 3; // 3 hours in seconds
+  private readonly CHAT_TTL = 60 * 5; //Time to live for bot chat
   private isConnected = false;
   private connectionFailed = false;
   private isRedisEnabled = true;
@@ -161,6 +163,48 @@ class RedisService {
     } catch (error) {
       console.error('Redis error in getUserStats:', error);
       return null;
+    }
+  }
+
+  async addMessageToContext(userId: string, message: ChatMessage){
+    if(!this.isRedisAvailable()) return;
+
+    try {
+      const key = `chat:context:${userId}`;
+
+      //const currentContext = await this.client!.lRange(key, 0, -1);
+      await this.client!.rPush(key, JSON.stringify(message));
+      await this.client!.expire(key, this.CHAT_TTL);
+      await this.client!.lTrim(key, 0, 4); // Keep 5 messages in the context
+    } catch (error) {
+      console.error('Redis error in add and cache Message:', error);
+      return null;
+    }
+  }
+
+  async getRecentChatContext(userId: string, count: number = 5): Promise<ChatMessage[] | null>{
+    if (!this.isRedisAvailable()) return null;
+
+    try {
+      const key = `chat:context:${userId}`;
+      
+      // Get recent messages from Redis
+      const messages = await this.client!.lRange(key, 0, count - 1);
+      return messages.map(msg => JSON.parse(msg)).reverse() as ChatMessage[];
+    } catch (error) {
+      console.error('Redis error in getCacheMessage:', error);
+      return null;
+    }
+  }
+
+  async clearChatContext(userId: string){
+    if (!this.isRedisAvailable()) return;
+
+    try {
+      const key = `chat:context:${userId}`;
+      await this.client!.del(key);
+    } catch (error) {
+      console.error('Redis error in clearChatContext:', error);
     }
   }
 

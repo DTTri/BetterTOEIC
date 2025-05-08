@@ -1,9 +1,8 @@
+import { ChatMessage, GPTResponse } from '~/models/Chat';
 import OpenAI from 'openai';
-import { GPTResponse } from '~/models/Chat';
 
 class GPTService {
   private openai: OpenAI;
-  private readonly MAX_TOKENS = 150; // Limit response length
 
   constructor() {
     const apiKey = process.env.OPENAI_API_KEY;
@@ -16,34 +15,38 @@ class GPTService {
     });
   }
 
-  async generateResponse(message: string): Promise<GPTResponse> {
+  async generateResponse(message: string, context: ChatMessage[] = []): Promise<GPTResponse> {
     try {
-      const completion = await this.openai.chat.completions.create({
-        messages: [
-          {
-            role: "system",
-            content: "You are an English teacher helping students prepare for the TOEIC exam. Please answer the following question briefly and clearly in no more than 150 words. Focus only on what's relevant and avoid unnecessary explanations. Use simple vocabulary and avoid advanced grammar structures."
-          },
-          { role: "user", content: message }
-        ],
-        model: "gpt-4o-mini",
-        max_tokens: this.MAX_TOKENS,
-        temperature: 0.7, // Add some variability but keep responses focused
-        presence_penalty: 0.6, // Encourage diverse responses
-        frequency_penalty: 0.6, // Discourage repetition
-      });
+      const messages = [
+        { role: 'system', content: 'You are an English teacher helping students prepare for the TOEIC exam. Please answer the following question briefly and clearly in no more than 150 words. Focus only on what\'s relevant and avoid unnecessary explanations. Use simple vocabulary and avoid advanced grammar structures.' },
+      ];
 
-      const content = completion.choices[0]?.message?.content;
-      
-      if (!content) {
-        throw new Error('No response generated');
+      if (context && context.length > 0) {
+        context.forEach(msg => {
+          messages.push({
+            role: msg.role === 'bot' ? 'assistant' : 'user',
+            content: msg.content
+          });
+        });
       }
 
+      messages.push({ role: 'user', content: message });
+
+      const response = await this.openai.chat.completions.create({
+        model: 'gpt-4o-mini',
+        messages: messages as any[],
+        temperature: 0.7,
+        max_tokens: 500,
+      });
+
+      const content = response.choices[0]?.message?.content || "I apologize, but I couldn't generate a response.";
+
       return { content };
-    } catch (error: any) {     
+    } catch (error: any) {
+      console.error('Error generating GPT response:', error);
       return {
         content: 'Sorry, an error occurred while processing your request.',
-        error: error.message || 'UNKNOWN_ERROR'
+        error: error.message || 'UNKNOWN_ERROR',
       };
     }
   }

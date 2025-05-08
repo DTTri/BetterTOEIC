@@ -3,31 +3,36 @@ import { gptService } from './GPTService';
 import { ChatHistory, ChatMessage } from '~/models/Chat';
 import { collections } from '../config/connectDB';
 import { ObjectId } from 'mongodb';
+import redisServiceInstance from './RedisService';
+
+const MAX_CHAT_MESSAGES = 200;
+const REDIS_CONTEXT_TTL = 300; // 5 minutes in seconds
+const REDIS_CONTEXT_SIZE = 5; // Number of recent messages to keep as context
 
 class ChatService {
   async handleMessage(message: string, languageCode: string, userId?: string): Promise<ChatMessage> {
     try {
-      const dialogflowResponse = await dialogflowService.detectIntent(
-        userId || 'guest',
-        message,
-        languageCode
-      );
+      if (userId) {
+        await this.storeMessageInRedisContext(userId, 'user', message);
+      }
+
+      const recentContext = userId ? await redisServiceInstance.getRecentChatContext(userId, REDIS_CONTEXT_SIZE) : [];
+      const dialogflowResponse = await dialogflowService.detectIntent(userId || 'guest', message, languageCode);
 
       let content = '';
 
-      console.log("dialogflowResponse" + dialogflowResponse.matched);
-    
+      console.log('dialogflowResponse' + dialogflowResponse.matched);
+
       if (dialogflowResponse.matched) {
         const params = dialogflowResponse.parameters;
         const fullResponse = dialogflowResponse.response + ' ' || '';
         content = fullResponse + params?.responseText + (params?.url ? ` ${params.url}` : '');
-      }
-      else {
-        const gptResponse = await gptService.generateResponse(message);
+      } else {
+        const gptResponse = await gptService.generateResponse(message, recentContext || []);
         content = gptResponse.content;
       }
 
-      console.log("content" + content);
+      console.log('content' + content);
 
       const responseMessage: ChatMessage = {
         role: 'bot',
@@ -35,7 +40,9 @@ class ChatService {
         created_at: new Date().toISOString(),
       };
 
-      if(userId) {
+      if (userId) {
+        await this.storeMessageInRedisContext(userId, 'bot', content);
+
         await this.saveConversation(userId, message, content);
       }
 
@@ -43,12 +50,25 @@ class ChatService {
     } catch (error) {
       console.error('Error in handleMessage:', error);
       const errorMessage = 'Sorry, an error occurred. Please try again later.';
-      
+
       return {
         role: 'bot',
         content: errorMessage,
         created_at: new Date().toISOString(),
       };
+    }
+  }
+
+  private async storeMessageInRedisContext(userId: string, role: string, content: string): Promise<void> {
+    try {
+      const message = {
+        role,
+        content,
+        created_at: new Date().toISOString(),
+      };
+      await redisServiceInstance.addMessageToContext(userId, message as ChatMessage);
+    } catch (error) {
+      console.error('Error storing message in Redis context:', error);
     }
   }
 
@@ -66,12 +86,8 @@ class ChatService {
           content: botResponse,
           created_at: new Date().toISOString(),
         });
-        await collections.conversations?.updateOne(
-          { userId: new ObjectId(userId) },
-          { $set: conversation }
-        );
-      }
-      else {
+        await collections.conversations?.updateOne({ userId: new ObjectId(userId) }, { $set: conversation });
+      } else {
         await collections.conversations?.insertOne({
           userId: new ObjectId(userId),
           chats: [
@@ -96,17 +112,17 @@ class ChatService {
   async getChatHistory(userId: string, page: number = 1, limit: number = 10): Promise<ChatHistory | null> {
     try {
       const conversation = await collections.conversations?.findOne({ userId: new ObjectId(userId) });
-      
+
       if (conversation) {
         const sortedChats = [...conversation.chats].sort(
           (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
         );
-        
+
         const totalMessages = sortedChats.length;
         const totalPages = Math.ceil(totalMessages / limit);
-        
+
         let startIndex, endIndex;
-        
+
         if (page === 1) {
           startIndex = Math.max(0, totalMessages - limit);
           endIndex = totalMessages;
@@ -114,9 +130,9 @@ class ChatService {
           endIndex = Math.max(0, totalMessages - (page - 1) * limit);
           startIndex = Math.max(0, endIndex - limit);
         }
-        
+
         const paginatedChats = sortedChats.slice(startIndex, endIndex);
-        
+
         return {
           userId: conversation.userId.toString(),
           chats: paginatedChats,
@@ -124,11 +140,10 @@ class ChatService {
             currentPage: page,
             totalPages,
             totalMessages,
-            hasMore: page < totalPages
-          }
+            hasMore: page < totalPages,
+          },
         } as ChatHistory;
-      }
-      else {
+      } else {
         return {
           userId: userId,
           chats: [],
@@ -136,8 +151,8 @@ class ChatService {
             currentPage: 1,
             totalPages: 0,
             totalMessages: 0,
-            hasMore: false
-          }
+            hasMore: false,
+          },
         } as ChatHistory;
       }
     } catch (error) {
@@ -148,6 +163,3 @@ class ChatService {
 }
 
 export const chatService = new ChatService();
-
-
-
