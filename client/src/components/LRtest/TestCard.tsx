@@ -1,5 +1,5 @@
 // This is just a stub code (mock code)'
-import { Test } from "@/entities";
+import { SWTest, Test } from "@/entities";
 import clock from "../../assets/charm_clock-alarm.svg";
 import Hierarchy from "../../assets/Hierarchy.png";
 import Test_Img from "../../assets/Test_Img.svg";
@@ -8,7 +8,7 @@ export default function TestCard({
   test,
   onClick,
 }: {
-  test: Test;
+  test: Test | SWTest;
   onClick: () => void;
 }) {
   const titleTestCard = test.title;
@@ -32,7 +32,9 @@ export default function TestCard({
         </div>
         <div className="flex flex-row items-center gap-[6px]">
           <img src={Hierarchy} alt="" />
-          <span>7 parts | 200 questions</span>
+          <span>
+            {"main_audio" in test ? "7 parts | 200 questions" : "19 questions"}
+          </span>
         </div>
       </div>
     </div>

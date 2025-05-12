@@ -42,6 +42,7 @@ import LoginOauth from "./auth/LoginOAuth";
 import LearnPracticeLesson from "./practice/LearnPracticeLesson";
 import CreatingSWTestPage from "./admin/test/CreatingSWTestPage";
 import ReviewSWTestPage from "./test/ReviewSWTestPage";
+import SWTestDetailsPage from "./test/SWTestDetailsPage";
 import RessetPasswordPage from "./auth/RessetPasswordPage";
 
 export {
@@ -71,6 +72,7 @@ export {
   UserLayout,
   ReviewTestPage,
   ReviewSWTestPage,
+  SWTestDetailsPage,
   ReviewPracticePage,
   VocabCardGalleryPage,
   VocabLearingPage,
