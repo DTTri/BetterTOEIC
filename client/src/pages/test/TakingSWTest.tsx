@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { sUser } from "@/store";
+import { sUser, swTestStore } from "@/store";
 import { swTestService } from "@/services";
 import { toast } from "react-toastify";
-import { SWTest } from "@/entities";
 import LoadingProgress from "@/components/LoadingProgress";
 import TestNavigator from "@/components/SWtest/TestNavigator";
 
@@ -13,29 +12,10 @@ export default function TakingSWTest() {
   const { id } = useParams();
   const userId = sUser.use((state) => state.info._id);
   const nav = useNavigate();
-  const [testData, setTestData] = useState<SWTest | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchTestData = async () => {
-      if (!id) return;
-      try {
-        const response = await swTestService.getSWTestById(id);
-        if (response.EC === 0) {
-          setTestData(response.DT);
-        } else {
-          toast.error(response.EM || "Failed to fetch test data");
-        }
-      } catch (error) {
-        console.error("Error fetching test data:", error);
-        toast.error("Failed to fetch test data");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchTestData();
-  }, [id]);
+  const testData = swTestStore
+    .use((pre) => pre.swTestList)
+    .find((test) => test._id === id);
+  const [isLoading, setIsLoading] = useState(false);
 
   const convertBlobToBase64 = (blob: Blob): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -46,7 +26,6 @@ export default function TakingSWTest() {
     });
   };
 
-  // Convert Blob to File for upload
   const blobToFile = (blob: Blob, fileName: string): File => {
     return new File([blob], fileName, { type: blob.type });
   };
@@ -64,15 +43,12 @@ export default function TakingSWTest() {
       setIsLoading(true);
       toast.info("Processing your answers...");
 
-      // Upload audio recordings to S3
       const audioUploadPromises = results.speakingRecordings.map(
         async (blob, index) => {
           try {
-            // Convert Blob to File with a unique name
             const fileName = `speaking_q${index + 1}_${Date.now()}.webm`;
             const file = blobToFile(blob, fileName);
 
-            // Get presigned URL from server
             const response = await http.get(
               `file/presigned-url?fileName=${file.name}&contentType=${file.type}`
             );
@@ -81,7 +57,6 @@ export default function TakingSWTest() {
               throw new Error("Failed to get presigned URL");
             }
 
-            // Upload file to S3
             const result = await fetch(response.presignedUrl, {
               method: "PUT",
               headers: {
@@ -94,29 +69,23 @@ export default function TakingSWTest() {
               throw new Error("Failed to upload audio file");
             }
 
-            // Return the S3 URL
             return "https://seuit-qlnt.s3.amazonaws.com/" + response.key;
           } catch (error) {
             console.error(`Error uploading audio file ${index + 1}:`, error);
-            // Fallback to base64 if upload fails
             return convertBlobToBase64(blob);
           }
         }
       );
 
-      // Wait for all uploads to complete
       const audioUrls = await Promise.all(audioUploadPromises);
 
-      // Combine speaking and writing answers
       const answers = [...audioUrls, ...results.writingAnswers];
 
-      // Create the DTO
       const completeSWTestDTO = {
         testId: id,
         answers: answers,
       };
 
-      // Submit the test
       const response = await swTestService.completeSWTest(
         userId,
         completeSWTestDTO
@@ -124,7 +93,7 @@ export default function TakingSWTest() {
 
       if (response.EC === 0) {
         toast.success("Test submitted successfully!");
-        nav(`/swtest/${id}`); // Navigate to test details page
+        nav(`/test`);
       } else {
         toast.error(response.EM || "Failed to submit test");
       }

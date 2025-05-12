@@ -1,18 +1,20 @@
 import { PageHeader, SearchBar } from "@/components";
 import TestCardGallery from "@/components/LRtest/TestCardGallery";
-import { Test } from "@/entities";
+import { SWTest, Test } from "@/entities";
 import { testStore } from "@/store/testStore";
 import { Tab, Tabs } from "@mui/material";
 import { useEffect, useState } from "react";
 
 import * as motion from "motion/react-client";
 import LoadingProgress from "@/components/LoadingProgress";
+import { swTestStore } from "@/store";
 
 export default function TestsPage() {
   const testList: Test[] = testStore.use((pre) => pre.testList);
+  const swTestList = swTestStore.use((pre) => pre.swTestList);
   const [value, setValue] = useState(0);
   const [testValue, setTestValue] = useState(0);
-  const [curTests, setCurTests] = useState<Test[]>(testList);
+  const [curTests, setCurTests] = useState<Test[] | SWTest[]>(testList);
   useEffect(() => {
     setCurTests(testList);
   }, [testList]);
@@ -24,11 +26,11 @@ export default function TestsPage() {
     console.log(searchText);
     setValue(0);
     if (searchText === "" || !searchText) {
-      setCurTests(testList);
+      setCurTests(testValue === 0 ? testList : swTestList);
       return;
     }
     setCurTests(
-      testList.filter((test) =>
+      curTests.filter((test) =>
         test.title.toLowerCase().includes(searchText.toLowerCase())
       )
     );
@@ -37,10 +39,10 @@ export default function TestsPage() {
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
     if (newValue === 0) {
-      setCurTests(testList);
+      setCurTests(testValue === 0 ? testList : swTestList);
     } else {
       setCurTests(
-        testList.filter((test) =>
+        curTests.filter((test) =>
           test.title
             .toString()
             .includes(event.currentTarget.textContent?.toString() || "")
@@ -53,9 +55,9 @@ export default function TestsPage() {
     console.log(event.currentTarget.textContent?.toString() || "");
     setTestValue(newValue);
     if (newValue === 0) {
-      setCurTests(testList.filter((test) => test.isLRTest === true));
+      setCurTests(testList);
     } else {
-      setCurTests(testList.filter((test) => test.isLRTest === false));
+      setCurTests(swTestList);
     }
   };
 

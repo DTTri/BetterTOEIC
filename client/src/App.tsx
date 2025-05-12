@@ -46,6 +46,7 @@ import {
   LearnPracticeLesson,
   CreatingSWTestPage,
   ReviewSWTestPage,
+  SWTestDetailsPage,
 } from "./pages";
 
 import { useEffect } from "react";
@@ -534,6 +535,14 @@ function App() {
             element={
               <UserLayout haveFooter={false} haveChatBot={false}>
                 <TakingSWTest />
+              </UserLayout>
+            }
+          />
+          <Route
+            path="/swtest/:id"
+            element={
+              <UserLayout>
+                <SWTestDetailsPage />
               </UserLayout>
             }
           />
