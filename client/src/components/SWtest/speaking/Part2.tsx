@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import Timer from "../Timer";
 import AudioRecorder from "../AudioRecorder";
-import { Question } from "@/entities";
+import { SWQuestion } from "@/entities";
 import { Part2SWTestTime } from "../SWTestTime";
 interface Part2Props {
-  question: Question;
+  question: SWQuestion;
   onComplete: (recording: Blob) => void;
 }
 
 export default function Part2({ question, onComplete }: Part2Props) {
-  const [stage, setStage] = useState<
-    "direction" | "preparation" | "recording"
-  >("preparation");
+  const [stage, setStage] = useState<"direction" | "preparation" | "recording">(
+    "preparation"
+  );
 
   useEffect(() => {
     setStage(question.question_number === 3 ? "direction" : "preparation");
@@ -52,9 +52,11 @@ export default function Part2({ question, onComplete }: Part2Props) {
             <h2 className="text-3xl font-bold mb-4 w-full text-center block">
               Question 3-4: Describe a picture
             </h2>
-            <h3 className="text-lg font-medium mb-4">Direction: In this part of the test, you will describe the picture on the
-              screen. You will have 45 seconds to prepare your response. Then
-              you will have 30 seconds to describe the picture.</h3>
+            <h3 className="text-lg font-medium mb-4">
+              Direction: In this part of the test, you will describe the picture
+              on the screen. You will have 45 seconds to prepare your response.
+              Then you will have 30 seconds to describe the picture.
+            </h3>
             <div className="hidden">
               <Timer
                 initialSeconds={Part2SWTestTime.DirectionTime || 10}
@@ -67,7 +69,7 @@ export default function Part2({ question, onComplete }: Part2Props) {
           <div className="w-full">
             <div className="flex justify-center mb-8">
               <img
-                src={question.images?.[0]}
+                src={question.image?.[0]}
                 alt={`Question ${question.question_number}`}
                 className="max-w-full h-auto rounded-lg shadow-md"
               />
@@ -75,7 +77,11 @@ export default function Part2({ question, onComplete }: Part2Props) {
 
             <div className="flex justify-center mb-6">
               <Timer
-                initialSeconds={stage === "preparation" ? Part2SWTestTime.PreparationTime || 45 : Part2SWTestTime.RecordingTime || 30}
+                initialSeconds={
+                  stage === "preparation"
+                    ? Part2SWTestTime.PreparationTime || 45
+                    : Part2SWTestTime.RecordingTime || 30
+                }
                 onTimeEnd={
                   stage === "preparation"
                     ? handlePreparationEnd

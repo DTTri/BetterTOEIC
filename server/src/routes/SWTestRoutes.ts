@@ -15,6 +15,6 @@ swTestRouter.put(
 );
 swTestRouter.get('/getSWTestHistory/:userId', swTestControllerInstance.getSWTestHistory);
 swTestRouter.get('/getUserStatistics/:userId', swTestControllerInstance.getUserStatistics);
-swTestRouter.get('/getCompletedTest/:userId/:testId', swTestControllerInstance.getCompletedTest);
+swTestRouter.get('/getCompletedTest/:userId/:testId/:attemptId', swTestControllerInstance.getCompletedTest);
 
 export default swTestRouter;

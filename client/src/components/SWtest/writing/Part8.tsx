@@ -1,10 +1,10 @@
 import { useState } from "react";
 import Timer from "../Timer";
 import TextEditor from "../TextEditor";
-import { Question } from "@/entities";
+import { SWQuestion } from "@/entities";
 import { Part8SWTestTime } from "../SWTestTime";
 interface Part8Props {
-  question: Question;
+  question: SWQuestion;
   onComplete: (answer: string) => void;
 }
 
@@ -32,10 +32,12 @@ export default function Part8({ question, onComplete }: Part8Props) {
             <h2 className="text-3xl font-bold mb-4 w-full text-center block">
               Question 19: Write an essay
             </h2>
-            <h3 className="text-lg font-medium mb-4">Direction:  In this part of the test, you will write an essay expressing and
-              supporting your opinion on a given topic. You will have 30 minutes
-              to plan, write, and revise your essay. Your essay should be
-              between 300-350 words.</h3>
+            <h3 className="text-lg font-medium mb-4">
+              Direction: In this part of the test, you will write an essay
+              expressing and supporting your opinion on a given topic. You will
+              have 30 minutes to plan, write, and revise your essay. Your essay
+              should be between 300-350 words.
+            </h3>
             <div className="hidden">
               <Timer
                 initialSeconds={Part8SWTestTime.DirectionTime || 10}
@@ -55,7 +57,9 @@ export default function Part8({ question, onComplete }: Part8Props) {
             </div>
             <div className="space-y-6">
               <div className="bg-gray-50 p-6 rounded-lg">
-                <h4 className="text-lg font-semibold mb-4">Question: {question.text}</h4>
+                <h4 className="text-lg font-semibold mb-4">
+                  Question: {question.text}
+                </h4>
               </div>
             </div>
 

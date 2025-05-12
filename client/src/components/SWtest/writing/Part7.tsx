@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import Timer from "../Timer";
 import TextEditor from "../TextEditor";
-import { Question } from "@/entities";
+import { SWQuestion } from "@/entities";
 import { Part7SWTestTime } from "../SWTestTime";
 
 interface Part7Props {
-  question: Question;
+  question: SWQuestion;
   onComplete: (answer: string) => void;
 }
 

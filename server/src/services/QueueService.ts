@@ -53,12 +53,16 @@ class QueueService {
     if (!this.evaluationQueue) return;
 
     this.evaluationQueue.process(async (job) => {
-      const { userId, testId, contentKey } = job.data;
+      const { userId, testId, contentKey, attemptId } = job.data;
 
       try {
         console.log(`Processing evaluation for test ${testId} by user ${userId}`);
 
         const testContent = await s3Service.getTestContent(contentKey);
+
+        if (!attemptId) {
+          throw new Error(`No attemptId found for test ${testId} content`);
+        }
 
         const testDoc = await collections.swTests?.findOne({ _id: new ObjectId(testId.toString()) });
         if (!testDoc) {
@@ -93,16 +97,23 @@ class QueueService {
             userId: new ObjectId(userId.toString()),
             year,
             month,
-            'tests.testId': testId,
+            tests: {
+              $elemMatch: {
+                testId: testId,
+                attemptId: attemptId,
+              },
+            },
           },
           {
             $set: {
-              'tests.$.scores': scores,
-              'tests.$.totalScore': totalScore,
-              'tests.$.averageScore': averageScore,
-              'tests.$.completed_at': new Date().toISOString(),
+              'tests.$[elem].scores': scores,
+              'tests.$[elem].totalScore': totalScore,
+              'tests.$[elem].averageScore': averageScore,
               updated_at: new Date().toISOString(),
             },
+          },
+          {
+            arrayFilters: [{ 'elem.testId': testId, 'elem.attemptId': attemptId }],
           }
         );
 
@@ -121,10 +132,10 @@ class QueueService {
     return this.isQueueEnabled && this.evaluationQueue !== null;
   }
 
-  async queueTestEvaluation(userId: string, testId: string, contentKey: string): Promise<void> {
+  async queueTestEvaluation(userId: string, testId: string, contentKey: string, attemptId: string): Promise<void> {
     if (!this.isQueueAvailable()) {
       console.log(`Queue disabled. Skipping evaluation for test ${testId} by user ${userId}`);
-      await this.evaluateTestSynchronously(userId, testId, contentKey);
+      await this.evaluateTestSynchronously(userId, testId, contentKey, attemptId);
       return;
     }
 
@@ -132,16 +143,21 @@ class QueueService {
       userId,
       testId,
       contentKey,
+      attemptId,
     });
     console.log(`Queued evaluation for test ${testId} by user ${userId}`);
   }
 
-  private async evaluateTestSynchronously(userId: string, testId: string, contentKey: string): Promise<void> {
+  private async evaluateTestSynchronously(
+    userId: string,
+    testId: string,
+    contentKey: string,
+    attemptId: string
+  ): Promise<void> {
     try {
       console.log(`Processing evaluation synchronously for test ${testId} by user ${userId}`);
 
       const testContent = await s3Service.getTestContent(contentKey);
-
       const testDoc = await collections.swTests?.findOne({ _id: new ObjectId(testId.toString()) });
       if (!testDoc) {
         throw new Error(`Test not found: ${testId}`);
@@ -172,16 +188,23 @@ class QueueService {
           userId: new ObjectId(userId.toString()),
           year,
           month,
-          'tests.testId': testId,
+          tests: {
+            $elemMatch: {
+              testId: testId,
+              attemptId: attemptId,
+            },
+          },
         },
         {
           $set: {
-            'tests.$.scores': scores,
-            'tests.$.totalScore': totalScore,
-            'tests.$.averageScore': averageScore,
-            'tests.$.completed_at': new Date().toISOString(),
+            'tests.$[elem].scores': scores,
+            'tests.$[elem].totalScore': totalScore,
+            'tests.$[elem].averageScore': averageScore,
             updated_at: new Date().toISOString(),
           },
+        },
+        {
+          arrayFilters: [{ 'elem.testId': testId, 'elem.attemptId': attemptId }],
         }
       );
 

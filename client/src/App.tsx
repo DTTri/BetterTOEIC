@@ -57,6 +57,7 @@ import {
   vocabService,
   practiceService,
   chatService,
+  swTestService,
 } from "./services";
 import {
   sRoadmap,
@@ -66,6 +67,7 @@ import {
   practiceStore,
   sForum,
   sChat,
+  swTestStore,
 } from "./store";
 import { User } from "./entities";
 import { ThemeProvider } from "@mui/material";
@@ -394,7 +396,37 @@ function App() {
       } catch (error) {
         console.log("Fail to fetch chat history: ", error);
       }
-    }
+    };
+    const fetchSWTests = async () => {
+      try {
+        const response = await swTestService.getAllSWTests();
+        if (response.EC === 0) {
+          swTestStore.set((prev) => (prev.value.swTestList = response.DT));
+        } else {
+          console.log("Fail to fetch SW tests: ", response.EM);
+        }
+      } catch (error) {
+        console.log("Fail to fetch SW tests: ", error);
+      }
+    };
+    const fetchSWTestHistory = async () => {
+      try {
+        const response = await swTestService.getSWTestHistory(curUser || "");
+        if (response.EC === 0) {
+          swTestStore.set(
+            (prev) => (prev.value.swTestHistory = response.DT.tests)
+          );
+          // console.log(
+          //   "SW Test history fetched successfully",
+          //   response.DT.tests
+          // );
+        } else {
+          console.log("Fail to fetch SW test history: ", response.EM);
+        }
+      } catch (error) {
+        console.log("Fail to fetch SW test history: ", error);
+      }
+    };
 
     const fetchSecureData = async () => {
       await fetchAllUsers();
@@ -410,6 +442,8 @@ function App() {
         fetchSavedVocabs(),
         fetchVocabHistory(),
         fetchChatHistory(),
+        fetchSWTests(),
+        fetchSWTestHistory(),
       ]);
     };
 
@@ -520,7 +554,7 @@ function App() {
             }
           />
           <Route
-            path="/review-sw-test/:id/:attemp"
+            path="/review-sw-test/:testId/:attemptId"
             element={
               <UserLayout haveFooter={false}>
                 <ReviewSWTestPage />

@@ -7,12 +7,14 @@ import Part5 from "./speaking/Part5";
 import Part6 from "./writing/Part6";
 import Part7 from "./writing/Part7";
 import Part8 from "./writing/Part8";
-import { Question } from "@/entities";
+import { SWQuestion } from "@/entities";
+import GetSWPart from "@/utils/GetSWPart";
+import getSWPart from "@/utils/GetSWPart";
 
-type TestSection = "speaking" | "writing";
+//type TestSection = "speaking" | "writing";
 
 interface TestNavigatorProps {
-  questions: Question[];
+  questions: SWQuestion[];
   onComplete: (results: {
     speakingRecordings: Blob[];
     writingAnswers: string[];
@@ -42,8 +44,8 @@ export default function TestNavigator({
   };
 
   useEffect(() => {
-    setCurrentPart(questions[currentQuestion].part);
-  }, [currentQuestion]);
+    setCurrentPart(GetSWPart(questions[currentQuestion].question_number));
+  }, [currentQuestion, questions]);
 
   const handleRecordingComplete = (recording: Blob | Blob[]) => {
     const newRecordings = [...speakingRecordings];
@@ -107,7 +109,9 @@ export default function TestNavigator({
       case 6:
         return (
           <Part6
-            questions={questions.filter((q) => q.part === 6)}
+            questions={questions.filter(
+              (q) => getSWPart(q.question_number) === 6
+            )}
             onComplete={handleAnswerComplete}
           />
         );
