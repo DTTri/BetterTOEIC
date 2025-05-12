@@ -64,6 +64,8 @@ class SWTestService {
 
       const answers = [...audioUrls, ...writingAnswers];
 
+      const attemptId = new ObjectId().toString();
+
       const testContent: SWTestContent = {
         testId,
         userId,
@@ -79,20 +81,18 @@ class SWTestService {
 
       const testMetadata: SWTestMetadata = {
         testId,
+        attemptId,
         contentKey,
         scores: [],
         totalScore: 0,
         averageScore: 0,
         attempted_at: new Date().toISOString(),
-        completed_at: '',
-        duration: 0,
       };
 
       const date = new Date();
       const year = date.getFullYear();
       const month = date.getMonth() + 1;
 
-      // First, check if the partition exists
       const partition = await collections.swTestHistoryPartitions?.findOne({
         userId: new ObjectId(userId.toString()),
         year,
@@ -124,7 +124,7 @@ class SWTestService {
 
       console.log(`Updated MongoDB partition for year ${year}, month ${month}`);
 
-      await queueService.queueTestEvaluation(userId, testId, contentKey);
+      await queueService.queueTestEvaluation(userId, testId, contentKey, attemptId);
 
       return true;
     } catch (error) {
@@ -133,7 +133,6 @@ class SWTestService {
     }
   }
 
-  // Get SW test history for a user with pagination
   async getSWTestHistory(userId: string, page = 1, limit = 10): Promise<any> {
     try {
       const cachedHistory = await redisService.getUserHistory(userId, page, limit);
@@ -181,11 +180,12 @@ class SWTestService {
                 content = await s3Service.getTestContent(test.contentKey);
                 await redisService.cacheTestContent(userId, test.testId, content);
               }
-
+              const testWithoutContentKey = { ...test, contentKey: undefined };
               return {
-                ...test,
+                ...testWithoutContentKey,
                 evaluations: content.evaluations,
                 sampleAnswers: content.sampleAnswers,
+                answers: content.answers,
               };
             } catch (error) {
               console.error(`Error getting content for test ${test.testId}:`, error);
@@ -209,6 +209,7 @@ class SWTestService {
           hasPrevPage: page > 1,
         },
       };
+      console.log(`Retrieved test history for user ${userId} from MongoDB`);
 
       await redisService.cacheUserHistory(userId, page, limit, result);
 
@@ -219,24 +220,40 @@ class SWTestService {
     }
   }
 
-  // Get completed test details
-  async getCompletedTest(userId: string, testId: string): Promise<any> {
+  async getCompletedTest(userId: string, testId: string, attemptId?: string): Promise<any> {
     try {
-      const cachedTest = await redisService.getTestMetadata(userId, testId);
-      let testMetadata = cachedTest;
+      console.log(`Getting completed test for user ${userId}, test ${testId}, attempt ${attemptId || 'latest'}`);
 
-      if (!testMetadata) {
+      if (attemptId) {
+        const cacheKey = `test:${userId}:${testId}:${attemptId}`;
+        const cachedTest = await redisService.get(cacheKey);
+
+        if (cachedTest) {
+          console.log(`Retrieved test from Redis cache with key ${cacheKey}`);
+          return JSON.parse(cachedTest);
+        }
+
         const partitions =
           ((await collections.swTestHistoryPartitions
-            ?.find({ userId: new ObjectId(userId.toString()), 'tests.testId': testId })
+            ?.find({
+              userId: new ObjectId(userId.toString()),
+              tests: {
+                $elemMatch: {
+                  testId: testId,
+                  attemptId: attemptId,
+                },
+              },
+            })
             .toArray()) as SWTestHistoryPartition[]) || [];
 
         if (partitions.length === 0) {
+          console.log(`No partitions found for user ${userId}, test ${testId}, attempt ${attemptId}`);
           return null;
         }
 
+        let testMetadata = null;
         for (const partition of partitions) {
-          const test = partition.tests.find((t) => t.testId === testId);
+          const test = partition.tests.find((t) => t.testId === testId && t.attemptId === attemptId);
           if (test) {
             testMetadata = test;
             break;
@@ -244,27 +261,81 @@ class SWTestService {
         }
 
         if (!testMetadata) {
+          console.log(`No test metadata found for user ${userId}, test ${testId}, attempt ${attemptId}`);
           return null;
         }
 
-        await redisService.cacheTestMetadata(userId, testId, testMetadata);
+        const content = await s3Service.getTestContent(testMetadata.contentKey);
+
+        const testDoc = await collections.swTests?.findOne({ _id: new ObjectId(testId.toString()) });
+        const test = testDoc as unknown as SWTest;
+
+        const result = {
+          ...testMetadata,
+          content,
+          questions: test?.questions || [],
+        };
+
+        await redisService.set(cacheKey, JSON.stringify(result), 3600); // Cache for 1 hour
+
+        return result;
+      } else {
+        // if attemptId is not provided, returns the latest attempt
+        const cachedTest = await redisService.getTestMetadata(userId, testId);
+        let testMetadata = cachedTest;
+
+        if (!testMetadata) {
+          const partitions =
+            ((await collections.swTestHistoryPartitions
+              ?.find({ userId: new ObjectId(userId.toString()), 'tests.testId': testId })
+              .toArray()) as SWTestHistoryPartition[]) || [];
+
+          if (partitions.length === 0) {
+            return null;
+          }
+
+          let latestTest = null;
+          for (const partition of partitions) {
+            const testsForThisId = partition.tests.filter((t) => t.testId === testId);
+            if (testsForThisId.length > 0) {
+              const sortedTests = testsForThisId.sort(
+                (a, b) => new Date(b.attempted_at).getTime() - new Date(a.attempted_at).getTime()
+              );
+
+              if (
+                !latestTest ||
+                new Date(sortedTests[0].attempted_at).getTime() > new Date(latestTest.attempted_at).getTime()
+              ) {
+                latestTest = sortedTests[0];
+              }
+            }
+          }
+
+          testMetadata = latestTest;
+
+          if (!testMetadata) {
+            return null;
+          }
+
+          await redisService.cacheTestMetadata(userId, testId, testMetadata);
+        }
+
+        let content = await redisService.getTestContent(userId, testId);
+
+        if (!content) {
+          content = await s3Service.getTestContent(testMetadata.contentKey);
+          await redisService.cacheTestContent(userId, testId, content);
+        }
+
+        const testDoc = await collections.swTests?.findOne({ _id: new ObjectId(testId.toString()) });
+        const test = testDoc as unknown as SWTest;
+
+        return {
+          ...testMetadata,
+          content,
+          questions: test?.questions || [],
+        };
       }
-
-      let content = await redisService.getTestContent(userId, testId);
-
-      if (!content) {
-        content = await s3Service.getTestContent(testMetadata.contentKey);
-        await redisService.cacheTestContent(userId, testId, content);
-      }
-
-      const testDoc = await collections.swTests?.findOne({ _id: new ObjectId(testId.toString()) });
-      const test = testDoc as unknown as SWTest;
-
-      return {
-        ...testMetadata,
-        content,
-        questions: test?.questions || [],
-      };
     } catch (error) {
       console.error('Error getting completed test:', error);
       return null;

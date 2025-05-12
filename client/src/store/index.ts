@@ -7,6 +7,7 @@ import { testStore } from "./testStore";
 import { practiceStore } from "./practiceStore";
 import sForum from "./forumStore";
 import sChat from "./chatStore";
+import { swTestStore } from "./swTestStore";
 export {
   sRoadmap,
   sCreatingPersonalRoadmap,
@@ -16,5 +17,6 @@ export {
   testStore,
   practiceStore,
   sForum,
-  sChat
+  sChat,
+  swTestStore,
 };

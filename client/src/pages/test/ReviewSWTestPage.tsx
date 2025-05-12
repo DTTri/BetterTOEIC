@@ -1,7 +1,7 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useRef, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Volume2 } from "lucide-react";
 import "swiper/css";
 import "swiper/css/navigation";
 import SwiperCore from "swiper";
@@ -12,211 +12,10 @@ import {
 } from "@/components/ui/accordion";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import { PlusIcon } from "lucide-react";
-
-type SWQuestion = {
-  question_number: number;
-  text?: string;
-  image?: string;
-  keywords?: string[]; // for describing image
-  groupImages?: string[];
-  groupText?: string;
-};
-
-type SWTest = {
-  title: string;
-  description: string;
-  questions: SWQuestion[];
-};
-type CompletedTest = {
-  // arrays have same length - 19 (11 speaking + 8 writing)
-  answers: string[]; // 11 first elements are audio url, the rest are text
-  evaluations: string[]; // all text
-  sampleAnswers: string[]; // AI sample answers - audio url
-  scores: number[]; // scores for each question
-};
-const sampleSWTest: SWTest = {
-  title: "Sample SW Test",
-  description: "This is a sample SW test",
-  questions: [
-    {
-      question_number: 1,
-      text: "Hi. This is Myra Peters calling about my appointment with Dr. Jones. I have a three o'clock appointment scheduled for this afternoon. Unfortunately, I won't be able to keep it because of an important meeting at work. So, I'll need to reschedule. I was hoping to come in sometime next week. Any time Monday, Tuesday, or Wednesday afternoon would work for me. I hope the doctor has some time available on one of those days. Please call me back and let me know.",
-    },
-    {
-      question_number: 2,
-      text: "Hi. This is Myra Peters calling about my appointment with Dr. Jones. I have a three o'clock appointment scheduled for this afternoon. Unfortunately, I won't be able to keep it because of an important meeting at work. So, I'll need to reschedule. I was hoping to come in sometime next week. Any time Monday, Tuesday, or Wednesday afternoon would work for me. I hope the doctor has some time available on one of those days. Please call me back and let me know.",
-    },
-    {
-      question_number: 3,
-      image:
-        "https://media.zim.vn/648002b59951e9bad7675cf3/toeic-speaking-describe-a-picture-samples-2.jpeg",
-    },
-    {
-      question_number: 4,
-      image:
-        "https://media.zim.vn/648002b59951e9bad7675cf3/toeic-speaking-describe-a-picture-samples-2.jpeg",
-    },
-    {
-      question_number: 5,
-      text: "What sports do you like?",
-      groupText:
-        "Imagine that a research firm is doing a telephone survey of people in your city You have agreed to answer some questions about sports.",
-    },
-    {
-      question_number: 6,
-      text: "What sports do you like?",
-    },
-    {
-      question_number: 7,
-      text: "What sports do you like?",
-    },
-    {
-      question_number: 8,
-      groupImages: [
-        "https://media.zim.vn/648002b59951e9bad7675cf3/toeic-speaking-describe-a-picture-samples-2.jpeg",
-      ],
-      text: "What time is the meeting?",
-    },
-    {
-      question_number: 9,
-      groupImages: [
-        "https://media.zim.vn/648002b59951e9bad7675cf3/toeic-speaking-describe-a-picture-samples-2.jpeg",
-      ],
-      text: "What time is the meeting?",
-    },
-    {
-      question_number: 10,
-      groupImages: [
-        "https://media.zim.vn/648002b59951e9bad7675cf3/toeic-speaking-describe-a-picture-samples-2.jpeg",
-      ],
-      text: "What time is the meeting?",
-    },
-    {
-      question_number: 11,
-      text: "Many people prefer driving their own cars, while others would rather use public transportation. Which do you prefer? Explain why.",
-    },
-    {
-      question_number: 12,
-      image:
-        "https://media.zim.vn/648002b59951e9bad7675cf3/toeic-speaking-describe-a-picture-samples-2.jpeg",
-      keywords: ["car", "public transportation"],
-    },
-    {
-      question_number: 13,
-      image:
-        "https://media.zim.vn/648002b59951e9bad7675cf3/toeic-speaking-describe-a-picture-samples-2.jpeg",
-      keywords: ["car", "public transportation"],
-    },
-    {
-      question_number: 14,
-      image:
-        "https://media.zim.vn/648002b59951e9bad7675cf3/toeic-speaking-describe-a-picture-samples-2.jpeg",
-      keywords: ["car", "public transportation"],
-    },
-    {
-      question_number: 15,
-      image:
-        "https://media.zim.vn/648002b59951e9bad7675cf3/toeic-speaking-describe-a-picture-samples-2.jpeg",
-      keywords: ["car", "public transportation"],
-    },
-    {
-      question_number: 16,
-      image:
-        "https://media.zim.vn/648002b59951e9bad7675cf3/toeic-speaking-describe-a-picture-samples-2.jpeg",
-      keywords: ["car", "public transportation"],
-    },
-    {
-      question_number: 17,
-      text: "An email",
-    },
-    {
-      question_number: 18,
-      text: "An email",
-    },
-    {
-      question_number: 19,
-      text: "Do you agree or disagree with the following statement? It is more important to work at a job you enjoy than to make a lot of money. Support your answer with specific reasons and examples.",
-    },
-  ],
-};
-
-const sampleCompletedTest: CompletedTest = {
-  answers: [
-    // Speaking answers (audio URLs)
-    "https://storage.googleapis.com/bettertoeic/audio/answer1.mp3",
-    "https://storage.googleapis.com/bettertoeic/audio/answer2.mp3",
-    "https://storage.googleapis.com/bettertoeic/audio/answer3.mp3",
-    "https://storage.googleapis.com/bettertoeic/audio/answer4.mp3",
-    "https://storage.googleapis.com/bettertoeic/audio/answer5.mp3",
-    "https://storage.googleapis.com/bettertoeic/audio/answer6.mp3",
-    "https://storage.googleapis.com/bettertoeic/audio/answer7.mp3",
-    "https://storage.googleapis.com/bettertoeic/audio/answer8.mp3",
-    "https://storage.googleapis.com/bettertoeic/audio/answer9.mp3",
-    "https://storage.googleapis.com/bettertoeic/audio/answer10.mp3",
-    "https://storage.googleapis.com/bettertoeic/audio/answer11.mp3",
-    // Writing answers (text)
-    "The meeting is scheduled for 2 PM in the main conference room. All department heads are required to attend.",
-    "The project deadline has been extended to next Friday due to unexpected technical challenges.",
-    "I recommend implementing a new training program to improve employee productivity.",
-    "The company should invest in renewable energy sources to reduce carbon emissions.",
-    "The marketing strategy needs to be revised to target younger demographics.",
-    "The new software system will streamline our workflow and increase efficiency.",
-    "The budget proposal includes provisions for staff training and development.",
-    "The quarterly report shows significant growth in our overseas markets.",
-  ],
-  evaluations: [
-    // Speaking evaluations
-    "Good pronunciation and clear delivery. However, could improve on using more complex vocabulary.",
-    "Excellent fluency and natural intonation. Good use of appropriate business language.",
-    "Clear description of the image with good use of present continuous tense.",
-    "Well-structured response with good use of spatial language.",
-    "Good response to the survey question with appropriate examples.",
-    "Clear and concise answer with good use of supporting details.",
-    "Natural response with good use of conversational language.",
-    "Good description of the schedule with clear time references.",
-    "Well-organized response with good use of sequence words.",
-    "Clear explanation of the process with appropriate technical terms.",
-    "Excellent opinion response with strong supporting arguments.",
-    // Writing evaluations
-    "Well-structured email with clear purpose and appropriate tone.",
-    "Good use of business language and proper formatting.",
-    "Clear recommendations with supporting evidence.",
-    "Strong argument with good use of persuasive language.",
-    "Well-organized proposal with clear objectives.",
-    "Good use of technical terms and clear explanations.",
-    "Professional report format with comprehensive data analysis.",
-    "Clear market analysis with good use of business terminology.",
-  ],
-  sampleAnswers: [
-    // Speaking sample answers (audio URLs)
-    "https://storage.googleapis.com/bettertoeic/audio/sample1.mp3",
-    "https://storage.googleapis.com/bettertoeic/audio/sample2.mp3",
-    "https://storage.googleapis.com/bettertoeic/audio/sample3.mp3",
-    "https://storage.googleapis.com/bettertoeic/audio/sample4.mp3",
-    "https://storage.googleapis.com/bettertoeic/audio/sample5.mp3",
-    "https://storage.googleapis.com/bettertoeic/audio/sample6.mp3",
-    "https://storage.googleapis.com/bettertoeic/audio/sample7.mp3",
-    "https://storage.googleapis.com/bettertoeic/audio/sample8.mp3",
-    "https://storage.googleapis.com/bettertoeic/audio/sample9.mp3",
-    "https://storage.googleapis.com/bettertoeic/audio/sample10.mp3",
-    "https://storage.googleapis.com/bettertoeic/audio/sample11.mp3",
-    // Writing sample answers (text)
-    "The meeting will be held at 2:00 PM in the main conference room. All department heads must attend.",
-    "Due to technical issues, the project deadline has been extended to next Friday.",
-    "I suggest implementing a comprehensive training program to enhance employee productivity.",
-    "To reduce our carbon footprint, the company should transition to renewable energy sources.",
-    "Our marketing strategy should be updated to better reach younger consumers.",
-    "The new software system promises to optimize our workflow and boost efficiency.",
-    "The proposed budget includes funding for staff training and professional development.",
-    "Our quarterly report indicates substantial growth in international markets.",
-  ],
-  scores: [
-    // Speaking scores
-    18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18,
-    // Writing scores
-    18, 18, 18, 18, 18, 18, 18, 18,
-  ],
-};
+import { SWQuestion } from "@/entities";
+import { useParams } from "react-router-dom";
+import { sUser, swTestStore } from "@/store";
+import { toast } from "react-toastify";
 
 const questionGroups = [
   {
@@ -323,6 +122,37 @@ const scoreClassifications = [
   },
 ];
 
+const speakText = (text: string, voices: SpeechSynthesisVoice[] = []) => {
+  if (!("speechSynthesis" in window)) {
+    toast.error(
+      "Your browser doesn't support text to speech. Please try a different browser."
+    );
+    return;
+  }
+
+  window.speechSynthesis.cancel();
+
+  const utterance = new SpeechSynthesisUtterance(text);
+
+  utterance.rate = 0.9;
+  utterance.pitch = 1;
+
+  const availableVoices =
+    voices.length > 0 ? voices : window.speechSynthesis.getVoices();
+
+  const englishVoice = availableVoices.find(
+    (voice) =>
+      voice.lang.includes("en") &&
+      (voice.name.includes("Female") || voice.name.includes("Google"))
+  );
+
+  if (englishVoice) {
+    utterance.voice = englishVoice;
+  }
+
+  window.speechSynthesis.speak(utterance);
+};
+
 const SWQuestionReview = ({
   question,
   answer,
@@ -336,6 +166,34 @@ const SWQuestionReview = ({
   sampleAnswer: string;
   score: number;
 }) => {
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const availableVoices = useRef<SpeechSynthesisVoice[]>([]);
+
+  useEffect(() => {
+    if ("speechSynthesis" in window) {
+      const voices = window.speechSynthesis.getVoices();
+      if (voices.length > 0) {
+        availableVoices.current = voices;
+      }
+
+      const voicesChangedHandler = () => {
+        availableVoices.current = window.speechSynthesis.getVoices();
+      };
+
+      window.speechSynthesis.addEventListener(
+        "voiceschanged",
+        voicesChangedHandler
+      );
+
+      return () => {
+        window.speechSynthesis.removeEventListener(
+          "voiceschanged",
+          voicesChangedHandler
+        );
+      };
+    }
+  }, []);
+
   const classifyScore = useMemo(() => {
     const classification = scoreClassifications.find(
       (item) => score >= item.min && score <= item.max
@@ -343,6 +201,24 @@ const SWQuestionReview = ({
     console.log("Classify score: ", classification);
     return classification;
   }, [score]);
+
+  const handlePlaySampleAnswer = () => {
+    if (question.question_number < 12) {
+      setIsSpeaking(true);
+      speakText(sampleAnswer, availableVoices.current);
+
+      const speechEndHandler = () => {
+        setIsSpeaking(false);
+      };
+
+      window.speechSynthesis.addEventListener("end", speechEndHandler);
+
+      setTimeout(() => {
+        window.speechSynthesis.removeEventListener("end", speechEndHandler);
+        setIsSpeaking(false);
+      }, 15000);
+    }
+  };
   return (
     <div className="w-full p-8 bg-white rounded-[16px] flex flex-col gap-4">
       <div className="w-full flex justify-between items-center">
@@ -397,12 +273,14 @@ const SWQuestionReview = ({
       {[3, 4, 12, 13, 14, 15, 16].includes(question.question_number) ? (
         <div className="w-full flex flex-col items-center gap-2">
           <img
-            src={question.image}
+            src={question.image?.[0]}
             alt="question"
             className="w-[430px] h-auto object-cover"
           />
           {question.question_number > 11 && (
-            <p className="text-[18px]">{question.keywords?.join(", ")}</p>
+            <p className="text-[18px]">
+              {question.text + " " + question.passage}
+            </p>
           )}
         </div>
       ) : (
@@ -448,17 +326,19 @@ const SWQuestionReview = ({
                 Sample answer:
               </p>
               {question.question_number < 12 && (
-                <audio
-                  src={sampleAnswer}
-                  controls
-                  className="w-1/3 [&::-webkit-media-controls-panel]:bg-white [&::-webkit-media-controls-current-time-display]:text-[#007142] [&::-webkit-media-controls-time-remaining-display]:text-[#007142] [&::-webkit-media-controls-mute-button]:text-[#007142] [&::-webkit-media-controls-volume-slider]:text-[#007142] [&::-webkit-media-controls-play-button]:text-[#007142] border border-black rounded-full h-[40px]"
-                />
+                <button
+                  onClick={handlePlaySampleAnswer}
+                  disabled={isSpeaking}
+                  className={`flex items-center gap-2 bg-[#007142] text-white px-3 py-1 rounded-md hover:bg-[#005a33] transition-colors ${
+                    isSpeaking ? "opacity-70" : ""
+                  }`}
+                >
+                  <Volume2 size={18} />
+                  {isSpeaking ? "Speaking..." : "Play Sample Answer"}
+                </button>
               )}
             </div>
-            {/* sampleAnswer speech to text */}
-            {question.question_number > 2 && (
-              <p className="text-[18px]">{sampleAnswer}</p>
-            )}
+            <p className="text-[18px]">{sampleAnswer}</p>
           </AccordionContent>
         </AccordionItem>
       </Accordion>
@@ -467,15 +347,35 @@ const SWQuestionReview = ({
 };
 
 export default function ReviewSWTestPage() {
+  const { testId, attemptId } = useParams();
+  const userId = sUser.use((state) => state.info._id);
+  console.log(testId, attemptId, userId);
   const [currentQuestions, setCurrentQuestions] = useState<number[]>([1, 2]);
-
+  const test = swTestStore
+    .use((state) => state.swTestList)
+    .find((test) => test._id === testId);
+  const completedTest = swTestStore
+    .use((state) => state.swTestHistory)
+    .find((test) => test.testId === testId && test.attemptId === attemptId);
+  console.log(test);
+  console.log(completedTest);
   const [swiperInstance, setSwiperInstance] = useState<SwiperCore | null>(null);
+
   const handlePrev = () => {
     swiperInstance?.slidePrev();
   };
+
   const handleNext = () => {
     swiperInstance?.slideNext();
   };
+
+  if (!completedTest || !test) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p className="text-xl">Test data not found or failed to load</p>
+      </div>
+    );
+  }
 
   return (
     <div className="px-20 pt-8 pb-[100px]">
@@ -518,12 +418,12 @@ export default function ReviewSWTestPage() {
       <div className="w-full flex flex-col gap-4">
         {(currentQuestions.includes(5) || currentQuestions.includes(8)) && (
           <div className="w-full bg-white rounded-[16px] p-4">
-            {currentQuestions.includes(5) && (
-              <p>{sampleSWTest.questions[4].groupText}</p>
+            {currentQuestions.includes(5) && test.questions && (
+              <p>{test.questions[4]?.passage}</p>
             )}
-            {currentQuestions.includes(8) && (
+            {currentQuestions.includes(8) && test.questions && (
               <img
-                src={sampleSWTest.questions[7].groupImages?.[0]}
+                src={test.questions[7]?.image?.[0]}
                 alt="question"
                 className="w-[430px] h-auto object-cover"
               />
@@ -533,11 +433,11 @@ export default function ReviewSWTestPage() {
         {currentQuestions.map((questionNumber) => (
           <SWQuestionReview
             key={questionNumber}
-            question={sampleSWTest.questions[questionNumber - 1]}
-            answer={sampleCompletedTest.answers[questionNumber - 1]}
-            evaluation={sampleCompletedTest.evaluations[questionNumber - 1]}
-            sampleAnswer={sampleCompletedTest.sampleAnswers[questionNumber - 1]}
-            score={sampleCompletedTest.scores[questionNumber - 1]}
+            question={test.questions?.[questionNumber - 1]}
+            answer={completedTest.answers?.[questionNumber - 1]}
+            evaluation={completedTest.evaluations?.[questionNumber - 1]}
+            sampleAnswer={completedTest.sampleAnswers?.[questionNumber - 1]}
+            score={completedTest.scores?.[questionNumber - 1]}
           />
         ))}
       </div>

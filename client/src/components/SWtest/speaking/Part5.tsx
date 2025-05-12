@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
 import Timer from "../Timer";
 import AudioRecorder from "../AudioRecorder";
-import { Question } from "@/entities";
+import { SWQuestion } from "@/entities";
 import { Part5SWTestTime } from "../SWTestTime";
 interface Part5Props {
-  question: Question;
+  question: SWQuestion;
   onComplete: (recording: Blob) => void;
 }
 
 export default function Part5({ question, onComplete }: Part5Props) {
-  const [stage, setStage] = useState<"direction" | "preparation" | "recording">("preparation");
+  const [stage, setStage] = useState<"direction" | "preparation" | "recording">(
+    "preparation"
+  );
   const [isRecording, setIsRecording] = useState(false);
 
   useEffect(() => {
@@ -47,9 +49,11 @@ export default function Part5({ question, onComplete }: Part5Props) {
             <h2 className="text-3xl font-bold mb-4 w-full text-center block">
               Question 11: Express an opinion
             </h2>
-            <h3 className="text-lg font-medium mb-4">Direction:  In this part of the test, you will give your opinion about a
-              specific topic. You will have 45 seconds to prepare your response.
-              Then you will have 60 seconds to speak about the topic.</h3>
+            <h3 className="text-lg font-medium mb-4">
+              Direction: In this part of the test, you will give your opinion
+              about a specific topic. You will have 45 seconds to prepare your
+              response. Then you will have 60 seconds to speak about the topic.
+            </h3>
             <div className="hidden">
               <Timer
                 initialSeconds={Part5SWTestTime.DirectionTime || 10}
@@ -61,12 +65,18 @@ export default function Part5({ question, onComplete }: Part5Props) {
         ) : (
           <div className="w-full">
             <div className="bg-gray-50 p-6 rounded-lg mb-8">
-              <h4 className="text-lg font-semibold mb-4">Topic: {question.text}</h4>
+              <h4 className="text-lg font-semibold mb-4">
+                Topic: {question.text}
+              </h4>
             </div>
 
             <div className="flex justify-center mb-6">
               <Timer
-                initialSeconds={stage === "preparation" ? (Part5SWTestTime.PreparationTime || 45) : (Part5SWTestTime.RecordingTime || 60)}
+                initialSeconds={
+                  stage === "preparation"
+                    ? Part5SWTestTime.PreparationTime || 45
+                    : Part5SWTestTime.RecordingTime || 60
+                }
                 onTimeEnd={
                   stage === "preparation"
                     ? handlePreparationEnd

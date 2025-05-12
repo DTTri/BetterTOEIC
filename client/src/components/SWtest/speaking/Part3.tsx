@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
 import Timer from "../Timer";
 import AudioRecorder from "../AudioRecorder";
-import { Question } from "@/entities";
+import { SWQuestion } from "@/entities";
 import { Part3SWTestTime } from "../SWTestTime";
 interface Part3Props {
-  question: Question;
+  question: SWQuestion;
   onComplete: (recordings: Blob) => void;
 }
 
 export default function Part3({ question, onComplete }: Part3Props) {
-  const [stage, setStage] = useState<"direction" | "preparation" | "recording">("preparation");
+  const [stage, setStage] = useState<"direction" | "preparation" | "recording">(
+    "preparation"
+  );
 
   useEffect(() => {
     setStage(question.question_number === 5 ? "direction" : "preparation");
@@ -19,7 +21,9 @@ export default function Part3({ question, onComplete }: Part3Props) {
 
   // Get response time based on question number (15s for first two, 30s for last)
   const getResponseTime = (questionNumber: number) => {
-    return questionNumber === 7 ? (Part3SWTestTime.question7?.RecordingTime || 30) : (Part3SWTestTime.question56?.RecordingTime || 15);
+    return questionNumber === 7
+      ? Part3SWTestTime.question7?.RecordingTime || 30
+      : Part3SWTestTime.question56?.RecordingTime || 15;
   };
 
   const handleDirectionEnd = () => {
@@ -53,10 +57,12 @@ export default function Part3({ question, onComplete }: Part3Props) {
             <h2 className="text-3xl font-bold mb-4 w-full text-center block">
               Question 5-7: Answer the questions
             </h2>
-            <h3 className="text-lg font-medium mb-4">Direction: In this part of the test, you will answer three questions. You
-              will have 3 seconds to prepare for each question. For questions 5
-              and 6, you will have 15 seconds to respond to each question. For
-              question 7, you will have 30 seconds to respond</h3>
+            <h3 className="text-lg font-medium mb-4">
+              Direction: In this part of the test, you will answer three
+              questions. You will have 3 seconds to prepare for each question.
+              For questions 5 and 6, you will have 15 seconds to respond to each
+              question. For question 7, you will have 30 seconds to respond
+            </h3>
             <div className="hidden">
               <Timer
                 initialSeconds={Part3SWTestTime.DirectionTime || 10}
@@ -70,15 +76,23 @@ export default function Part3({ question, onComplete }: Part3Props) {
             <div className="bg-gray-50 p-6 rounded-lg mb-8">
               <h4 className="text-lg font-bold mb-4">{question.text}</h4>
               <p className="text-lg leading-relaxed">
-                Question: {question.passages?.[0]}
+                Question: {question.passage}
               </p>
             </div>
 
             <div className="flex justify-center mb-6">
               <Timer
-                initialSeconds={stage == "preparation" ? (Part3SWTestTime.PreparationTime || 3) : getResponseTime(question.question_number)}
-                onTimeEnd={stage == "preparation" ? handlePreparationEnd : handleRecordingEnd}
-                isPreparation={stage === 'preparation'}
+                initialSeconds={
+                  stage == "preparation"
+                    ? Part3SWTestTime.PreparationTime || 3
+                    : getResponseTime(question.question_number)
+                }
+                onTimeEnd={
+                  stage == "preparation"
+                    ? handlePreparationEnd
+                    : handleRecordingEnd
+                }
+                isPreparation={stage === "preparation"}
               />
             </div>
 

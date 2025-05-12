@@ -3,7 +3,6 @@ type SWQuestion = {
   text: string;
   passage?: string;
   image?: string[];
-  part: number;
   question_audio?: string;
 };
 

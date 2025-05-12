@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import Timer from "../Timer";
 import AudioRecorder from "../AudioRecorder";
-import { Question } from "@/entities";
+import { SWQuestion } from "@/entities";
 import { Part4SWTestTime } from "../SWTestTime";
 
 interface Part4Props {
-  question: Question;
+  question: SWQuestion;
   onComplete: (recordings: Blob) => void;
 }
 
 export default function Part4({ question, onComplete }: Part4Props) {
-  const [stage, setStage] = useState<
-    "direction" | "preparation" | "recording"
-  >("preparation");
+  const [stage, setStage] = useState<"direction" | "preparation" | "recording">(
+    "preparation"
+  );
 
   useEffect(() => {
     setStage(question.question_number === 8 ? "direction" : "preparation");
@@ -22,7 +22,9 @@ export default function Part4({ question, onComplete }: Part4Props) {
 
   // Get response time based on question number (15s for first two, 30s for last)
   const getResponseTime = (questionIndex: number) => {
-    return questionIndex === 10 ? (Part4SWTestTime.question10?.RecordingTime || 30) : (Part4SWTestTime.question89?.RecordingTime || 15);
+    return questionIndex === 10
+      ? Part4SWTestTime.question10?.RecordingTime || 30
+      : Part4SWTestTime.question89?.RecordingTime || 15;
   };
 
   const handleDirectionEnd = () => {
@@ -57,12 +59,14 @@ export default function Part4({ question, onComplete }: Part4Props) {
             <h2 className="text-3xl font-bold mb-4 w-full text-center block">
               Question 8-10: Respond to questions using provided information
             </h2>
-            <h3 className="text-lg font-medium mb-4">Direction: In this part of the test, you will answer three questions based on
-              the information provided. You will have 45 seconds to read the
-              information before the questions begin. You will have 3 seconds to
-              prepare for each question. For questions 8 and 9, you will have 15
-              seconds to respond. For question 10, you will have 30 seconds to
-              respond.</h3>
+            <h3 className="text-lg font-medium mb-4">
+              Direction: In this part of the test, you will answer three
+              questions based on the information provided. You will have 45
+              seconds to read the information before the questions begin. You
+              will have 3 seconds to prepare for each question. For questions 8
+              and 9, you will have 15 seconds to respond. For question 10, you
+              will have 30 seconds to respond.
+            </h3>
             <div className="hidden">
               <Timer
                 initialSeconds={Part4SWTestTime.DirectionTime || 10}
@@ -75,7 +79,7 @@ export default function Part4({ question, onComplete }: Part4Props) {
           <div className="w-full">
             <div className="flex justify-center mb-4">
               <img
-                src={question.images?.[0]}
+                src={question.image?.[0]}
                 alt="Schedule Information"
                 className="max-w-full h-auto rounded-lg shadow-md"
               />
@@ -84,15 +88,23 @@ export default function Part4({ question, onComplete }: Part4Props) {
             <div className="bg-gray-50 p-6 rounded-lg mb-8">
               <h4 className="text-lg font-semibold mb-4">{question.text}</h4>
               <p className="text-lg leading-relaxed">
-                Question: {question.passages?.[0]}
+                Question: {question.passage}
               </p>
             </div>
 
             <div className="flex justify-center mb-6">
-            <Timer
-                initialSeconds={stage == "preparation" ? (Part4SWTestTime.PreparationTime || 3) : getResponseTime(question.question_number)}
-                onTimeEnd={stage == "preparation" ? handlePreparationEnd : handleRecordingEnd}
-                isPreparation={stage === 'preparation'}
+              <Timer
+                initialSeconds={
+                  stage == "preparation"
+                    ? Part4SWTestTime.PreparationTime || 3
+                    : getResponseTime(question.question_number)
+                }
+                onTimeEnd={
+                  stage == "preparation"
+                    ? handlePreparationEnd
+                    : handleRecordingEnd
+                }
+                isPreparation={stage === "preparation"}
               />
             </div>
 

@@ -1,11 +1,11 @@
 import { useState } from "react";
 import Timer from "../Timer";
 import TextEditor from "../TextEditor";
-import { Question } from "@/entities";
+import { SWQuestion } from "@/entities";
 import { Part6SWTestTime } from "../SWTestTime";
 
 interface Part6Props {
-  questions: Question[];
+  questions: SWQuestion[];
   onComplete: (answers: string[]) => void;
 }
 
@@ -53,10 +53,13 @@ export default function Part6({ questions, onComplete }: Part6Props) {
             <h2 className="text-3xl font-bold mb-4 w-full text-center block">
               Question 12-16: Write ONE sentence based on a picture
             </h2>
-            <h3 className="text-lg font-medium mb-4">Direction: In this part of the test, you will write ONE sentence that is
-              based on a picture. With each picture, you will be given TWO words
-              or phrases that you must use in your sentence. You can change the
-              forms of the words and you can use the words in any order.</h3>
+            <h3 className="text-lg font-medium mb-4">
+              Direction: In this part of the test, you will write ONE sentence
+              that is based on a picture. With each picture, you will be given
+              TWO words or phrases that you must use in your sentence. You can
+              change the forms of the words and you can use the words in any
+              order.
+            </h3>
             <div className="hidden">
               <Timer
                 initialSeconds={Part6SWTestTime.DirectionTime || 10}
@@ -70,7 +73,7 @@ export default function Part6({ questions, onComplete }: Part6Props) {
             <div className="grid grid-cols-2 gap-6 ">
               <div className="w-full h-[265px] rounded-lg">
                 <img
-                  src={questions[currentQuestion]?.images?.[0]}
+                  src={questions[currentQuestion]?.image?.[0]}
                   alt={`Question ${currentQuestion + 1}`}
                   className="w-full h-full object-fill rounded-lg shadow-md"
                 />
@@ -78,7 +81,7 @@ export default function Part6({ questions, onComplete }: Part6Props) {
               <div className="space-y-6 h-full">
                 <div className="bg-gray-50 p-2 rounded-lg">
                   <h4 className="text-sm font-bold text-gray-600 mb-2">
-                    Keywords: {questions[currentQuestion]?.passages?.[0]}
+                    Keywords: {questions[currentQuestion]?.passage}
                   </h4>
                 </div>
                 <TextEditor
@@ -99,7 +102,7 @@ export default function Part6({ questions, onComplete }: Part6Props) {
                 Previous
               </button>
               <Timer
-                initialSeconds={(Part6SWTestTime.RecordingTime || 480)}
+                initialSeconds={Part6SWTestTime.RecordingTime || 480}
                 onTimeEnd={handleTimeEnd}
                 isPreparation={false}
               />

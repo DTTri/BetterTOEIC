@@ -49,7 +49,7 @@ class HuggingFaceService {
           const transcription = await this.transcribeAudio(audioData);
           return { index, transcription, success: true };
         } catch (error) {
-          console.error(`Error processing audio for question ${index + 1}:`, error);
+          console.error(`Error processing audio for question ${index + 1}`);
           return { index, transcription: 'Error transcribing audio', success: false };
         }
       });
@@ -112,7 +112,7 @@ class HuggingFaceService {
               score,
             };
           } catch (error) {
-            console.error(`Error evaluating question ${data.questionNumber}:`, error);
+            console.error(`Error evaluating question ${data.questionNumber}`);
             return {
               index: data.index,
               evaluation: 'Error evaluating response',
@@ -133,7 +133,7 @@ class HuggingFaceService {
 
       return { evaluations, sampleAnswers, scores };
     } catch (error) {
-      console.error('Error evaluating SW Test:', error);
+      console.error('Error evaluating SW Test:');
       throw error;
     }
   }
@@ -143,7 +143,7 @@ class HuggingFaceService {
       const response = await axios.get(audioUrl, { responseType: 'arraybuffer' });
       return Buffer.from(response.data, 'binary');
     } catch (error) {
-      console.error('Error downloading audio from S3:', error);
+      console.error('Error downloading audio from S3:');
       throw error;
     }
   }
@@ -166,7 +166,7 @@ class HuggingFaceService {
 
       return response.data.text || '';
     } catch (error) {
-      console.error('Error transcribing audio:', error);
+      console.error('Error transcribing audio:');
       throw error;
     }
   }
@@ -190,7 +190,7 @@ class HuggingFaceService {
         console.error('Hugging Face API payment required error:', error.response.data.error);
         return this.generateFallbackResponse(prompt);
       }
-      console.error('Error calling Hugging Face API:', error);
+      console.error('Error calling Hugging Face API:');
       throw error;
     }
   }

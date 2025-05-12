@@ -1,26 +1,24 @@
 import { useEffect, useState } from "react";
 import Timer from "../Timer";
 import AudioRecorder from "../AudioRecorder";
-import { Question } from "@/entities";
+import { SWQuestion } from "@/entities";
 import { Part1SWTestTime } from "../SWTestTime";
 
 interface Part1Props {
-  question: Question;
+  question: SWQuestion;
   onComplete: (recording: Blob) => void;
 }
 
 export default function Part1({ question, onComplete }: Part1Props) {
-  const [stage, setStage] = useState<
-    "direction" | "preparation" | "recording"
-  >("preparation");
+  const [stage, setStage] = useState<"direction" | "preparation" | "recording">(
+    "preparation"
+  );
 
   const [isRecording, setIsRecording] = useState(false);
 
   useEffect(() => {
     setStage(question.question_number === 1 ? "direction" : "preparation");
   }, [question]);
-
-
 
   const handleDirectionEnd = () => {
     setStage("preparation");
@@ -58,13 +56,11 @@ export default function Part1({ question, onComplete }: Part1Props) {
               Question 1-2: Read aloud the text aloud.
             </h2>
             <h3 className="text-lg font-medium mb-4 inline-block">
-              Direction:In this part of the test, you will read aloud the text on the
-              screen. You will have 45 seconds to prepare. Then you will have 45
-              seconds to read the text aloud.
+              Direction:In this part of the test, you will read aloud the text
+              on the screen. You will have 45 seconds to prepare. Then you will
+              have 45 seconds to read the text aloud.
             </h3>
-            <p className="text-gray-700">
-              
-            </p>
+            <p className="text-gray-700"></p>
             <div className="hidden">
               <Timer
                 initialSeconds={Part1SWTestTime.DirectionTime || 10}
@@ -81,7 +77,11 @@ export default function Part1({ question, onComplete }: Part1Props) {
 
             <div className="flex justify-center mb-6">
               <Timer
-                initialSeconds={stage === "preparation" ? Part1SWTestTime.PreparationTime || 45 : Part1SWTestTime.RecordingTime || 45}
+                initialSeconds={
+                  stage === "preparation"
+                    ? Part1SWTestTime.PreparationTime || 45
+                    : Part1SWTestTime.RecordingTime || 45
+                }
                 onTimeEnd={
                   stage === "preparation"
                     ? handlePreparationEnd

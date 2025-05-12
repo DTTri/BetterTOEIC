@@ -1827,6 +1827,288 @@ paths:
                     type: integer
                     example: 4
 
+  /swtest/getCompletedTest/{userId}/{testId}/{attemptId}:
+    get:
+      summary: Get a specific completed Speaking and Writing test by user ID, test ID, and attempt ID
+      description: Retrieves a specific test attempt using the unique attempt ID. This ensures the correct attempt is returned when a user has taken the same test multiple times.
+      tags:
+        - SWTest
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: '60f1a5c5e6b3f32d4c9a5678'
+        - name: testId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: '60f1a5c5e6b3f32d4c9a1234'
+        - name: attemptId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: '60f1a5c5e6b3f32d4c9a9876'
+      responses:
+        '200':
+          description: Completed test fetched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EM:
+                    type: string
+                    example: 'Completed test fetched successfully'
+                  EC:
+                    type: integer
+                    example: 0
+                  DT:
+                    type: object
+                    properties:
+                      testId:
+                        type: string
+                        example: '60f1a5c5e6b3f32d4c9a1234'
+                      attemptId:
+                        type: string
+                        example: '60f1a5c5e6b3f32d4c9a9876'
+                      contentKey:
+                        type: string
+                        example: 'user/60f1a5c5e6b3f32d4c9a5678/test/60f1a5c5e6b3f32d4c9a1234/content.json'
+                      scores:
+                        type: array
+                        items:
+                          type: number
+                        example: [4, 3, 5, 4, 3, 4, 4, 3, 4, 5, 4, 3, 4, 5, 4, 3, 4, 5, 4]
+                      totalScore:
+                        type: number
+                        example: 75
+                      averageScore:
+                        type: number
+                        example: 3.95
+                      attempted_at:
+                        type: string
+                        format: date-time
+                        example: '2023-07-15T11:30:00.000Z'
+                      completed_at:
+                        type: string
+                        format: date-time
+                        example: '2023-07-15T12:15:00.000Z'
+                      duration:
+                        type: number
+                        example: 2700
+                      content:
+                        type: object
+                        properties:
+                          testId:
+                            type: string
+                            example: '60f1a5c5e6b3f32d4c9a1234'
+                          userId:
+                            type: string
+                            example: '60f1a5c5e6b3f32d4c9a5678'
+                          attemptId:
+                            type: string
+                            example: '60f1a5c5e6b3f32d4c9a9876'
+                          answers:
+                            type: array
+                            items:
+                              type: string
+                            example:
+                              [
+                                'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q1_audio.mp3',
+                                'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q2_audio.mp3',
+                                '...',
+                              ]
+                          evaluations:
+                            type: array
+                            items:
+                              type: string
+                            example: ['The response demonstrates good fluency with clear pronunciation...', '...']
+                          sampleAnswers:
+                            type: array
+                            items:
+                              type: string
+                            example: ['Hello, this is Myra Peters calling regarding my appointment...', '...']
+                          created_at:
+                            type: string
+                            format: date-time
+                            example: '2023-07-15T11:30:00.000Z'
+                          updated_at:
+                            type: string
+                            format: date-time
+                            example: '2023-07-15T12:15:00.000Z'
+                      questions:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/SWQuestion'
+        '400':
+          description: Failed to fetch completed test
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EM:
+                    type: string
+                    example: 'Completed test not found'
+                  EC:
+                    type: integer
+                    example: 1
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EM:
+                    type: string
+                    example: 'Internal server error'
+                  EC:
+                    type: integer
+                    example: 2
+
+  /swtest/getCompletedTest/{userId}/{testId}:
+    get:
+      summary: Get the latest completed Speaking and Writing test by user ID and test ID
+      description: Retrieves the most recent attempt of a test when no specific attempt ID is provided.
+      tags:
+        - SWTest
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: '60f1a5c5e6b3f32d4c9a5678'
+        - name: testId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: '60f1a5c5e6b3f32d4c9a1234'
+      responses:
+        '200':
+          description: Completed test fetched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EM:
+                    type: string
+                    example: 'Completed test fetched successfully'
+                  EC:
+                    type: integer
+                    example: 0
+                  DT:
+                    type: object
+                    properties:
+                      testId:
+                        type: string
+                        example: '60f1a5c5e6b3f32d4c9a1234'
+                      attemptId:
+                        type: string
+                        example: '60f1a5c5e6b3f32d4c9a9876'
+                      contentKey:
+                        type: string
+                        example: 'user/60f1a5c5e6b3f32d4c9a5678/test/60f1a5c5e6b3f32d4c9a1234/content.json'
+                      scores:
+                        type: array
+                        items:
+                          type: number
+                        example: [4, 3, 5, 4, 3, 4, 4, 3, 4, 5, 4, 3, 4, 5, 4, 3, 4, 5, 4]
+                      totalScore:
+                        type: number
+                        example: 75
+                      averageScore:
+                        type: number
+                        example: 3.95
+                      attempted_at:
+                        type: string
+                        format: date-time
+                        example: '2023-07-15T11:30:00.000Z'
+                      completed_at:
+                        type: string
+                        format: date-time
+                        example: '2023-07-15T12:15:00.000Z'
+                      duration:
+                        type: number
+                        example: 2700
+                      content:
+                        type: object
+                        properties:
+                          testId:
+                            type: string
+                            example: '60f1a5c5e6b3f32d4c9a1234'
+                          userId:
+                            type: string
+                            example: '60f1a5c5e6b3f32d4c9a5678'
+                          attemptId:
+                            type: string
+                            example: '60f1a5c5e6b3f32d4c9a9876'
+                          answers:
+                            type: array
+                            items:
+                              type: string
+                            example:
+                              [
+                                'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q1_audio.mp3',
+                                'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q2_audio.mp3',
+                                '...',
+                              ]
+                          evaluations:
+                            type: array
+                            items:
+                              type: string
+                            example: ['The response demonstrates good fluency with clear pronunciation...', '...']
+                          sampleAnswers:
+                            type: array
+                            items:
+                              type: string
+                            example: ['Hello, this is Myra Peters calling regarding my appointment...', '...']
+                          created_at:
+                            type: string
+                            format: date-time
+                            example: '2023-07-15T11:30:00.000Z'
+                          updated_at:
+                            type: string
+                            format: date-time
+                            example: '2023-07-15T12:15:00.000Z'
+                      questions:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/SWQuestion'
+        '400':
+          description: Failed to fetch completed test
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EM:
+                    type: string
+                    example: 'Completed test not found'
+                  EC:
+                    type: integer
+                    example: 1
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EM:
+                    type: string
+                    example: 'Internal server error'
+                  EC:
+                    type: integer
+                    example: 2
+
   /swtest/getSWTestHistory/{userId}:
     get:
       summary: Get Speaking and Writing test history by user ID
@@ -1986,12 +2268,12 @@ paths:
                 message:
                   type: string
                   description: The message to send to the chatbot
-                  example: "How can I improve my TOEIC score?"
+                  example: 'How can I improve my TOEIC score?'
                 languageCode:
                   type: string
                   description: The language code for the message
-                  default: "en"
-                  example: "en"
+                  default: 'en'
+                  example: 'en'
       responses:
         '200':
           description: Message processed successfully
@@ -2003,14 +2285,14 @@ paths:
                   role:
                     type: string
                     enum: [bot]
-                    example: "bot"
+                    example: 'bot'
                   content:
                     type: string
-                    example: "To improve your TOEIC score, you should focus on these key areas: 1. Regular practice with official TOEIC materials..."
+                    example: 'To improve your TOEIC score, you should focus on these key areas: 1. Regular practice with official TOEIC materials...'
                   created_at:
                     type: string
                     format: date-time
-                    example: "2024-01-20T15:30:00.000Z"
+                    example: '2024-01-20T15:30:00.000Z'
         '400':
           description: Invalid request
           content:
@@ -2020,7 +2302,7 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: "Message is required"
+                    example: 'Message is required'
         '500':
           description: Internal server error
           content:
@@ -2030,7 +2312,7 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: "Failed to process message"
+                    example: 'Failed to process message'
 
   /chat/history/{userId}:
     get:
@@ -2044,7 +2326,7 @@ paths:
           schema:
             type: string
           description: The ID of the user whose chat history to retrieve
-          example: "user123"
+          example: 'user123'
         - name: page
           in: query
           required: false
@@ -2077,13 +2359,13 @@ paths:
                     example: 0
                   EM:
                     type: string
-                    example: "Chat history fetched successfully"
+                    example: 'Chat history fetched successfully'
                   DT:
                     type: object
                     properties:
                       userId:
                         type: string
-                        example: "user123"
+                        example: 'user123'
                       chats:
                         type: array
                         items:
@@ -2115,7 +2397,7 @@ paths:
                     example: 1
                   EM:
                     type: string
-                    example: "Chat history not found for this user"
+                    example: 'Chat history not found for this user'
         '500':
           description: Internal server error
           content:
@@ -2128,7 +2410,7 @@ paths:
                     example: 2
                   EM:
                     type: string
-                    example: "Failed to retrieve chat history"
+                    example: 'Failed to retrieve chat history'
 components:
   schemas:
     SWTest:
@@ -2200,6 +2482,14 @@ components:
           type: string
           description: 'The ID of the completed test'
           example: '60f1a5c5e6b3f32d4c9a1234'
+        attemptId:
+          type: string
+          description: 'The unique identifier for this specific test attempt'
+          example: '60f1a5c5e6b3f32d4c9a9876'
+        contentKey:
+          type: string
+          description: 'The S3 key for the full test content'
+          example: 'user/60f1a5c5e6b3f32d4c9a5678/test/60f1a5c5e6b3f32d4c9a1234/content.json'
         answers:
           type: array
           description: 'Array of 19 answers (11 speaking + 8 writing). For speaking questions, these are S3 URLs to audio files. For writing questions, these are text answers.'
@@ -2255,6 +2545,14 @@ components:
           items:
             type: number
           example: [4, 3, 5, 4, 3, 4, 4, 3, 4, 5, 4, 3, 4, 5, 4, 3, 4, 5, 4]
+        totalScore:
+          type: number
+          description: 'The sum of all scores'
+          example: 75
+        averageScore:
+          type: number
+          description: 'The average score across all questions'
+          example: 3.95
         transcriptions:
           type: array
           description: 'Array of 11 transcriptions of the speaking answers, generated by the speech-to-text model'
@@ -2270,6 +2568,15 @@ components:
           description: 'The date and time when the test was attempted'
           format: date-time
           example: '2023-07-15T11:30:00.000Z'
+        completed_at:
+          type: string
+          description: 'The date and time when the test was completed (evaluations finished)'
+          format: date-time
+          example: '2023-07-15T12:15:00.000Z'
+        duration:
+          type: number
+          description: 'The duration of the test in seconds'
+          example: 2700
 
     SWTestHistory:
       type: object
@@ -2287,6 +2594,8 @@ components:
             [
               {
                 'testId': '60f1a5c5e6b3f32d4c9a1234',
+                'attemptId': '60f1a5c5e6b3f32d4c9a9876',
+                'contentKey': 'user/60f1a5c5e6b3f32d4c9a5678/test/60f1a5c5e6b3f32d4c9a1234/content.json',
                 'answers':
                   [
                     'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q1_audio.mp3',
@@ -2296,15 +2605,25 @@ components:
                 'evaluations': ['The response demonstrates good fluency with clear pronunciation...', '...'],
                 'sampleAnswers': ['Hello, this is Myra Peters calling regarding my appointment...', '...'],
                 'scores': [4, 3, 5, 4, 3, 4, 4, 3, 4, 5, 4, 3, 4, 5, 4, 3, 4, 5, 4],
+                'totalScore': 75,
+                'averageScore': 3.95,
                 'attempted_at': '2023-07-15T11:30:00.000Z',
+                'completed_at': '2023-07-15T12:15:00.000Z',
+                'duration': 2700,
               },
               {
                 'testId': '60f1a5c5e6b3f32d4c9a5679',
+                'attemptId': '60f1a5c5e6b3f32d4c9a9877',
+                'contentKey': 'user/60f1a5c5e6b3f32d4c9a5678/test/60f1a5c5e6b3f32d4c9a5679/content.json',
                 'answers': ['...'],
                 'evaluations': ['...'],
                 'sampleAnswers': ['...'],
                 'scores': [3, 4, 4, 3, 5, 4, 3, 4, 5, 4, 3, 4, 5, 4, 3, 4, 5, 4, 3],
+                'totalScore': 72,
+                'averageScore': 3.79,
                 'attempted_at': '2023-07-20T14:45:00.000Z',
+                'completed_at': '2023-07-20T15:30:00.000Z',
+                'duration': 2700,
               },
             ]
         created_at:
@@ -2744,21 +3063,21 @@ components:
         role:
           type: string
           enum: [user, bot]
-          example: "user"
+          example: 'user'
         content:
           type: string
-          example: "How can I improve my TOEIC score?"
+          example: 'How can I improve my TOEIC score?'
         created_at:
           type: string
           format: date-time
-          example: "2024-01-20T15:30:00.000Z"
+          example: '2024-01-20T15:30:00.000Z'
 
     ChatHistory:
       type: object
       properties:
         userId:
           type: string
-          example: "user123"
+          example: 'user123'
         chats:
           type: array
           items:

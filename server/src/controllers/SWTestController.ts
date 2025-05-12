@@ -202,9 +202,9 @@ class SWTestController {
 
   async getCompletedTest(req: Request, res: Response) {
     try {
-      const { userId, testId } = req.params;
+      const { userId, testId, attemptId } = req.params;
 
-      const completedTest = await swTestServiceInstance.getCompletedTest(userId, testId);
+      const completedTest = await swTestServiceInstance.getCompletedTest(userId, testId, attemptId);
 
       if (completedTest) {
         res.status(200).json({

@@ -166,8 +166,8 @@ class RedisService {
     }
   }
 
-  async addMessageToContext(userId: string, message: ChatMessage){
-    if(!this.isRedisAvailable()) return;
+  async addMessageToContext(userId: string, message: ChatMessage) {
+    if (!this.isRedisAvailable()) return;
 
     try {
       const key = `chat:context:${userId}`;
@@ -181,22 +181,22 @@ class RedisService {
     }
   }
 
-  async getRecentChatContext(userId: string, count: number = 5): Promise<ChatMessage[] | null>{
+  async getRecentChatContext(userId: string, count: number = 5): Promise<ChatMessage[] | null> {
     if (!this.isRedisAvailable()) return null;
 
     try {
       const key = `chat:context:${userId}`;
-      
+
       const messages = await this.client!.lRange(key, 0, count - 1);
-      
-      return messages.map(msg => JSON.parse(msg)) as ChatMessage[];
+
+      return messages.map((msg) => JSON.parse(msg)) as ChatMessage[];
     } catch (error) {
       console.error('Redis error in getCacheMessage:', error);
       return null;
     }
   }
 
-  async clearChatContext(userId: string){
+  async clearChatContext(userId: string) {
     if (!this.isRedisAvailable()) return;
 
     try {
