@@ -4,7 +4,22 @@ export interface ChatMessage {
   created_at: string;
 } 
 
+export interface ChatArchive {
+  archiveId: string;
+  archiveKey: string;
+  messageCount: number;
+  firstMessageDate: string;
+  lastMessageDate: string;
+  createdAt: string;
+}
+
 export interface ChatHistory {
+  userId: string;
+  chats: ChatMessage[];
+  archives?: ChatArchive[];
+}
+
+export interface ChatHistoryResponse {
   userId: string;
   chats: ChatMessage[];
   pagination?: {
@@ -12,7 +27,8 @@ export interface ChatHistory {
     totalPages: number;
     totalMessages: number;
     hasMore: boolean;
-  }
+  };
+  archives?: ChatArchive[];
 }
 
 export interface DialogflowResponse {

@@ -1,5 +1,6 @@
 import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { ChatMessage } from '~/models/Chat';
 import { SWTestContent } from '~/models/SWTestContent';
 
 class S3Service {
@@ -69,6 +70,45 @@ class S3Service {
     }
 
     return JSON.parse(bodyContents) as SWTestContent;
+  }
+
+  private generateChatArchiveKey(userId: string, archiveId: string): string {
+    return `users/${userId}/chat-archives/${archiveId}.json`;
+  }
+
+  //Upload chat archive to S3
+   async uploadChatArchive(userId: string, archiveId: string, dataChat: ChatMessage[]): Promise<string> {
+    const key = this.generateChatArchiveKey(userId, archiveId);
+    const archiveData = {
+      messages: dataChat,
+      createdAt: new Date().toISOString()
+    };
+
+    await this.s3Client.send(
+      new PutObjectCommand({
+        Bucket: this.bucketName,
+        Key: key,
+        Body: JSON.stringify(archiveData),
+        ContentType: 'application/json',
+      })
+    );
+    return key;
+  }
+
+  async getChatArchive(key: string): Promise<any> {
+    const command = new GetObjectCommand({
+      Bucket: this.bucketName,
+      Key: key,
+    });
+
+    const response = await this.s3Client.send(command);
+    const bodyContents = await response.Body?.transformToString();
+
+    if (!bodyContents) {
+      throw new Error('Failed to retrieve chat archive from S3');
+    }
+
+    return JSON.parse(bodyContents);
   }
 
   async getSignedUrl(key: string, expiresIn = 3600): Promise<string> {

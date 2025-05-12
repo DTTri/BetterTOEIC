@@ -36,7 +36,7 @@ class GPTService {
       await redisServiceInstance.addMessageToContext(userId, { role: 'user', content: message, created_at: new Date().toISOString() });
       
       const response = await this.openai.chat.completions.create({
-        model: 'gpt-4o-mini',
+        model: process.env.GPT_MODEL || 'gpt-4o-mini',
         messages: messages as any[],
         temperature: 0.7,
         max_tokens: 500,
