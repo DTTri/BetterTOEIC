@@ -2,6 +2,7 @@ import express, { Express, json } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import { connectDB } from './config/connectDB';
+import cronService from './services/CronService';
 import {
   practiceRouter,
   roadmapRouter,
@@ -47,3 +48,4 @@ connectDB()
   .catch((error) => {
     console.error('Database connection failed', error);
   });
+console.log('CronService initialized: ' + cronService);

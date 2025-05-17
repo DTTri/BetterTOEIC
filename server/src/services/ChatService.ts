@@ -6,7 +6,6 @@ import { ObjectId } from 'mongodb';
 import redisServiceInstance from './RedisService';
 import s3ServiceInstance from './S3Service';
 
-const MAX_CHAT_MESSAGES = 200;
 const REDIS_CONTEXT_SIZE = 5; // Number of recent messages to keep as context
 
 class ChatService {
@@ -126,59 +125,10 @@ class ChatService {
   }
 
   async getChatHistory(userId: string, page: number = 1, limit: number = 10): Promise<ChatHistory | null> {
-    try {
-      const conversation = await collections.conversations?.findOne({ userId: new ObjectId(userId) });
-
-      if(!conversation){
-        return {
-          userId: userId,
-          chats: [],
-          pagination: {
-            currentPage: 1,
-            totalPages: 0,
-            totalMessages: 0,
-            hasMore: false,
-          },
-        } as ChatHistory;
-      }
-        const sortedChats = [...conversation.chats].sort(
-          (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-        );
-
-        const totalMessages = sortedChats.length;
-        const totalPages = Math.ceil(totalMessages / limit);
-
-        let startIndex, endIndex;
-
-        if (page === 1) {
-          startIndex = Math.max(0, totalMessages - limit);
-          endIndex = totalMessages;
-        } else {
-          endIndex = Math.max(0, totalMessages - (page - 1) * limit);
-          startIndex = Math.max(0, endIndex - limit);
-        }
-
-        const paginatedChats = sortedChats.slice(startIndex, endIndex);
-
-        return {
-          userId: conversation.userId.toString(),
-          chats: paginatedChats,
-          pagination: {
-            currentPage: page,
-            totalPages,
-            totalMessages,
-            hasMore: page < totalPages,
-          },
-        } as ChatHistoryResponse;
-    } catch (error) {
-      console.error('Error getting chat history:', error);
-      return null;
-    }
-    //Idea: get chat from mongodb and get older chat from s3 archive
     // try {
     //   const conversation = await collections.conversations?.findOne({ userId: new ObjectId(userId) });
 
-    //   if (!conversation) {
+    //   if(!conversation){
     //     return {
     //       userId: userId,
     //       chats: [],
@@ -188,38 +138,22 @@ class ChatService {
     //         totalMessages: 0,
     //         hasMore: false,
     //       },
-    //       hasArchivedMessages: false,
     //     } as ChatHistory;
     //   }
+    //     const sortedChats = [...conversation.chats].sort(
+    //       (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+    //     );
 
-    //   const sortedChats = [...conversation.chats].sort(
-    //     (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-    //   );
+    //     const totalMessages = sortedChats.length;
+    //     const totalPages = Math.ceil(totalMessages / limit);
 
-    //   const currentMessagesCount = sortedChats.length;
-    //   const hasArchives = conversation.archives && conversation.archives.length > 0;
-    //   const archivedMessagesCount = hasArchives
-    //     ? conversation.archives.reduce((sum: any, archive: any) => sum + archive.messageCount, 0)
-    //     : 0;
-    //   const totalMessages = currentMessagesCount + (includeArchived ? archivedMessagesCount : 0);
-    //   const totalPages = Math.ceil(totalMessages / limit);
+    //     let startIndex, endIndex;
 
-    //   let startIndex, endIndex;
-
-    //   const currentPageStartPosition = (page - 1) * limit;
-    //   const isCurrentPageInMongoDB = currentPageStartPosition >= (includeArchived ? archivedMessagesCount : 0);
-
-    //   if (!includeArchived || !hasArchives || isCurrentPageInMongoDB) {
-    //     // If the current page is in MongoDB
     //     if (page === 1) {
-    //       startIndex = Math.max(0, currentMessagesCount - limit);
-    //       endIndex = currentMessagesCount;
-    //     } else if (isCurrentPageInMongoDB) {
-    //       const adjustedPage = includeArchived ? page - Math.ceil(archivedMessagesCount / limit) : page;
-    //       endIndex = Math.max(0, currentMessagesCount - (adjustedPage - 1) * limit);
-    //       startIndex = Math.max(0, endIndex - limit);
+    //       startIndex = Math.max(0, totalMessages - limit);
+    //       endIndex = totalMessages;
     //     } else {
-    //       endIndex = Math.max(0, currentMessagesCount - (page - 1) * limit);
+    //       endIndex = Math.max(0, totalMessages - (page - 1) * limit);
     //       startIndex = Math.max(0, endIndex - limit);
     //     }
 
@@ -234,92 +168,116 @@ class ChatService {
     //         totalMessages,
     //         hasMore: page < totalPages,
     //       },
-    //       hasArchivedMessages: hasArchives,
-    //     } as ChatHistory;
-    //   }
-
-    //   const sortedArchives = [...conversation.archives].sort(
-    //     (a, b) => new Date(a.firstMessageDate).getTime() - new Date(b.firstMessageDate).getTime()
-    //   );
-
-    //   const archiveStartPosition = currentPageStartPosition;
-    //   const archiveEndPosition = Math.min(archiveStartPosition + limit, archivedMessagesCount);
-
-    //   let currentPosition = 0;
-    //   let targetArchive = null;
-    //   let archiveStartIndex = 0;
-
-    //   for (const archive of sortedArchives) {
-    //     const nextPosition = currentPosition + archive.messageCount;
-
-    //     if (archiveStartPosition < nextPosition) {
-    //       targetArchive = archive;
-    //       archiveStartIndex = archiveStartPosition - currentPosition;
-    //       break;
-    //     }
-
-    //     currentPosition = nextPosition;
-    //   }
-
-    //   if (!targetArchive) {
-    //     return this.getChatHistory(userId, page, limit, false);
-    //   }
-
-    //   const archiveData = await s3ServiceInstance.getChatArchive(targetArchive.archiveKey);
-
-    //   if (!archiveData || !archiveData.messages) {
-    //     return this.getChatHistory(userId, page, limit, false);
-    //   }
-
-    //   const archiveEndIndex = Math.min(archiveStartIndex + limit, targetArchive.messageCount);
-    //   const messagesFromArchive = archiveData.messages.slice(archiveStartIndex, archiveEndIndex);
-
-    //   let resultMessages = [...messagesFromArchive];
-    //   let remainingCount = limit - messagesFromArchive.length;
-
-    //   if (remainingCount > 0) {
-    //     let nextArchiveIndex = sortedArchives.indexOf(targetArchive) + 1;
-
-    //     while (remainingCount > 0 && nextArchiveIndex < sortedArchives.length) {
-    //       const nextArchive = sortedArchives[nextArchiveIndex];
-    //       try {
-    //         const nextArchiveData = await s3ServiceInstance.getChatArchive(nextArchive.archiveKey);
-
-    //         if (nextArchiveData && nextArchiveData.messages) {
-    //           const messagesNeeded = Math.min(remainingCount, nextArchive.messageCount);
-    //           const nextMessages = nextArchiveData.messages.slice(0, messagesNeeded);
-
-    //           resultMessages = [...resultMessages, ...nextMessages];
-    //           remainingCount -= nextMessages.length;
-    //         }
-    //       } catch (error) {
-    //         console.error(`Error retrieving archive ${nextArchive.archiveId}:`, error);
-    //       }
-
-    //       nextArchiveIndex++;
-    //     }
-
-    //     if (remainingCount > 0) {
-    //       const mongoMessages = sortedChats.slice(0, remainingCount);
-    //       resultMessages = [...resultMessages, ...mongoMessages];
-    //     }
-    //   }
-
-    //   return {
-    //     userId: conversation.userId.toString(),
-    //     chats: resultMessages,
-    //     pagination: {
-    //       currentPage: page,
-    //       totalPages,
-    //       totalMessages,
-    //       hasMore: page < totalPages,
-    //     },
-    //     hasArchivedMessages: true,
-    //   } as ChatHistory;
+    //     } as ChatHistoryResponse;
     // } catch (error) {
     //   console.error('Error getting chat history:', error);
     //   return null;
     // }
+
+    //Idea: get chat from mongodb and get older chat from s3 archive
+    try {
+      const conversation = await collections.conversations?.findOne({ userId: new ObjectId(userId) });
+
+      if (!conversation) {
+        return {
+          userId: userId,
+          chats: [],
+          pagination: {
+            currentPage: 1,
+            totalPages: 0,
+            totalMessages: 0,
+            hasMore: false,
+          },
+        } as ChatHistoryResponse;
+      }
+
+      const sortedMongoChats = [...conversation.chats].sort(
+        (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+      );
+
+      const currentMessagesCount = sortedMongoChats.length;
+      const hasArchives = conversation.archives && conversation.archives.length > 0;
+      const archivedMessagesCount = hasArchives
+        ? conversation.archives.reduce((sum: any, archive: any) => sum + archive.messageCount, 0)
+        : 0;
+      const totalMessages = currentMessagesCount + archivedMessagesCount;
+      const totalPages = totalMessages > 0 ? Math.ceil(totalMessages / limit) : 0;
+      if(page < 1|| (page > totalPages && totalPages > 0) || totalMessages === 0){
+        return {
+          userId: conversation.userId.toString(),
+          chats: [],
+          pagination: {
+            currentPage: page,
+            totalPages,
+            totalMessages,
+            hasMore: false,
+          },
+        } as ChatHistoryResponse;
+      }
+
+      let messagesToSkipFromNewestEnd = (page - 1) * limit;
+      let messagesToTakeForPage = limit;
+      const resultMessages: ChatMessage[] = [];
+
+      // Try fetching from MongoDB (newest portion)
+      if (messagesToSkipFromNewestEnd < currentMessagesCount) {
+        const takeFromMongo = Math.min(messagesToTakeForPage, currentMessagesCount - messagesToSkipFromNewestEnd);
+        const mongoStartIndex = currentMessagesCount - messagesToSkipFromNewestEnd - takeFromMongo;
+        const mongoEndIndex = currentMessagesCount - messagesToSkipFromNewestEnd;
+        resultMessages.push(...sortedMongoChats.slice(mongoStartIndex, mongoEndIndex));
+        messagesToTakeForPage -= takeFromMongo;
+      }
+      messagesToSkipFromNewestEnd = Math.max(0, messagesToSkipFromNewestEnd - currentMessagesCount);
+
+      //If still need messages, fetch from S3 archives (from newest S3 archives to older ones)
+      if (messagesToTakeForPage > 0 && hasArchives) {
+        const sortedArchives = [...conversation.archives].sort(
+          (a, b) => new Date(b.firstMessageDate).getTime() - new Date(a.firstMessageDate).getTime()
+        ); // Sort S3 archives: newest first
+
+        for (const archive of sortedArchives) {
+          if (messagesToTakeForPage <= 0) break;
+
+          if (messagesToSkipFromNewestEnd < archive.messageCount) {
+            const takeFromThisArchive = Math.min(messagesToTakeForPage, archive.messageCount - messagesToSkipFromNewestEnd);
+            try {
+              const archiveData = await s3ServiceInstance.getChatArchive(archive.archiveKey);
+              if (archiveData && archiveData.messages) {
+                // Messages in archive are assumed to be oldest to newest
+                const s3Messages = archiveData.messages;
+                const s3StartIndex = archive.messageCount - messagesToSkipFromNewestEnd - takeFromThisArchive;
+                const s3EndIndex = archive.messageCount - messagesToSkipFromNewestEnd;
+                const fetchedS3 = s3Messages.slice(s3StartIndex, s3EndIndex);
+                resultMessages.unshift(...fetchedS3); // Prepend S3 messages as they are older
+                messagesToTakeForPage -= fetchedS3.length;
+              } else {
+                console.error(`Empty or invalid data in archive ${archive.archiveId}`);
+              }
+            } catch (error) {
+              console.error(`Error retrieving archive ${archive.archiveId}:`, error);
+              // Skip this archive and adjust skip count as if it was processed (or partially)
+            }
+            messagesToSkipFromNewestEnd = 0; // All skips within this archive are handled
+          } else {
+            messagesToSkipFromNewestEnd -= archive.messageCount;
+          }
+        }
+      }
+
+      return {
+        userId: conversation.userId.toString(),
+        chats: resultMessages,
+        pagination: {
+          currentPage: page,
+          totalPages,
+          totalMessages,
+          hasMore: page < totalPages,
+        },
+      } as ChatHistoryResponse;
+    } catch (error) {
+      console.error('Error getting chat history:', error);
+      return null;
+    }
   }
 }
 

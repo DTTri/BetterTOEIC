@@ -28,7 +28,6 @@ export interface ChatHistoryResponse {
     totalMessages: number;
     hasMore: boolean;
   };
-  archives?: ChatArchive[];
 }
 
 export interface DialogflowResponse {

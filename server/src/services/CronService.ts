@@ -4,7 +4,7 @@ import s3ServiceInstance from './S3Service';
 import { v4 as uuidv4 } from 'uuid';
 import { ChatArchive } from '~/models/Chat';
 
-const MAX_CHAT_MESSAGES = 200; // Số tin nhắn tối đa giữ trong MongoDB
+const MAX_CHAT_MESSAGES = 200;
 
 class CronService {
   private isRunning: boolean = false;
