@@ -1,12 +1,14 @@
 import { dialogflowService } from './DialogflowService';
 import { gptService } from './GPTService';
-import { ChatHistory, ChatHistoryResponse, ChatMessage } from '~/models/Chat';
+import { ChatArchive, ChatHistory, ChatHistoryResponse, ChatMessage } from '~/models/Chat';
 import { collections } from '../config/connectDB';
 import { ObjectId } from 'mongodb';
 import redisServiceInstance from './RedisService';
 import s3ServiceInstance from './S3Service';
+import { v4 as uuidv4 } from 'uuid';
 
 const REDIS_CONTEXT_SIZE = 5; // Number of recent messages to keep as context
+const MAX_CHAT_MESSAGES = 200; //Number of messages to keep in MongoDB
 
 class ChatService {
   async handleMessage(message: string, languageCode: string, userId?: string): Promise<ChatMessage> {
@@ -82,8 +84,31 @@ class ChatService {
           content: botResponse,
           created_at: new Date().toISOString(),
         });
+
+        if(conversation.chats.length % 100 == 0 && conversation.chats.length > MAX_CHAT_MESSAGES){
+          const messagesToArchiveCount = conversation.chats.length - MAX_CHAT_MESSAGES;
+          const messagesToArchive = conversation.chats.slice(0, messagesToArchiveCount);
+          const archiveId = uuidv4();
+          const archiveKey = await s3ServiceInstance.uploadChatArchive(userId, archiveId, messagesToArchive);
+          
+          if (!conversation.archives) {
+            conversation.archives = [];
+          }
+
+          conversation.archives.push({
+            archiveId: archiveId,
+            archiveKey: archiveKey,
+            messageCount: messagesToArchive.length,
+            firstMessageDate: messagesToArchive[0].created_at,
+            lastMessageDate: messagesToArchive[messagesToArchive.length - 1].created_at,
+            createdAt: new Date().toISOString()
+          } as ChatArchive);
+
+          const updatedChats = conversation.chats.slice(messagesToArchiveCount);
+          conversation.chats = updatedChats;
+        }
         
-        // Cập nhật conversation trong MongoDB
+        // Update the conversation in the database
         await collections.conversations?.updateOne(
           { userId: new ObjectId(userId) }, 
           { 
