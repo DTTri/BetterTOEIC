@@ -22,23 +22,67 @@ class S3Service {
     return `users/${userId}/tests/${testId}/content.json`;
   }
 
-  private generateAudioKey(userId: string, testId: string, questionNumber: number): string {
-    return `users/${userId}/tests/${testId}/audio/${questionNumber}.mp3`;
+  private generateAudioKey(userId: string, testId: string, questionNumber: number, format: string = 'webm'): string {
+    return `users/${userId}/tests/${testId}/audio/${questionNumber}.${format}`;
   }
 
   async uploadAudio(userId: string, testId: string, questionNumber: number, audioData: Buffer): Promise<string> {
-    const key = this.generateAudioKey(userId, testId, questionNumber);
+    const isWebM = this.detectWebMFormat(audioData);
+    const format = isWebM ? 'webm' : 'mp3';
+    const contentType = isWebM ? 'audio/webm' : 'audio/mp3';
+
+    console.log(`Uploading audio for question ${questionNumber} as ${format} format (${contentType})`);
+
+    const key = this.generateAudioKey(userId, testId, questionNumber, format);
 
     await this.s3Client.send(
       new PutObjectCommand({
         Bucket: this.bucketName,
         Key: key,
         Body: audioData,
-        ContentType: 'audio/mp3',
+        ContentType: contentType,
       })
     );
 
     return `https://${this.bucketName}.s3.amazonaws.com/${key}`;
+  }
+
+  private detectWebMFormat(audioData: Buffer): boolean {
+    if (audioData.length < 4) {
+      return false;
+    }
+
+    if (audioData[0] === 0x1a && audioData[1] === 0x45 && audioData[2] === 0xdf && audioData[3] === 0xa3) {
+      console.log('Detected WebM format audio');
+      return true;
+    }
+
+    const headerStr = Buffer.from(audioData.buffer, audioData.byteOffset, Math.min(50, audioData.length)).toString(
+      'hex'
+    );
+    if (headerStr.includes('1a45dfa3') || headerStr.includes('webm')) {
+      console.log('Detected WebM format audio (alternative signature)');
+      return true;
+    }
+
+    if (audioData.length > 10) {
+      const possibleUrl = Buffer.from(
+        audioData.buffer,
+        audioData.byteOffset,
+        Math.min(100, audioData.length)
+      ).toString();
+      if (possibleUrl.includes('webm')) {
+        console.log('Detected WebM format from URL');
+        return true;
+      }
+    }
+
+    console.log(
+      'Audio format header bytes:',
+      Buffer.from(audioData.buffer, audioData.byteOffset, Math.min(16, audioData.length)).toString('hex')
+    );
+
+    return false;
   }
 
   async uploadTestContent(userId: string, testContent: SWTestContent): Promise<string> {
@@ -76,12 +120,11 @@ class S3Service {
     return `users/${userId}/chat-archives/${archiveId}.json`;
   }
 
-  //Upload chat archive to S3
-   async uploadChatArchive(userId: string, archiveId: string, dataChat: ChatMessage[]): Promise<string> {
+  async uploadChatArchive(userId: string, archiveId: string, dataChat: ChatMessage[]): Promise<string> {
     const key = this.generateChatArchiveKey(userId, archiveId);
     const archiveData = {
       messages: dataChat,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     };
 
     await this.s3Client.send(

@@ -128,7 +128,7 @@ class SWTestService {
 
       return true;
     } catch (error) {
-      console.error('Error completing SW test:', error);
+      console.error('Error completing SW test');
       return false;
     }
   }
@@ -276,11 +276,10 @@ class SWTestService {
           questions: test?.questions || [],
         };
 
-        await redisService.set(cacheKey, JSON.stringify(result), 3600); // Cache for 1 hour
+        await redisService.set(cacheKey, JSON.stringify(result), 3600); // 1 hour
 
         return result;
       } else {
-        // if attemptId is not provided, returns the latest attempt
         const cachedTest = await redisService.getTestMetadata(userId, testId);
         let testMetadata = cachedTest;
 

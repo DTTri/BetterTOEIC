@@ -16,14 +16,14 @@ class HuggingFaceService {
   private sttModel: string;
   private fallbackLlmModel: string;
   private responseCache: Map<string, CacheEntry>;
-  private cacheTTL: number; // time to live in milliseconds
+  private cacheTTL: number;
 
   constructor() {
     this.apiKey = process.env.HUGGING_FACE_API_KEY || '';
     this.baseUrl = 'https://api-inference.huggingface.co/models/';
-    this.llmModel = process.env.LLM_MODEL || 'google/flan-t5-xxl';
-    this.fallbackLlmModel = 'google/flan-t5-xxl';
-    this.sttModel = 'openai/whisper-large-v3';
+    this.llmModel = process.env.LLM_MODEL || 'microsoft/phi-2';
+    this.fallbackLlmModel = 'google/flan-t5-large';
+    this.sttModel = 'openai/whisper-small';
     this.responseCache = new Map<string, CacheEntry>();
     this.cacheTTL = 24 * 60 * 60 * 1000;
   }
@@ -45,12 +45,86 @@ class HuggingFaceService {
       const speakingAnswers = answers.slice(0, 11);
       const transcriptionPromises = speakingAnswers.map(async (audioUrl, index) => {
         try {
-          const audioData = await this.downloadAudioFromS3(audioUrl);
+          if (!audioUrl || audioUrl === 'null' || audioUrl === 'undefined') {
+            console.warn(`No audio URL provided for question ${index + 1}`);
+            return {
+              index,
+              transcription: '[No audio response provided]',
+              success: false,
+            };
+          }
+
+          let audioData: Buffer;
+          if (Buffer.isBuffer(audioUrl)) {
+            console.log(`Processing audio buffer for question ${index + 1}: ${audioUrl.length} bytes`);
+            audioData = audioUrl;
+          } else {
+            console.log(
+              `Processing audio for question ${index + 1}: ${typeof audioUrl === 'string' ? audioUrl.substring(0, 100) + '...' : 'non-string type'}`
+            );
+
+            try {
+              audioData = await this.downloadAudioFromS3(audioUrl);
+            } catch (downloadError: any) {
+              console.error(`Error downloading audio for question ${index + 1}: ${downloadError.message}`);
+
+              if (typeof audioUrl === 'string' && audioUrl.includes('s3.amazonaws.com')) {
+                const urlMatch = audioUrl.match(/(https?:\/\/[^\s]+)/);
+                if (urlMatch) {
+                  const extractedUrl = urlMatch[0];
+                  console.log(`Retrying with extracted URL: ${extractedUrl}`);
+                  audioData = await this.downloadAudioFromS3(extractedUrl);
+                } else {
+                  throw new Error('Could not extract valid URL from string');
+                }
+              } else {
+                throw downloadError;
+              }
+            }
+          }
+
+          if (!audioData || audioData.length === 0) {
+            console.warn(`Empty audio data for question ${index + 1}`);
+            return {
+              index,
+              transcription: '[Empty audio file]',
+              success: false,
+            };
+          }
+
+          console.log(
+            `Audio data for question ${index + 1}: ${audioData.length} bytes, first 16 bytes: ${Buffer.from(audioData.buffer, audioData.byteOffset, Math.min(16, audioData.length)).toString('hex')}`
+          );
+
           const transcription = await this.transcribeAudio(audioData);
+
+          if (!transcription || transcription.trim() === '') {
+            console.warn(`Empty transcription result for question ${index + 1}`);
+            return {
+              index,
+              transcription: '[No speech detected in audio]',
+              success: false,
+            };
+          }
+
           return { index, transcription, success: true };
-        } catch (error) {
-          console.error(`Error processing audio for question ${index + 1}`);
-          return { index, transcription: 'Error transcribing audio', success: false };
+        } catch (error: any) {
+          console.error(`Error processing audio for question ${index + 1}: ${error.message || 'Unknown error'}`);
+
+          let errorMessage = 'Error transcribing audio';
+          if (error.response && error.response.status) {
+            errorMessage += ` (Status: ${error.response.status})`;
+
+            if (error.response.status === 402) {
+              errorMessage += ' - API usage limit reached';
+            }
+          }
+
+          return {
+            index,
+            transcription: errorMessage,
+            success: false,
+          };
         }
       });
       const transcriptionResults = await Promise.all(transcriptionPromises);
@@ -140,34 +214,180 @@ class HuggingFaceService {
 
   private async downloadAudioFromS3(audioUrl: string): Promise<Buffer> {
     try {
-      const response = await axios.get(audioUrl, { responseType: 'arraybuffer' });
-      return Buffer.from(response.data, 'binary');
-    } catch (error) {
-      console.error('Error downloading audio from S3:');
+      if (!audioUrl.startsWith('http')) {
+        if (Buffer.isBuffer(audioUrl)) {
+          console.log('Input is already a Buffer, returning as is');
+          return audioUrl;
+        }
+
+        if (typeof audioUrl === 'string' && audioUrl.includes('s3.amazonaws.com')) {
+          const urlMatch = audioUrl.match(/(https?:\/\/[^\s]+)/);
+          if (urlMatch) {
+            audioUrl = urlMatch[0];
+            console.log(`Extracted URL from string: ${audioUrl}`);
+          } else {
+            console.error('Could not extract URL from string');
+            throw new Error('Invalid audio URL format');
+          }
+        } else {
+          console.error('Input is not a valid URL or Buffer');
+          throw new Error('Invalid audio URL format');
+        }
+      }
+
+      console.log(`Downloading audio from: ${audioUrl}`);
+
+      const response = await axios.get(audioUrl, {
+        responseType: 'arraybuffer',
+        timeout: 10000, // 10s
+      });
+
+      if (!response.data || response.data.length === 0) {
+        throw new Error('Empty response received from S3');
+      }
+
+      const buffer = Buffer.from(response.data, 'binary');
+      console.log(`Successfully downloaded audio: ${buffer.length} bytes`);
+      return buffer;
+    } catch (error: any) {
+      if (error.response) {
+        console.error(
+          `Error downloading audio from S3 (Status ${error.response.status}):`,
+          error.response.statusText || 'Unknown error'
+        );
+      } else if (error.request) {
+        console.error('Error downloading audio from S3: No response received (timeout or CORS issue)');
+      } else {
+        console.error('Error downloading audio from S3:', error.message || 'Unknown error');
+      }
+
       throw error;
     }
   }
 
   private async transcribeAudio(audioData: Buffer): Promise<string> {
+    const sttModels = [
+      this.sttModel, // Primary model
+      'openai/whisper-base', // Fallback 1
+      'facebook/wav2vec2-base-960h', // Fallback 2
+    ];
+
+    for (const model of sttModels) {
+      try {
+        console.log(`Attempting to transcribe audio with model: ${model}`);
+        const FormData = require('form-data');
+        const formData = new FormData();
+        const isWebM = this.detectWebMFormat(audioData);
+
+        formData.append('file', audioData, {
+          filename: isWebM ? 'audio.webm' : 'audio.mp3',
+          contentType: isWebM ? 'audio/webm' : 'audio/mp3',
+        });
+
+        const response = await axios.post(`${this.baseUrl}${model}`, formData, {
+          headers: {
+            Authorization: `Bearer ${this.apiKey}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+
+        const transcription = response.data.text || response.data.generated_text || '';
+        if (transcription) {
+          console.log(`Successfully transcribed with model: ${model}`);
+          return transcription;
+        }
+      } catch (error: any) {
+        if (error.response && error.response.status === 402) {
+          console.warn(`Payment required for model ${model}, trying next fallback...`);
+        } else {
+          console.error(`Error processing audio with model ${model}: ${error.message || 'Unknown error'}`);
+        }
+      }
+    }
+
+    // tried all Hungging Face models, try OpenAI as a last resort
     try {
+      const openaiApiKey = process.env.OPENAI_API_KEY;
+      if (!openaiApiKey || openaiApiKey === '123') {
+        console.warn('OpenAI API key not available or is a placeholder');
+        return '[OpenAI transcription unavailable - API key not configured]';
+      }
+
+      console.log('Attempting to transcribe with OpenAI Whisper API');
+
+      if (!audioData || audioData.length === 0) {
+        console.error('OpenAI transcription failed: Empty audio data');
+        return '[Empty audio data]';
+      }
+
+      const audioSizeMB = audioData.length / (1024 * 1024);
+      if (audioSizeMB > 25) {
+        console.error(`OpenAI transcription failed: Audio file too large (${audioSizeMB.toFixed(2)}MB > 25MB limit)`);
+        return '[Audio file too large for transcription]';
+      }
+
       const FormData = require('form-data');
       const formData = new FormData();
+      const isWebM = this.detectWebMFormat(audioData);
+
       formData.append('file', audioData, {
-        filename: 'audio.mp3',
-        contentType: 'audio/mp3',
+        filename: isWebM ? 'audio.webm' : 'audio.mp3',
+        contentType: isWebM ? 'audio/webm' : 'audio/mp3',
       });
 
-      const response = await axios.post(`${this.baseUrl}${this.sttModel}`, formData, {
+      formData.append('model', 'whisper-1');
+      formData.append('response_format', 'json');
+
+      formData.append('language', 'en'); // language
+      formData.append('temperature', '0.0'); // for more deterministic results
+
+      console.log('OpenAI Whisper API request details:', {
+        url: 'https://api.openai.com/v1/audio/transcriptions',
+        fileSize: `${audioSizeMB.toFixed(2)}MB`,
+        model: 'whisper-1',
+        parameters: { response_format: 'json', language: 'en', temperature: '0.0' },
+      });
+
+      const response = await axios.post('https://api.openai.com/v1/audio/transcriptions', formData, {
         headers: {
-          Authorization: `Bearer ${this.apiKey}`,
+          Authorization: `Bearer ${openaiApiKey}`,
           'Content-Type': 'multipart/form-data',
         },
+        timeout: 30000, // 30s
       });
 
-      return response.data.text || '';
-    } catch (error) {
-      console.error('Error transcribing audio:');
-      throw error;
+      if (response.data && response.data.text) {
+        console.log('Successfully transcribed with OpenAI Whisper API');
+        return response.data.text;
+      } else {
+        console.warn('OpenAI returned unexpected response format:', JSON.stringify(response.data).substring(0, 200));
+        return '[Unexpected response format from OpenAI]';
+      }
+    } catch (openaiError: any) {
+      if (openaiError.response) {
+        const status = openaiError.response.status;
+        const data = openaiError.response.data;
+
+        const errorMessage = data?.error?.message || JSON.stringify(data).substring(0, 200) || 'Unknown error';
+
+        console.error(`OpenAI transcription failed (Status ${status}): ${errorMessage}`);
+
+        if (status === 400) {
+          return '[OpenAI transcription failed: Bad request - The audio file may be corrupted or in an unsupported format]';
+        } else if (status === 401) {
+          return '[OpenAI transcription failed: Authentication error - Check API key]';
+        } else if (status === 429) {
+          return '[OpenAI transcription failed: Rate limit exceeded]';
+        } else {
+          return `[OpenAI transcription failed: ${errorMessage}]`;
+        }
+      } else if (openaiError.request) {
+        console.error('OpenAI transcription failed: No response received (timeout or network issue)');
+        return '[OpenAI transcription failed: No response received]';
+      } else {
+        console.error('OpenAI transcription failed:', openaiError.message || 'Unknown error');
+        return '[OpenAI transcription failed: Request setup error]';
+      }
     }
   }
 
@@ -186,11 +406,41 @@ class HuggingFaceService {
 
       return response.data.generated_text || '';
     } catch (error: any) {
-      if (error.response && error.response.status === 402) {
-        console.error('Hugging Face API payment required error:', error.response.data.error);
-        return this.generateFallbackResponse(prompt);
+      throw error;
+    }
+  }
+
+  private async callOpenAIAPI(prompt: string): Promise<string> {
+    try {
+      const openaiApiKey = process.env.OPENAI_API_KEY;
+      if (!openaiApiKey || openaiApiKey === '123') {
+        console.log('OpenAI API key not available or is a placeholder');
+        throw new Error('OpenAI API key not properly configured');
       }
-      console.error('Error calling Hugging Face API:');
+
+      console.log('Calling OpenAI API as fallback...');
+      const response = await axios.post(
+        'https://api.openai.com/v1/chat/completions',
+        {
+          model: 'gpt-3.5-turbo',
+          messages: [
+            { role: 'system', content: 'You are an expert TOEIC evaluator.' },
+            { role: 'user', content: prompt },
+          ],
+          temperature: 0.7,
+          max_tokens: 500,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${openaiApiKey}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      return response.data.choices[0].message.content || '';
+    } catch (error: any) {
+      console.error('Error calling OpenAI API:', error.message);
       throw error;
     }
   }
@@ -217,7 +467,6 @@ SCORE: 3`;
     }
 
     let retries = 0;
-    let lastError: any = null;
 
     while (retries < maxRetries) {
       try {
@@ -225,22 +474,29 @@ SCORE: 3`;
         this.cacheResponse(cacheKey, response);
         return response;
       } catch (error: any) {
-        lastError = error;
         retries++;
+        console.error('Error with primary model:', error.message || 'Unknown error');
 
-        if (retries >= maxRetries && model === this.llmModel && !(error.response && error.response.status === 402)) {
+        if (retries >= maxRetries && model === this.llmModel) {
           console.log(
             `Trying fallback model ${this.fallbackLlmModel} after ${maxRetries} failed attempts with primary model`
           );
 
           try {
             const fallbackResponse = await this.callHuggingFaceAPI(prompt, this.fallbackLlmModel);
-
             this.cacheResponse(cacheKey, fallbackResponse);
-
             return fallbackResponse;
-          } catch (fallbackError) {
-            console.error('Fallback model also failed:', fallbackError);
+          } catch (fallbackError: any) {
+            console.error('Fallback model also failed:', fallbackError.message || 'Unknown error');
+
+            try {
+              console.log('Both Hugging Face models failed, trying OpenAI...');
+              const openaiResponse = await this.callOpenAIAPI(prompt);
+              this.cacheResponse(cacheKey, openaiResponse);
+              return openaiResponse;
+            } catch (openaiError: any) {
+              console.error('OpenAI fallback also failed:', openaiError.message || 'Unknown error');
+            }
           }
         }
 
@@ -256,7 +512,6 @@ SCORE: 3`;
       }
     }
 
-    // this should never be reached due to the fallback response above
     throw new Error('Maximum retries exceeded');
   }
 
@@ -372,6 +627,8 @@ SCORE: [Single number between 0-5]`;
 
   private parseResponse(response: string): { evaluation: string; sampleAnswer: string; score: number } {
     try {
+      console.log(`Response preview: ${response.substring(0, 100)}...`);
+
       const evaluationMatch = response.match(/EVALUATION:(.*?)(?=SAMPLE_ANSWER:|$)/s);
       const evaluation = evaluationMatch ? evaluationMatch[1].trim() : '';
 
@@ -381,10 +638,123 @@ SCORE: [Single number between 0-5]`;
       const scoreMatch = response.match(/SCORE:\s*(\d+)/);
       const score = scoreMatch ? parseInt(scoreMatch[1], 10) : 0;
 
+      if (!evaluation) {
+        const possibleEvaluation = this.extractEvaluationContent(response);
+        if (possibleEvaluation) {
+          return {
+            evaluation: possibleEvaluation.evaluation,
+            sampleAnswer: possibleEvaluation.sampleAnswer,
+            score: possibleEvaluation.score,
+          };
+        }
+      }
+
       return { evaluation, sampleAnswer, score };
     } catch (error) {
       console.error('Error parsing LLM response:', error);
       return { evaluation: 'Error evaluating response', sampleAnswer: '', score: 0 };
+    }
+  }
+
+  private detectWebMFormat(audioData: Buffer): boolean {
+    if (audioData.length < 4) {
+      return false;
+    }
+
+    if (audioData[0] === 0x1a && audioData[1] === 0x45 && audioData[2] === 0xdf && audioData[3] === 0xa3) {
+      console.log('Detected WebM format audio');
+      return true;
+    }
+
+    const headerStr = Buffer.from(audioData.buffer, audioData.byteOffset, Math.min(50, audioData.length)).toString(
+      'hex'
+    );
+    if (headerStr.includes('1a45dfa3') || headerStr.includes('webm')) {
+      console.log('Detected WebM format audio (alternative signature)');
+      return true;
+    }
+
+    console.log(
+      'Audio format header bytes:',
+      Buffer.from(audioData.buffer, audioData.byteOffset, Math.min(16, audioData.length)).toString('hex')
+    );
+
+    return false;
+  }
+
+  private extractEvaluationContent(text: string): { evaluation: string; sampleAnswer: string; score: number } | null {
+    try {
+      let evaluation = '';
+      let sampleAnswer = '';
+      let score = 0;
+
+      const evaluationKeywords = ['pronunciation', 'fluency', 'grammar', 'vocabulary', 'coherence', 'organization'];
+      const sampleKeywords = ['sample', 'example', 'better response', 'improved answer'];
+
+      const paragraphs = text.split('\n\n').filter((p) => p.trim().length > 0);
+
+      for (const paragraph of paragraphs) {
+        const lowerPara = paragraph.toLowerCase();
+        const keywordCount = evaluationKeywords.filter((kw) => lowerPara.includes(kw)).length;
+
+        if (keywordCount >= 2 && paragraph.length > 50) {
+          evaluation = paragraph.trim();
+          break;
+        }
+      }
+
+      for (const paragraph of paragraphs) {
+        const lowerPara = paragraph.toLowerCase();
+        const hasSampleKeyword = sampleKeywords.some((kw) => lowerPara.includes(kw));
+
+        if ((hasSampleKeyword || lowerPara.includes('answer')) && paragraph.length > 30 && paragraph !== evaluation) {
+          sampleAnswer = paragraph.trim();
+          break;
+        }
+      }
+
+      if (!sampleAnswer) {
+        const nonEvalParagraphs = paragraphs.filter((p) => p !== evaluation);
+        if (nonEvalParagraphs.length > 0) {
+          sampleAnswer = nonEvalParagraphs.reduce((a, b) => (a.length > b.length ? a : b)).trim();
+        }
+      }
+
+      const scoreRegex = /(\d)[\/\s]*5|score:?\s*(\d)|rating:?\s*(\d)|grade:?\s*(\d)/i;
+      const scoreMatch = text.match(scoreRegex);
+      if (scoreMatch) {
+        const extractedScore = parseInt(scoreMatch[1] || scoreMatch[2] || scoreMatch[3] || scoreMatch[4], 10);
+        if (extractedScore >= 0 && extractedScore <= 5) {
+          score = extractedScore;
+        }
+      }
+
+      if (score === 0) {
+        const positiveWords = ['excellent', 'good', 'great', 'well', 'clear', 'fluent', 'appropriate'];
+        const negativeWords = ['poor', 'limited', 'incorrect', 'error', 'mistake', 'unclear', 'difficult'];
+
+        const positiveCount = positiveWords.filter((word) => text.toLowerCase().includes(word)).length;
+        const negativeCount = negativeWords.filter((word) => text.toLowerCase().includes(word)).length;
+
+        if (positiveCount > negativeCount * 2) {
+          score = 4;
+        } else if (positiveCount > negativeCount) {
+          score = 3;
+        } else if (negativeCount > positiveCount * 2) {
+          score = 1;
+        } else {
+          score = 2;
+        }
+      }
+
+      if (evaluation || sampleAnswer) {
+        return { evaluation, sampleAnswer, score };
+      }
+
+      return null;
+    } catch (error) {
+      console.error('Error in flexible parsing:', error);
+      return null;
     }
   }
 }

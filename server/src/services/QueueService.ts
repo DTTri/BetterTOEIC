@@ -122,7 +122,6 @@ class QueueService {
         console.log(`Completed evaluation for test ${testId} by user ${userId}`);
         return { success: true, testId };
       } catch (error) {
-        console.error('Error processing test evaluation:', error);
         throw error;
       }
     });
@@ -210,7 +209,7 @@ class QueueService {
 
       console.log(`Completed synchronous evaluation for test ${testId} by user ${userId}`);
     } catch (error) {
-      console.error('Error processing synchronous evaluation:', error);
+      throw error;
     }
   }
 

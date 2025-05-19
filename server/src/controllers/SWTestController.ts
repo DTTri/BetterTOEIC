@@ -3,6 +3,7 @@ import { ObjectId } from 'mongodb';
 import { SWTest } from '~/models';
 import { CompleteSWTestDTO } from '~/models/DTOs';
 import { swTestServiceInstance } from '~/services';
+import axios from 'axios';
 
 class SWTestController {
   async createSWTest(req: Request, res: Response) {
@@ -57,7 +58,7 @@ class SWTestController {
     }
   }
 
-  async getAllSWTests(req: Request, res: Response) {
+  async getAllSWTests(_req: Request, res: Response) {
     try {
       const swTests = await swTestServiceInstance.getAllSWTests();
       if (swTests) {
@@ -119,18 +120,77 @@ class SWTestController {
       const speakingAudioBlobs: Buffer[] = [];
       const writingAnswers: string[] = [];
 
-      completeSWTestDTO.answers.forEach((answer, index) => {
+      for (let index = 0; index < completeSWTestDTO.answers.length; index++) {
+        const answer = completeSWTestDTO.answers[index];
+
         if (index < 11) {
-          if (typeof answer === 'string' && answer.startsWith('data:audio')) {
-            const base64Data = answer.split(',')[1];
-            const audioBuffer = Buffer.from(base64Data, 'base64');
-            speakingAudioBlobs.push(audioBuffer);
+          if (typeof answer === 'string') {
+            if (answer.startsWith('data:audio')) {
+              const base64Data = answer.split(',')[1];
+              const audioBuffer = Buffer.from(base64Data, 'base64');
+              speakingAudioBlobs.push(audioBuffer);
+              console.log(`Processed base64 audio for question ${index + 1}: ${audioBuffer.length} bytes`);
+            } else if (answer.includes('s3.amazonaws.com')) {
+              console.log(`Received S3 URL for question ${index + 1}: ${answer.substring(0, 100)}...`);
+
+              try {
+                const response = await axios.get(answer, {
+                  responseType: 'arraybuffer',
+                  timeout: 10000, // 10s
+                });
+
+                if (response.data && response.data.length > 0) {
+                  const audioBuffer = Buffer.from(response.data);
+                  console.log(`Successfully downloaded audio from S3: ${audioBuffer.length} bytes`);
+                  speakingAudioBlobs.push(audioBuffer);
+                } else {
+                  console.warn(`Empty response from S3 for question ${index + 1}`);
+                  speakingAudioBlobs.push(Buffer.alloc(0));
+                }
+              } catch (error: any) {
+                console.error(
+                  `Error downloading audio from S3 for question ${index + 1}:`,
+                  error.message || 'Unknown error'
+                );
+                speakingAudioBlobs.push(Buffer.alloc(0));
+              }
+            } else {
+              console.log(`Received unknown string format for question ${index + 1}, treating as URL`);
+
+              try {
+                const response = await axios.get(answer, {
+                  responseType: 'arraybuffer',
+                  timeout: 10000, // 10s
+                });
+
+                if (response.data && response.data.length > 0) {
+                  const audioBuffer = Buffer.from(response.data);
+                  console.log(`Successfully downloaded audio from URL: ${audioBuffer.length} bytes`);
+                  speakingAudioBlobs.push(audioBuffer);
+                } else {
+                  console.warn(`Empty response from URL for question ${index + 1}`);
+                  speakingAudioBlobs.push(Buffer.alloc(0));
+                }
+              } catch (error: any) {
+                console.error(
+                  `Error downloading audio from URL for question ${index + 1}:`,
+                  error.message || 'Unknown error'
+                );
+                speakingAudioBlobs.push(Buffer.from(answer));
+              }
+            }
           } else {
-            speakingAudioBlobs.push(Buffer.from(answer));
+            console.log(`Received non-string answer for question ${index + 1}, type: ${typeof answer}`);
+            speakingAudioBlobs.push(Buffer.from(String(answer)));
           }
         } else {
           writingAnswers.push(answer);
         }
+      }
+
+      console.log(`Processing ${speakingAudioBlobs.length} audio files for test ${completeSWTestDTO.testId}`);
+      speakingAudioBlobs.forEach((blob, index) => {
+        console.log(`Audio ${index + 1}: ${blob.length} bytes`);
       });
 
       const result = await swTestServiceInstance.completeSWTest(
@@ -153,7 +213,7 @@ class SWTestController {
         });
       }
     } catch (err: any) {
-      console.error('Error in completeSWTest:', err);
+      console.error('Error in completeSWTest:', err.message);
       res.status(500).json({
         EM: err.message,
         EC: 4,

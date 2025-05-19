@@ -46,7 +46,23 @@ export default function TakingSWTest() {
       const audioUploadPromises = results.speakingRecordings.map(
         async (blob, index) => {
           try {
-            const fileName = `speaking_q${index + 1}_${Date.now()}.webm`;
+            const fileExtension = blob.type.includes("webm")
+              ? "webm"
+              : blob.type.includes("mp3")
+              ? "mp3"
+              : blob.type.includes("wav")
+              ? "wav"
+              : "webm";
+
+            console.log(
+              `Audio for question ${index + 1} has type: ${
+                blob.type
+              }, using extension: ${fileExtension}`
+            );
+
+            const fileName = `speaking_q${
+              index + 1
+            }_${Date.now()}.${fileExtension}`;
             const file = blobToFile(blob, fileName);
 
             const response = await http.get(

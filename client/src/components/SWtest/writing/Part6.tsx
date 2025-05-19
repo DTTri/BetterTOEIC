@@ -20,7 +20,6 @@ export default function Part6({ questions, onComplete }: Part6Props) {
     onComplete(answers);
   }, []);
 
-
   const handleAnswerChange = (value: string) => {
     const newAnswers = [...answers];
     newAnswers[currentQuestion] = value;
@@ -83,7 +82,8 @@ export default function Part6({ questions, onComplete }: Part6Props) {
               <div className="space-y-6 h-full">
                 <div className="bg-gray-50 p-2 rounded-lg">
                   <h4 className="text-sm font-bold text-gray-600 mb-2">
-                    Keywords: {questions[currentQuestion]?.passage}
+                    Keywords: {questions[currentQuestion]?.text} -{" "}
+                    {questions[currentQuestion]?.passage}
                   </h4>
                 </div>
                 <TextEditor
