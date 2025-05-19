@@ -3,13 +3,23 @@ import { Question } from "@/entities";
 import { roadmapService } from "@/services";
 import http from "@/services/http";
 import { sNewTest } from "@/store";
-import { Button } from "@mui/material";
+import {
+  Button,
+  Paper,
+  Chip,
+  Tooltip,
+  TextField,
+  IconButton,
+  MenuItem,
+} from "@mui/material";
+import { alpha } from "@mui/material/styles";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
-import theme from "@/theme";
+import AudiotrackIcon from "@mui/icons-material/Audiotrack";
+import SaveIcon from "@mui/icons-material/Save";
+import CreateIcon from "@mui/icons-material/Create";
 import { toast } from "react-toastify";
 export default function CreatingRoadmapExsPage() {
   useEffect(() => {
@@ -158,157 +168,279 @@ export default function CreatingRoadmapExsPage() {
     document.getElementById("file-input")?.click();
   };
   return (
-    <div className="creating-test-container">
-      <h2 className="text-3xl font-bold">NEW CHAPTER</h2>
-      <hr />
-      <div className="selects-container flex gap-4 items-center">
-        <div className="flex gap-2 items-center">
-          <p className="text-3xl font-bold">Phase:</p>
-          <select
-            className="bg-gray-50 border border-black rounded-sm shadow-sm p-2 w-16 focus:outline-none focus:ring-1 focus:ring-black focus:border-transparent"
-            value={phase}
-            onChange={(e) => {
-              setPhase(parseInt(e.target.value));
-            }}
-            disabled={isAllBlocked}
-          >
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-          </select>
-        </div>
-        <div className="flex gap-2 items-center">
-          <p className="text-3xl font-bold">Part:</p>
-          <select
-            className="bg-gray-50 border border-black rounded-sm shadow-sm p-2 w-16 focus:outline-none focus:ring-1 focus:ring-black focus:border-transparent"
-            value={part}
-            onChange={(e) => {
-              setPart(parseInt(e.target.value));
-            }}
-            disabled={isAllBlocked}
-          >
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-          </select>
-        </div>
-        <div className="flex gap-2 items-center">
-          <p className="text-3xl font-bold">Chapter:</p>
-          <input
-            type="number"
-            value={chapter}
-            disabled={isAllBlocked}
-            onChange={(e) => {
-              setChapter(parseInt(e.target.value));
-            }}
-            min={1}
-            className="border-2 border-black rounded-sm shadow-md p-2 w-16
-          focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-          />
-        </div>
-      </div>
-      {part < 5 && (
-        <div className="audio flex gap-2 items-center">
-          <p className="text-2xl font-bold">Listening Audio:</p>
-          <input
-            id="file-input"
-            type="file"
-            accept="audio/*"
-            multiple={false}
-            onChange={(e) => {
-              if (e.target.files) {
-                setMainAudio(e.target.files[0]);
-              }
-            }}
-            style={{ display: "none" }}
-            disabled={isAllBlocked}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleFileInputClick}
-            disabled={isAllBlocked}
-            startIcon={<AddPhotoAlternateIcon />}
-            style={{
-              backgroundColor: theme.palette.primary.main,
-            }}
-          >
-            Add audio file
-          </Button>
-          <p>{mainAudio?.name}</p>
-        </div>
-      )}
+    <div className="creating-test-container max-w-7xl mx-auto px-4 py-6">
+      <h1 className="text-3xl font-semibold mb-6 text-gray-800">
+        Create New Roadmap Chapter
+      </h1>
 
-      <div className="flex flex-col gap-2">
-        {questionGroups.map((questionGroup, index) => (
-          <div
-            className="flex justify-start items-start border-b-2 border-gray-300"
-            key={questionGroup.id}
-          >
-            <div className="w-5/6">
-              <CreatingQuestionGroup
-                key={questionGroup.id}
-                part={part}
-                questionNumberFrom={
-                  questionGroups
-                    .slice(0, index)
-                    .reduce(
-                      (acc, questionGroup) => acc + questionGroup.number,
-                      0
-                    ) + 1
-                }
-                onNewQuestionCreated={() => {
-                  setQuestionGroups([
-                    ...questionGroups.slice(0, index),
-                    {
-                      ...questionGroups[index],
-                      number: questionGroups[index].number + 1,
-                    },
-                    ...questionGroups.slice(index + 1),
-                  ]);
+      <Paper elevation={2} className="p-6 mb-8 rounded-xl shadow-lg bg-gray-50">
+        <h2 className="text-xl text-gray-700 font-medium mb-4">
+          Chapter Information
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+          <div className="flex flex-col gap-2">
+            <h3 className="text-lg font-medium text-gray-700">Phase:</h3>
+            <TextField
+              select
+              value={phase}
+              onChange={(e) => setPhase(parseInt(e.target.value))}
+              disabled={isAllBlocked}
+              variant="outlined"
+              fullWidth
+              className="transition-all duration-300 hover:shadow-md"
+            >
+              <MenuItem value={1}>
+                <div className="flex items-center">
+                  <div className="w-4 h-4 rounded-full bg-blue-500 mr-2"></div>
+                  Phase 1
+                </div>
+              </MenuItem>
+              <MenuItem value={2}>
+                <div className="flex items-center">
+                  <div className="w-4 h-4 rounded-full bg-green-500 mr-2"></div>
+                  Phase 2
+                </div>
+              </MenuItem>
+              <MenuItem value={3}>
+                <div className="flex items-center">
+                  <div className="w-4 h-4 rounded-full bg-yellow-500 mr-2"></div>
+                  Phase 3
+                </div>
+              </MenuItem>
+              <MenuItem value={4}>
+                <div className="flex items-center">
+                  <div className="w-4 h-4 rounded-full bg-purple-500 mr-2"></div>
+                  Phase 4
+                </div>
+              </MenuItem>
+            </TextField>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <h3 className="text-lg font-medium text-gray-700">Part:</h3>
+            <TextField
+              select
+              value={part}
+              onChange={(e) => {
+                setPart(parseInt(e.target.value));
+                setQuestionGroups([
+                  {
+                    id: uuidv4(),
+                    number: 1,
+                  },
+                ]);
+                setQuestions([]);
+                setMainAudio(null);
+              }}
+              disabled={isAllBlocked}
+              variant="outlined"
+              fullWidth
+              className="transition-all duration-300 hover:shadow-md"
+            >
+              <MenuItem value={1}>
+                <div className="flex items-center">
+                  <div className="w-4 h-4 rounded-full bg-blue-500 mr-2"></div>
+                  Part 1: Photographs
+                </div>
+              </MenuItem>
+              <MenuItem value={2}>
+                <div className="flex items-center">
+                  <div className="w-4 h-4 rounded-full bg-green-500 mr-2"></div>
+                  Part 2: Question-Response
+                </div>
+              </MenuItem>
+              <MenuItem value={3}>
+                <div className="flex items-center">
+                  <div className="w-4 h-4 rounded-full bg-yellow-500 mr-2"></div>
+                  Part 3: Conversations
+                </div>
+              </MenuItem>
+              <MenuItem value={4}>
+                <div className="flex items-center">
+                  <div className="w-4 h-4 rounded-full bg-orange-500 mr-2"></div>
+                  Part 4: Talks
+                </div>
+              </MenuItem>
+              <MenuItem value={5}>
+                <div className="flex items-center">
+                  <div className="w-4 h-4 rounded-full bg-red-500 mr-2"></div>
+                  Part 5: Incomplete Sentences
+                </div>
+              </MenuItem>
+              <MenuItem value={6}>
+                <div className="flex items-center">
+                  <div className="w-4 h-4 rounded-full bg-purple-500 mr-2"></div>
+                  Part 6: Text Completion
+                </div>
+              </MenuItem>
+              <MenuItem value={7}>
+                <div className="flex items-center">
+                  <div className="w-4 h-4 rounded-full bg-pink-500 mr-2"></div>
+                  Part 7: Reading Comprehension
+                </div>
+              </MenuItem>
+            </TextField>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <h3 className="text-lg font-medium text-gray-700">Chapter:</h3>
+            <TextField
+              type="number"
+              value={chapter}
+              onChange={(e) => setChapter(parseInt(e.target.value))}
+              disabled={isAllBlocked}
+              variant="outlined"
+              fullWidth
+              InputProps={{ inputProps: { min: 1 } }}
+              className="transition-all duration-300 hover:shadow-md"
+            />
+          </div>
+        </div>
+
+        {part < 5 && (
+          <div className="mb-6">
+            <h3 className="text-lg mb-2 text-gray-700 font-medium">
+              Listening Audio File
+            </h3>
+            <div className="flex items-center gap-4">
+              <input
+                id="file-input"
+                type="file"
+                accept="audio/*"
+                multiple={false}
+                onChange={(e) => {
+                  if (e.target.files) {
+                    setMainAudio(e.target.files[0]);
+                  }
                 }}
-                onQuestionDeleted={() => {
-                  setQuestionGroups([
-                    ...questionGroups.slice(0, index),
-                    {
-                      ...questionGroups[index],
-                      number: questionGroups[index].number - 1,
-                    },
-                    ...questionGroups.slice(index + 1),
-                  ]);
-                }}
-                onQuestionsCreated={handleQuestionsCreated}
+                style={{ display: "none" }}
+                disabled={isAllBlocked}
               />
-            </div>
-            {index > 0 && (
               <Button
                 variant="contained"
-                onClick={() => {
-                  deleteQuestionGroup(questionGroup.id);
-                }}
-                style={{
-                  backgroundColor: theme.palette.error.main,
-                  width: "fit-content",
-                  fontSize: "0.8rem",
-                  textTransform: "none",
-                }}
+                color="primary"
+                onClick={handleFileInputClick}
                 disabled={isAllBlocked}
+                startIcon={<AudiotrackIcon />}
+                className="transition-all duration-300 hover:shadow-md"
               >
-                Delete Group
+                Select Audio File
               </Button>
-            )}
+              {mainAudio ? (
+                <Chip
+                  label={mainAudio.name}
+                  variant="outlined"
+                  color="primary"
+                  className="animate-fadeIn"
+                />
+              ) : (
+                <span className="text-sm text-gray-500 italic">
+                  No file selected
+                </span>
+              )}
+            </div>
           </div>
+        )}
+      </Paper>
+
+      <div className="grid grid-cols-1 gap-8">
+        {questionGroups.map((questionGroup, index) => (
+          <Paper
+            elevation={3}
+            className="p-6 border-l-4 border-blue-500 transition-all duration-300 hover:shadow-lg relative"
+            key={questionGroup.id}
+          >
+            <div className="flex justify-between items-start">
+              <div className="w-full">
+                <h3 className="mb-4 flex items-center text-blue-700 text-lg font-medium">
+                  <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mr-2 text-blue-700 font-bold">
+                    {index + 1}
+                  </div>
+                  Question Group {index + 1}
+                </h3>
+
+                <CreatingQuestionGroup
+                  key={questionGroup.id}
+                  part={part}
+                  questionNumberFrom={
+                    questionGroups
+                      .slice(0, index)
+                      .reduce(
+                        (acc, questionGroup) => acc + questionGroup.number,
+                        0
+                      ) + 1
+                  }
+                  onNewQuestionCreated={() => {
+                    setQuestionGroups([
+                      ...questionGroups.slice(0, index),
+                      {
+                        ...questionGroups[index],
+                        number: questionGroups[index].number + 1,
+                      },
+                      ...questionGroups.slice(index + 1),
+                    ]);
+                  }}
+                  onQuestionDeleted={() => {
+                    setQuestionGroups([
+                      ...questionGroups.slice(0, index),
+                      {
+                        ...questionGroups[index],
+                        number: questionGroups[index].number - 1,
+                      },
+                      ...questionGroups.slice(index + 1),
+                    ]);
+                  }}
+                  onQuestionsCreated={handleQuestionsCreated}
+                />
+              </div>
+
+              {index > 0 && (
+                <IconButton
+                  aria-label="delete group"
+                  size="medium"
+                  color="error"
+                  onClick={() => {
+                    deleteQuestionGroup(questionGroup.id);
+                  }}
+                  disabled={isAllBlocked}
+                  className="absolute top-4 right-4 min-w-0 w-10 h-10 rounded-full p-0"
+                  sx={{
+                    position: "absolute",
+                    top: 4,
+                    right: 4,
+                    zIndex: 10,
+                    bgcolor: "transparent",
+                    "&:hover": {
+                      bgcolor: alpha("#f44336", 0.08),
+                    },
+                  }}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="black"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                </IconButton>
+              )}
+            </div>
+          </Paper>
         ))}
+
         {(part === 3 || part === 4 || part === 6 || part === 7) && (
-          <div className="flex justify-center">
+          <div className="flex justify-center mt-4">
             <Button
               variant="contained"
-              color="primary"
+              color="secondary"
               onClick={() => {
                 setQuestionGroups([
                   ...questionGroups,
@@ -318,39 +450,44 @@ export default function CreatingRoadmapExsPage() {
                   },
                 ]);
               }}
-              style={{
-                backgroundColor: theme.palette.secondary.main,
-                color: "black",
-                textTransform: "none",
-                width: "fit-content",
-              }}
-              endIcon={<ArrowDownwardIcon />}
               disabled={isAllBlocked}
+              className="transition-all duration-300 hover:shadow-lg px-6 py-2 rounded-full"
+              endIcon={<ArrowDownwardIcon />}
             >
-              Add question group
+              Add Question Group
             </Button>
           </div>
         )}
       </div>
-      <div className="buttons-container flex gap-4 justify-end">
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={handleChangeBlockStatus}
-        >
-          {isAllBlocked ? "Unsave" : "Save all"}
-        </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          style={{
-            width: "fit-content",
-          }}
-          onClick={handleCreateRoadmapEx}
-          disabled={!isAllBlocked}
-        >
-          Create
-        </Button>
+
+      <div className="flex justify-center gap-4 mb-8">
+        <Tooltip title={isAllBlocked ? "Unsave changes" : "Save all changes"}>
+          <Button
+            variant="contained"
+            color={isAllBlocked ? "error" : "secondary"}
+            onClick={handleChangeBlockStatus}
+            startIcon={<SaveIcon />}
+            className="transition-all duration-300 hover:shadow-lg"
+            size="large"
+          >
+            {isAllBlocked ? "Unsave" : "Save All"}
+          </Button>
+        </Tooltip>
+        <Tooltip title="Create chapter">
+          <span>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleCreateRoadmapEx}
+              disabled={!isAllBlocked}
+              startIcon={<CreateIcon />}
+              className="transition-all duration-300 hover:shadow-lg"
+              size="large"
+            >
+              Create Chapter
+            </Button>
+          </span>
+        </Tooltip>
       </div>
     </div>
   );
