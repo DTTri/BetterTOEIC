@@ -11,19 +11,25 @@ interface CacheEntry {
 
 class HuggingFaceService {
   private apiKey: string;
-  private baseUrl: string;
+  private huggingFaceBaseUrl: string;
+  private openaiBaseUrl: string;
   private llmModel: string;
   private sttModel: string;
+  private multimodalModel: string;
   private fallbackLlmModel: string;
   private responseCache: Map<string, CacheEntry>;
   private cacheTTL: number;
+  private openaiApiKey: string;
 
   constructor() {
     this.apiKey = process.env.HUGGING_FACE_API_KEY || '';
-    this.baseUrl = 'https://api-inference.huggingface.co/models/';
-    this.llmModel = process.env.LLM_MODEL || 'microsoft/phi-2';
-    this.fallbackLlmModel = 'google/flan-t5-large';
-    this.sttModel = 'openai/whisper-small';
+    this.openaiApiKey = process.env.OPENAI_API_KEY || '';
+    this.huggingFaceBaseUrl = 'https://api-inference.huggingface.co/models/';
+    this.openaiBaseUrl = 'https://api.openai.com/v1/';
+    this.llmModel = process.env.LLM_MODEL || '';
+    this.fallbackLlmModel = process.env.FALLBACK_LLM_MODEL || '';
+    this.sttModel = process.env.STT_MODEL || '';
+    this.multimodalModel = process.env.MULTIMODAL_MODEL || '';
     this.responseCache = new Map<string, CacheEntry>();
     this.cacheTTL = 24 * 60 * 60 * 1000;
   }
@@ -41,6 +47,44 @@ class HuggingFaceService {
       const sampleAnswers: string[] = new Array(answers.length);
       const scores: number[] = new Array(answers.length);
       const transcriptions: string[] = new Array(11);
+
+      const questionImages: Map<number, Buffer[]> = new Map();
+      const imageDownloadPromises: Promise<void>[] = [];
+
+      for (const question of test.questions) {
+        if (question.image && question.image.length > 0) {
+          const questionNumber = question.question_number;
+          const imagePromises = question.image.map(async (imageUrl) => {
+            try {
+              console.log(`Downloading image for question ${questionNumber}: ${imageUrl}`);
+              const imageData = await this.downloadImageFromS3(imageUrl);
+
+              if (!questionImages.has(questionNumber)) {
+                questionImages.set(questionNumber, []);
+              }
+
+              const images = questionImages.get(questionNumber);
+              if (images) {
+                images.push(imageData);
+              }
+
+              console.log(`Successfully downloaded image for question ${questionNumber}: ${imageData.length} bytes`);
+            } catch (error: any) {
+              console.error(
+                `Error downloading image for question ${questionNumber}: ${error.message || 'Unknown error'}`
+              );
+            }
+          });
+
+          imageDownloadPromises.push(...imagePromises);
+        }
+      }
+
+      if (imageDownloadPromises.length > 0) {
+        console.log(`Downloading ${imageDownloadPromises.length} images...`);
+        await Promise.all(imageDownloadPromises);
+        console.log('All images downloaded successfully');
+      }
 
       const speakingAnswers = answers.slice(0, 11);
       const transcriptionPromises = speakingAnswers.map(async (audioUrl, index) => {
@@ -127,6 +171,7 @@ class HuggingFaceService {
           };
         }
       });
+
       const transcriptionResults = await Promise.all(transcriptionPromises);
       transcriptionResults.forEach((result) => {
         transcriptions[result.index] = result.transcription;
@@ -136,6 +181,9 @@ class HuggingFaceService {
         const isSpoken = index < 11;
         const question = test.questions[index];
         let textToEvaluate = answer;
+        const questionNumber = index + 1;
+
+        const imageBuffers = questionImages.get(questionNumber) || [];
 
         if (isSpoken) {
           const transcriptionResult = transcriptionResults.find((r) => r.index === index);
@@ -146,9 +194,11 @@ class HuggingFaceService {
           index,
           textToEvaluate,
           isSpoken,
-          questionNumber: index + 1,
+          questionNumber,
           questionText: question.text,
           passage: question.passage,
+          imageBuffers: imageBuffers.length > 0 ? imageBuffers : undefined,
+          questionAudio: question.question_audio,
         };
       });
 
@@ -162,22 +212,46 @@ class HuggingFaceService {
       for (const batch of batches) {
         const batchPromises = batch.map(async (data) => {
           try {
-            const prompt = data.isSpoken
-              ? this.createSpeakingEvaluationPrompt(
+            let responseText;
+
+            if (data.imageBuffers && data.imageBuffers.length > 0) {
+              responseText = await this.evaluateWithMultimodalModel(
+                data.textToEvaluate,
+                data.questionNumber,
+                data.questionText,
+                data.passage,
+                data.imageBuffers,
+                data.isSpoken,
+                data.questionAudio
+              );
+            } else {
+              let prompt;
+
+              if (data.questionNumber === 1 || data.questionNumber === 2) {
+                prompt = this.createReadAloudEvaluationPrompt(
                   data.textToEvaluate,
                   data.questionNumber,
-                  data.questionText,
-                  data.passage
-                )
-              : this.createWritingEvaluationPrompt(
+                  data.questionText
+                );
+              } else if (data.isSpoken) {
+                prompt = this.createSpeakingEvaluationPrompt(
                   data.textToEvaluate,
                   data.questionNumber,
                   data.questionText,
                   data.passage
                 );
+              } else {
+                prompt = this.createWritingEvaluationPrompt(
+                  data.textToEvaluate,
+                  data.questionNumber,
+                  data.questionText,
+                  data.passage
+                );
+              }
 
-            const response = await this.callHuggingFaceAPIWithRetry(prompt, this.llmModel);
-            const { evaluation, sampleAnswer, score } = this.parseResponse(response);
+              responseText = await this.callHuggingFaceAPIWithRetry(prompt, this.llmModel);
+            }
+            const { evaluation, sampleAnswer, score } = this.parseResponse(responseText);
 
             return {
               index: data.index,
@@ -200,7 +274,14 @@ class HuggingFaceService {
 
         batchResults.forEach((result) => {
           evaluations[result.index] = result.evaluation;
-          sampleAnswers[result.index] = result.sampleAnswer;
+
+          if (result.index === 0 || result.index === 1) {
+            sampleAnswers[result.index] = test.questions[result.index].text;
+            console.log(`Using original text as sample answer for read-aloud question ${result.index + 1}`);
+          } else {
+            sampleAnswers[result.index] = result.sampleAnswer;
+          }
+
           scores[result.index] = result.score;
         });
       }
@@ -212,57 +293,65 @@ class HuggingFaceService {
     }
   }
 
-  private async downloadAudioFromS3(audioUrl: string): Promise<Buffer> {
+  private async downloadFromS3(url: string, fileType: 'audio' | 'image'): Promise<Buffer> {
     try {
-      if (!audioUrl.startsWith('http')) {
-        if (Buffer.isBuffer(audioUrl)) {
-          console.log('Input is already a Buffer, returning as is');
-          return audioUrl;
+      if (!url.startsWith('http')) {
+        if (Buffer.isBuffer(url)) {
+          console.log(`Input is already a Buffer, returning as is`);
+          return url;
         }
 
-        if (typeof audioUrl === 'string' && audioUrl.includes('s3.amazonaws.com')) {
-          const urlMatch = audioUrl.match(/(https?:\/\/[^\s]+)/);
+        if (typeof url === 'string' && url.includes('s3.amazonaws.com')) {
+          const urlMatch = url.match(/(https?:\/\/[^\s]+)/);
           if (urlMatch) {
-            audioUrl = urlMatch[0];
-            console.log(`Extracted URL from string: ${audioUrl}`);
+            url = urlMatch[0];
+            console.log(`Extracted URL from string: ${url}`);
           } else {
             console.error('Could not extract URL from string');
-            throw new Error('Invalid audio URL format');
+            throw new Error(`Invalid ${fileType} URL format`);
           }
         } else {
           console.error('Input is not a valid URL or Buffer');
-          throw new Error('Invalid audio URL format');
+          throw new Error(`Invalid ${fileType} URL format`);
         }
       }
 
-      console.log(`Downloading audio from: ${audioUrl}`);
+      console.log(`Downloading ${fileType} from: ${url}`);
 
-      const response = await axios.get(audioUrl, {
+      const response = await axios.get(url, {
         responseType: 'arraybuffer',
         timeout: 10000, // 10s
       });
 
       if (!response.data || response.data.length === 0) {
-        throw new Error('Empty response received from S3');
+        throw new Error(`Empty response received from S3 for ${fileType}`);
       }
 
       const buffer = Buffer.from(response.data, 'binary');
-      console.log(`Successfully downloaded audio: ${buffer.length} bytes`);
+      console.log(`Successfully downloaded ${fileType}: ${buffer.length} bytes`);
       return buffer;
     } catch (error: any) {
       if (error.response) {
         console.error(
-          `Error downloading audio from S3 (Status ${error.response.status}):`,
+          `Error downloading ${fileType} from S3 (Status ${error.response.status}):`,
           error.response.statusText || 'Unknown error'
         );
       } else if (error.request) {
-        console.error('Error downloading audio from S3: No response received (timeout or CORS issue)');
+        console.error(`Error downloading ${fileType} from S3: No response received (timeout or CORS issue)`);
       } else {
-        console.error('Error downloading audio from S3:', error.message || 'Unknown error');
+        console.error(`Error downloading ${fileType} from S3:`, error.message || 'Unknown error');
       }
 
       throw error;
     }
+  }
+
+  private async downloadAudioFromS3(audioUrl: string): Promise<Buffer> {
+    return this.downloadFromS3(audioUrl, 'audio');
+  }
+
+  private async downloadImageFromS3(imageUrl: string): Promise<Buffer> {
+    return this.downloadFromS3(imageUrl, 'image');
   }
 
   private async transcribeAudio(audioData: Buffer): Promise<string> {
@@ -284,7 +373,7 @@ class HuggingFaceService {
           contentType: isWebM ? 'audio/webm' : 'audio/mp3',
         });
 
-        const response = await axios.post(`${this.baseUrl}${model}`, formData, {
+        const response = await axios.post(`${this.huggingFaceBaseUrl}${model}`, formData, {
           headers: {
             Authorization: `Bearer ${this.apiKey}`,
             'Content-Type': 'multipart/form-data',
@@ -394,7 +483,7 @@ class HuggingFaceService {
   private async callHuggingFaceAPI(prompt: string, model: string): Promise<string> {
     try {
       const response = await axios.post(
-        `${this.baseUrl}${model}`,
+        `${this.huggingFaceBaseUrl}${model}`,
         { inputs: prompt },
         {
           headers: {
@@ -408,6 +497,189 @@ class HuggingFaceService {
     } catch (error: any) {
       throw error;
     }
+  }
+
+  /**
+   * Evaluates a response using OpenAI's multimodal model that can process both text and images
+   */
+  private async evaluateWithMultimodalModel(
+    answer: string,
+    questionNumber: number,
+    questionText: string,
+    passage?: string,
+    imageBuffers?: Buffer[],
+    isSpoken: boolean = false,
+    questionAudio?: string
+  ): Promise<string> {
+    // For questions 1 and 2 (read aloud), add special instructions
+    const isReadAloudQuestion = questionNumber === 1 || questionNumber === 2;
+    try {
+      // Check if OpenAI API key is available
+      if (!this.openaiApiKey || this.openaiApiKey === '123') {
+        console.warn('OpenAI API key not available or is a placeholder');
+        return this.generateFallbackMultimodalResponse(answer, questionNumber, isSpoken);
+      }
+
+      // Prepare the message content array
+      const content: any[] = [];
+
+      // Add the system message
+      content.push({
+        type: 'text',
+        text: this.createMultimodalSystemPrompt(isSpoken),
+      });
+
+      // Add the question context
+      let questionContext = `You are evaluating a ${isSpoken ? 'speaking' : 'writing'} response for TOEIC question #${questionNumber}.\n\n`;
+      questionContext += `Question: ${questionText}\n`;
+
+      if (passage) {
+        questionContext += `Context: ${passage}\n`;
+      }
+
+      if (questionAudio) {
+        questionContext += `This question includes audio instructions that the test-taker listened to.\n`;
+      }
+
+      content.push({
+        type: 'text',
+        text: questionContext,
+      });
+
+      // Add images if available
+      if (imageBuffers && imageBuffers.length > 0) {
+        for (const imageBuffer of imageBuffers) {
+          const base64Image = imageBuffer.toString('base64');
+          content.push({
+            type: 'image_url',
+            image_url: {
+              url: `data:image/jpeg;base64,${base64Image}`,
+            },
+          });
+        }
+
+        content.push({
+          type: 'text',
+          text: 'The above image(s) were shown to the test-taker as part of the question.',
+        });
+      }
+
+      // Add the user's answer
+      content.push({
+        type: 'text',
+        text: `Test-taker's ${isSpoken ? 'transcribed speaking' : 'writing'} response:\n"${answer}"\n\nPlease evaluate this response based on TOEIC criteria.`,
+      });
+
+      // Add the evaluation instructions
+      if (isReadAloudQuestion) {
+        content.push({
+          type: 'text',
+          text: this.createReadAloudEvaluationInstructions(),
+        });
+      } else {
+        content.push({
+          type: 'text',
+          text: this.createMultimodalEvaluationInstructions(isSpoken),
+        });
+      }
+
+      // Make the API call
+      console.log(`Sending multimodal evaluation request to OpenAI for question ${questionNumber}`);
+
+      const response = await axios.post(
+        `${this.openaiBaseUrl}chat/completions`,
+        {
+          model: this.multimodalModel,
+          messages: [
+            {
+              role: 'user',
+              content: content,
+            },
+          ],
+          max_tokens: 1000,
+          temperature: 0.2,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${this.openaiApiKey}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (response.data && response.data.choices && response.data.choices[0]) {
+        console.log(`Successfully received multimodal evaluation for question ${questionNumber}`);
+        return response.data.choices[0].message.content;
+      } else {
+        console.warn('OpenAI API returned unexpected response format');
+        return this.generateFallbackMultimodalResponse(answer, questionNumber, isSpoken);
+      }
+    } catch (error: any) {
+      console.error(`Error with multimodal evaluation: ${error.message || 'Unknown error'}`);
+      return this.generateFallbackMultimodalResponse(answer, questionNumber, isSpoken);
+    }
+  }
+
+  /**
+   * Creates a system prompt for the multimodal model
+   */
+  private createMultimodalSystemPrompt(isSpoken: boolean): string {
+    if (isSpoken) {
+      return `You are an expert TOEIC Speaking evaluator with years of experience. You will evaluate a transcribed speaking response for a TOEIC test question that may include images.`;
+    } else {
+      return `You are an expert TOEIC Writing evaluator with years of experience. You will evaluate a written response for a TOEIC test question that may include images.`;
+    }
+  }
+
+  /**
+   * Creates evaluation instructions for the multimodal model
+   */
+  private createMultimodalEvaluationInstructions(isSpoken: boolean): string {
+    let instructions = `Please provide your evaluation in the following format:\n\n`;
+
+    if (isSpoken) {
+      instructions += `EVALUATION: [Provide a detailed evaluation (100-150 words) focusing on pronunciation, fluency, grammar, vocabulary, content completeness, coherence, and how well the response addresses any images shown.]\n\n`;
+    } else {
+      instructions += `EVALUATION: [Provide a detailed evaluation (100-150 words) focusing on grammar, vocabulary, organization, development, task completion, mechanics, and how well the response addresses any images shown.]\n\n`;
+    }
+
+    instructions += `SAMPLE_ANSWER: [Provide a sample improved response that would score higher.]\n\n`;
+    instructions += `SCORE: [Provide a single number between 0-5, where:
+0 = No response or incomprehensible
+1 = Demonstrates minimal proficiency
+2 = Demonstrates limited proficiency
+3 = Demonstrates fair proficiency
+4 = Demonstrates good proficiency
+5 = Demonstrates excellent proficiency]`;
+
+    return instructions;
+  }
+
+  /**
+   * Creates evaluation instructions specifically for read-aloud questions (1-2)
+   */
+  private createReadAloudEvaluationInstructions(): string {
+    return `Please provide your evaluation in the following format:\n\n
+EVALUATION: [Provide a detailed evaluation (100-150 words) focusing on pronunciation, intonation, stress, rhythm, and clarity. Evaluate how accurately the test-taker read the text without adding or omitting words.]\n\n
+SAMPLE_ANSWER: [DO NOT PROVIDE A SAMPLE ANSWER. The sample answer for read-aloud questions is always the original text that was provided to the test-taker.]\n\n
+SCORE: [Provide a single number between 0-5, where:
+0 = No response or incomprehensible
+1 = Demonstrates minimal proficiency (major pronunciation issues, many words mispronounced)
+2 = Demonstrates limited proficiency (frequent errors, difficult to understand)
+3 = Demonstrates fair proficiency (some errors but generally understandable)
+4 = Demonstrates good proficiency (minor errors, good pronunciation)
+5 = Demonstrates excellent proficiency (near-native pronunciation, very few errors)]`;
+  }
+
+  /**
+   * Generates a fallback response when multimodal evaluation fails
+   */
+  private generateFallbackMultimodalResponse(_answer: string, questionNumber: number, isSpoken: boolean): string {
+    return `EVALUATION: Due to technical limitations, we couldn't provide a detailed evaluation of your ${isSpoken ? 'speaking' : 'writing'} response for question ${questionNumber}. Your response has been recorded and will be evaluated by our team.
+
+SAMPLE_ANSWER: A comprehensive sample answer would typically address all aspects of the question, including any images shown, with clear organization, appropriate vocabulary, and grammatical accuracy.
+
+SCORE: 3`;
   }
 
   private async callOpenAIAPI(prompt: string): Promise<string> {
@@ -543,6 +815,39 @@ SCORE: 3`;
       timestamp: Date.now(),
       data: response,
     });
+  }
+
+  private createReadAloudEvaluationPrompt(answer: string, questionNumber: number, questionText: string): string {
+    return `You are an expert TOEIC Speaking evaluator with years of experience.
+You will evaluate the following TOEIC Speaking response for question #${questionNumber}, which is a READ ALOUD question.
+
+Original text that the test-taker was asked to read aloud:
+"${questionText}"
+
+This is a transcription of the test-taker's spoken response:
+"${answer}"
+
+Please evaluate this response based on TOEIC Speaking criteria for read-aloud tasks and provide:
+1. A detailed evaluation (100-150 words) focusing on:
+   - Pronunciation: clarity, stress, intonation patterns
+   - Rhythm and pacing: appropriate speed and natural flow
+   - Accuracy: reading the text as written without adding or omitting words
+   - Clarity: overall intelligibility of the speech
+
+2. DO NOT provide a sample answer - for read-aloud questions, the sample answer is always the original text.
+
+3. A score on a scale of 0-5, where:
+   0 = No response or incomprehensible
+   1 = Demonstrates minimal proficiency (major pronunciation issues, many words mispronounced)
+   2 = Demonstrates limited proficiency (frequent errors, difficult to understand)
+   3 = Demonstrates fair proficiency (some errors but generally understandable)
+   4 = Demonstrates good proficiency (minor errors, good pronunciation)
+   5 = Demonstrates excellent proficiency (near-native pronunciation, very few errors)
+
+Format your response exactly as follows:
+EVALUATION: [Your detailed evaluation here]
+SAMPLE_ANSWER: ${questionText}
+SCORE: [Single number between 0-5]`;
   }
 
   private createSpeakingEvaluationPrompt(

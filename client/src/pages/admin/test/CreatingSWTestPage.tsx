@@ -40,8 +40,10 @@ export default function CreatingSWTestPage() {
 
   interface ExtendedSWQuestion extends SWQuestion {
     imageFiles?: File[];
+    audioFile?: File;
     image?: string[];
     images?: string[];
+    question_audio?: string;
   }
 
   const [questions, setQuestions] = useState<ExtendedSWQuestion[]>(
@@ -78,6 +80,21 @@ export default function CreatingSWTestPage() {
       setQuestions(updatedQuestions);
     };
     reader.readAsDataURL(file);
+  };
+
+  const handleAudioUpload = (index: number, file: File) => {
+    const updatedQuestions = [...questions];
+    updatedQuestions[index] = {
+      ...updatedQuestions[index],
+      audioFile: file,
+    };
+
+    const audioUrl = URL.createObjectURL(file);
+
+    updatedQuestions[index].question_audio = audioUrl;
+    setQuestions(updatedQuestions);
+
+    console.log(`Audio file uploaded for question ${index + 1}: ${file.name}`);
   };
 
   const uploadFile = async (file: File) => {
@@ -120,6 +137,8 @@ export default function CreatingSWTestPage() {
 
       const uploadedQuestionPromises = questions.map(async (question) => {
         let imageUrls: string[] = [];
+        let audioUrl: string = "";
+
         if (question.imageFiles && question.imageFiles.length > 0) {
           imageUrls = await Promise.all(
             question.imageFiles.map(async (image) => await uploadFile(image))
@@ -133,6 +152,18 @@ export default function CreatingSWTestPage() {
           delete question.imageFiles;
           delete question.image;
         }
+
+        if (question.audioFile) {
+          audioUrl = await uploadFile(question.audioFile);
+
+          if (audioUrl === "") {
+            return null;
+          }
+
+          question.question_audio = audioUrl;
+          delete question.audioFile;
+        }
+
         return question;
       });
 
@@ -454,6 +485,12 @@ export default function CreatingSWTestPage() {
                 id="q5-7-audio-input"
                 type="file"
                 accept="audio/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    handleAudioUpload(4, file);
+                  }
+                }}
                 style={{ display: "none" }}
                 disabled={isAllBlocked}
               />
@@ -469,9 +506,25 @@ export default function CreatingSWTestPage() {
               >
                 Upload Audio
               </Button>
-              <span className="text-gray-500 italic text-sm">
-                No audio uploaded
-              </span>
+              {questions[4].question_audio ? (
+                <div className="flex items-center gap-2">
+                  <Chip
+                    label="Audio uploaded"
+                    color="success"
+                    variant="outlined"
+                    className="animate-fadeIn"
+                  />
+                  <audio
+                    controls
+                    src={questions[4].question_audio}
+                    className="h-8 w-48"
+                  />
+                </div>
+              ) : (
+                <span className="text-gray-500 italic text-sm">
+                  No audio uploaded
+                </span>
+              )}
             </div>
 
             <TextField
@@ -599,6 +652,12 @@ export default function CreatingSWTestPage() {
                 id="q8-10-audio-input"
                 type="file"
                 accept="audio/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    handleAudioUpload(7, file);
+                  }
+                }}
                 style={{ display: "none" }}
                 disabled={isAllBlocked}
               />
@@ -614,9 +673,25 @@ export default function CreatingSWTestPage() {
               >
                 Upload Audio
               </Button>
-              <span className="text-gray-500 italic text-sm">
-                No audio uploaded
-              </span>
+              {questions[7].question_audio ? (
+                <div className="flex items-center gap-2">
+                  <Chip
+                    label="Audio uploaded"
+                    color="success"
+                    variant="outlined"
+                    className="animate-fadeIn"
+                  />
+                  <audio
+                    controls
+                    src={questions[7].question_audio}
+                    className="h-8 w-48"
+                  />
+                </div>
+              ) : (
+                <span className="text-gray-500 italic text-sm">
+                  No audio uploaded
+                </span>
+              )}
             </div>
           </div>
         </Paper>
@@ -640,6 +715,12 @@ export default function CreatingSWTestPage() {
                 id="q11-audio-input"
                 type="file"
                 accept="audio/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    handleAudioUpload(10, file);
+                  }
+                }}
                 style={{ display: "none" }}
                 disabled={isAllBlocked}
               />
@@ -655,9 +736,25 @@ export default function CreatingSWTestPage() {
               >
                 Upload Audio
               </Button>
-              <span className="text-gray-500 italic text-sm">
-                No audio uploaded
-              </span>
+              {questions[10].question_audio ? (
+                <div className="flex items-center gap-2">
+                  <Chip
+                    label="Audio uploaded"
+                    color="success"
+                    variant="outlined"
+                    className="animate-fadeIn"
+                  />
+                  <audio
+                    controls
+                    src={questions[10].question_audio}
+                    className="h-8 w-48"
+                  />
+                </div>
+              ) : (
+                <span className="text-gray-500 italic text-sm">
+                  No audio uploaded
+                </span>
+              )}
             </div>
 
             <TextField
