@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Timer from "../Timer";
 import AudioRecorder from "../AudioRecorder";
 import { SWQuestion } from "@/entities";
-import { Part4SWTestTime } from "../SWTestTime";
+import { Time89ForPart4, Time10ForPart4 } from "../SWTestTime";
 
 interface Part4Props {
   question: SWQuestion;
@@ -23,8 +23,8 @@ export default function Part4({ question, onComplete }: Part4Props) {
   // Get response time based on question number (15s for first two, 30s for last)
   const getResponseTime = (questionIndex: number) => {
     return questionIndex === 10
-      ? Part4SWTestTime.question10?.RecordingTime || 30
-      : Part4SWTestTime.question89?.RecordingTime || 15;
+      ? Time10ForPart4.RecordingTime || 30
+      : Time89ForPart4.RecordingTime || 15;
   };
 
   const handleDirectionEnd = () => {
@@ -69,7 +69,7 @@ export default function Part4({ question, onComplete }: Part4Props) {
             </h3>
             <div className="hidden">
               <Timer
-                initialSeconds={Part4SWTestTime.DirectionTime || 10}
+                initialSeconds={Time10ForPart4.DirectionTime || 10}
                 onTimeEnd={handleDirectionEnd}
                 isPreparation={false}
               />
@@ -86,9 +86,9 @@ export default function Part4({ question, onComplete }: Part4Props) {
             </div>
 
             <div className="bg-gray-50 p-6 rounded-lg mb-8">
-              <h4 className="text-lg font-semibold mb-4">{question.text}</h4>
+              <h4 className="text-lg font-semibold mb-4">{question.passage}</h4>
               <p className="text-lg leading-relaxed">
-                Question: {question.passage}
+                Question: {question.text}
               </p>
             </div>
 
@@ -96,7 +96,7 @@ export default function Part4({ question, onComplete }: Part4Props) {
               <Timer
                 initialSeconds={
                   stage == "preparation"
-                    ? Part4SWTestTime.PreparationTime || 3
+                    ? Time10ForPart4.PreparationTime || 3
                     : getResponseTime(question.question_number)
                 }
                 onTimeEnd={

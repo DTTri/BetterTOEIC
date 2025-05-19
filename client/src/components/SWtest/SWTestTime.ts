@@ -2,69 +2,60 @@ export type SWTestTime = {
     DirectionTime: number,
     PreparationTime?: number,
     RecordingTime?: number,
-    question56?: {
-        RecordingTime: number,
-    },
-    question7?: {
-        RecordingTime: number,
-    },
-    question89?: {
-        RecordingTime: number,
-    },
-    question10?: {
-        RecordingTime: number,
-    }
 }
 
-export const Part1SWTestTime : SWTestTime = {
-    DirectionTime: 5,
-    PreparationTime: 10,
-    RecordingTime: 10,
-}
-export const Part2SWTestTime: SWTestTime = {
-    DirectionTime: 5,
-    PreparationTime: 10,
-    RecordingTime: 10,
-}
-
-export const Part3SWTestTime: SWTestTime = {
+export const TimeForPart1 : SWTestTime = {
     DirectionTime: 5,
     PreparationTime: 3,
-    question56: {
-        RecordingTime: 5,
-    },
-    question7: {
-        RecordingTime: 5,
-    }
-}
-export const Part4SWTestTime: SWTestTime = {
-    DirectionTime: 5,
-    PreparationTime: 3,
-    question89: {
-        RecordingTime: 5,
-    },
-    question10: {
-        RecordingTime: 5,
-    },
+    RecordingTime: 3,
 }
 
-export const Part5SWTestTime: SWTestTime = {
+export const TimeForPart2: SWTestTime = {
     DirectionTime: 5,
-    PreparationTime: 10,
+    PreparationTime: 3,
+    RecordingTime: 3,
+}
+
+export const Time56ForPart3: SWTestTime = {
+    DirectionTime: 5,
+    PreparationTime: 3,
+    RecordingTime: 5,
+}
+
+export const Time7ForPart3: SWTestTime = {
+    DirectionTime: 5,
+    PreparationTime: 3,
+    RecordingTime: 5,
+}
+export const Time89ForPart4: SWTestTime = {
+    DirectionTime: 5,
+    PreparationTime: 3,
+    RecordingTime: 5,
+}
+
+export const Time10ForPart4: SWTestTime = {
+    DirectionTime: 5,
+    PreparationTime: 3,
+    RecordingTime: 5,
+}
+
+export const TimeForPart5: SWTestTime = {
+    DirectionTime: 5,
+    PreparationTime: 3,
+    RecordingTime: 3,
+}
+
+export const TimeForPart6: SWTestTime = {
+    DirectionTime: 5,
+    RecordingTime: 30,
+}
+
+export const TimeForPart7: SWTestTime = {
+    DirectionTime: 5,
     RecordingTime: 15,
 }
 
-export const Part6SWTestTime: SWTestTime = {
+export const TimeForPart8: SWTestTime = {
     DirectionTime: 5,
-    RecordingTime: 10,
-}
-
-export const Part7SWTestTime: SWTestTime = {
-    DirectionTime: 5,
-    RecordingTime: 10,
-}
-
-export const Part8SWTestTime: SWTestTime = {
-    DirectionTime: 5,
-    RecordingTime: 20
+    RecordingTime: 15
 }

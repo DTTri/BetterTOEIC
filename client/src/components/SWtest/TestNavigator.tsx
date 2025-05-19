@@ -134,6 +134,6 @@ export default function TestNavigator({
 
   console.log("cur qestion" + currentQuestion);
   return (
-    <div className="min-h-screen bg-gray-50 py-4">{renderCurrentPart()}</div>
+    <div className="min-h-screen w-[80%] mx-auto bg-gray-50 py-4">{renderCurrentPart()}</div>
   );
 }

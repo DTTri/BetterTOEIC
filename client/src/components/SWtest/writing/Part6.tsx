@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Timer from "../Timer";
 import TextEditor from "../TextEditor";
 import { SWQuestion } from "@/entities";
-import { Part6SWTestTime } from "../SWTestTime";
+import { TimeForPart6 } from "../SWTestTime";
 
 interface Part6Props {
   questions: SWQuestion[];
@@ -16,10 +16,10 @@ export default function Part6({ questions, onComplete }: Part6Props) {
     new Array(questions.length).fill("")
   );
 
-  const handleTimeEnd = () => {
-    console.log("time end");
+  const handleTimeEnd = useCallback(() => {
     onComplete(answers);
-  };
+  }, []);
+
 
   const handleAnswerChange = (value: string) => {
     const newAnswers = [...answers];
@@ -30,6 +30,8 @@ export default function Part6({ questions, onComplete }: Part6Props) {
   const handleNextQuestion = () => {
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion((curr) => curr + 1);
+    } else {
+      onComplete(answers);
     }
   };
 
@@ -62,7 +64,7 @@ export default function Part6({ questions, onComplete }: Part6Props) {
             </h3>
             <div className="hidden">
               <Timer
-                initialSeconds={Part6SWTestTime.DirectionTime || 10}
+                initialSeconds={TimeForPart6.DirectionTime || 10}
                 onTimeEnd={() => setStage("writing")}
                 isPreparation={false}
               />
@@ -102,7 +104,7 @@ export default function Part6({ questions, onComplete }: Part6Props) {
                 Previous
               </button>
               <Timer
-                initialSeconds={Part6SWTestTime.RecordingTime || 480}
+                initialSeconds={TimeForPart6.RecordingTime || 480}
                 onTimeEnd={handleTimeEnd}
                 isPreparation={false}
               />
@@ -111,7 +113,7 @@ export default function Part6({ questions, onComplete }: Part6Props) {
                 disabled={currentQuestion === 16}
                 className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
               >
-                Next
+                {currentQuestion === 16 ? "Finish" : "Next"}
               </button>
             </div>
           </div>

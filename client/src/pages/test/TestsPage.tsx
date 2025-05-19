@@ -3,7 +3,7 @@ import TestCardGallery from "@/components/LRtest/TestCardGallery";
 import { SWTest, Test } from "@/entities";
 import { testStore } from "@/store/testStore";
 import { Tab, Tabs } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import * as motion from "motion/react-client";
 import LoadingProgress from "@/components/LoadingProgress";
@@ -15,6 +15,8 @@ export default function TestsPage() {
   const [value, setValue] = useState(0);
   const [testValue, setTestValue] = useState(0);
   const [curTests, setCurTests] = useState<Test[] | SWTest[]>(testList);
+  const isSWtest = useRef(false);
+
   useEffect(() => {
     setCurTests(testList);
   }, [testList]);
@@ -55,8 +57,10 @@ export default function TestsPage() {
     console.log(event.currentTarget.textContent?.toString() || "");
     setTestValue(newValue);
     if (newValue === 0) {
+      isSWtest.current = false;
       setCurTests(testList);
     } else {
+      isSWtest.current = true;
       setCurTests(swTestList);
     }
   };
@@ -99,7 +103,7 @@ export default function TestsPage() {
         <Tab label="2019" />
         <Tab label="2018" />
       </Tabs>
-      <TestCardGallery tests={curTests}></TestCardGallery>
+      <TestCardGallery isSWTestList={isSWtest.current} tests={curTests}></TestCardGallery>
     </motion.div>
   );
 }

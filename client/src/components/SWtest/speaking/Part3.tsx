@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Timer from "../Timer";
 import AudioRecorder from "../AudioRecorder";
 import { SWQuestion } from "@/entities";
-import { Part3SWTestTime } from "../SWTestTime";
+import { Time56ForPart3, Time7ForPart3 } from "../SWTestTime";
 interface Part3Props {
   question: SWQuestion;
   onComplete: (recordings: Blob) => void;
@@ -22,8 +22,8 @@ export default function Part3({ question, onComplete }: Part3Props) {
   // Get response time based on question number (15s for first two, 30s for last)
   const getResponseTime = (questionNumber: number) => {
     return questionNumber === 7
-      ? Part3SWTestTime.question7?.RecordingTime || 30
-      : Part3SWTestTime.question56?.RecordingTime || 15;
+      ? Time7ForPart3.RecordingTime || 30
+      : Time56ForPart3.RecordingTime || 15;
   };
 
   const handleDirectionEnd = () => {
@@ -65,7 +65,7 @@ export default function Part3({ question, onComplete }: Part3Props) {
             </h3>
             <div className="hidden">
               <Timer
-                initialSeconds={Part3SWTestTime.DirectionTime || 10}
+                initialSeconds={Time56ForPart3.DirectionTime || 10}
                 onTimeEnd={handleDirectionEnd}
                 isPreparation={false}
               />
@@ -74,9 +74,9 @@ export default function Part3({ question, onComplete }: Part3Props) {
         ) : (
           <div className="w-full">
             <div className="bg-gray-50 p-6 rounded-lg mb-8">
-              <h4 className="text-lg font-bold mb-4">{question.text}</h4>
+              <h4 className="text-lg font-bold mb-4">{question.passage}</h4>
               <p className="text-lg leading-relaxed">
-                Question: {question.passage}
+                Question: {question.text}
               </p>
             </div>
 
@@ -84,7 +84,7 @@ export default function Part3({ question, onComplete }: Part3Props) {
               <Timer
                 initialSeconds={
                   stage == "preparation"
-                    ? Part3SWTestTime.PreparationTime || 3
+                    ? Time7ForPart3.PreparationTime || 3
                     : getResponseTime(question.question_number)
                 }
                 onTimeEnd={

@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Timer from "../Timer";
 import TextEditor from "../TextEditor";
 import { SWQuestion } from "@/entities";
-import { Part8SWTestTime } from "../SWTestTime";
+import { TimeForPart8 } from "../SWTestTime";
 interface Part8Props {
   question: SWQuestion;
   onComplete: (answer: string) => void;
@@ -10,14 +10,14 @@ interface Part8Props {
 
 export default function Part8({ question, onComplete }: Part8Props) {
   const [stage, setStage] = useState<"direction" | "writing">("direction");
-  const [answer, setAnswer] = useState("");
+  const answer = useRef<string>("");
 
   const handleTimeEnd = () => {
-    onComplete(answer);
+    onComplete(answer.current);
   };
 
   const handleAnswerChange = (value: string) => {
-    setAnswer(value);
+    answer.current = value;
   };
 
   return (
@@ -40,7 +40,7 @@ export default function Part8({ question, onComplete }: Part8Props) {
             </h3>
             <div className="hidden">
               <Timer
-                initialSeconds={Part8SWTestTime.DirectionTime || 10}
+                initialSeconds={TimeForPart8.DirectionTime || 10}
                 onTimeEnd={() => setStage("writing")}
                 isPreparation={false}
               />
@@ -50,7 +50,7 @@ export default function Part8({ question, onComplete }: Part8Props) {
           <div className="flex flex-col gap-2">
             <div className="w-full flex justify-center items-center">
               <Timer
-                initialSeconds={Part8SWTestTime.RecordingTime || 1800}
+                initialSeconds={TimeForPart8.RecordingTime || 1800}
                 onTimeEnd={handleTimeEnd}
                 isPreparation={false}
               />

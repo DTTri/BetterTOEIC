@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Timer from "../Timer";
 import AudioRecorder from "../AudioRecorder";
 import { SWQuestion } from "@/entities";
-import { Part1SWTestTime } from "../SWTestTime";
+import { TimeForPart1 } from "../SWTestTime";
 
 interface Part1Props {
   question: SWQuestion;
@@ -56,14 +56,14 @@ export default function Part1({ question, onComplete }: Part1Props) {
               Question 1-2: Read aloud the text aloud.
             </h2>
             <h3 className="text-lg font-medium mb-4 inline-block">
-              Direction:In this part of the test, you will read aloud the text
+              Direction: In this part of the test, you will read aloud the text
               on the screen. You will have 45 seconds to prepare. Then you will
               have 45 seconds to read the text aloud.
             </h3>
             <p className="text-gray-700"></p>
             <div className="hidden">
               <Timer
-                initialSeconds={Part1SWTestTime.DirectionTime || 10}
+                initialSeconds={TimeForPart1.DirectionTime || 10}
                 onTimeEnd={handleDirectionEnd}
                 isPreparation={false}
               />
@@ -72,15 +72,15 @@ export default function Part1({ question, onComplete }: Part1Props) {
         ) : (
           <div className="w-full">
             <div className="bg-gray-50 p-6 rounded-lg mb-4">
-              <p className="text-lg leading-relaxed">{question.text}</p>
+              <p className="text-lg leading-relaxed">{question.passage}</p>
             </div>
 
             <div className="flex justify-center mb-6">
               <Timer
                 initialSeconds={
                   stage === "preparation"
-                    ? Part1SWTestTime.PreparationTime || 45
-                    : Part1SWTestTime.RecordingTime || 45
+                    ? TimeForPart1.PreparationTime || 45
+                    : TimeForPart1.RecordingTime || 45
                 }
                 onTimeEnd={
                   stage === "preparation"

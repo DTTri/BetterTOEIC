@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Timer from "../Timer";
 import TextEditor from "../TextEditor";
 import { SWQuestion } from "@/entities";
-import { Part7SWTestTime } from "../SWTestTime";
+import { TimeForPart7 } from "../SWTestTime";
 
 interface Part7Props {
   question: SWQuestion;
@@ -14,14 +14,14 @@ export default function Part7({ question, onComplete }: Part7Props) {
   useEffect(() => {
     setStage(question.question_number === 17 ? "direction" : "writing");
   }, [question]);
-  const [answer, setAnswer] = useState("");
+  const answer = useRef<string>("");
 
   const handleTimeEnd = () => {
-    onComplete(answer);
-  };
+    onComplete(answer.current);
+  }
 
   const handleAnswerChange = (value: string) => {
-    setAnswer(value);
+    answer.current = value;
   };
 
   return (
@@ -46,7 +46,7 @@ export default function Part7({ question, onComplete }: Part7Props) {
             </h3>
             <div className="hidden">
               <Timer
-                initialSeconds={Part7SWTestTime.DirectionTime || 10}
+                initialSeconds={TimeForPart7.DirectionTime || 10}
                 onTimeEnd={() => setStage("writing")}
                 isPreparation={false}
               />
@@ -56,7 +56,7 @@ export default function Part7({ question, onComplete }: Part7Props) {
           <div className="flex flex-col gap-2">
             <div className="w-full flex justify-center items-center">
               <Timer
-                initialSeconds={Part7SWTestTime.RecordingTime || 600}
+                initialSeconds={TimeForPart7.RecordingTime || 600}
                 onTimeEnd={handleTimeEnd}
                 isPreparation={false}
               />
@@ -65,7 +65,7 @@ export default function Part7({ question, onComplete }: Part7Props) {
               <div className="space-y-4">
                 <div className="w-full">
                   <div className="text-gray-600 whitespace-pre-line">
-                    {question.text}
+                    {question.passage}
                   </div>
                 </div>
                 {/* Can replace with the request of the question

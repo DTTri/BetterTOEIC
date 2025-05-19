@@ -200,7 +200,7 @@ export default function Conversation({
       whileInView={{ x: -85, y: 0, scale: 1 }}
       exit={{ x: 150, y: 200, scale: 0 }}
       onAnimationComplete={handleAnimationComplete}
-      className="fixed z-[2000] right-0 bottom-6 w-[450px] h-[600px] bg-[#fff] rounded-[24px] shadow-md shadow-slate-400 overflow-hidden"
+      className="fixed z-[2000] right-4 bottom-12 w-[450px] h-[600px] bg-[#fff] rounded-[24px] shadow-md shadow-slate-400 overflow-hidden"
     >
       <div className="title flex flex-row items-center py-4 px-6 border-b-[1px] border-b-slate-200">
         <RemoveIcon

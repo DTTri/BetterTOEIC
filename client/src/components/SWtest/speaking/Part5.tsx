@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Timer from "../Timer";
 import AudioRecorder from "../AudioRecorder";
 import { SWQuestion } from "@/entities";
-import { Part5SWTestTime } from "../SWTestTime";
+import { TimeForPart5 } from "../SWTestTime";
 interface Part5Props {
   question: SWQuestion;
   onComplete: (recording: Blob) => void;
@@ -56,7 +56,7 @@ export default function Part5({ question, onComplete }: Part5Props) {
             </h3>
             <div className="hidden">
               <Timer
-                initialSeconds={Part5SWTestTime.DirectionTime || 10}
+                initialSeconds={TimeForPart5.DirectionTime || 10}
                 onTimeEnd={handleDirectionEnd}
                 isPreparation={false}
               />
@@ -74,8 +74,8 @@ export default function Part5({ question, onComplete }: Part5Props) {
               <Timer
                 initialSeconds={
                   stage === "preparation"
-                    ? Part5SWTestTime.PreparationTime || 45
-                    : Part5SWTestTime.RecordingTime || 60
+                    ? TimeForPart5.PreparationTime || 45
+                    : TimeForPart5.RecordingTime || 60
                 }
                 onTimeEnd={
                   stage === "preparation"
