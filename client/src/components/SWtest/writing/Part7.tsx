@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import {  useCallback, useEffect, useRef, useState } from "react";
 import Timer from "../Timer";
 import TextEditor from "../TextEditor";
 import { SWQuestion } from "@/entities";
@@ -17,12 +17,26 @@ export default function Part7({ question, onComplete }: Part7Props) {
   const answer = useRef<string>("");
 
   const handleTimeEnd = () => {
+    console.log(`Question ${question.question_number} + 1}: ${answer.current}`);
     onComplete(answer.current);
+    answer.current = "";
   }
 
   const handleAnswerChange = (value: string) => {
     answer.current = value;
   };
+
+  const renderTextEditor = useCallback(() => {
+    return (
+      <TextEditor
+        key={question.question_number}
+        initialValue={answer.current}
+        onChange={handleAnswerChange}
+        placeholder="Write your email response here..."
+        minHeight="400px"
+      />
+    )
+  }, [question]);
 
   return (
     <div className="max-w-4xl mx-auto p-6">
@@ -64,9 +78,14 @@ export default function Part7({ question, onComplete }: Part7Props) {
             <div className="bg-gray-50 p-4 rounded-lg">
               <div className="space-y-4">
                 <div className="w-full">
-                  <div className="text-gray-600 whitespace-pre-line">
-                    {question.passage}
-                  </div>
+                  <p className="text-gray-700 whitespace-pre-wrap">
+                    {question.passage?.split(/\r\n|\\n|\n/g).map((line, index, array) => (
+                      <span key={index}>
+                        {line}
+                        {index < array.length - 1 && <br />}
+                      </span>
+                    ))}
+                  </p>
                 </div>
                 {/* Can replace with the request of the question
               <div className="text-gray-800 whitespace-pre-line">
@@ -76,11 +95,7 @@ export default function Part7({ question, onComplete }: Part7Props) {
             </div>
 
             <div className="space-y-4">
-              <TextEditor
-                onChange={handleAnswerChange}
-                placeholder="Write your email response here..."
-                minHeight="400px"
-              />
+              {renderTextEditor()}
             </div>
           </div>
         )}

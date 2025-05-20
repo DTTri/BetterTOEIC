@@ -13,6 +13,7 @@ export default function Part8({ question, onComplete }: Part8Props) {
   const answer = useRef<string>("");
 
   const handleTimeEnd = () => {
+    console.log(`Question ${question.question_number} + 1}: ${answer.current}`);
     onComplete(answer.current);
   };
 
@@ -56,8 +57,8 @@ export default function Part8({ question, onComplete }: Part8Props) {
               />
             </div>
             <div className="space-y-6">
-              <div className="bg-gray-50 p-6 rounded-lg">
-                <h4 className="text-lg font-semibold mb-4">
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h4 className="text-lg font-semibold mb-3">
                   Question: {question.text}
                 </h4>
               </div>
@@ -65,6 +66,8 @@ export default function Part8({ question, onComplete }: Part8Props) {
 
             <div className="space-y-4">
               <TextEditor
+                key={question.question_number}
+                initialValue={answer.current}
                 onChange={handleAnswerChange}
                 placeholder="Write your essay here..."
                 minHeight="600px"

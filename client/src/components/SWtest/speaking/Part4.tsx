@@ -10,12 +10,12 @@ interface Part4Props {
 }
 
 export default function Part4({ question, onComplete }: Part4Props) {
-  const [stage, setStage] = useState<"direction" | "preparation" | "recording">(
+  const [stage, setStage] = useState<"direction" | "preparation" | "audio" | "recording">(
     "preparation"
   );
 
   useEffect(() => {
-    setStage(question.question_number === 8 ? "direction" : "preparation");
+    setStage(question.question_number === 8 ? "direction" : "audio");
   }, [question]);
 
   const [isRecording, setIsRecording] = useState(false);
@@ -28,13 +28,18 @@ export default function Part4({ question, onComplete }: Part4Props) {
   };
 
   const handleDirectionEnd = () => {
-    setStage("preparation");
+    setStage("audio");
   };
 
   const handlePreparationEnd = () => {
     setStage("recording");
     setIsRecording(true);
   };
+
+  const handleAudioEnd = () => {
+    setStage("preparation");
+    console.log("Audio ended");
+  }
 
   const handleRecordingEnd = () => {
     setIsRecording(false);
@@ -52,6 +57,16 @@ export default function Part4({ question, onComplete }: Part4Props) {
           QUESTION {question.question_number} OF 19
         </h2>
       </div>
+
+      { stage === "audio" && (
+        <audio
+          src={question.question_audio}
+          className="hidden"
+          controls
+          autoPlay
+          onEnded={handleAudioEnd}
+        />
+      )}
 
       <div className="bg-white rounded-b-lg shadow-lg p-6 space-y-6">
         {stage === "direction" ? (

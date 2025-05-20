@@ -16,13 +16,11 @@ export default function Timer({
 
   useEffect(() => {
     setSeconds(initialSeconds);
-    console.log("initial seconds" + initialSeconds);
   }, [onTimeEnd]);
 
   useEffect(() => {
     if (seconds <= 0) {
       onTimeEnd();
-      console.log("time end");
       return;
     }
 
