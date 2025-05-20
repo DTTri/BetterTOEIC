@@ -8,7 +8,6 @@ import Part6 from "./writing/Part6";
 import Part7 from "./writing/Part7";
 import Part8 from "./writing/Part8";
 import { SWQuestion } from "@/entities";
-import GetSWPart from "@/utils/GetSWPart";
 import getSWPart from "@/utils/GetSWPart";
 
 //type TestSection = "speaking" | "writing";
@@ -45,14 +44,12 @@ export default function TestNavigator({
     const currentQNumber = questions[currentQuestion]?.question_number;
 
     if (currentQNumber === 19) {
-      console.log("[TestNavigator] Đã xử lý xong câu 19. Chờ useEffect gọi onComplete cuối cùng.");
-      return; // Không chuyển câu hỏi nữa
+      return;
     }
 
     if (currentPart === 6) {
       // Part 6 (Q12-Q16) gọi onComplete một lần với tất cả các câu trả lời của nó.
-      // Cần chuyển đến câu hỏi đầu tiên của Part tiếp theo (Part 7 - Q17).
-      let nextPartNumber = currentPart + 1; // Mục tiêu là Part 7
+      let nextPartNumber = currentPart + 1;
       let indexOfNextPartStart = -1;
 
       // Tìm index của câu hỏi đầu tiên thuộc Part tiếp theo
@@ -76,7 +73,7 @@ export default function TestNavigator({
   };
 
   useEffect(() => {
-    if (questions[currentQuestion]) { // Đảm bảo câu hỏi tồn tại
+    if (questions[currentQuestion]) {
       setCurrentPart(getSWPart(questions[currentQuestion].question_number));
     }
   }, [currentQuestion, questions]);
@@ -100,12 +97,12 @@ export default function TestNavigator({
     handleNextQuestion();
   };
 
-  useEffect(() => {
-    console.log("[TestNavigator] speakingRecordings đã cập nhật:", speakingRecordings);
-  }, [speakingRecordings]);
-  useEffect(() => {
-    console.log("[TestNavigator] writingAnswers đã cập nhật:", writingAnswers);
-  }, [writingAnswers]);
+  // useEffect(() => {
+  //   console.log("[TestNavigator] speakingRecordings đã cập nhật:", speakingRecordings);
+  // }, [speakingRecordings]);
+  // useEffect(() => {
+  //   console.log("[TestNavigator] writingAnswers đã cập nhật:", writingAnswers);
+  // }, [writingAnswers]);
 
   const renderCurrentPart = () => {
     if (isTestCompleted || !questions[currentQuestion]) {
@@ -180,18 +177,17 @@ export default function TestNavigator({
     const writingQuestionsCount = questions.filter(q => getSWPart(q.question_number) >= 6).length;
 
     // Log để kiểm tra điều kiện gọi onComplete cuối cùng
-    console.log(`[TestNavigator] Kiểm tra onComplete cuối cùng:
-      Speaking: ${speakingRecordings.length}/${speakingQuestionsCount}
-      Writing: ${writingAnswers.length}/${writingQuestionsCount}`);
-    if (writingAnswers.length > 0 && writingAnswers.length < writingQuestionsCount) {
-       console.log("[TestNavigator] Nội dung writingAnswers hiện tại:", writingAnswers);
-    }
+    // console.log(`[TestNavigator] Kiểm tra onComplete cuối cùng:
+    //   Speaking: ${speakingRecordings.length}/${speakingQuestionsCount}
+    //   Writing: ${writingAnswers.length}/${writingQuestionsCount}`);
+    // if (writingAnswers.length > 0 && writingAnswers.length < writingQuestionsCount) {
+    //    console.log("[TestNavigator] Nội dung writingAnswers hiện tại:", writingAnswers);
+    // }
 
     if (speakingRecordings.length === speakingQuestionsCount &&
         writingAnswers.length === writingQuestionsCount) {
-      console.log("[TestNavigator] Bài thi hoàn thành! Đang hoàn tất kết quả với:", { speakingRecordings, writingAnswers });
-      //onComplete({ speakingRecordings, writingAnswers });
-      setIsTestCompleted(true); // Ngăn việc gọi lại onComplete
+      onComplete({ speakingRecordings, writingAnswers });
+      setIsTestCompleted(true);
     }
   }, [speakingRecordings, writingAnswers, questions, onComplete, isTestCompleted]);
 
