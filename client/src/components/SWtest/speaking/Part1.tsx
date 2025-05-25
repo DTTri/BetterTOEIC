@@ -72,7 +72,7 @@ export default function Part1({ question, onComplete }: Part1Props) {
         ) : (
           <div className="w-full">
             <div className="bg-gray-50 p-6 rounded-lg mb-4">
-              <p className="text-lg leading-relaxed">{question.text}</p>
+              <p className="text-lg leading-relaxed">{question.passage}</p>
             </div>
 
             <div className="flex justify-center mb-6">
