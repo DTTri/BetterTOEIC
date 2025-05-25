@@ -26,12 +26,18 @@ class HuggingFaceService {
     this.openaiApiKey = process.env.OPENAI_API_KEY || '';
     this.huggingFaceBaseUrl = 'https://api-inference.huggingface.co/models/';
     this.openaiBaseUrl = 'https://api.openai.com/v1/';
-    this.llmModel = process.env.LLM_MODEL || '';
-    this.fallbackLlmModel = process.env.FALLBACK_LLM_MODEL || '';
-    this.sttModel = process.env.STT_MODEL || '';
-    this.multimodalModel = process.env.MULTIMODAL_MODEL || '';
+    this.llmModel = process.env.LLM_MODEL || 'microsoft/phi-2';
+    this.fallbackLlmModel = process.env.FALLBACK_LLM_MODEL || 'google/flan-t5-large';
+    this.sttModel = process.env.STT_MODEL || 'openai/whisper-small';
+    this.multimodalModel = process.env.MULTIMODAL_MODEL || 'gpt-4o-mini';
     this.responseCache = new Map<string, CacheEntry>();
     this.cacheTTL = 24 * 60 * 60 * 1000;
+
+    // Log configuration for debugging
+    console.log('HuggingFaceService initialized with:');
+    console.log(`- Multimodal Model: ${this.multimodalModel}`);
+    console.log(`- OpenAI API Key available: ${this.openaiApiKey ? 'Yes' : 'No'}`);
+    console.log(`- OpenAI Base URL: ${this.openaiBaseUrl}`);
   }
 
   async evaluateSWTest(
@@ -499,9 +505,7 @@ class HuggingFaceService {
     }
   }
 
-  /**
-   * Evaluates a response using OpenAI's multimodal model that can process both text and images
-   */
+  // for questions that have images
   private async evaluateWithMultimodalModel(
     answer: string,
     questionNumber: number,
@@ -511,25 +515,22 @@ class HuggingFaceService {
     isSpoken: boolean = false,
     questionAudio?: string
   ): Promise<string> {
-    // For questions 1 and 2 (read aloud), add special instructions
+    // For questions 1 and 2
     const isReadAloudQuestion = questionNumber === 1 || questionNumber === 2;
+    let messageContent: any[] = [];
+
     try {
-      // Check if OpenAI API key is available
       if (!this.openaiApiKey || this.openaiApiKey === '123') {
         console.warn('OpenAI API key not available or is a placeholder');
         return this.generateFallbackMultimodalResponse(answer, questionNumber, isSpoken);
       }
-
-      // Prepare the message content array
       const content: any[] = [];
 
-      // Add the system message
       content.push({
         type: 'text',
         text: this.createMultimodalSystemPrompt(isSpoken),
       });
 
-      // Add the question context
       let questionContext = `You are evaluating a ${isSpoken ? 'speaking' : 'writing'} response for TOEIC question #${questionNumber}.\n\n`;
       questionContext += `Question: ${questionText}\n`;
 
@@ -546,7 +547,6 @@ class HuggingFaceService {
         text: questionContext,
       });
 
-      // Add images if available
       if (imageBuffers && imageBuffers.length > 0) {
         for (const imageBuffer of imageBuffers) {
           const base64Image = imageBuffer.toString('base64');
@@ -564,13 +564,11 @@ class HuggingFaceService {
         });
       }
 
-      // Add the user's answer
       content.push({
         type: 'text',
         text: `Test-taker's ${isSpoken ? 'transcribed speaking' : 'writing'} response:\n"${answer}"\n\nPlease evaluate this response based on TOEIC criteria.`,
       });
 
-      // Add the evaluation instructions
       if (isReadAloudQuestion) {
         content.push({
           type: 'text',
@@ -583,29 +581,32 @@ class HuggingFaceService {
         });
       }
 
-      // Make the API call
       console.log(`Sending multimodal evaluation request to OpenAI for question ${questionNumber}`);
+      console.log(`Using model: ${this.multimodalModel}`);
+      console.log(`API endpoint: ${this.openaiBaseUrl}chat/completions`);
 
-      const response = await axios.post(
-        `${this.openaiBaseUrl}chat/completions`,
-        {
-          model: this.multimodalModel,
-          messages: [
-            {
-              role: 'user',
-              content: content,
-            },
-          ],
-          max_tokens: 1000,
-          temperature: 0.2,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${this.openaiApiKey}`,
-            'Content-Type': 'application/json',
+      const requestBody = {
+        model: this.multimodalModel,
+        messages: [
+          {
+            role: 'user',
+            content: content,
           },
-        }
-      );
+        ],
+        max_tokens: 1000,
+        temperature: 0.2,
+      };
+
+      console.log(`Request body (content items): ${content.length} items`);
+
+      messageContent = content;
+
+      const response = await axios.post(`${this.openaiBaseUrl}chat/completions`, requestBody, {
+        headers: {
+          Authorization: `Bearer ${this.openaiApiKey}`,
+          'Content-Type': 'application/json',
+        },
+      });
 
       if (response.data && response.data.choices && response.data.choices[0]) {
         console.log(`Successfully received multimodal evaluation for question ${questionNumber}`);
@@ -615,14 +616,74 @@ class HuggingFaceService {
         return this.generateFallbackMultimodalResponse(answer, questionNumber, isSpoken);
       }
     } catch (error: any) {
-      console.error(`Error with multimodal evaluation: ${error.message || 'Unknown error'}`);
+      console.error(`Error with multimodal evaluation for question ${questionNumber}:`);
+
+      if (error.response) {
+        console.error(`Status: ${error.response.status}`);
+        console.error(`Status Text: ${error.response.statusText}`);
+        console.error(`Response Data:`, JSON.stringify(error.response.data, null, 2));
+
+        if (error.response.status === 404) {
+          console.error(`Model '${this.multimodalModel}' not found. Trying fallback models...`);
+
+          // Try fallback models
+          const fallbackModels = ['gpt-4o-mini', 'gpt-4-turbo', 'gpt-4'];
+          for (const fallbackModel of fallbackModels) {
+            if (fallbackModel !== this.multimodalModel) {
+              try {
+                console.log(`Trying fallback multimodal model: ${fallbackModel}`);
+
+                const fallbackRequestBody = {
+                  model: fallbackModel,
+                  messages: [
+                    {
+                      role: 'user',
+                      content: messageContent,
+                    },
+                  ],
+                  max_tokens: 1000,
+                  temperature: 0.2,
+                };
+
+                const fallbackResponse = await axios.post(
+                  `${this.openaiBaseUrl}chat/completions`,
+                  fallbackRequestBody,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${this.openaiApiKey}`,
+                      'Content-Type': 'application/json',
+                    },
+                  }
+                );
+
+                if (fallbackResponse.data && fallbackResponse.data.choices && fallbackResponse.data.choices[0]) {
+                  console.log(`Successfully received multimodal evaluation using fallback model: ${fallbackModel}`);
+                  return fallbackResponse.data.choices[0].message.content;
+                }
+              } catch (fallbackError: any) {
+                console.error(
+                  `Fallback model ${fallbackModel} also failed:`,
+                  fallbackError.response?.status || fallbackError.message
+                );
+              }
+            }
+          }
+        } else if (error.response.status === 401) {
+          console.error('Authentication failed. Check your OpenAI API key.');
+        } else if (error.response.status === 429) {
+          console.error('Rate limit exceeded. Please try again later.');
+        }
+      } else if (error.request) {
+        console.error('No response received from OpenAI API');
+        console.error('Request details:', error.request);
+      } else {
+        console.error('Error setting up request:', error.message);
+      }
+
       return this.generateFallbackMultimodalResponse(answer, questionNumber, isSpoken);
     }
   }
 
-  /**
-   * Creates a system prompt for the multimodal model
-   */
   private createMultimodalSystemPrompt(isSpoken: boolean): string {
     if (isSpoken) {
       return `You are an expert TOEIC Speaking evaluator with years of experience. You will evaluate a transcribed speaking response for a TOEIC test question that may include images.`;
@@ -630,10 +691,6 @@ class HuggingFaceService {
       return `You are an expert TOEIC Writing evaluator with years of experience. You will evaluate a written response for a TOEIC test question that may include images.`;
     }
   }
-
-  /**
-   * Creates evaluation instructions for the multimodal model
-   */
   private createMultimodalEvaluationInstructions(isSpoken: boolean): string {
     let instructions = `Please provide your evaluation in the following format:\n\n`;
 
@@ -655,9 +712,7 @@ class HuggingFaceService {
     return instructions;
   }
 
-  /**
-   * Creates evaluation instructions specifically for read-aloud questions (1-2)
-   */
+  // for questions 1 and 2
   private createReadAloudEvaluationInstructions(): string {
     return `Please provide your evaluation in the following format:\n\n
 EVALUATION: [Provide a detailed evaluation (100-150 words) focusing on pronunciation, intonation, stress, rhythm, and clarity. Evaluate how accurately the test-taker read the text without adding or omitting words.]\n\n
@@ -671,9 +726,7 @@ SCORE: [Provide a single number between 0-5, where:
 5 = Demonstrates excellent proficiency (near-native pronunciation, very few errors)]`;
   }
 
-  /**
-   * Generates a fallback response when multimodal evaluation fails
-   */
+  // fallback for multimodal failed cases
   private generateFallbackMultimodalResponse(_answer: string, questionNumber: number, isSpoken: boolean): string {
     return `EVALUATION: Due to technical limitations, we couldn't provide a detailed evaluation of your ${isSpoken ? 'speaking' : 'writing'} response for question ${questionNumber}. Your response has been recorded and will be evaluated by our team.
 
