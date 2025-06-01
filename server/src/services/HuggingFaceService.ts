@@ -621,7 +621,6 @@ class HuggingFaceService {
       if (error.response) {
         console.error(`Status: ${error.response.status}`);
         console.error(`Status Text: ${error.response.statusText}`);
-        console.error(`Response Data:`, JSON.stringify(error.response.data, null, 2));
 
         if (error.response.status === 404) {
           console.error(`Model '${this.multimodalModel}' not found. Trying fallback models...`);
@@ -661,10 +660,7 @@ class HuggingFaceService {
                   return fallbackResponse.data.choices[0].message.content;
                 }
               } catch (fallbackError: any) {
-                console.error(
-                  `Fallback model ${fallbackModel} also failed:`,
-                  fallbackError.response?.status || fallbackError.message
-                );
+                console.error(`Fallback model ${fallbackModel} also failed:`);
               }
             }
           }
@@ -675,7 +671,6 @@ class HuggingFaceService {
         }
       } else if (error.request) {
         console.error('No response received from OpenAI API');
-        console.error('Request details:', error.request);
       } else {
         console.error('Error setting up request:', error.message);
       }
@@ -812,8 +807,6 @@ SCORE: 3`;
             this.cacheResponse(cacheKey, fallbackResponse);
             return fallbackResponse;
           } catch (fallbackError: any) {
-            console.error('Fallback model also failed:', fallbackError.message || 'Unknown error');
-
             try {
               console.log('Both Hugging Face models failed, trying OpenAI...');
               const openaiResponse = await this.callOpenAIAPI(prompt);
@@ -1009,7 +1002,7 @@ SCORE: [Single number between 0-5]`;
 
       return { evaluation, sampleAnswer, score };
     } catch (error) {
-      console.error('Error parsing LLM response:', error);
+      console.error('Error parsing LLM response:');
       return { evaluation: 'Error evaluating response', sampleAnswer: '', score: 0 };
     }
   }
@@ -1111,7 +1104,7 @@ SCORE: [Single number between 0-5]`;
 
       return null;
     } catch (error) {
-      console.error('Error in flexible parsing:', error);
+      console.error('Error in flexible parsing:');
       return null;
     }
   }

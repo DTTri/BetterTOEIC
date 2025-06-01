@@ -29,7 +29,7 @@ export default function AdminLayout() {
   return (
     <div className="min-h-screen w-full overflow-y-auto flex flex-col bg-background">
       <Header />
-      <div className="flex flex-1">
+      <div className="flex flex-1 h-full">
         <SideBar />
         <motion.div
           initial={{ opacity: 0, translateX: -20 }}
