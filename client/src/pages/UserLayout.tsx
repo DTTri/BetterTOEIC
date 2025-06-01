@@ -23,6 +23,7 @@ export default function UserLayout({
   passAll?: boolean;
   haveChatBot?: boolean;
 }) {
+  const findUser = sUser.use((state) => state.info);
   const [isOpenChatBot, setIsOpenChatBot] = useState<boolean>(false);
   const handleOpenChatBot = () => {
     setIsOpenChatBot(!isOpenChatBot);
@@ -50,7 +51,6 @@ export default function UserLayout({
       </div>
     );
   }
-  const findUser = sUser.use((state) => state.info);
   const token =
     localStorage.getItem("token") || sessionStorage.getItem("token");
   const curUserId =
@@ -59,12 +59,9 @@ export default function UserLayout({
     sUser.reset();
     return <Navigate to="/login" />;
   }
-
-  if (!findUser._id) {
+  if (!findUser) {
     return <LoadingProgress />;
   }
-  console.log("id 2" + findUser._id);
-  console.log("id 1" + curUserId);
   if (findUser._id !== curUserId) {
     sUser.reset();
     return <Navigate to="/login" />;

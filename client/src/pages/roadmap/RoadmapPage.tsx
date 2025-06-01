@@ -14,9 +14,6 @@ export default function RoadmapPage() {
   const [isConfirmResetRoadmapPopupOpen, setIsConfirmResetRoadmapPopupOpen] =
     useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
-  sRoadmap.watch((newValue) => {
-    console.log("sRoadmap: " + newValue.exercises);
-  }, []);
   useEffect(() => {
     if (userRoadmap) {
       const completedChapters = userRoadmap.completedRoadmapExercises.filter(
