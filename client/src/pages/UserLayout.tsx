@@ -10,7 +10,6 @@ import "swiper/css/scrollbar";
 import { ReactNode, useState } from "react";
 import Conversation from "@/components/chat-bot/Conversation";
 
-
 export default function UserLayout({
   children,
   haveHeader = true,
@@ -24,24 +23,27 @@ export default function UserLayout({
   passAll?: boolean;
   haveChatBot?: boolean;
 }) {
-  const [isOpenChatBot, setIsOpenChatBot] = useState<Boolean>(false);
+  const [isOpenChatBot, setIsOpenChatBot] = useState<boolean>(false);
   const handleOpenChatBot = () => {
-    setIsOpenChatBot(!isOpenChatBot)
-  }
+    setIsOpenChatBot(!isOpenChatBot);
+  };
   if (passAll) {
     return (
-      <div className="w-full overflow-y-auto bg-gray-100">
-        {haveChatBot && 
-          <div onClick={handleOpenChatBot} className="fixed z-[1000] h-[60px] w-[60px] overflow-hidden rounded-full right-8 bottom-10 hover:shadow-md cursor-pointer">
+      <div className="w-full overflow-y-auto bg-background">
+        {haveChatBot && (
+          <div
+            onClick={handleOpenChatBot}
+            className="fixed z-[1000] h-[60px] w-[60px] overflow-hidden rounded-full right-8 bottom-10 hover:shadow-md cursor-pointer"
+          >
             <img
               src={chatIcon}
               className="w-full h-full block object-cover object-center"
             />
           </div>
-        }
-        {
-          (isOpenChatBot && haveChatBot) && <Conversation handleCloseChatBot={() => setIsOpenChatBot(false)}/>
-        }
+        )}
+        {isOpenChatBot && haveChatBot && (
+          <Conversation handleCloseChatBot={() => setIsOpenChatBot(false)} />
+        )}
         {haveHeader && <Header />}
         <div className="w-full min-h-screen h-full">{children}</div>
         {haveFooter && <Footer />}
@@ -69,18 +71,21 @@ export default function UserLayout({
   }
 
   return (
-    <div className="w-full overflow-y-auto bg-gray-100">
-      {haveChatBot && 
-        <div onClick={handleOpenChatBot} className="fixed z-[1000] h-[60px] w-[60px] overflow-hidden rounded-full right-8 bottom-10 hover:shadow-md cursor-pointer">
+    <div className="w-full overflow-y-auto bg-background">
+      {haveChatBot && (
+        <div
+          onClick={handleOpenChatBot}
+          className="fixed z-[1000] h-[60px] w-[60px] overflow-hidden rounded-full right-8 bottom-10 hover:shadow-md cursor-pointer"
+        >
           <img
             src={chatIcon}
             className="w-full h-full block object-cover object-center"
           />
         </div>
-      }
-      {
-        (isOpenChatBot && haveChatBot) && <Conversation handleCloseChatBot={() => setIsOpenChatBot(false)}/>
-      }
+      )}
+      {isOpenChatBot && haveChatBot && (
+        <Conversation handleCloseChatBot={() => setIsOpenChatBot(false)} />
+      )}
       {haveHeader && <Header />}
       <div className="w-full min-h-screen h-full">{children}</div>
       {haveFooter && <Footer />}
