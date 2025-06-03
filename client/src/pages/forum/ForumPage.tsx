@@ -6,8 +6,7 @@ import LoadingProgress from "@/components/LoadingProgress";
 import Post from "@/entities/Post";
 import { sUser } from "@/store";
 import sForum from "@/store/forumStore";
-import { Suspense, useEffect, useState } from "react";
-import { LazyMotion, domAnimation } from "motion/react";
+import { useEffect, useState } from "react";
 import { LazyLoadComponent } from "react-lazy-load-image-component";
 import { PostComponentSkeleton } from "@/components/forum/skeletons";
 
@@ -36,7 +35,7 @@ export default function ForumPage() {
 
   const filterPost = (baseOn: string, arrange: string) => {
     console.log(baseOn, arrange);
-    let sortedPosts = [...forumStore]; // Create a new array
+    const sortedPosts = [...forumStore]; // Create a new array
 
     if (arrange === "up") {
       if (baseOn === "totalLike" || baseOn === "comments") {

@@ -1,4 +1,4 @@
-import {  useCallback, useEffect, useRef, useState } from "react";
+import {  useEffect, useRef, useState } from "react";
 import Timer from "../Timer";
 import TextEditor from "../TextEditor";
 import { SWQuestion } from "@/entities";
