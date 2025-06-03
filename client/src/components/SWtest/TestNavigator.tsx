@@ -97,12 +97,12 @@ export default function TestNavigator({
     handleNextQuestion();
   };
 
-  // useEffect(() => {
-  //   console.log("[TestNavigator] speakingRecordings đã cập nhật:", speakingRecordings);
-  // }, [speakingRecordings]);
-  // useEffect(() => {
-  //   console.log("[TestNavigator] writingAnswers đã cập nhật:", writingAnswers);
-  // }, [writingAnswers]);
+  useEffect(() => {
+    console.log("[TestNavigator] speakingRecordings đã cập nhật:", speakingRecordings);
+  }, [speakingRecordings]);
+  useEffect(() => {
+    console.log("[TestNavigator] writingAnswers đã cập nhật:", writingAnswers);
+  }, [writingAnswers]);
 
   const renderCurrentPart = () => {
     if (isTestCompleted || !questions[currentQuestion]) {
@@ -177,12 +177,12 @@ export default function TestNavigator({
     const writingQuestionsCount = questions.filter(q => getSWPart(q.question_number) >= 6).length;
 
     // Log để kiểm tra điều kiện gọi onComplete cuối cùng
-    // console.log(`[TestNavigator] Kiểm tra onComplete cuối cùng:
-    //   Speaking: ${speakingRecordings.length}/${speakingQuestionsCount}
-    //   Writing: ${writingAnswers.length}/${writingQuestionsCount}`);
-    // if (writingAnswers.length > 0 && writingAnswers.length < writingQuestionsCount) {
-    //    console.log("[TestNavigator] Nội dung writingAnswers hiện tại:", writingAnswers);
-    // }
+    console.log(`[TestNavigator] Kiểm tra onComplete cuối cùng:
+      Speaking: ${speakingRecordings.length}/${speakingQuestionsCount}
+      Writing: ${writingAnswers.length}/${writingQuestionsCount}`);
+    if (writingAnswers.length > 0 && writingAnswers.length < writingQuestionsCount) {
+       console.log("[TestNavigator] Nội dung writingAnswers hiện tại:", writingAnswers);
+    }
 
     if (speakingRecordings.length === speakingQuestionsCount &&
         writingAnswers.length === writingQuestionsCount) {

@@ -10,9 +10,9 @@ interface Part4Props {
 }
 
 export default function Part4({ question, onComplete }: Part4Props) {
-  const [stage, setStage] = useState<"direction" | "preparation" | "audio" | "recording">(
-    "preparation"
-  );
+  const [stage, setStage] = useState<
+    "direction" | "preparation" | "audio" | "recording"
+  >("preparation");
 
   useEffect(() => {
     setStage(question.question_number === 8 ? "direction" : "audio");
@@ -39,7 +39,7 @@ export default function Part4({ question, onComplete }: Part4Props) {
   const handleAudioEnd = () => {
     setStage("preparation");
     console.log("Audio ended");
-  }
+  };
 
   const handleRecordingEnd = () => {
     setIsRecording(false);
@@ -58,7 +58,7 @@ export default function Part4({ question, onComplete }: Part4Props) {
         </h2>
       </div>
 
-      { stage === "audio" && (
+      {stage === "audio" && (
         <audio
           src={question.question_audio}
           className="hidden"
@@ -108,19 +108,21 @@ export default function Part4({ question, onComplete }: Part4Props) {
             </div>
 
             <div className="flex justify-center mb-6">
-              <Timer
-                initialSeconds={
-                  stage == "preparation"
-                    ? Time10ForPart4.PreparationTime || 3
-                    : getResponseTime(question.question_number)
-                }
-                onTimeEnd={
-                  stage == "preparation"
-                    ? handlePreparationEnd
-                    : handleRecordingEnd
-                }
-                isPreparation={stage === "preparation"}
-              />
+              {stage !== "audio" && (
+                <Timer
+                  initialSeconds={
+                    stage == "preparation"
+                      ? Time10ForPart4.PreparationTime || 3
+                      : getResponseTime(question.question_number)
+                  }
+                  onTimeEnd={
+                    stage == "preparation"
+                      ? handlePreparationEnd
+                      : handleRecordingEnd
+                  }
+                  isPreparation={stage === "preparation"}
+                />
+              )}
             </div>
 
             <div className="flex justify-center">

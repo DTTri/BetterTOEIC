@@ -26,7 +26,7 @@ export default function Part7({ question, onComplete }: Part7Props) {
     answer.current = value;
   };
 
-  const renderTextEditor = useCallback(() => {
+  const renderTextEditor = () => {
     return (
       <TextEditor
         key={question.question_number}
@@ -36,7 +36,7 @@ export default function Part7({ question, onComplete }: Part7Props) {
         minHeight="400px"
       />
     )
-  }, [question]);
+  };
 
   return (
     <div className="max-w-4xl mx-auto p-6">
@@ -79,6 +79,9 @@ export default function Part7({ question, onComplete }: Part7Props) {
               <div className="space-y-4">
                 <div className="w-full">
                   <p className="text-gray-700 whitespace-pre-wrap">
+                    {/* I don't know why the text in this tag cannot be wrapped :"( 
+                      So I use the split method to add <br /> tags
+                    " */}
                     {question.passage?.split(/\r\n|\\n|\n/g).map((line, index, array) => (
                       <span key={index}>
                         {line}

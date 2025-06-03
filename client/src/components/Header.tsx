@@ -28,7 +28,6 @@ export default function Header() {
       "/user-info",
       "/user-report",
       "/test-saved",
-      "/word-saved",
     ];
     if (!headerPaths.includes(location.pathname)) {
       setSelectedItem("");
@@ -83,9 +82,6 @@ export default function Header() {
         break;
       case "report":
         nav("/user-report");
-        break;
-      case "word-saved":
-        nav("/word-saved");
         break;
       case "test-saved":
         nav("/test-saved");
@@ -232,7 +228,7 @@ export default function Header() {
                       </div>
                     </div>
                   </SelectTrigger>
-                  <SelectContent className="bg-white border border-gray-200 shadow-lg rounded-lg">
+                  <SelectContent className="bg-white border w- border-gray-200 shadow-lg rounded-lg">
                     <motion.div
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -247,7 +243,7 @@ export default function Header() {
                             value="admin"
                             className="hover:bg-blue-50 hover:text-blue-700"
                           >
-                            <AdminPanelSettingsIcon className="mr-2 text-sm" />
+                            <AdminPanelSettingsIcon className="mr-1 text-sm" />
                             Admin Dashboard
                           </SelectItemWithText>
                         )}
@@ -267,17 +263,11 @@ export default function Header() {
                           value="test-saved"
                           className="hover:bg-gray-50"
                         >
-                          Saved Tests
-                        </SelectItemWithText>
-                        <SelectItemWithText
-                          value="word-saved"
-                          className="hover:bg-gray-50"
-                        >
-                          Saved Words
+                          Saved List
                         </SelectItemWithText>
                         <SelectItemWithText
                           value="log-out"
-                          className="hover:bg-red-50 hover:text-red-700 border-t border-gray-100"
+                          className="hover:bg-red-50 hover:text-red-700 border-t border-gray-200"
                         >
                           Sign Out
                         </SelectItemWithText>
