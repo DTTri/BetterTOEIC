@@ -35,7 +35,7 @@ export default function WordSavedPage() {
         toast.error("Unsave vocab failed" + res.EM);
       }
     } catch (error) {
-      toast.error("Error when unsave vocab");
+      toast.error("Error when unsave vocab: " + error);
       
     }
   }

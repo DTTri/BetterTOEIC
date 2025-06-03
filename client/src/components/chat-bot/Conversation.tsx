@@ -23,7 +23,7 @@ export default function Conversation({
   handleCloseChatBot: () => void;
 }) {
   const user = sUser.use((state) => state.info);
-  const chat = sChat.use((state) => state.chatHistory);
+  //const chat = sChat.use((state) => state.chatHistory);
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
