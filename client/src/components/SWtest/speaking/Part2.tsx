@@ -39,7 +39,7 @@ export default function Part2({ question, onComplete }: Part2Props) {
   console.log("recording" + isRecording);
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
+    <div className="max-w-4xl mx-auto p-6">
       <div className="bg-[#981C1E] text-white text-center w-full font-bold py-3 px-5 text-2xl rounded-t-lg">
         <h2 className="text-lg font-semibold">
           QUESTION {question.question_number} OF 19
@@ -67,15 +67,15 @@ export default function Part2({ question, onComplete }: Part2Props) {
           </div>
         ) : (
           <div className="w-full">
-            <div className="flex justify-center mb-8">
+            <div className="flex max-h-[50%] justify-center mb-6">
               <img
                 src={question.image?.[0]}
                 alt={`Question ${question.question_number}`}
-                className="max-w-full h-auto rounded-lg shadow-md"
+                className="max-w-full h-full object-contain rounded-lg shadow-md"
               />
             </div>
 
-            <div className="flex justify-center mb-6">
+            <div className="flex justify-center mb-4">
               <Timer
                 initialSeconds={
                   stage === "preparation"

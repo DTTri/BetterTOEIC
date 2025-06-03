@@ -51,7 +51,7 @@ export default function Part4({ question, onComplete }: Part4Props) {
   console.log("stage" + stage);
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
+    <div className="max-w-4xl mx-auto p-6">
       <div className="bg-[#981C1E] text-white text-center w-full font-bold py-3 px-5 text-2xl rounded-t-lg">
         <h2 className="text-lg font-semibold">
           QUESTION {question.question_number} OF 19
@@ -68,7 +68,7 @@ export default function Part4({ question, onComplete }: Part4Props) {
         />
       )}
 
-      <div className="bg-white rounded-b-lg shadow-lg p-6 space-y-6">
+      <div className="bg-white rounded-b-lg shadow-lg p-4 space-y-6">
         {stage === "direction" ? (
           <div className="mb-4">
             <h2 className="text-3xl font-bold mb-4 w-full text-center block">
@@ -92,15 +92,15 @@ export default function Part4({ question, onComplete }: Part4Props) {
           </div>
         ) : (
           <div className="w-full">
-            <div className="flex justify-center mb-4">
+            <div className="flex max-h-[50%] justify-center mb-4">
               <img
                 src={question.image?.[0]}
                 alt="Schedule Information"
-                className="max-w-full h-auto rounded-lg shadow-md"
+                className="max-w-full h-full object-contain rounded-lg shadow-md"
               />
             </div>
 
-            <div className="bg-gray-50 p-6 rounded-lg mb-8">
+            <div className="bg-gray-50 p-3 rounded-lg mb-6">
               <h4 className="text-lg font-semibold mb-4">{question.passage}</h4>
               <p className="text-lg leading-relaxed">
                 Question: {question.text}

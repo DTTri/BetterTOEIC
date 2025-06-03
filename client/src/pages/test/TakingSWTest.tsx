@@ -135,7 +135,7 @@ export default function TakingSWTest() {
 
   return (
     <div className="bg-background">
-      <div className="max-w-[1500px] content py-2 px-10 m-auto overflow-hidden">
+      <div className="w-[80%] content py-1 px-8 m-auto overflow-hidden">
         <TestNavigator
           questions={testData.questions}
           onComplete={handleComplete}

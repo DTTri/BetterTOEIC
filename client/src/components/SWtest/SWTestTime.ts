@@ -7,13 +7,13 @@ export type SWTestTime = {
 export const TimeForPart1 : SWTestTime = {
     DirectionTime: 5,
     PreparationTime: 3,
-    RecordingTime: 10,
+    RecordingTime: 5,
 }
 
 export const TimeForPart2: SWTestTime = {
     DirectionTime: 5,
     PreparationTime: 3,
-    RecordingTime: 10,
+    RecordingTime: 5,
 }
 
 export const Time56ForPart3: SWTestTime = {

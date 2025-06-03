@@ -39,7 +39,7 @@ export default function Part7({ question, onComplete }: Part7Props) {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="max-w-5xl mx-auto p-6">
       <div className="bg-[#981C1E] text-white text-center w-full font-bold py-3 px-5 text-2xl rounded-t-lg">
         <h2 className="text-lg font-semibold">
           QUESTION {question.question_number} OF 19
@@ -75,26 +75,22 @@ export default function Part7({ question, onComplete }: Part7Props) {
                 isPreparation={false}
               />
             </div>
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <div className="space-y-4">
-                <div className="w-full">
-                  <p className="text-gray-700 whitespace-pre-wrap">
+            <div className="w-full bg-gray-50 p-3 rounded-lg">
+                  <p className="text-gray-700 text-sm whitespace-pre-wrap">
                     {/* I don't know why the text in this tag cannot be wrapped :"( 
                       So I use the split method to add <br /> tags
                     " */}
                     {question.passage?.split(/\r\n|\\n|\n/g).map((line, index, array) => (
                       <span key={index}>
                         {line}
-                        {index < array.length - 1 && <br />}
+                        {index < array.length - 1 && <br/>}
                       </span>
                     ))}
                   </p>
-                </div>
                 {/* Can replace with the request of the question
               <div className="text-gray-800 whitespace-pre-line">
                 {email.content}
               </div> */}
-              </div>
             </div>
 
             <div className="space-y-4">

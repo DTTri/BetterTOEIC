@@ -192,7 +192,7 @@ export default function TestNavigator({
   }, [speakingRecordings, writingAnswers, questions, onComplete, isTestCompleted]);
 
   return (
-    <div className="min-h-screen w-[80%] mx-auto bg-gray-50 py-4">
+    <div className="min-h-screen w-[80%] mx-auto bg-gray-50 py-2">
       {renderCurrentPart()}
     </div>
   );
