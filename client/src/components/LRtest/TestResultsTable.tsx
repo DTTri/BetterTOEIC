@@ -17,17 +17,17 @@ export default function TestResultsTable({
       <table className="min-w-full bg-primary text-white">
         <thead>
           <tr className="uppercase text-sm leading-normal">
-            <th className="py-3 px-6 text-left border border-white">
+            <th className="py-3 px-6 text-center border border-white">
               Ngày làm
             </th>
-            <th className="py-3 px-6 text-left border border-white">
+            <th className="py-3 px-6 text-center border border-white">
               Thời gian làm bài
             </th>
-            <th className="py-3 px-6 text-left border border-white">
+            <th className="py-3 px-6 text-center border border-white">
               Số câu đúng
             </th>
-            <th className="py-3 px-6 text-left border border-white">Kết quả</th>
-            <th className="py-3 px-6 text-left border border-white"></th>
+            <th className="py-3 px-6 text-center border border-white">Kết quả</th>
+            <th className="py-3 px-6 text-center border border-white"></th>
           </tr>
         </thead>
         <tbody className="text-sm font-light">

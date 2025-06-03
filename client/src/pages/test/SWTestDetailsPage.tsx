@@ -24,13 +24,13 @@ const SWTestResultsTable = ({
       <table className="min-w-full bg-primary text-white">
         <thead>
           <tr className="uppercase text-sm leading-normal">
-            <th className="py-3 px-6 text-left border border-white">
+            <th className="py-3 px-6 text-base text-center border border-white">
               Ngày làm
             </th>
-            <th className="py-3 px-6 text-left border border-white">
+            <th className="py-3 px-6 text-base text-center border border-white">
               Tổng điểm
             </th>
-            <th className="py-3 px-6 text-left border border-white"></th>
+            <th className="py-3 px-6 text-base text-center border border-white"></th>
           </tr>
         </thead>
         <tbody className="text-sm font-light">
