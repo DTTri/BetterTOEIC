@@ -14,9 +14,6 @@ export default function RoadmapPage() {
   const [isConfirmResetRoadmapPopupOpen, setIsConfirmResetRoadmapPopupOpen] =
     useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
-  sRoadmap.watch((newValue) => {
-    console.log("sRoadmap: " + newValue.exercises);
-  }, []);
   useEffect(() => {
     if (userRoadmap) {
       const completedChapters = userRoadmap.completedRoadmapExercises.filter(
@@ -88,7 +85,6 @@ export default function RoadmapPage() {
   return (
     <>
       {!userRoadmap ? (
-        // inform user that they have not created a roadmap yet
         <motion.div
           initial={{ opacity: 0, translateX: -20 }}
           animate={{ opacity: 1, translateX: 0 }}
@@ -96,7 +92,7 @@ export default function RoadmapPage() {
             duration: 0.4,
             scale: { type: "spring", visualDuration: 0.4, bounce: 0.5 },
           }}
-          className="bg-background w-full h-full py-8 flex flex-col items-center gap-4"
+          className="w-full h-full py-8 flex flex-col items-center gap-4"
         >
           <h1 className="text-4xl font-bold">
             You have not created a roadmap yet

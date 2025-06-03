@@ -16,6 +16,10 @@ export const collections: {
   vocabsSaved?: mongoDB.Collection;
   users?: mongoDB.Collection;
   posts?: mongoDB.Collection;
+  conversations?: mongoDB.Collection;
+  swTests?: mongoDB.Collection;
+  swTestHistories?: mongoDB.Collection;
+  swTestHistoryPartitions?: mongoDB.Collection;
 } = {};
 
 export async function connectDB() {
@@ -37,6 +41,11 @@ export async function connectDB() {
   const VOCABS_SAVED_COLLECTION_NAME = process.env.VOCABS_SAVED_COLLECTION_NAME || '';
   const USERS_COLLECTION_NAME = process.env.USERS_COLLECTION_NAME || '';
   const POSTS_COLLECTION_NAME = process.env.POSTS_COLLECTION_NAME || '';
+  const CONVERSATIONS_COLLECTION_NAME = process.env.CONVERSATIONS_COLLECTION_NAME || '';
+  const SW_TESTS_COLLECTION_NAME = process.env.SW_TESTS_COLLECTION_NAME || 'swTests';
+  const SW_TEST_HISTORIES_COLLECTION_NAME = process.env.SW_TEST_HISTORIES_COLLECTION_NAME || 'swTestHistories';
+  const SW_TEST_HISTORY_PARTITIONS_COLLECTION_NAME =
+    process.env.SW_TEST_HISTORY_PARTITIONS_COLLECTION_NAME || 'swTestHistoryPartitions';
 
   const client = new mongoDB.MongoClient(MONGODB_URL);
   await client.connect();
@@ -57,6 +66,10 @@ export async function connectDB() {
   const vocabsSavedCollection = db.collection(VOCABS_SAVED_COLLECTION_NAME);
   const usersCollection = db.collection(USERS_COLLECTION_NAME);
   const postsCollection = db.collection(POSTS_COLLECTION_NAME);
+  const conversationsCollection = db.collection(CONVERSATIONS_COLLECTION_NAME);
+  const swTestsCollection = db.collection(SW_TESTS_COLLECTION_NAME);
+  const swTestHistoriesCollection = db.collection(SW_TEST_HISTORIES_COLLECTION_NAME);
+  const swTestHistoryPartitionsCollection = db.collection(SW_TEST_HISTORY_PARTITIONS_COLLECTION_NAME);
   collections.tests = testsCollection;
   collections.testHistories = testHistoriesCollection;
   collections.testsSaved = testsSavedCollection;
@@ -71,5 +84,9 @@ export async function connectDB() {
   collections.vocabsSaved = vocabsSavedCollection;
   collections.users = usersCollection;
   collections.posts = postsCollection;
+  collections.conversations = conversationsCollection;
+  collections.swTests = swTestsCollection;
+  collections.swTestHistories = swTestHistoriesCollection;
+  collections.swTestHistoryPartitions = swTestHistoryPartitionsCollection;
   console.log('Successfully connected to database: ', DB_NAME);
 }

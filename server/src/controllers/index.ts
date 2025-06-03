@@ -5,6 +5,7 @@ import vocabControllerInstance from './VocabController';
 import authControllerInstance from './AuthController';
 import userControllerInstance from './UserController';
 import { forumControllerInstance } from './ForumController';
+import swTestControllerInstance from './SWTestController';
 
 export {
   testControllerInstance,
@@ -14,4 +15,5 @@ export {
   authControllerInstance,
   userControllerInstance,
   forumControllerInstance,
+  swTestControllerInstance,
 };

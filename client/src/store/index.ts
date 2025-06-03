@@ -3,4 +3,20 @@ import { sCreatingPersonalRoadmap } from "./roadmapStore";
 import sUser from "./userStore";
 import sVocab from "./vocabStore";
 import sNewTest from "./adminStore";
-export { sRoadmap, sCreatingPersonalRoadmap, sUser, sVocab, sNewTest };
+import { testStore } from "./testStore";
+import { practiceStore } from "./practiceStore";
+import sForum from "./forumStore";
+import sChat from "./chatStore";
+import { swTestStore } from "./swTestStore";
+export {
+  sRoadmap,
+  sCreatingPersonalRoadmap,
+  sUser,
+  sVocab,
+  sNewTest,
+  testStore,
+  practiceStore,
+  sForum,
+  sChat,
+  swTestStore,
+};

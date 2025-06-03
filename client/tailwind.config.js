@@ -6,15 +6,15 @@ export default {
     extend: {
       colors: {
         primary: {
-          DEFAULT: "#00205C", // Your previous primary color
+          DEFAULT: "#00205C",
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
-          DEFAULT: "#D0E3FF", // Your previous secondary color
+          DEFAULT: "#D0E3FF",
           foreground: "hsl(var(--secondary-foreground))",
         },
         tertiary: "#D0E3FF",
-        background: "#F5F6FA", // Your previous background color
+        background: "#F0F8FF",
         Red: "#FF0000",
         Green: "#BCFFE3",
         foreground: "hsl(var(--foreground))",
@@ -53,6 +53,28 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      keyframes: {
+        "accordion-down": {
+          from: {
+            height: "0",
+          },
+          to: {
+            height: "var(--radix-accordion-content-height)",
+          },
+        },
+        "accordion-up": {
+          from: {
+            height: "var(--radix-accordion-content-height)",
+          },
+          to: {
+            height: "0",
+          },
+        },
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
       },
     },
   },

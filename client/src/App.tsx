@@ -1,11 +1,32 @@
 import { Route, Routes } from "react-router-dom";
+import { Flip, ToastContainer } from "react-toastify";
+
 import {
+  AdminLayout,
+  AuthLayout,
+  CreatingPostPage,
+  CreatingPracticeExsPage,
+  CreatingPracticeLessonsPage,
+  CreatingRoadmapExsPage,
   CreatingRoadmapPage,
+  CreatingTestPage,
+  CreatingVocabsPage,
   DoingRoadmapExsPage,
+  ErrorPage,
+  ForgotPasswordPage,
   ForumManagementPage,
+  ForumPage,
+  HomePage,
+  LoginPage,
   OverallManagementPage,
+  PersonalImformationPage,
+  PostDetailPage,
   PracticeManagementPage,
   PracticePage,
+  RegisterPage,
+  ReportUserPage,
+  ReviewPracticePage,
+  ReviewTestPage,
   RoadmapManagementPage,
   RoadmapPage,
   TakingPracticePage,
@@ -13,51 +34,47 @@ import {
   TestDetailsPage,
   TestManagementPage,
   TestsPage,
+  TestsSavedPage,
+  UserLayout,
   UserManagementPage,
+  VerifyEmailPage,
+  VocabCardGalleryPage,
+  VocabLearingPage,
   VocabManagementPage,
+  WordSavedPage,
+  LoginOauth,
+  LearnPracticeLesson,
+  CreatingSWTestPage,
+  ReviewSWTestPage,
+  SWTestDetailsPage,
 } from "./pages";
-import CreatingPostPage from "./pages/admin/forum/CreatingPostPage";
-import CreatingPracticeExsPage from "./pages/admin/practice/CreatingPracticeExsPage";
-import CreatingPracticeLessonsPage from "./pages/admin/practice/CreatingPracticeLessonsPage";
-import CreatingRoadmapExsPage from "./pages/admin/roadmap/CreatingRoadmapExsPage";
-import CreatingMiniTestPage from "./pages/admin/test/CreatingMiniTestPage";
-import CreatingTestPage from "./pages/admin/test/CreatingTestPage";
-import CreatingVocabsPage from "./pages/admin/vocab/CreatingVocabsPage";
-import AdminLayout from "./pages/AdminLayout";
-import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
-import LoginPage from "./pages/auth/LoginPage";
-import RegisterPage from "./pages/auth/RegisterPage";
-import RessetPasswordPage from "./pages/auth/RessetPasswordPage";
-import ErrorPage from "./pages/error/ErrorPage";
-import ForumPage from "./pages/forum/ForumPage";
-import PostDetailPage from "./pages/forum/PostDetailPage";
-import PersonalImformationPage from "./pages/personal/PersonalImformationPage";
-import ReportUserPage from "./pages/personal/ReportUserPage";
-import TestsSavedPage from "./pages/personal/TestsSavedPage";
-import WordSavedPage from "./pages/personal/WordsSavedPage";
-import UserLayout from "./pages/UserLayout";
+
 import { useEffect } from "react";
-import { forumService, testService, userService } from "./services";
-import VocabCardGallery from "./pages/vocab/VocabCardGalleryPage";
-import VocabLearingPage from "./pages/vocab/VocabLearingPage";
-import { sRoadmap, sUser, sVocab } from "./store";
-import { roadmapService } from "./services";
-import { testStore } from "./store/testStore";
-import practiceService from "./services/practiceService";
-import { practiceStore } from "./store/practiceStore";
-import vocabService from "./services/vocabService";
-import VerifyEmailPage from "./pages/auth/VerifyEmailPage";
-import AuthLayout from "./pages/AuthLayout";
-import sForum from "./store/forumStore";
-import ReviewTestPage from "./pages/test/ReviewTestPage";
-import ReviewPracticePage from "./pages/practice/ReviewPracticePage";
+import {
+  forumService,
+  testService,
+  userService,
+  roadmapService,
+  vocabService,
+  practiceService,
+  chatService,
+  swTestService,
+} from "./services";
+import {
+  sRoadmap,
+  sUser,
+  sVocab,
+  testStore,
+  practiceStore,
+  sForum,
+  sChat,
+  swTestStore,
+} from "./store";
 import { User } from "./entities";
-import HomePage from "./pages/HomePage";
 import { ThemeProvider } from "@mui/material";
 import theme from "./theme";
-import { Flip, ToastContainer } from "react-toastify";
-import LoginOauth from "./pages/auth/LoginOAuth";
-import LearnPracticeLesson from "./pages/practice/LearnPracticeLesson";
+import RessetPasswordPage from "./pages/auth/RessetPasswordPage";
+import TakingSWTest from "./pages/test/TakingSWTest";
 
 function App() {
   const userJustLoggedIn = sUser.use((state) => state.info);
@@ -68,7 +85,6 @@ function App() {
     const fetchAllUsers = async () => {
       try {
         const response = await userService.getUsers();
-        console.log(response);
         if (response.EC === 0) {
           sUser.set((prev) => (prev.value.users = response.DT));
           if (curUser && curUser !== "") {
@@ -79,7 +95,7 @@ function App() {
             });
           }
         } else {
-          console.log("Fail to fetch all users: ", response.EM);
+          //console.log("Fail to fetch all users: ", response.EM);
         }
       } catch (error) {
         console.log("Fail to fetch all users: ", error);
@@ -89,7 +105,6 @@ function App() {
     const fetchUsersPerBand = async () => {
       try {
         const response = await userService.getTotalUsersPerBand();
-        console.log(response);
         if (response.EC === 0) {
           sUser.set((prev) => (prev.value.usersPerBand = response.DT));
         } else {
@@ -105,10 +120,10 @@ function App() {
         // });
       }
     };
+
     const fetchTests = async () => {
       try {
         const response = await testService.getTests();
-        console.log(response);
         if (response.EC === 0) {
           testStore.set((prev) => (prev.value.testList = response.DT));
         } else {
@@ -124,10 +139,10 @@ function App() {
         // });
       }
     };
+
     const fetchTestHistory = async () => {
       try {
         const response = await testService.getTestHistory(curUser || "");
-        console.log(response);
         if (response.EC === 0) {
           testStore.set((prev) => (prev.value.testHistory = response.DT));
         } else {
@@ -143,6 +158,7 @@ function App() {
         // });
       }
     };
+
     const fetchTestSaved = async () => {
       try {
         const response = await testService.getTestsSaved(curUser || "");
@@ -162,10 +178,10 @@ function App() {
         // });
       }
     };
+
     const fetchPracticeTests = async () => {
       try {
         const response = await practiceService.getPracticeTests();
-        console.log(response);
         if (response.EC === 0) {
           practiceStore.set(
             (prev) => (prev.value.practiceTestList = response.DT)
@@ -183,12 +199,12 @@ function App() {
         // });
       }
     };
+
     const fetchPracticeTestHistory = async () => {
       try {
         const response = await practiceService.getPracticeTestHistory(
           curUser || ""
         );
-        console.log(response);
         if (response.EC === 0) {
           console.log("history" + response.DT.length);
           practiceStore.set(
@@ -207,10 +223,10 @@ function App() {
         // });
       }
     };
+
     const fetchPracticeLesson = async () => {
       try {
         const response = await practiceService.getPracticeLessons();
-        console.log(response);
         if (response.EC === 0) {
           practiceStore.set(
             (prev) => (prev.value.practiceLesson = response.DT)
@@ -228,12 +244,12 @@ function App() {
         // });
       }
     };
+
     const fetchPracticeLessonHistory = async () => {
       try {
         const response = await practiceService.getPracticeLessonHistory(
           curUser || ""
         );
-        console.log(response);
         if (response.EC === 0) {
           practiceStore.set(
             (prev) =>
@@ -253,15 +269,14 @@ function App() {
         // });
       }
     };
+
     const fetchRoadmapExercises = async () => {
       try {
-        console.log("User roadmap: " + sRoadmap.value.userRoadmap);
         const res = await roadmapService.getRoadmapExercisesByPhase(
           sRoadmap.value.userRoadmap?.current_level || 1
         );
         if (res.EC === 0) {
           sRoadmap.set((pre) => (pre.value.exercises = res.DT));
-          console.log("fetch roadmap exercises", res.DT);
         } else {
           console.log(res.EM);
           // toast("Fail to fetch roadmap exercises", {
@@ -275,13 +290,12 @@ function App() {
         // });
       }
     };
+
     const fetchUserRoadmap = async () => {
       try {
         const res = await roadmapService.getRoadmapHistory(curUser || "");
         if (res.EC === 0) {
           sRoadmap.set((pre) => (pre.value.userRoadmap = res.DT));
-
-          console.log("fetch user roadmap", res.DT);
         } else {
           console.log(res.EM);
           // toast("Fail to fetch user roadmap", {
@@ -300,7 +314,6 @@ function App() {
       try {
         const response = await vocabService.getAllVocabTopics();
         if (response.EC === 0) {
-          console.log(response);
           sVocab.set((prev) => (prev.value.vocabTopics = response.DT));
         } else {
           console.log("Fail to fetch vocabs: ", response.EM);
@@ -315,11 +328,11 @@ function App() {
         // });
       }
     };
+
     const fetchSavedVocabs = async () => {
       try {
         const response = await vocabService.getVocabsSaved(curUser || "");
         if (response.EC === 0) {
-          console.log(response);
           sVocab.set((prev) => (prev.value.vocabsSaved = response.DT));
         } else {
           console.log("Fail to fetch saved vocabs: ", response.EM);
@@ -334,11 +347,11 @@ function App() {
         // });
       }
     };
+
     const fetchVocabHistory = async () => {
       try {
         const response = await vocabService.getVocabHistory(curUser || "");
         if (response.EC === 0) {
-          console.log(response);
           sVocab.set((prev) => (prev.value.vocabHistory = response.DT.topics));
         } else {
           console.log("Fail to fetch vocab history: ", response.EM);
@@ -353,11 +366,11 @@ function App() {
         // });
       }
     };
+
     const fetchForum = async () => {
       try {
         const response = await forumService.getAllPosts();
         if (response.EC === 0) {
-          console.log(response);
           sForum.set((prev) => (prev.value.posts = response.DT));
         } else {
           console.log("Fail to fetch forum: ", response.EM);
@@ -372,6 +385,50 @@ function App() {
         // });
       }
     };
+
+    const fetchChatHistory = async () => {
+      try {
+        const response = await chatService.getChatHistory(curUser || "");
+        if (response.EC === 0) {
+          sChat.set((prev) => (prev.value.chatHistory = response.DT.chats));
+        } else {
+          console.log("Fail to fetch chat history: ", response.EM);
+        }
+      } catch (error) {
+        console.log("Fail to fetch chat history: ", error);
+      }
+    };
+    const fetchSWTests = async () => {
+      try {
+        const response = await swTestService.getAllSWTests();
+        if (response.EC === 0) {
+          swTestStore.set((prev) => (prev.value.swTestList = response.DT));
+        } else {
+          console.log("Fail to fetch SW tests: ", response.EM);
+        }
+      } catch (error) {
+        console.log("Fail to fetch SW tests: ", error);
+      }
+    };
+    const fetchSWTestHistory = async () => {
+      try {
+        const response = await swTestService.getSWTestHistory(curUser || "");
+        if (response.EC === 0) {
+          swTestStore.set(
+            (prev) => (prev.value.swTestHistory = response.DT.tests)
+          );
+          // console.log(
+          //   "SW Test history fetched successfully",
+          //   response.DT.tests
+          // );
+        } else {
+          console.log("Fail to fetch SW test history: ", response.EM);
+        }
+      } catch (error) {
+        console.log("Fail to fetch SW test history: ", error);
+      }
+    };
+
     const fetchSecureData = async () => {
       await fetchAllUsers();
       await fetchUserRoadmap();
@@ -385,6 +442,9 @@ function App() {
         fetchRoadmapExercises(),
         fetchSavedVocabs(),
         fetchVocabHistory(),
+        fetchChatHistory(),
+        fetchSWTests(),
+        fetchSWTestHistory(),
       ]);
     };
 
@@ -394,8 +454,8 @@ function App() {
         fetchForum(),
         fetchVocabs(),
         fetchPracticeTests(),
-      ])
-    }
+      ]);
+    };
     fetchNotSecureData();
     if (curUser && curUser !== "") fetchSecureData();
   }, [userJustLoggedIn]);
@@ -425,8 +485,8 @@ function App() {
             <Route path="vocab" element={<VocabManagementPage />} />
             <Route path="test/creatingTest" element={<CreatingTestPage />} />
             <Route
-              path="test/creatingMiniTest"
-              element={<CreatingMiniTestPage />}
+              path="test/creatingSWTest"
+              element={<CreatingSWTestPage />}
             />
             <Route
               path="practice/creatingPracticeEx"
@@ -465,8 +525,24 @@ function App() {
           <Route
             path="/taking-test/:id"
             element={
-              <UserLayout haveFooter={false}>
+              <UserLayout haveFooter={false} haveChatBot={false}>
                 <TakingTestPage />
+              </UserLayout>
+            }
+          />
+          <Route
+            path="/taking-sw-test/:id"
+            element={
+              <UserLayout haveFooter={false} haveChatBot={false}>
+                <TakingSWTest />
+              </UserLayout>
+            }
+          />
+          <Route
+            path="/swtest/:id"
+            element={
+              <UserLayout>
+                <SWTestDetailsPage />
               </UserLayout>
             }
           />
@@ -483,6 +559,14 @@ function App() {
             element={
               <UserLayout haveFooter={false}>
                 <ReviewTestPage />
+              </UserLayout>
+            }
+          />
+          <Route
+            path="/review-sw-test/:testId/:attemptId"
+            element={
+              <UserLayout haveFooter={false}>
+                <ReviewSWTestPage />
               </UserLayout>
             }
           />
@@ -538,7 +622,7 @@ function App() {
             path="/vocab-gallery"
             element={
               <UserLayout passAll={true}>
-                <VocabCardGallery />
+                <VocabCardGalleryPage />
               </UserLayout>
             }
           />

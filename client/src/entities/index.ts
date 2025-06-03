@@ -11,6 +11,9 @@ import RoadmapHistory from "./RoadmapHistory";
 import { CompletedTest } from "./TestHistory";
 import SavedVocab from "./SavedVocab";
 import VocabHistory from "./VocabHistory";
+import ChatMessage from "./Chat";
+import { SWTest, SWQuestion } from "./SWTest";
+import CompletedSWTest from "./CompletedSWTest";
 export type {
   Test,
   RoadmapExercise,
@@ -25,4 +28,8 @@ export type {
   CompletedTest,
   SavedVocab,
   VocabHistory,
+  ChatMessage,
+  SWTest,
+  SWQuestion,
+  CompletedSWTest,
 };

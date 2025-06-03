@@ -6,16 +6,18 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { sUser } from "@/store";
-import { Button } from "@mui/material";
+import { Avatar } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Logo from "../assets/Logo_BetterTOEIC.svg";
-// import Noti from '../assets/Noti_icon.svg';
 import LoadingProgress from "./LoadingProgress";
-import * as motion from "motion/react-client";
+import { motion } from "framer-motion";
+import PersonIcon from "@mui/icons-material/Person";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 
 export default function Header() {
   const [selectedItem, setSelectedItem] = useState("");
+  const [isTestOpen, setIsTestOpen] = useState(false);
   const nav = useNavigate();
   const location = useLocation();
 
@@ -26,12 +28,28 @@ export default function Header() {
       "/user-info",
       "/user-report",
       "/test-saved",
-      "/word-saved",
     ];
     if (!headerPaths.includes(location.pathname)) {
       setSelectedItem("");
     }
   }, [location.pathname]);
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!isTestOpen) return;
+      const target = event.target as HTMLElement;
+      if (
+        !target.closest("#test-dropdown") &&
+        !target.closest(".test-button")
+      ) {
+        setIsTestOpen(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside); // Cleanup on unmount
+    };
+  }, [isTestOpen]);
   // const [userInfo, setUserInfo] = useState<User>(user);
 
   // useEffect(() => {
@@ -44,216 +62,224 @@ export default function Header() {
     return <LoadingProgress />;
   }
 
-  console.log("userInfo:", userInfo); // Add this line to log userInfo
-
   const handleItemChange = (e: string) => {
     setSelectedItem(e);
-    if (e === "log-out") {
-      localStorage.removeItem("token");
-      localStorage.removeItem("_id");
-      sessionStorage.removeItem("token");
-      sessionStorage.removeItem("_id");
-      sessionStorage.removeItem("state");
-      sUser.reset();
-      nav("/login");
-    } else if (e === "admin") {
-      nav("/admin");
-    } else if (e === "user-info") {
-      nav("/user-info");
-    } else if (e === "report") {
-      nav("/user-report");
-    } else if (e === "word-saved") {
-      nav("/word-saved");
-    } else if (e === "test-saved") {
-      nav("/test-saved");
+    switch (e) {
+      case "log-out":
+        localStorage.removeItem("token");
+        localStorage.removeItem("_id");
+        sessionStorage.removeItem("token");
+        sessionStorage.removeItem("_id");
+        sessionStorage.removeItem("state");
+        sUser.reset();
+        nav("/login");
+        break;
+      case "admin":
+        nav("/admin");
+        break;
+      case "user-info":
+        nav("/user-info");
+        break;
+      case "report":
+        nav("/user-report");
+        break;
+      case "test-saved":
+        nav("/test-saved");
+        break;
     }
   };
-  console.log("userInfo._id:", userInfo._id); // Add this line to log userInfo._id
 
   return (
     <>
-      <header className=" bg-[#ffffff] w-full px-9 py-3 flex justify-center">
-        <div className="max-w-[1440px] w-full flex flex-row justify-between  items-center">
-          <Link to="/">
-            <img
-              className="flex justify-center max-w-full w-[128px] object-cover object-center ml-4"
-              src={Logo}
-              alt="BetterTOEIC"
-            />
-          </Link>
-          <div className="right flex flex-row gap-[32px] items-center justify-center">
-            <ul className="flex flex-row gap-[18px]">
+      <motion.header
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="bg-white w-full px-6 py-2 shadow-sm border-b border-gray-100 sticky top-0 z-50"
+      >
+        <div className="max-w-[1440px] h-[55px] w-full flex flex-row justify-between items-center mx-auto">
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <Link to="/" className="flex items-center">
+              <img
+                className="w-[140px] h-auto object-contain"
+                src={Logo}
+                alt="BetterTOEIC"
+              />
+            </Link>
+          </motion.div>
+
+          <div className="flex items-center gap-8">
+            <nav className="hidden md:flex items-center gap-2">
               {userInfo._id && (
-                <li>
-                  <Link to="/road-map">
-                    <Button
-                      className="hover:bg-slate-100"
-                      style={{
-                        fontWeight: "700",
-                        fontSize: "16px",
-                        color: "#000000",
-                        fontFamily: "Nunito Sans",
-                      }}
-                      variant="text"
-                      sx={{ textTransform: "none" }}
-                    >
-                      Roadmap
-                    </Button>
-                  </Link>
-                </li>
-              )}
-              <li>
-                <Link to="/test">
-                  <Button
-                    className="hover:bg-slate-100"
-                    style={{
-                      fontWeight: "700",
-                      fontSize: "16px",
-                      color: "#000000",
-                      fontFamily: "Nunito Sans",
-                    }}
-                    variant="text"
-                    sx={{ textTransform: "none" }}
-                  >
-                    Tests
-                  </Button>
-                </Link>
-              </li>
-              <li>
-                <Link to="/practice">
-                  <Button
-                    className="hover:bg-slate-100"
-                    style={{
-                      fontWeight: "700",
-                      fontSize: "16px",
-                      color: "#000000",
-                      fontFamily: "Nunito Sans",
-                    }}
-                    variant="text"
-                    sx={{ textTransform: "none" }}
-                  >
-                    Practices
-                  </Button>
-                </Link>
-              </li>
-              <li>
-                <Link to="/vocab-gallery">
-                  <Button
-                    className="hover:bg-slate-100"
-                    style={{
-                      fontWeight: "700",
-                      fontSize: "16px",
-                      color: "#000000",
-                      fontFamily: "Nunito Sans",
-                    }}
-                    variant="text"
-                    sx={{ textTransform: "none" }}
-                  >
-                    Vocabulary
-                  </Button>
-                </Link>
-              </li>
-              <li>
-                <Link to="/forum">
-                  <Button
-                    className="hover:bg-slate-100"
-                    style={{
-                      fontWeight: "700",
-                      fontSize: "16px",
-                      color: "#000000",
-                      fontFamily: "Nunito Sans",
-                    }}
-                    variant="text"
-                    sx={{ textTransform: "none" }}
-                  >
-                    Forum
-                  </Button>
-                </Link>
-              </li>
-              {!userInfo._id && (
-                <li>
-                  <Link to="/login">
-                    <Button
-                      className="hover:bg-slate-100"
-                      style={{
-                        fontWeight: "700",
-                        fontSize: "16px",
-                        color: "#000000",
-                        fontFamily: "Nunito Sans",
-                        borderColor: "#000000",
-                        borderRadius: "10px",
-                      }}
-                      variant="outlined"
-                      sx={{ textTransform: "none" }}
-                    >
-                      Login
-                    </Button>
-                  </Link>
-                </li>
-              )}
-            </ul>
-            {/* { userInfo._id && (<div className="icon_noti">
-            <button className='flex items-center justify-center'><img src={Noti} alt="" /></button>
-          </div>)} */}
-            {userInfo._id && (
-              <Select onValueChange={handleItemChange}>
-                <SelectTrigger
-                  value={selectedItem}
-                  className="flex flex-row w-auto gap-4 justify-between shadow-none bg-background h-auto py-1 px-2 border-none"
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  <img
-                    src={userInfo.avatar}
-                    alt=""
-                    className="max-h-10 max-w-10 aspect-square w-full h-full inline-block rounded-full object-fill"
-                  />
-                  <div className="flex flex-col">
-                    <span className="text-[16px] font-semibold ">
-                      {userInfo.name.split(" ")}
-                    </span>
-                    <span className="text-[12px] font-normal ">
-                      {userInfo.isAdmin == true ? "Admin" : "User"}
-                    </span>
-                  </div>
-                </SelectTrigger>
-                <SelectContent className="bg-background">
-                  <motion.div
-                    initial={{ opacity: 0, translateY: -20 }}
-                    animate={{ opacity: 1, translateY: 0 }}
-                    transition={{
-                      duration: 0.3,
-                      scale: { type: "spring" },
-                      opacity: { ease: "easeInOut" },
-                    }}
+                  <Link
+                    to="/road-map"
+                    className="px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 font-semibold text-md"
                   >
-                    <SelectGroup>
-                      {userInfo.isAdmin && (
-                        <SelectItemWithText value="admin">
-                          Admin Dashboard
-                        </SelectItemWithText>
+                    Roadmap
+                  </Link>
+                </motion.div>
+              )}
+
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Link
+                  to="/test"
+                  className="px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 font-semibold text-md"
+                >
+                  Tests
+                </Link>
+              </motion.div>
+
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Link
+                  to="/practice"
+                  className="px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 font-semibold text-md"
+                >
+                  Practices
+                </Link>
+              </motion.div>
+
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Link
+                  to="/vocab-gallery"
+                  className="px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 font-semibold text-md"
+                >
+                  Vocabulary
+                </Link>
+              </motion.div>
+
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Link
+                  to="/forum"
+                  className="px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 font-semibold text-md"
+                >
+                  Forum
+                </Link>
+              </motion.div>
+
+              {!userInfo._id && (
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Link
+                    to="/login"
+                    className="px-6 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-lg transition-all duration-200 font-semibold text-sm shadow-sm"
+                  >
+                    Login
+                  </Link>
+                </motion.div>
+              )}
+            </nav>
+
+            {userInfo._id && (
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Select onValueChange={handleItemChange}>
+                  <SelectTrigger
+                    value={selectedItem}
+                    className="flex flex-row w-auto gap-3 justify-between shadow-sm bg-white hover:bg-gray-50 h-auto py-2 px-3 border border-gray-200 rounded-lg transition-all duration-200"
+                  >
+                    <div className="flex items-center gap-3">
+                      {userInfo.avatar ? (
+                        <img
+                          src={userInfo.avatar}
+                          alt=""
+                          className="w-8 h-8 rounded-full object-cover border-2 border-gray-200"
+                        />
+                      ) : (
+                        <Avatar
+                          sx={{ width: 32, height: 32 }}
+                          className="bg-gradient-to-br from-blue-500 to-blue-600"
+                        >
+                          <PersonIcon className="text-white text-sm" />
+                        </Avatar>
                       )}
-                      <SelectItemWithText value="report">
-                        User report
-                      </SelectItemWithText>
-                      <SelectItemWithText value="user-info">
-                        User-info
-                      </SelectItemWithText>
-                      <SelectItemWithText value="test-saved">
-                        Test saved list
-                      </SelectItemWithText>
-                      <SelectItemWithText value="word-saved">
-                        Word saved list
-                      </SelectItemWithText>
-                      <SelectItemWithText value="log-out">
-                        Log out
-                      </SelectItemWithText>
-                    </SelectGroup>
-                  </motion.div>
-                </SelectContent>
-              </Select>
+                      <div className="flex flex-col text-left">
+                        <span className="text-sm font-semibold text-gray-800">
+                          {userInfo.name}
+                        </span>
+                        <span className="text-xs text-gray-500">
+                          {userInfo.isAdmin ? (
+                            <span className="flex items-center gap-1">
+                              Admin
+                            </span>
+                          ) : (
+                            "User"
+                          )}
+                        </span>
+                      </div>
+                    </div>
+                  </SelectTrigger>
+                  <SelectContent className="bg-white border w- border-gray-200 shadow-lg rounded-lg">
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{
+                        duration: 0.2,
+                        ease: [0.4, 0, 0.2, 1],
+                      }}
+                    >
+                      <SelectGroup>
+                        {userInfo.isAdmin && (
+                          <SelectItemWithText
+                            value="admin"
+                            className="hover:bg-blue-50 hover:text-blue-700"
+                          >
+                            <AdminPanelSettingsIcon className="mr-1 text-sm" />
+                            Admin Dashboard
+                          </SelectItemWithText>
+                        )}
+                        <SelectItemWithText
+                          value="report"
+                          className="hover:bg-gray-50"
+                        >
+                          User Report
+                        </SelectItemWithText>
+                        <SelectItemWithText
+                          value="user-info"
+                          className="hover:bg-gray-50"
+                        >
+                          Profile Settings
+                        </SelectItemWithText>
+                        <SelectItemWithText
+                          value="test-saved"
+                          className="hover:bg-gray-50"
+                        >
+                          Saved List
+                        </SelectItemWithText>
+                        <SelectItemWithText
+                          value="log-out"
+                          className="hover:bg-red-50 hover:text-red-700 border-t border-gray-200"
+                        >
+                          Sign Out
+                        </SelectItemWithText>
+                      </SelectGroup>
+                    </motion.div>
+                  </SelectContent>
+                </Select>
+              </motion.div>
             )}
           </div>
         </div>
-      </header>
+      </motion.header>
     </>
   );
 }

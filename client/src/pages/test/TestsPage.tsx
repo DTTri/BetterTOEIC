@@ -1,17 +1,22 @@
 import { PageHeader, SearchBar } from "@/components";
-import TestCardGallery from "@/components/test/TestCardGallery";
-import { Test } from "@/entities";
+import TestCardGallery from "@/components/LRtest/TestCardGallery";
+import { SWTest, Test } from "@/entities";
 import { testStore } from "@/store/testStore";
 import { Tab, Tabs } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import * as motion from "motion/react-client";
 import LoadingProgress from "@/components/LoadingProgress";
+import { swTestStore } from "@/store";
 
 export default function TestsPage() {
   const testList: Test[] = testStore.use((pre) => pre.testList);
+  const swTestList = swTestStore.use((pre) => pre.swTestList);
   const [value, setValue] = useState(0);
-  const [curTests, setCurTests] = useState<Test[]>(testList);
+  const [testValue, setTestValue] = useState(0);
+  const [curTests, setCurTests] = useState<Test[] | SWTest[]>(testList);
+  const isSWtest = useRef(false);
+
   useEffect(() => {
     setCurTests(testList);
   }, [testList]);
@@ -23,24 +28,23 @@ export default function TestsPage() {
     console.log(searchText);
     setValue(0);
     if (searchText === "" || !searchText) {
-      setCurTests(testList);
+      setCurTests(testValue === 0 ? testList : swTestList);
       return;
     }
     setCurTests(
-      testList.filter((test) =>
+      curTests.filter((test) =>
         test.title.toLowerCase().includes(searchText.toLowerCase())
       )
     );
   };
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    console.log(event.currentTarget.textContent?.toString() || "");
     setValue(newValue);
     if (newValue === 0) {
-      setCurTests(testList);
+      setCurTests(testValue === 0 ? testList : swTestList);
     } else {
       setCurTests(
-        testList.filter((test) =>
+        curTests.filter((test) =>
           test.title
             .toString()
             .includes(event.currentTarget.textContent?.toString() || "")
@@ -49,7 +53,19 @@ export default function TestsPage() {
     }
   };
 
-  console.log(curTests.length);
+  const handleTestChange = (event: React.SyntheticEvent, newValue: number) => {
+    console.log(event.currentTarget.textContent?.toString() || "");
+    setTestValue(newValue);
+    if (newValue === 0) {
+      isSWtest.current = false;
+      setCurTests(testList);
+    } else {
+      isSWtest.current = true;
+      setCurTests(swTestList);
+    }
+  };
+
+  console.log("curtest" + curTests.length);
 
   return (
     <motion.div
@@ -65,11 +81,18 @@ export default function TestsPage() {
       <PageHeader text="ETS Standard Test Library" />
       <SearchBar onSearch={filterTests} />
       <Tabs
+        style={{ maxWidth: "40%" }}
+        value={testValue}
+        onChange={handleTestChange}
+      >
+        <Tab label="Listening & Reading" />
+        <Tab label="Speaking & Writing" />
+      </Tabs>
+      <Tabs
         style={{ maxWidth: "30%" }}
         variant="scrollable"
         value={value}
         onChange={handleChange}
-        centered
       >
         <Tab label="All" />
         <Tab label="2024" />
@@ -80,7 +103,7 @@ export default function TestsPage() {
         <Tab label="2019" />
         <Tab label="2018" />
       </Tabs>
-      <TestCardGallery tests={curTests}></TestCardGallery>
+      <TestCardGallery isSWTestList={isSWtest.current} tests={curTests}></TestCardGallery>
     </motion.div>
   );
 }

@@ -1,10 +1,20 @@
-import { Button } from "@mui/material";
+import {
+  Button,
+  Paper,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Tooltip,
+} from "@mui/material";
 import { useState, useRef } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import { Editor as TinyMCEEditor } from "tinymce";
 import practiceService from "@/services/practiceService";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import CreateIcon from "@mui/icons-material/Create";
 
 export default function CreatingPracticeLessonsPage() {
   const API_KEY = import.meta.env.VITE_TINY_MCE_API_KEY;
@@ -33,47 +43,98 @@ export default function CreatingPracticeLessonsPage() {
     }
   };
   return (
-    <div className="creating-test-container">
-      <h2 className="text-3xl font-bold">NEW LESSON</h2>
-      <hr />
-      <div className="items-start flex gap-8">
-        <p className="text-2xl font-bold">Part:</p>
-        <select
-          className="bg-gray-50 border border-black rounded-sm shadow-sm p-2 focus:outline-none focus:ring-1 focus:ring-black focus:border-transparent"
-          value={part}
-          onChange={(e) => {
-            setPart(parseInt(e.target.value));
-          }}
-        >
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-        </select>
-      </div>
-      <div className="w-1/2 items-center flex justify-start gap-8">
-        <p className="text-2xl font-semibold">Title:</p>
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Typing the title"
-          className="border-2 border-black rounded-sm shadow-md p-2 flex-1
-          focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent
-          "
-        />
-      </div>
-      <div className="w-full flex flex-col items-start gap-4">
-        <p className="text-2xl font-semibold">Content:</p>
+    <div className="creating-test-container max-w-7xl mx-auto px-4 py-6">
+      <h1 className="text-3xl font-semibold mb-6 text-gray-800">
+        Create New Practice Lesson
+      </h1>
+
+      <Paper elevation={2} className="p-6 mb-8 rounded-xl shadow-lg bg-gray-50">
+        <h2 className="text-xl text-gray-700 font-medium mb-4">
+          Lesson Information
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="flex flex-col gap-2">
+            <h3 className="text-lg font-medium text-gray-700">Part:</h3>
+            <FormControl fullWidth variant="outlined">
+              <InputLabel id="part-label">Select Part</InputLabel>
+              <Select
+                labelId="part-label"
+                id="part-select"
+                value={part}
+                onChange={(e) => setPart(Number(e.target.value))}
+                label="Select Part"
+                className="transition-all duration-300 hover:shadow-md"
+              >
+                <MenuItem value={1}>
+                  <div className="flex items-center">
+                    <div className="w-4 h-4 rounded-full bg-blue-500 mr-2"></div>
+                    Part 1: Photographs
+                  </div>
+                </MenuItem>
+                <MenuItem value={2}>
+                  <div className="flex items-center">
+                    <div className="w-4 h-4 rounded-full bg-green-500 mr-2"></div>
+                    Part 2: Question-Response
+                  </div>
+                </MenuItem>
+                <MenuItem value={3}>
+                  <div className="flex items-center">
+                    <div className="w-4 h-4 rounded-full bg-yellow-500 mr-2"></div>
+                    Part 3: Conversations
+                  </div>
+                </MenuItem>
+                <MenuItem value={4}>
+                  <div className="flex items-center">
+                    <div className="w-4 h-4 rounded-full bg-orange-500 mr-2"></div>
+                    Part 4: Talks
+                  </div>
+                </MenuItem>
+                <MenuItem value={5}>
+                  <div className="flex items-center">
+                    <div className="w-4 h-4 rounded-full bg-red-500 mr-2"></div>
+                    Part 5: Incomplete Sentences
+                  </div>
+                </MenuItem>
+                <MenuItem value={6}>
+                  <div className="flex items-center">
+                    <div className="w-4 h-4 rounded-full bg-purple-500 mr-2"></div>
+                    Part 6: Text Completion
+                  </div>
+                </MenuItem>
+                <MenuItem value={7}>
+                  <div className="flex items-center">
+                    <div className="w-4 h-4 rounded-full bg-pink-500 mr-2"></div>
+                    Part 7: Reading Comprehension
+                  </div>
+                </MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <h3 className="text-lg font-medium text-gray-700">Title:</h3>
+            <TextField
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Enter lesson title"
+              variant="outlined"
+              fullWidth
+              required
+              label="Lesson Title"
+              className="transition-all duration-300 hover:shadow-md"
+            />
+          </div>
+        </div>
+      </Paper>
+
+      <div className="mb-4">
         <Editor
           apiKey={API_KEY}
           onInit={(_evt, editor) => (editorRef.current = editor)}
           init={{
             height: 500,
-            menubar: false,
+            menubar: true,
             plugins: [
               "advlist",
               "autolink",
@@ -104,14 +165,20 @@ export default function CreatingPracticeLessonsPage() {
           }}
         />
       </div>
-      <div className="w-full flex justify-end gap-2 items-center">
-        <Button
-          onClick={handleCreate}
-          variant="contained"
-          style={{ backgroundColor: "#00205C" }}
-        >
-          Create
-        </Button>
+
+      <div className="flex justify-center gap-4 mb-8">
+        <Tooltip title="Create new lesson">
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleCreate}
+            startIcon={<CreateIcon />}
+            className="transition-all duration-300 hover:shadow-lg px-6 py-2"
+            size="large"
+          >
+            Create Lesson
+          </Button>
+        </Tooltip>
       </div>
     </div>
   );

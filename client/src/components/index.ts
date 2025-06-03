@@ -2,14 +2,14 @@ import Footer from "./Footer";
 import Header from "./Header";
 import PageHeader from "./PageHeader";
 import SearchBar from "./SearchBar";
-import TestCard from "./test/TestCard";
-import ListeningAudio from "./test/ListeningAudio";
-import Timer from "./test/Timer";
-import QuestionComponent from "./test/QuestionComponent";
-import QuestionsListContainer from "./test/QuestionsListContainer";
-import TestResultsTable from "./test/TestResultsTable";
-import QuestionsGroup from "./test/QuestionsGroup";
-import PartItemsContainer from "./test/PartItemsContainer";
+import TestCard from "./LRtest/TestCard";
+import ListeningAudio from "./LRtest/ListeningAudio";
+import Timer from "./LRtest/Timer";
+import QuestionComponent from "./LRtest/QuestionComponent";
+import QuestionsListContainer from "./LRtest/QuestionsListContainer";
+import TestResultsTable from "./LRtest/TestResultsTable";
+import QuestionsGroup from "./LRtest/QuestionsGroup";
+import PartItemsContainer from "./LRtest/PartItemsContainer";
 import QuestionPalette from "./vocab/VocabQuestionPalette";
 import PracticeList from "./practice/PracticeList";
 import LeftBar from "./practice/LeftBarPractice";
@@ -33,6 +33,7 @@ import PostSearchBar from "./forum/PostSearchBar";
 import PostSharing from "./forum/PostSharing";
 import CreatingQuestion from "./admin/CreatingQuestion";
 import CreatingQuestionGroup from "./admin/CreatingQuestionGroup";
+import SWQuestionReview from "./test/SWQuestionReview";
 export {
   Footer,
   Header,
@@ -69,4 +70,5 @@ export {
   PostSharing,
   CreatingQuestion,
   CreatingQuestionGroup,
+  SWQuestionReview,
 };

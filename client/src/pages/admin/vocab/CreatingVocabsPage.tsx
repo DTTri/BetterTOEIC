@@ -4,11 +4,21 @@ import CreateVocabDTO from "@/entities/DTOS/CreateVocabDTO";
 import http from "@/services/http";
 import vocabService from "@/services/vocabService";
 import { sVocab } from "@/store";
-import { Button } from "@mui/material";
+import {
+  Button,
+  Paper,
+  TextField,
+  FormControl,
+  Tooltip,
+  Chip,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
+import AddIcon from "@mui/icons-material/Add";
+import CreateIcon from "@mui/icons-material/Create";
+import ImageIcon from "@mui/icons-material/Image";
 export default function CreatingVocabsPage() {
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
@@ -126,64 +136,123 @@ export default function CreatingVocabsPage() {
   }
   console.log(vocabs);
   return (
-    <div className="w-full min-h-screen rounded-xl bg-white text-black p-4 flex flex-col gap-6">
-      <div className="flex gap-2 items-center">
-        <p className="text-2xl font-bold">Topic Name:</p>
-        <input
-          type="text"
-          className="p-2 text-lg bg-gray-100 rounded-sm border border-black"
-          placeholder="Type topic name here"
-          value={topicName}
-          onChange={(e) => setTopicName(e.target.value)}
-        />
-      </div>
-      <div className="flex gap-2 items-center">
-        <p className="text-2xl font-bold">Topic Avatar:</p>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) {
-              setTopicAvt(file);
-            }
-          }}
-        />
-      </div>
-      <div className="flex flex-col gap-2">
-        <p className="text-2xl font-bold mb-2">Vocabs:</p>
-        <div className="flex flex-col gap-4">
-          {vocabs.map((vocab, index) => (
+    <div className="creating-test-container max-w-7xl mx-auto px-4 py-6">
+      <h4 className="text-3xl font-semibold">Create New Vocabulary Topic</h4>
+
+      <Paper elevation={2} className="p-6 mb-8 rounded-xl shadow-lg bg-gray-50">
+        <h6 className="text-xl text-gray-700 font-medium mb-4">
+          Topic Information
+        </h6>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+          <FormControl fullWidth variant="outlined">
+            <TextField
+              id="topic-name"
+              label="Topic Name"
+              value={topicName}
+              onChange={(e) => setTopicName(e.target.value)}
+              placeholder="Enter topic name"
+              variant="outlined"
+              fullWidth
+              required
+              className="transition-all duration-300 hover:shadow-md"
+            />
+          </FormControl>
+
+          <div>
+            <div className="flex items-center gap-4">
+              <input
+                id="image-input"
+                type="file"
+                accept="image/*"
+                multiple={false}
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setTopicAvt(file);
+                  }
+                }}
+                style={{ display: "none" }}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => document.getElementById("image-input")?.click()}
+                startIcon={<ImageIcon />}
+                className="transition-all duration-300 hover:shadow-md"
+              >
+                Topic Banner
+              </Button>
+              {topicAvt ? (
+                <Chip
+                  label={topicAvt.name}
+                  variant="outlined"
+                  color="primary"
+                  className="animate-fadeIn"
+                />
+              ) : (
+                <p className="text-sm text-gray-500 italic">
+                  No image selected
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      </Paper>
+
+      <div className="flex flex-col gap-6">
+        {vocabs.map((vocab, index) => (
+          <Paper
+            elevation={2}
+            className="p-4 border-l-4 border-blue-500 transition-all duration-300 hover:shadow-md"
+            key={vocab.id}
+          >
             <CreatingVocab
               vocabId={vocab.id}
               onSave={handleOnSave}
-              key={vocab.id}
               vocabNumber={index + 1}
               onDelete={() => {
                 setVocabs(vocabs.filter((v) => v.id !== vocab.id));
               }}
             />
-          ))}
-        </div>
-        <Button
-          onClick={() =>
-            setVocabs([
-              ...vocabs,
-              {
-                id: uuidv4(),
-                number: vocabs.length + 1,
-                vocab: {} as CreateVocabDTO,
-              },
-            ])
-          }
-        >
-          Add vocabulary
-        </Button>
-        <div className="flex flex-row justify-end items-center p-2">
-          <Button variant="contained" onClick={handleCreateTopic}>
+          </Paper>
+        ))}
+      </div>
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={() =>
+          setVocabs([
+            ...vocabs,
+            {
+              id: uuidv4(),
+              number: vocabs.length + 1,
+              vocab: {} as CreateVocabDTO,
+            },
+          ])
+        }
+        startIcon={<AddIcon />}
+        className="transition-all duration-300 hover:shadow-md w-fit"
+        style={{
+          margin: "0 auto",
+        }}
+      >
+        Add Vocabulary
+      </Button>
+
+      <div className="flex justify-end gap-4">
+        <Tooltip title="Create vocabulary topic">
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleCreateTopic}
+            startIcon={<CreateIcon />}
+            className="transition-all duration-300 hover:shadow-lg"
+            size="large"
+          >
             Create Topic
           </Button>
-        </div>
+        </Tooltip>
       </div>
     </div>
   );

@@ -6,6 +6,8 @@ info:
 servers:
   - url: http://localhost:8000/api
     description: Local server
+  - url: https://bettertoeic-nodejsserver.onrender.com/api
+    description: Production server
 paths:
   /test/createTest:
     post:
@@ -1328,8 +1330,1430 @@ paths:
           description: Post or comment not found
         '500':
           description: Internal server error
+
+  # SWTest endpoints
+  /swtest/createSWTest:
+    post:
+      summary: Create a new Speaking and Writing test
+      tags:
+        - SWTest
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSWTestDTO'
+            example:
+              title: 'TOEIC Speaking and Writing Test 1'
+              description: 'Complete Speaking and Writing practice test'
+              created_by: 'admin'
+              difficulty: 'Intermediate'
+              questions: [
+                  # Speaking Part 1 (Questions 1-2): Read a text aloud
+                  {
+                    question_number: 1,
+                    text: 'Read the text aloud.',
+                    passage: "Hi. This is Myra Peters calling about my appointment with Dr. Jones. I have a three o'clock appointment scheduled for this afternoon. Unfortunately, I won't be able to keep it because of an important meeting at work. So, I'll need to reschedule. I was hoping to come in sometime next week. Any time Monday, Tuesday, or Wednesday afternoon would work for me. I hope the doctor has some time available on one of those days. Please call me back and let me know.",
+                    part: 1,
+                  },
+                  {
+                    question_number: 2,
+                    text: 'Read the text aloud.',
+                    passage: 'Our speaker tonight is Mr. John Wilson, who has just returned from traveling in South America. Mr. Wilson spent his trip photographing scenes of small-town life across the continent. His work is well known around the world, and his photography has been featured in numerous newspapers, magazines, and books. Tonight he will share with us photographs and stories from his recent trip and will answer any questions you may have. Due to time constraints, we ask you to hold your questions until the end of the talk.',
+                    part: 1,
+                  },
+
+                  # Speaking Part 2 (Questions 3-4): Describe a picture
+                  {
+                    question_number: 3,
+                    text: 'Describe the picture in as much detail as possible.',
+                    passage: 'In this question, you will look at a picture on your screen. You will have 30 seconds to prepare your response. Then you will have 45 seconds to speak about the picture.',
+                    image: ['https://jaxtina.com/wp-content/uploads/2021/10/TOEIC-Speaking-Question-3-1.jpg'],
+                    part: 2,
+                  },
+                  {
+                    question_number: 4,
+                    text: 'Describe the picture in as much detail as possible.',
+                    passage: 'In this question, you will look at a picture on your screen. You will have 30 seconds to prepare your response. Then you will have 45 seconds to speak about the picture.',
+                    image: ['https://media.zim.vn/610aa95592067e001e3dde36/TOEIC-Speaking-Describe-a-picture-_-6.jpg'],
+                    part: 2,
+                  },
+
+                  # Speaking Part 3 (Questions 5-7): Respond to questions
+                  {
+                    question_number: 5,
+                    text: 'What sports do you enjoy playing?',
+                    passage: 'Imagine that a research firm is doing a telephone survey of people in your city. You have agreed to answer some questions about sports.',
+                    part: 3,
+                  },
+                  {
+                    question_number: 6,
+                    text: 'How often do you usually play sports?',
+                    passage: 'Imagine that a research firm is doing a telephone survey of people in your city. You have agreed to answer some questions about sports.',
+                    part: 3,
+                  },
+                  {
+                    question_number: 7,
+                    text: 'Do you think it is important for children to play sports? Why or why not?',
+                    passage: 'Imagine that a research firm is doing a telephone survey of people in your city. You have agreed to answer some questions about sports.',
+                    part: 3,
+                  },
+
+                  # Speaking Part 4 (Questions 8-10): Respond to questions with information provided
+                  {
+                    question_number: 8,
+                    text: 'What qualifications does the caller have that make him a good candidate for the chef position?',
+                    passage: 'Maple City Restaurant is looking for a new chef. Read the advertisement for the position. Then listen to the telephone message. (Telephone message would be provided as audio)',
+                    image: ['https://example.com/restaurant_ad.jpg'],
+                    question_audio: 'https://example.com/question8_audio.mp3',
+                    part: 4,
+                  },
+                  {
+                    question_number: 9,
+                    text: 'Why is the caller interested in working at Maple City Restaurant?',
+                    passage: 'Maple City Restaurant is looking for a new chef. Read the advertisement for the position. Then listen to the telephone message.',
+                    question_audio: 'https://example.com/question9_audio.mp3',
+                    part: 4,
+                  },
+                  {
+                    question_number: 10,
+                    text: 'When would the caller be available for an interview?',
+                    passage: 'Maple City Restaurant is looking for a new chef. Read the advertisement for the position. Then listen to the telephone message.',
+                    question_audio: 'https://example.com/question10_audio.mp3',
+                    part: 4,
+                  },
+
+                  # Speaking Part 5 (Question 11): Express an opinion
+                  {
+                    question_number: 11,
+                    text: 'Some people prefer to take public transportation to work rather than drive their own car. Others believe that driving their own car is better. Which do you think is better and why?',
+                    passage: 'In this question, you will be asked to give your opinion about a specific topic. Be sure to say as much as you can in the time allowed.',
+                    question_audio: 'https://example.com/question11_audio.mp3',
+                    part: 5,
+                  },
+
+                  # Writing Part 6 (Questions 12-16): Write a sentence based on a picture
+                  {
+                    question_number: 12,
+                    text: 'Write ONE sentence that describes this picture.',
+                    passage: 'Look at the picture and write ONE sentence that describes this picture. Your sentence should be clear and descriptive.',
+                    image:
+                      [
+                        'https://www.ets.org/content/dam/ets-org/images/tests/toeic/toeic-writing-sample-question-1.jpg',
+                      ],
+                    part: 6,
+                  },
+                  {
+                    question_number: 13,
+                    text: 'Write ONE sentence that describes this picture.',
+                    passage: 'Look at the picture and write ONE sentence that describes this picture. Your sentence should be clear and descriptive.',
+                    image: ['https://example.com/writing_image2.jpg'],
+                    part: 6,
+                  },
+                  {
+                    question_number: 14,
+                    text: 'Write ONE sentence that describes this picture.',
+                    passage: 'Look at the picture and write ONE sentence that describes this picture. Your sentence should be clear and descriptive.',
+                    image: ['https://example.com/writing_image3.jpg'],
+                    part: 6,
+                  },
+                  {
+                    question_number: 15,
+                    text: 'Write ONE sentence that describes this picture.',
+                    passage: 'Look at the picture and write ONE sentence that describes this picture. Your sentence should be clear and descriptive.',
+                    image: ['https://example.com/writing_image4.jpg'],
+                    part: 6,
+                  },
+                  {
+                    question_number: 16,
+                    text: 'Write ONE sentence that describes this picture.',
+                    passage: 'Look at the picture and write ONE sentence that describes this picture. Your sentence should be clear and descriptive.',
+                    image: ['https://example.com/writing_image5.jpg'],
+                    part: 6,
+                  },
+
+                  # Writing Part 7 (Questions 17-18): Respond to a written request
+                  {
+                    question_number: 17,
+                    text: 'Write a response to the email. In your response, give your opinion and supporting reasons.',
+                    passage: 'From: Dale City Welcome Committee\nTo: New Dale City Residents\nSubject: Welcome to Dale City\n\nDear New Residents,\n\nAs chairperson of the Dale City Welcome Committee, I would like to welcome you to our city. Our committee is organizing a special meeting for new residents on May 25 at the City Hall. At the meeting, you will receive information about the city and the services it offers.\n\nWe would like to know what specific information about the city you are interested in learning. Is there anything specific about Dale City that you would like us to present at the meeting?\n\nWe look forward to meeting you on May 25.\n\nSincerely,\nBarbara Smith\nChairperson\nDale City Welcome Committee',
+                    part: 7,
+                  },
+                  {
+                    question_number: 18,
+                    text: 'Write a response to the email. In your response, give your opinion and supporting reasons.',
+                    passage: 'From: Human Resources Department\nTo: All Employees\nSubject: Office Dress Code\n\nAs you know, our company has always had a formal dress code, requiring suits and ties for men and professional attire for women. However, we are considering changing to a more casual dress code.\n\nBefore we make this change, we would like to hear from you. Do you think we should change our dress code? Would a more casual dress code positively or negatively affect our work environment?\n\nPlease reply with your opinion on this matter by Friday.\n\nRegards,\nHuman Resources Department',
+                    part: 7,
+                  },
+
+                  # Writing Part 8 (Question 19): Write an opinion essay
+                  {
+                    question_number: 19,
+                    text: 'Some people believe that it is more important to enjoy your job than to earn a high salary. Others believe that a high salary is more important than job satisfaction. Which do you think is more important: enjoying your job or earning a high salary?',
+                    passage: 'Write an essay on the topic. In your essay, be sure to support your opinion with reasons and examples. Use specific reasons and examples to support your answer.',
+                    part: 8,
+                  },
+                ]
+      responses:
+        '201':
+          description: SWTest created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EM:
+                    type: string
+                    example: 'SW Test created successfully'
+                  EC:
+                    type: integer
+                    example: 0
+                  DT:
+                    $ref: '#/components/schemas/SWTest'
+        '400':
+          description: Failed to create SWTest
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EM:
+                    type: string
+                    example: 'Failed to create SW Test'
+                  EC:
+                    type: integer
+                    example: 3
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EM:
+                    type: string
+                    example: 'Internal server error'
+                  EC:
+                    type: integer
+                    example: 4
+
+  /swtest/deleteSWTest/{swTestId}:
+    delete:
+      summary: Delete a Speaking and Writing test
+      tags:
+        - SWTest
+      parameters:
+        - name: swTestId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: '60f1a5c5e6b3f32d4c9a1234'
+      responses:
+        '200':
+          description: SWTest deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EM:
+                    type: string
+                    example: 'SW Test deleted successfully'
+                  EC:
+                    type: integer
+                    example: 0
+        '400':
+          description: Failed to delete SWTest
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EM:
+                    type: string
+                    example: 'Failed to delete SW Test'
+                  EC:
+                    type: integer
+                    example: 1
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EM:
+                    type: string
+                    example: 'Internal server error'
+                  EC:
+                    type: integer
+                    example: 2
+
+  /swtest/getAllSWTests:
+    get:
+      summary: Get all Speaking and Writing tests
+      tags:
+        - SWTest
+      responses:
+        '200':
+          description: SWTests fetched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EM:
+                    type: string
+                    example: 'SW Tests fetched successfully'
+                  EC:
+                    type: integer
+                    example: 0
+                  DT:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SWTest'
+        '400':
+          description: Failed to fetch SWTests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EM:
+                    type: string
+                    example: 'Failed to fetch SW Tests'
+                  EC:
+                    type: integer
+                    example: 1
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EM:
+                    type: string
+                    example: 'Internal server error'
+                  EC:
+                    type: integer
+                    example: 2
+
+  /swtest/getSWTestById/{swTestId}:
+    get:
+      summary: Get a Speaking and Writing test by ID
+      tags:
+        - SWTest
+      parameters:
+        - name: swTestId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: '60f1a5c5e6b3f32d4c9a1234'
+      responses:
+        '200':
+          description: SWTest fetched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EM:
+                    type: string
+                    example: 'SW Test fetched successfully'
+                  EC:
+                    type: integer
+                    example: 0
+                  DT:
+                    $ref: '#/components/schemas/SWTest'
+        '400':
+          description: Failed to fetch SWTest
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EM:
+                    type: string
+                    example: 'Failed to fetch SW Test'
+                  EC:
+                    type: integer
+                    example: 1
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EM:
+                    type: string
+                    example: 'Internal server error'
+                  EC:
+                    type: integer
+                    example: 2
+
+  /swtest/completeSWTest/{userId}:
+    put:
+      summary: Complete a Speaking and Writing test
+      description: Submit answers for a Speaking and Writing test. For speaking questions, the answers should be S3 URLs to audio files. For writing questions, the answers should be text.
+      tags:
+        - SWTest
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: '60f1a5c5e6b3f32d4c9a5678'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompleteSWTestDTO'
+            example:
+              testId: '60f1a5c5e6b3f32d4c9a1234'
+              answers: [
+                  # Speaking Part 1 (Questions 1-2): Read a text aloud - Audio URLs
+                  'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q1_audio.mp3',
+                  'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q2_audio.mp3',
+
+                  # Speaking Part 2 (Questions 3-4): Describe a picture - Audio URLs
+                  'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q3_audio.mp3',
+                  'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q4_audio.mp3',
+
+                  # Speaking Part 3 (Questions 5-7): Respond to questions - Audio URLs
+                  'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q5_audio.mp3',
+                  'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q6_audio.mp3',
+                  'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q7_audio.mp3',
+
+                  # Speaking Part 4 (Questions 8-10): Respond to questions with information provided - Audio URLs
+                  'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q8_audio.mp3',
+                  'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q9_audio.mp3',
+                  'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q10_audio.mp3',
+
+                  # Speaking Part 5 (Question 11): Express an opinion - Audio URL
+                  'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q11_audio.mp3',
+
+                  # Writing Part 6 (Questions 12-16): Write a sentence based on a picture - Text answers
+                  'The mechanic is teaching a new employee how to repair a car engine.',
+                  'The man is fixing his bicycle on the street.',
+                  'The woman is sitting at her desk working on a computer.',
+                  'The woman is wearing a business suit for her interview.',
+                  'The child is walking barefoot on the beach although it is cold.',
+
+                  # Writing Part 7 (Questions 17-18): Respond to a written request - Text answers
+                  'Dear Mr. Pinkney, I am writing to inform you that I cannot attend the meeting on Friday morning due to a prior commitment. I suggest we either reschedule the meeting to Friday afternoon or conduct the meeting virtually so everyone can participate. Please let me know what works best for the team. Regards, John Smith',
+                  'Dear Journal of Business News, I am interested in subscribing to your publication. Could you please provide information about the subscription duration options? Also, is there a digital version available? Finally, do you offer any additional discounts for long-term subscriptions? Thank you for your assistance. Regards, Jane Doe',
+
+                  # Writing Part 8 (Question 19): Write an opinion essay - Text answer
+                  'I strongly believe that enjoying your job is more important than earning a high salary. When people work in a field they are passionate about, they tend to be more motivated, productive, and satisfied with their lives. For example, my friend chose to become a teacher despite the relatively low pay because she loves working with children. She finds fulfillment in helping students learn and grow, which no amount of money could provide. Additionally, spending 40+ hours per week at a job you dislike just for the money can lead to stress, burnout, and even health problems. Research has shown that job satisfaction correlates more strongly with overall happiness than income level. While financial stability is certainly important, there are many moderately-paying careers that can provide both sufficient income and personal satisfaction. In conclusion, pursuing work that aligns with your interests and values will likely lead to greater long-term happiness than choosing a career solely based on salary.',
+                ]
+      responses:
+        '200':
+          description: SWTest evaluated and saved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EM:
+                    type: string
+                    example: 'SW Test evaluated and saved successfully'
+                  EC:
+                    type: integer
+                    example: 0
+                  DT:
+                    type: object
+                    properties:
+                      testId:
+                        type: string
+                        example: '60f1a5c5e6b3f32d4c9a1234'
+                      evaluations:
+                        type: array
+                        items:
+                          type: string
+                        example:
+                          [
+                            'The response demonstrates good fluency and pronunciation...',
+                            'The writing shows good organization but has some grammar issues...',
+                          ]
+                      sampleAnswers:
+                        type: array
+                        items:
+                          type: string
+                        example: ['A more complete response would be...', 'A better organized response would be...']
+                      scores:
+                        type: array
+                        items:
+                          type: number
+                        example: [4, 3]
+                      transcriptions:
+                        type: array
+                        items:
+                          type: string
+                        example:
+                          [
+                            'This is the transcription of the first audio response',
+                            'This is the transcription of the second audio response',
+                          ]
+        '400':
+          description: Failed to complete SWTest
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EM:
+                    type: string
+                    example: 'Failed to complete SW Test'
+                  EC:
+                    type: integer
+                    example: 4
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EM:
+                    type: string
+                    example: 'Internal server error'
+                  EC:
+                    type: integer
+                    example: 4
+
+  /swtest/getCompletedTest/{userId}/{testId}/{attemptId}:
+    get:
+      summary: Get a specific completed Speaking and Writing test by user ID, test ID, and attempt ID
+      description: Retrieves a specific test attempt using the unique attempt ID. This ensures the correct attempt is returned when a user has taken the same test multiple times.
+      tags:
+        - SWTest
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: '60f1a5c5e6b3f32d4c9a5678'
+        - name: testId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: '60f1a5c5e6b3f32d4c9a1234'
+        - name: attemptId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: '60f1a5c5e6b3f32d4c9a9876'
+      responses:
+        '200':
+          description: Completed test fetched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EM:
+                    type: string
+                    example: 'Completed test fetched successfully'
+                  EC:
+                    type: integer
+                    example: 0
+                  DT:
+                    type: object
+                    properties:
+                      testId:
+                        type: string
+                        example: '60f1a5c5e6b3f32d4c9a1234'
+                      attemptId:
+                        type: string
+                        example: '60f1a5c5e6b3f32d4c9a9876'
+                      contentKey:
+                        type: string
+                        example: 'user/60f1a5c5e6b3f32d4c9a5678/test/60f1a5c5e6b3f32d4c9a1234/content.json'
+                      scores:
+                        type: array
+                        items:
+                          type: number
+                        example: [4, 3, 5, 4, 3, 4, 4, 3, 4, 5, 4, 3, 4, 5, 4, 3, 4, 5, 4]
+                      totalScore:
+                        type: number
+                        example: 75
+                      averageScore:
+                        type: number
+                        example: 3.95
+                      attempted_at:
+                        type: string
+                        format: date-time
+                        example: '2023-07-15T11:30:00.000Z'
+                      completed_at:
+                        type: string
+                        format: date-time
+                        example: '2023-07-15T12:15:00.000Z'
+                      duration:
+                        type: number
+                        example: 2700
+                      content:
+                        type: object
+                        properties:
+                          testId:
+                            type: string
+                            example: '60f1a5c5e6b3f32d4c9a1234'
+                          userId:
+                            type: string
+                            example: '60f1a5c5e6b3f32d4c9a5678'
+                          attemptId:
+                            type: string
+                            example: '60f1a5c5e6b3f32d4c9a9876'
+                          answers:
+                            type: array
+                            items:
+                              type: string
+                            example:
+                              [
+                                'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q1_audio.mp3',
+                                'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q2_audio.mp3',
+                                '...',
+                              ]
+                          evaluations:
+                            type: array
+                            items:
+                              type: string
+                            example: ['The response demonstrates good fluency with clear pronunciation...', '...']
+                          sampleAnswers:
+                            type: array
+                            items:
+                              type: string
+                            example: ['Hello, this is Myra Peters calling regarding my appointment...', '...']
+                          created_at:
+                            type: string
+                            format: date-time
+                            example: '2023-07-15T11:30:00.000Z'
+                          updated_at:
+                            type: string
+                            format: date-time
+                            example: '2023-07-15T12:15:00.000Z'
+                      questions:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/SWQuestion'
+        '400':
+          description: Failed to fetch completed test
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EM:
+                    type: string
+                    example: 'Completed test not found'
+                  EC:
+                    type: integer
+                    example: 1
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EM:
+                    type: string
+                    example: 'Internal server error'
+                  EC:
+                    type: integer
+                    example: 2
+
+  /swtest/getCompletedTest/{userId}/{testId}:
+    get:
+      summary: Get the latest completed Speaking and Writing test by user ID and test ID
+      description: Retrieves the most recent attempt of a test when no specific attempt ID is provided.
+      tags:
+        - SWTest
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: '60f1a5c5e6b3f32d4c9a5678'
+        - name: testId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: '60f1a5c5e6b3f32d4c9a1234'
+      responses:
+        '200':
+          description: Completed test fetched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EM:
+                    type: string
+                    example: 'Completed test fetched successfully'
+                  EC:
+                    type: integer
+                    example: 0
+                  DT:
+                    type: object
+                    properties:
+                      testId:
+                        type: string
+                        example: '60f1a5c5e6b3f32d4c9a1234'
+                      attemptId:
+                        type: string
+                        example: '60f1a5c5e6b3f32d4c9a9876'
+                      contentKey:
+                        type: string
+                        example: 'user/60f1a5c5e6b3f32d4c9a5678/test/60f1a5c5e6b3f32d4c9a1234/content.json'
+                      scores:
+                        type: array
+                        items:
+                          type: number
+                        example: [4, 3, 5, 4, 3, 4, 4, 3, 4, 5, 4, 3, 4, 5, 4, 3, 4, 5, 4]
+                      totalScore:
+                        type: number
+                        example: 75
+                      averageScore:
+                        type: number
+                        example: 3.95
+                      attempted_at:
+                        type: string
+                        format: date-time
+                        example: '2023-07-15T11:30:00.000Z'
+                      completed_at:
+                        type: string
+                        format: date-time
+                        example: '2023-07-15T12:15:00.000Z'
+                      duration:
+                        type: number
+                        example: 2700
+                      content:
+                        type: object
+                        properties:
+                          testId:
+                            type: string
+                            example: '60f1a5c5e6b3f32d4c9a1234'
+                          userId:
+                            type: string
+                            example: '60f1a5c5e6b3f32d4c9a5678'
+                          attemptId:
+                            type: string
+                            example: '60f1a5c5e6b3f32d4c9a9876'
+                          answers:
+                            type: array
+                            items:
+                              type: string
+                            example:
+                              [
+                                'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q1_audio.mp3',
+                                'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q2_audio.mp3',
+                                '...',
+                              ]
+                          evaluations:
+                            type: array
+                            items:
+                              type: string
+                            example: ['The response demonstrates good fluency with clear pronunciation...', '...']
+                          sampleAnswers:
+                            type: array
+                            items:
+                              type: string
+                            example: ['Hello, this is Myra Peters calling regarding my appointment...', '...']
+                          created_at:
+                            type: string
+                            format: date-time
+                            example: '2023-07-15T11:30:00.000Z'
+                          updated_at:
+                            type: string
+                            format: date-time
+                            example: '2023-07-15T12:15:00.000Z'
+                      questions:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/SWQuestion'
+        '400':
+          description: Failed to fetch completed test
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EM:
+                    type: string
+                    example: 'Completed test not found'
+                  EC:
+                    type: integer
+                    example: 1
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EM:
+                    type: string
+                    example: 'Internal server error'
+                  EC:
+                    type: integer
+                    example: 2
+
+  /swtest/getSWTestHistory/{userId}:
+    get:
+      summary: Get Speaking and Writing test history by user ID
+      tags:
+        - SWTest
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: '60f1a5c5e6b3f32d4c9a5678'
+      responses:
+        '200':
+          description: SWTest history fetched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EM:
+                    type: string
+                    example: 'SW Test history fetched successfully'
+                  EC:
+                    type: integer
+                    example: 0
+                  DT:
+                    $ref: '#/components/schemas/SWTestHistory'
+        '400':
+          description: Failed to fetch SWTest history
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EM:
+                    type: string
+                    example: 'Failed to fetch SW Test history'
+                  EC:
+                    type: integer
+                    example: 1
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EM:
+                    type: string
+                    example: 'Internal server error'
+                  EC:
+                    type: integer
+                    example: 2
+
+  /swtest/updateSWTestEvaluation/{userId}:
+    put:
+      summary: Update Speaking and Writing test evaluation
+      tags:
+        - SWTest
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+          example: '60f1a5c5e6b3f32d4c9a5678'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                testId:
+                  type: string
+                evaluations:
+                  type: array
+                  items:
+                    type: string
+                sampleAnswers:
+                  type: array
+                  items:
+                    type: string
+                scores:
+                  type: array
+                  items:
+                    type: number
+            example:
+              testId: '60f1a5c5e6b3f32d4c9a1234'
+              evaluations:
+                [
+                  'The response demonstrates good fluency and pronunciation...',
+                  'The writing shows good organization but has some grammar issues...',
+                ]
+              sampleAnswers: ['A more complete response would be...', 'A better organized response would be...']
+              scores: [4, 3]
+      responses:
+        '200':
+          description: SWTest evaluation updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EM:
+                    type: string
+                    example: 'SW Test evaluation updated successfully'
+                  EC:
+                    type: integer
+                    example: 0
+        '400':
+          description: Failed to update SWTest evaluation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EM:
+                    type: string
+                    example: 'Failed to update SW Test evaluation'
+                  EC:
+                    type: integer
+                    example: 1
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EM:
+                    type: string
+                    example: 'Internal server error'
+                  EC:
+                    type: integer
+                    example: 2
+  /chat/message:
+    post:
+      summary: Send a message to the chatbot
+      tags:
+        - Chat
+      parameters:
+        - name: userId
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Optional user ID for tracking conversation history
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  description: The message to send to the chatbot
+                  example: 'How can I improve my TOEIC score?'
+                languageCode:
+                  type: string
+                  description: The language code for the message
+                  default: 'en'
+                  example: 'en'
+      responses:
+        '200':
+          description: Message processed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  role:
+                    type: string
+                    enum: [bot]
+                    example: 'bot'
+                  content:
+                    type: string
+                    example: 'To improve your TOEIC score, you should focus on these key areas: 1. Regular practice with official TOEIC materials...'
+                  created_at:
+                    type: string
+                    format: date-time
+                    example: '2024-01-20T15:30:00.000Z'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Message is required'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Failed to process message'
+
+  /chat/history/{userId}:
+    get:
+      summary: Get chat history for a user
+      tags:
+        - Chat
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the user whose chat history to retrieve
+          example: 'user123'
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          description: Page number for pagination
+          example: 1
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+          description: Number of messages per page
+          example: 10
+      responses:
+        '200':
+          description: Chat history retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EC:
+                    type: integer
+                    example: 0
+                  EM:
+                    type: string
+                    example: 'Chat history fetched successfully'
+                  DT:
+                    type: object
+                    properties:
+                      userId:
+                        type: string
+                        example: 'user123'
+                      chats:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/ChatMessage'
+                      pagination:
+                        type: object
+                        properties:
+                          currentPage:
+                            type: integer
+                            example: 1
+                          totalPages:
+                            type: integer
+                            example: 5
+                          totalMessages:
+                            type: integer
+                            example: 48
+                          hasMore:
+                            type: boolean
+                            example: true
+        '404':
+          description: Chat history not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EC:
+                    type: integer
+                    example: 1
+                  EM:
+                    type: string
+                    example: 'Chat history not found for this user'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  EC:
+                    type: integer
+                    example: 2
+                  EM:
+                    type: string
+                    example: 'Failed to retrieve chat history'
 components:
   schemas:
+    SWTest:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: '60f1a5c5e6b3f32d4c9a1234'
+        title:
+          type: string
+          example: 'TOEIC Speaking and Writing Test 1'
+        description:
+          type: string
+          example: 'Complete Speaking and Writing practice test'
+        created_by:
+          type: string
+          example: 'admin'
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/SWQuestion'
+        created_at:
+          type: string
+          format: date-time
+          example: '2023-07-15T10:30:00.000Z'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2023-07-15T10:30:00.000Z'
+        difficulty:
+          type: string
+          example: 'Intermediate'
+
+    SWQuestion:
+      type: object
+      properties:
+        question_number:
+          type: integer
+          description: 'The sequential number of the question in the test'
+          example: 1
+        text:
+          type: string
+          description: 'The specific question text'
+          example: 'What sports do you enjoy playing?'
+        passage:
+          type: string
+          description: 'The information/introduction/context for the question or part'
+          example: 'Imagine that a research firm is doing a telephone survey of people in your city. You have agreed to answer some questions about sports.'
+        image:
+          type: array
+          description: 'URLs to images used in the question (especially for Part 2 and Part 6)'
+          items:
+            type: string
+          example: ['https://jaxtina.com/wp-content/uploads/2021/10/TOEIC-Speaking-Question-3-1.jpg']
+        part:
+          type: integer
+          description: 'The part number of the TOEIC Speaking and Writing test (1-8)'
+          example: 1
+          enum: [1, 2, 3, 4, 5, 6, 7, 8]
+        question_audio:
+          type: string
+          description: 'URL to audio file for questions that include audio prompts'
+          example: 'https://example.com/question_audio.mp3'
+
+    SWCompletedTest:
+      type: object
+      properties:
+        testId:
+          type: string
+          description: 'The ID of the completed test'
+          example: '60f1a5c5e6b3f32d4c9a1234'
+        attemptId:
+          type: string
+          description: 'The unique identifier for this specific test attempt'
+          example: '60f1a5c5e6b3f32d4c9a9876'
+        contentKey:
+          type: string
+          description: 'The S3 key for the full test content'
+          example: 'user/60f1a5c5e6b3f32d4c9a5678/test/60f1a5c5e6b3f32d4c9a1234/content.json'
+        answers:
+          type: array
+          description: 'Array of 19 answers (11 speaking + 8 writing). For speaking questions, these are S3 URLs to audio files. For writing questions, these are text answers.'
+          items:
+            type: string
+          example: [
+              # Speaking answers (S3 URLs to audio files)
+              'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q1_audio.mp3',
+              'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q2_audio.mp3',
+              'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q3_audio.mp3',
+              'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q4_audio.mp3',
+              'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q5_audio.mp3',
+              'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q6_audio.mp3',
+              'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q7_audio.mp3',
+              'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q8_audio.mp3',
+              'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q9_audio.mp3',
+              'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q10_audio.mp3',
+              'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q11_audio.mp3',
+
+              # Writing answers (text)
+              'The mechanic is teaching a new employee how to repair a car engine.',
+              'The man is fixing his bicycle on the street.',
+              'The woman is sitting at her desk working on a computer.',
+              'The woman is wearing a business suit for her interview.',
+              'The child is walking barefoot on the beach although it is cold.',
+              'Dear Mr. Pinkney, I am writing to inform you that I cannot attend the meeting...',
+              'Dear Journal of Business News, I am interested in subscribing to your publication...',
+              'I strongly believe that enjoying your job is more important than earning a high salary...',
+            ]
+        evaluations:
+          type: array
+          description: 'Array of 19 evaluations (11 speaking + 8 writing) generated by the AI model'
+          items:
+            type: string
+          example:
+            [
+              "The response demonstrates good fluency with clear pronunciation. The speaker effectively communicates the message about rescheduling the appointment, including all key details such as the reason for cancellation and available days for rescheduling. There are minor grammatical errors but they don't impede understanding.",
+              'The writing shows good organization with a clear introduction, body paragraphs with examples, and a conclusion. The vocabulary is appropriate and varied. There are some minor grammatical issues with verb tense consistency.',
+            ]
+        sampleAnswers:
+          type: array
+          description: 'Array of 19 sample answers (11 speaking + 8 writing) generated by the AI model as examples of better responses'
+          items:
+            type: string
+          example:
+            [
+              "Hello, this is Myra Peters calling regarding my appointment with Dr. Jones scheduled for 3 PM today. Unfortunately, I need to reschedule due to an important work meeting that has come up. I'm available any afternoon next week - Monday, Tuesday, or Wednesday would work well for me. Please call me back to confirm a new appointment time on one of these days. Thank you.",
+              'I believe that job satisfaction is more important than a high salary for several reasons. First, spending 40+ hours weekly at a job you enjoy leads to better mental health and overall life satisfaction. Second, passion for your work typically results in better performance and career advancement opportunities. While financial stability is necessary, research shows that beyond meeting basic needs, additional income has diminishing returns on happiness. For example, many teachers choose their profession despite modest salaries because they find fulfillment in educating future generations. In conclusion, pursuing meaningful work that aligns with your values and interests contributes more to long-term happiness than prioritizing salary alone.',
+            ]
+        scores:
+          type: array
+          description: 'Array of 19 scores (11 speaking + 8 writing) on a scale of 0-5, where 0 is the lowest and 5 is the highest'
+          items:
+            type: number
+          example: [4, 3, 5, 4, 3, 4, 4, 3, 4, 5, 4, 3, 4, 5, 4, 3, 4, 5, 4]
+        totalScore:
+          type: number
+          description: 'The sum of all scores'
+          example: 75
+        averageScore:
+          type: number
+          description: 'The average score across all questions'
+          example: 3.95
+        transcriptions:
+          type: array
+          description: 'Array of 11 transcriptions of the speaking answers, generated by the speech-to-text model'
+          items:
+            type: string
+          example:
+            [
+              "Hi, this is Myra Peters calling about my appointment with Dr. Jones. I have a three o'clock appointment scheduled for this afternoon. Unfortunately I won't be able to keep it because of an important meeting at work. So I'll need to reschedule. I was hoping to come in sometime next week. Any time Monday, Tuesday or Wednesday afternoon would work for me. I hope the doctor has some time available on one of those days. Please call me back and let me know.",
+              'Our speaker tonight is Mr. John Wilson who has just returned from traveling in South America. Mr. Wilson spent his trip photographing scenes of small town life across the continent.',
+            ]
+        attempted_at:
+          type: string
+          description: 'The date and time when the test was attempted'
+          format: date-time
+          example: '2023-07-15T11:30:00.000Z'
+        completed_at:
+          type: string
+          description: 'The date and time when the test was completed (evaluations finished)'
+          format: date-time
+          example: '2023-07-15T12:15:00.000Z'
+        duration:
+          type: number
+          description: 'The duration of the test in seconds'
+          example: 2700
+
+    SWTestHistory:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: 'The user ID who owns this test history'
+          example: '60f1a5c5e6b3f32d4c9a5678'
+        completedTests:
+          type: array
+          description: 'Array of completed Speaking and Writing tests by this user'
+          items:
+            $ref: '#/components/schemas/SWCompletedTest'
+          example:
+            [
+              {
+                'testId': '60f1a5c5e6b3f32d4c9a1234',
+                'attemptId': '60f1a5c5e6b3f32d4c9a9876',
+                'contentKey': 'user/60f1a5c5e6b3f32d4c9a5678/test/60f1a5c5e6b3f32d4c9a1234/content.json',
+                'answers':
+                  [
+                    'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q1_audio.mp3',
+                    'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q2_audio.mp3',
+                    '...',
+                  ],
+                'evaluations': ['The response demonstrates good fluency with clear pronunciation...', '...'],
+                'sampleAnswers': ['Hello, this is Myra Peters calling regarding my appointment...', '...'],
+                'scores': [4, 3, 5, 4, 3, 4, 4, 3, 4, 5, 4, 3, 4, 5, 4, 3, 4, 5, 4],
+                'totalScore': 75,
+                'averageScore': 3.95,
+                'attempted_at': '2023-07-15T11:30:00.000Z',
+                'completed_at': '2023-07-15T12:15:00.000Z',
+                'duration': 2700,
+              },
+              {
+                'testId': '60f1a5c5e6b3f32d4c9a5679',
+                'attemptId': '60f1a5c5e6b3f32d4c9a9877',
+                'contentKey': 'user/60f1a5c5e6b3f32d4c9a5678/test/60f1a5c5e6b3f32d4c9a5679/content.json',
+                'answers': ['...'],
+                'evaluations': ['...'],
+                'sampleAnswers': ['...'],
+                'scores': [3, 4, 4, 3, 5, 4, 3, 4, 5, 4, 3, 4, 5, 4, 3, 4, 5, 4, 3],
+                'totalScore': 72,
+                'averageScore': 3.79,
+                'attempted_at': '2023-07-20T14:45:00.000Z',
+                'completed_at': '2023-07-20T15:30:00.000Z',
+                'duration': 2700,
+              },
+            ]
+        created_at:
+          type: string
+          description: 'The date and time when the test history was created'
+          format: date-time
+          example: '2023-07-15T10:30:00.000Z'
+        updated_at:
+          type: string
+          description: 'The date and time when the test history was last updated'
+          format: date-time
+          example: '2023-07-20T14:45:00.000Z'
+
+    CreateSWTestDTO:
+      type: object
+      required:
+        - title
+        - description
+        - created_by
+        - difficulty
+        - questions
+      properties:
+        title:
+          type: string
+          description: 'The title of the Speaking and Writing test'
+          example: 'TOEIC Speaking and Writing Test 1'
+        description:
+          type: string
+          description: 'A brief description of the test'
+          example: 'Complete Speaking and Writing practice test covering all 8 parts'
+        created_by:
+          type: string
+          description: 'The ID of the user who created the test (usually an admin)'
+          example: 'admin'
+        difficulty:
+          type: string
+          description: 'The difficulty level of the test'
+          example: 'Intermediate'
+          enum: ['Beginner', 'Intermediate', 'Advanced']
+        questions:
+          type: array
+          description: 'Array of 19 questions (11 speaking + 8 writing) following the TOEIC S&W format'
+          items:
+            $ref: '#/components/schemas/SWQuestion'
+          example: [
+              # Speaking Part 1: Read a text aloud (Questions 1-2)
+              {
+                'question_number': 1,
+                'text': "Hi. This is Myra Peters calling about my appointment with Dr. Jones. I have a three o'clock appointment scheduled for this afternoon. Unfortunately, I won't be able to keep it because of an important meeting at work. So, I'll need to reschedule. I was hoping to come in sometime next week. Any time Monday, Tuesday, or Wednesday afternoon would work for me. I hope the doctor has some time available on one of those days. Please call me back and let me know.",
+                'part': 1,
+              },
+
+              # Speaking Part 2: Describe a picture (Questions 3-4)
+              {
+                'question_number': 3,
+                'text': 'In this question, you will describe the picture on your screen in as much detail as possible.',
+                'images': ['https://jaxtina.com/wp-content/uploads/2021/10/TOEIC-Speaking-Question-3-1.jpg'],
+                'part': 2,
+              },
+
+              # Speaking Part 3: Respond to questions (Questions 5-7)
+              {
+                'question_number': 5,
+                'text': 'Imagine that a research firm is doing a telephone survey of people in your city. You have agreed to answer some questions about sports.',
+                'passages': ['What sports do you enjoy playing?'],
+                'part': 3,
+              },
+
+              # Writing Part 6: Write a sentence based on a picture (Questions 12-16)
+              {
+                'question_number': 12,
+                'text': 'Write ONE sentence that describes this picture.',
+                'images':
+                  ['https://www.ets.org/content/dam/ets-org/images/tests/toeic/toeic-writing-sample-question-1.jpg'],
+                'part': 6,
+              },
+            ]
+
+    CompleteSWTestDTO:
+      type: object
+      required:
+        - testId
+        - answers
+      properties:
+        testId:
+          type: string
+          description: 'The ID of the test being completed'
+          example: '60f1a5c5e6b3f32d4c9a1234'
+        answers:
+          type: array
+          description: 'Array of 19 answers (11 speaking + 8 writing). For speaking questions, these are S3 URLs to audio files. For writing questions, these are text answers.'
+          items:
+            type: string
+          example: [
+              # Speaking Part 1 (Questions 1-2): Read a text aloud - Audio URLs
+              'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q1_audio.mp3',
+              'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q2_audio.mp3',
+
+              # Speaking Part 2 (Questions 3-4): Describe a picture - Audio URLs
+              'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q3_audio.mp3',
+              'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q4_audio.mp3',
+
+              # Speaking Part 3 (Questions 5-7): Respond to questions - Audio URLs
+              'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q5_audio.mp3',
+              'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q6_audio.mp3',
+              'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q7_audio.mp3',
+
+              # Speaking Part 4 (Questions 8-10): Respond to questions with information provided - Audio URLs
+              'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q8_audio.mp3',
+              'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q9_audio.mp3',
+              'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q10_audio.mp3',
+
+              # Speaking Part 5 (Question 11): Express an opinion - Audio URL
+              'https://bettertoeic-uploads.s3.amazonaws.com/speaking_q11_audio.mp3',
+
+              # Writing Part 6 (Questions 12-16): Write a sentence based on a picture - Text answers
+              'The mechanic is teaching a new employee how to repair a car engine.',
+              'The man is fixing his bicycle on the street.',
+              'The woman is sitting at her desk working on a computer.',
+              'The woman is wearing a business suit for her interview.',
+              'The child is walking barefoot on the beach although it is cold.',
+
+              # Writing Part 7 (Questions 17-18): Respond to a written request - Text answers
+              'Dear Mr. Pinkney, I am writing to inform you that I cannot attend the meeting on Friday morning due to a prior commitment. I suggest we either reschedule the meeting to Friday afternoon or conduct the meeting virtually so everyone can participate. Please let me know what works best for the team. Regards, [Name]',
+              'Dear Journal of Business News, I am interested in subscribing to your publication. Could you please provide information about the subscription duration options? Also, is there a digital version available? Finally, do you offer any additional discounts for long-term subscriptions? Thank you for your assistance. Regards, [Name]',
+
+              # Writing Part 8 (Question 19): Write an opinion essay - Text answer
+              'I strongly believe that enjoying your job is more important than earning a high salary. When people work in a field they are passionate about, they tend to be more motivated, productive, and satisfied with their lives. For example, my friend chose to become a teacher despite the relatively low pay because she loves working with children. She finds fulfillment in helping students learn and grow, which no amount of money could provide. Additionally, spending 40+ hours per week at a job you dislike just for the money can lead to stress, burnout, and even health problems. Research has shown that job satisfaction correlates more strongly with overall happiness than income level. While financial stability is certainly important, there are many moderately-paying careers that can provide both sufficient income and personal satisfaction. In conclusion, pursuing work that aligns with your interests and values will likely lead to greater long-term happiness than choosing a career solely based on salary.',
+            ]
+
     CreateTestDTO:
       type: object
       properties:
@@ -1632,3 +3056,29 @@ components:
             type: string
           avatar:
             type: string
+
+    ChatMessage:
+      type: object
+      properties:
+        role:
+          type: string
+          enum: [user, bot]
+          example: 'user'
+        content:
+          type: string
+          example: 'How can I improve my TOEIC score?'
+        created_at:
+          type: string
+          format: date-time
+          example: '2024-01-20T15:30:00.000Z'
+
+    ChatHistory:
+      type: object
+      properties:
+        userId:
+          type: string
+          example: 'user123'
+        chats:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatMessage'

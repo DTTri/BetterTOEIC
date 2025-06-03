@@ -1,14 +1,13 @@
 class Http {
   baseUrl: string;
   constructor() {
-    this.baseUrl = "https://bettertoeic-nodejsserver.onrender.com/api";
+    this.baseUrl = "http://localhost:8000/api";
   }
   private getURL(url: string) {
     return `${this.baseUrl}/${url}`;
   }
   async get(endpoint: string) {
     const response = await fetch(this.getURL(endpoint));
-    console.log(response);
     return response.json();
   }
   async post(endpoint: string, data: object) {
