@@ -52,8 +52,14 @@ export default function HomePage() {
             <div className="p-6 bg-gray-50 shadow rounded-lg text-center">
               <h3 className="text-xl font-semibold mb-4">Real Exam Simulation</h3>
               <p className="text-gray-600">
-                Experience authentic TOEIC test environments with timed exams
-                and detailed feedback.
+                Experience authentic TOEIC test environments with timed exams.
+              </p>
+            </div>
+            <div className="p-6 bg-gray-50 shadow rounded-lg text-center">
+              <h3 className="text-xl font-semibold mb-4">AI Analyzis</h3>
+              <p className="text-gray-600">
+                Get personalized feedback
+                using advanced AI technology and learn more with intergrated chat bot.
               </p>
             </div>
             <div className="p-6 bg-gray-50 shadow rounded-lg text-center">
@@ -63,13 +69,6 @@ export default function HomePage() {
               <p className="text-gray-600">
                 Tailored plans to achieve your goals based on your current level
                 and objectives.
-              </p>
-            </div>
-            <div className="p-6 bg-gray-50 shadow rounded-lg text-center">
-              <h3 className="text-xl font-semibold mb-4">Focused Practice</h3>
-              <p className="text-gray-600">
-                Practice specific parts of the TOEIC test to strengthen your
-                weaknesses.
               </p>
             </div>
             <div className="p-6 bg-gray-50 shadow rounded-lg text-center">
@@ -96,7 +95,7 @@ export default function HomePage() {
           Ready to Start Your TOEIC Journey?
         </h2>
         <button
-          onClick={() => nav("/login")}
+          onClick={() => nav("/road-map")}
           className="bg-white text-blue-600 px-6 py-3 rounded font-semibold shadow-lg hover:bg-gray-100 animate-bounce"
         >
           Join Now

@@ -25,7 +25,11 @@ export default function TestCard({
         />
       </div>
       <div className="w-[60%] flex flex-col gap-2 px-4 py-3">
-        <h3 className="text-xl font-bold text-[#000]">{titleTestCard}</h3>
+        <h3
+          className="text-xl font-bold text-[#000] overflow-hidden white-space-nowrap text-ellipsis line-clamp-2" 
+        >
+          {titleTestCard}
+        </h3>
         <div className="flex flex-row items-center gap-[6px]">
           <img src={clock} alt="" />
           <span>120 minutes</span>
