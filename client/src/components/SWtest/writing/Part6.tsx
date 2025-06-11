@@ -51,7 +51,7 @@ export default function Part6({ questions, onComplete }: Part6Props) {
   // }, [currentQuestion]);
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="max-w-5xl mx-auto p-6">
       <div className="bg-red-800 text-white py-3 px-6 rounded-t-lg">
         <h2 className="text-lg font-semibold">
           QUESTION {questions[currentQuestion].question_number} OF 19

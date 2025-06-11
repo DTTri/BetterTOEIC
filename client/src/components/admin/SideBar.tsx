@@ -83,7 +83,7 @@ export default function SideBar() {
   };
 
   return (
-    <div className="sidebar h-full bg-gradient-to-b from-slate-50 to-white border-r border-gray-200 shadow-xl relative">
+    <div className="sidebar bg-gradient-to-b from-slate-50 to-white border-r border-gray-200 shadow-xl relative">
       <button
         onClick={toggleSidebar}
         className=" bg-white shadow-md mx-auto rounded-full text-gray-600 hover:text-gray-800 flex-shrink-0 absolute -right-3 top-2 z-10"

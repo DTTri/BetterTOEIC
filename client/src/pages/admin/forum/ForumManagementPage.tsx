@@ -37,7 +37,7 @@ export default function ForumManagementPage() {
         setPosts(posts.filter((post) => post._id !== post._id));
       }
     } catch (error) {
-      console.log("Fail to delete post");
+      console.log("Fail to delete post: "  + error);
     }
   };
 

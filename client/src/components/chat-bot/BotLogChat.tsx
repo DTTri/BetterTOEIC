@@ -4,7 +4,6 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { Link } from "@mui/material";
 
 export default function BotLogChat({ message }: { message: Message }) {
-  // Regex để tách URL và text thường
   const extractUrlAndText = (content: string) => {
     const urlRegex = /(https?:\/\/[^\s]+)/g;
     const urls = content.match(urlRegex) || [];
@@ -12,23 +11,19 @@ export default function BotLogChat({ message }: { message: Message }) {
     return { text, urls };
   };
 
-  // Hàm để lấy tên route từ URL
   const getRouteNameFromUrl = (url: string) => {
     try {
       const urlObj = new URL(url);
       const pathSegments = urlObj.pathname.split("/").filter(Boolean);
 
-      // Lấy segment đầu tiên của path
       const routeName = pathSegments[0];
 
-      // Map các route name thành text hiển thị
       const routeDisplayNames: { [key: string]: string } = {
         practice: "Practice",
         test: "Test",
         "vocab-gallery": "Vocabulary",
         "road-map": "Roadmap",
         forum: "Forum",
-        // Thêm các mapping khác nếu cần
       };
 
       return routeDisplayNames[routeName] || routeName;
@@ -38,18 +33,18 @@ export default function BotLogChat({ message }: { message: Message }) {
     }
   };
 
-  const formatTextWithLineBreaks = (text: string) => {
-    return text.split("\n").map(
-      (paragraph, index) =>
-        paragraph.trim() && (
-          <p
-            key={index}
-            className={`mb-2 last:mb-0 ${index === 0 ? "mt-0" : "mt-2"}`}
-          >
-            {paragraph}
-          </p>
-        )
-    );
+  const formatTextIntoBoldStyle = (text: string): (string | JSX.Element)[] => {
+    const parts = text.split(/(\*\*.*?\*\*)/g);
+
+    return parts
+      .map((part, index) => {
+        if (part.startsWith("**") && part.endsWith("**")) {
+          const boldContent = part.substring(2, part.length - 2);
+          return <strong className="text-gray-700" key={`bold-${index}`}>{boldContent}</strong>;
+        }
+        return part;
+      })
+      .filter(part => (typeof part === 'string' ? part.length > 0 : true));
   };
 
   const { text, urls } = extractUrlAndText(message.content);
@@ -67,8 +62,8 @@ export default function BotLogChat({ message }: { message: Message }) {
         {/* Text Message */}
         {text && (
           <div className="bg-[#F6F6F6] rounded-tr-[25px] rounded-t-[25px] inline-flex items-start justify-center p-2 px-[14px]">
-            <div className="text-[#4B4B4B] text-sm font-bold break-words">
-              {formatTextWithLineBreaks(text)}
+            <div className="text-[#4B4B4B] text-sm font-bold break-words whitespace-pre-wrap" style={{ wordBreak: "break-word", lineHeight: "1.5" }}>
+              {formatTextIntoBoldStyle(text)}
             </div>
           </div>
         )}

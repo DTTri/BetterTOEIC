@@ -42,7 +42,7 @@ export default function Part1({ question, onComplete }: Part1Props) {
   console.log(isRecording);
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
+    <div className="max-w-4xl mx-auto p-6">
       <div className="bg-[#981C1E] text-white text-center w-full font-bold py-3 px-5 text-2xl rounded-t-lg">
         <h2 className="text-lg font-semibold">
           QUESTION {question.question_number} OF 19
@@ -75,7 +75,7 @@ export default function Part1({ question, onComplete }: Part1Props) {
               <p className="text-lg leading-relaxed">{question.passage}</p>
             </div>
 
-            <div className="flex justify-center mb-6">
+            <div className="flex justify-center mb-4">
               <Timer
                 initialSeconds={
                   stage === "preparation"

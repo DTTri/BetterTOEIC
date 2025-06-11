@@ -51,14 +51,14 @@ export default function ReviewPracticePage() {
         let count: number[] = [];
         selectedPracticeTest.questions.forEach((question, index) => {
           if (index == 0) {
-            count.push(question.question_group_number);
+            count.push(question.question_group_number || 0);
           }
           if (
             index > 0 &&
             question.question_group_number !=
               questions[index - 1]?.question_group_number
           ) {
-            count.push(question.question_group_number);
+            count.push(question.question_group_number || 0);
           }
         });
         console.log(count);

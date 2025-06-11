@@ -10,7 +10,6 @@ import { sUser } from "@/store";
 import sForum from "@/store/forumStore";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { LazyMotion, domAnimation } from "motion/react";
 import { LazyLoadComponent } from "react-lazy-load-image-component";
 import { CommentSkeleton } from "@/components/forum/skeletons";
 
@@ -68,7 +67,7 @@ export default function PostDetailPage() {
         });
       }
     } catch (error) {
-      console.log("Fail to delete post");
+      console.log("Fail to delete post: " + error);
     }
   };
 
@@ -98,7 +97,7 @@ export default function PostDetailPage() {
         );
       }
     } catch (error) {
-      console.log("Fail to like post");
+      console.log("Fail to like post: " + error);
     }
   };
 
@@ -121,7 +120,7 @@ export default function PostDetailPage() {
         });
       }
     } catch (error) {
-      console.log("Fail to delete comment");
+      console.log("Fail to delete comment: " + error);
     }
   };
 
@@ -150,7 +149,7 @@ export default function PostDetailPage() {
         });
       }
     } catch (error) {
-      console.log;
+      console.log("Fail to create comment: " + error);
     }
   };
   console.log("comment in post" + post.comments);
