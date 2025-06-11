@@ -40,11 +40,11 @@ BetterTOEIC is a comprehensive TOEIC (Test of English for International Communic
 ### Backend
 - Node.js
 - Express.js
-- MongoDB (với Mongoose)
+- MongoDB
 - JSON Web Tokens (JWT)
 - AWS S3 SDK
 - Redis
-- Hugging Face Transformers (cho AI)
+- Hugging Face Transformers
 
 ### Frontend
 - React (TypeScript)
