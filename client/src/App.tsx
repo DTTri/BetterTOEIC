@@ -443,7 +443,6 @@ function App() {
         fetchSavedVocabs(),
         fetchVocabHistory(),
         fetchChatHistory(),
-        fetchSWTests(),
         fetchSWTestHistory(),
       ]);
     };
@@ -451,6 +450,7 @@ function App() {
     const fetchNotSecureData = async () => {
       await Promise.all([
         fetchTests(),
+        fetchSWTests(),
         fetchForum(),
         fetchVocabs(),
         fetchPracticeTests(),
