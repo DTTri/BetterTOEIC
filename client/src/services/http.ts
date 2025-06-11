@@ -1,7 +1,7 @@
 class Http {
   baseUrl: string;
   constructor() {
-    this.baseUrl = "https://bettertoeic-nodejsserver.onrender.com/api";
+    this.baseUrl = import.meta.env.VITE_API_URL;
   }
   private getURL(url: string) {
     return `${this.baseUrl}/${url}`;
